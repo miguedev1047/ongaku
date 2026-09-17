@@ -1,0 +1,22 @@
+{
+    "name": "@ongaku/types",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Ongaku shared types",
+    "type": "module",
+    "exports": {
+        ".": "./src/index.ts"
+    },
+    "scripts": {
+        "lint": "oxlint .",
+        "fmt": "oxfmt --write .",
+        "fmt:check": "oxfmt --check .",
+        "typecheck": "tsc --noEmit"
+    },
+    "devDependencies": {
+        "@ongaku/toolchain": "workspace:*",
+        "oxfmt": "^0.68.0",
+        "oxlint": "^1.83.0",
+        "typescript": "^7.0.2"
+    }
+}

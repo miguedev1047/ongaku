@@ -1,0 +1,10 @@
+node_modules/
+.turbo/
+turbo.json.turbo*
+.turbo-cache/
+dist/
+.next/
+out/
+.env
+.env.*
+*.log

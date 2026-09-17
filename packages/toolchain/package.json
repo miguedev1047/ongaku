@@ -1,0 +1,14 @@
+{
+    "name": "@ongaku/toolchain",
+    "version": "0.0.0",
+    "private": true,
+    "type": "module",
+    "exports": {
+        "./oxlint": "./oxlint.config.ts",
+        "./oxfmt": "./.oxfmtrc.json"
+    },
+    "devDependencies": {
+        "oxfmt": "^0.68.0",
+        "oxlint": "^1.83.0"
+    }
+}
