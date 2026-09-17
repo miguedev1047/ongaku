@@ -52,6 +52,7 @@
   "devDependencies": {
     "@electron-toolkit/tsconfig": "^2.0.0",
     "@ongaku/toolchain": "workspace:*",
+    "@ongaku/server": "workspace:*",
     "@tanstack/router-plugin": "^1.168.35",
     "@types/node": "^22.20.3",
     "@types/react": "^19.3.0",

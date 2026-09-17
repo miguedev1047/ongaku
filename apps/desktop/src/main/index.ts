@@ -1,9 +1,11 @@
-import { join } from "path";
+import icon from "../../resources/icon.png?asset";
 
+import { join } from "path";
+import { initServer } from "@ongaku/server";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import { app, shell, BrowserWindow, ipcMain } from "electron";
 
-import icon from "../../resources/icon.png?asset";
+initServer();
 
 function createWindow(): void {
   const mainWindow = new BrowserWindow({

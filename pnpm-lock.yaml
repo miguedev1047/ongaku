@@ -227,6 +227,9 @@ importers:
       '@electron-toolkit/tsconfig':
         specifier: ^2.0.0
         version: 2.0.0(@types/node@22.20.3)
+      '@ongaku/server':
+        specifier: workspace:*
+        version: link:../../packages/server
       '@ongaku/toolchain':
         specifier: workspace:*
         version: link:../../packages/toolchain
@@ -273,31 +276,6 @@ importers:
         specifier: ^7.3.6
         version: 7.3.6(@types/node@22.20.3)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.23.13)
 
-  apps/server:
-    dependencies:
-      '@hono/node-server':
-        specifier: ^2.1.1
-        version: 2.1.1(hono@4.13.8)
-      hono:
-        specifier: ^4.13.8
-        version: 4.13.8
-    devDependencies:
-      '@ongaku/constants':
-        specifier: workspace:*
-        version: link:../../packages/constants
-      '@ongaku/toolchain':
-        specifier: workspace:*
-        version: link:../../packages/toolchain
-      '@types/node':
-        specifier: ^26.1.1
-        version: 26.6.1
-      tsx:
-        specifier: ^4.23.0
-        version: 4.23.13
-      typescript:
-        specifier: ^7.0.2
-        version: 7.0.2
-
   packages/constants:
     devDependencies:
       '@ongaku/toolchain':
@@ -315,6 +293,31 @@ importers:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+
+  packages/server:
+    dependencies:
+      '@hono/node-server':
+        specifier: ^2.1.1
+        version: 2.1.1(hono@4.13.8)
+      hono:
+        specifier: ^4.13.8
+        version: 4.13.8
+    devDependencies:
+      '@ongaku/constants':
+        specifier: workspace:*
+        version: link:../constants
+      '@ongaku/toolchain':
+        specifier: workspace:*
+        version: link:../toolchain
+      '@types/node':
+        specifier: ^26.1.1
+        version: 26.6.1
+      tsx:
+        specifier: ^4.23.0
+        version: 4.23.13
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
 
   packages/toolchain:
     devDependencies:
