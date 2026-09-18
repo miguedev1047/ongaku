@@ -1,25 +1,26 @@
 {
-    "name": "@ongaku/constants",
-    "version": "0.1.0",
-    "private": true,
-    "description": "Ongaku shared constants",
-    "type": "module",
-    "exports": {
-        ".": "./src/index.ts",
-        "./server": "./src/server.ts",
-        "./paths": "./src/paths.ts"
-    },
-    "scripts": {
-        "lint": "oxlint .",
-        "fmt": "oxfmt --write .",
-        "fmt:check": "oxfmt --check .",
-        "typecheck": "tsc --noEmit"
-    },
-    "devDependencies": {
-        "@ongaku/toolchain": "workspace:*",
-        "@types/node": "^26.6.1",
-        "oxfmt": "^0.68.0",
-        "oxlint": "^1.83.0",
-        "typescript": "^5.9.3"
-    }
+  "name": "@ongaku/constants",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Ongaku shared constants",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./server": "./src/server.ts",
+    "./paths": "./src/paths.ts",
+    "./extensions": "./src/extensions.ts"
+  },
+  "scripts": {
+    "lint": "oxlint .",
+    "fmt": "oxfmt --write .",
+    "fmt:check": "oxfmt --check .",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@ongaku/toolchain": "workspace:*",
+    "@types/node": "^26.6.1",
+    "oxfmt": "^0.68.0",
+    "oxlint": "^1.83.0",
+    "typescript": "^5.9.3"
+  }
 }
