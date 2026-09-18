@@ -49,7 +49,7 @@ export function initServer() {
           path: relative(PLAYLIST_DIR, resolvedPath)
         })
 
-        const file = middleware(c, async () => {})
+        const file = await middleware(c, async () => {})
         return file ?? c.notFound()
       }
     )
@@ -74,14 +74,18 @@ export function initServer() {
         }
 
         const cachePath = join(CACHE_PICTURES_DIR, `${id}.webp`)
+        const cacheRoot = relative(process.cwd(), CACHE_PICTURES_DIR)
+
+        const serveCachedCover = () => {
+          const middleware = serveStatic({
+            root: cacheRoot,
+            path: `${id}.webp`
+          })
+          return middleware(c, async () => {})
+        }
 
         if (existsSync(cachePath)) {
-          const middleware = serveStatic({
-            root: relative(process.cwd(), CACHE_PICTURES_DIR),
-            path: relative(CACHE_PICTURES_DIR, resolvedPath)
-          })
-
-          const file = middleware(c, async () => {})
+          const file = await serveCachedCover()
           return file ?? c.notFound()
         }
 
@@ -102,12 +106,7 @@ export function initServer() {
             .toFormat("webp", { quality: 80 })
             .toFile(cachePath)
 
-          const middleware = serveStatic({
-            root: relative(process.cwd(), CACHE_PICTURES_DIR),
-            path: relative(CACHE_PICTURES_DIR, resolvedPath)
-          })
-
-          const file = middleware(c, async () => {})
+          const file = await serveCachedCover()
           return file ?? c.notFound()
         } catch (err) {
           console.error(`Error extracting cover for "${resolvedPath}":`, err)
@@ -122,7 +121,9 @@ export function initServer() {
       port: SERVER_PORT
     },
     (info) => {
-      console.log(`Server is running on http://localhost:${info.port}`)
+      console.log(
+        `[ONGAKU-SERVER]: Server is running on http://localhost:${info.port}`
+      )
     }
   )
 }
