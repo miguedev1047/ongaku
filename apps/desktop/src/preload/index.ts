@@ -1,7 +1,13 @@
 import { electronAPI } from "@electron-toolkit/preload";
-import { contextBridge } from "electron";
+import { contextBridge, ipcRenderer } from "electron";
+import { GetPlaylists } from "../main/models";
 
-const api = {};
+const api = {
+  getPlaylists: (...args: Parameters<GetPlaylists>) =>
+    ipcRenderer.invoke("getPlaylists", ...args),
+  getPlaylistSongs: (playlist: string) =>
+    ipcRenderer.invoke("getPlaylistSongs", playlist),
+};
 
 if (process.contextIsolated) {
   try {
