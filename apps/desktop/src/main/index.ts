@@ -1,9 +1,10 @@
 import icon from "../../resources/icon.png?asset";
-
+import { ipcHandler } from "./handlers/_handlers";
 import { join } from "path";
 import { initServer } from "@ongaku/server";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
-import { app, shell, BrowserWindow, ipcMain } from "electron";
+import { app, shell, BrowserWindow } from "electron";
+import { checkFolders } from "./helpers/check-folders";
 
 initServer();
 
@@ -40,13 +41,14 @@ function createWindow(): void {
 }
 
 app.whenReady().then(() => {
+  checkFolders();
+  ipcHandler();
+
   electronApp.setAppUserModelId("com.electron");
 
   app.on("browser-window-created", (_, window) => {
     optimizer.watchWindowShortcuts(window);
   });
-
-  ipcMain.on("ping", () => console.log("pong"));
 
   createWindow();
 
