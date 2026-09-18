@@ -1,4 +1,5 @@
 import { TanstackDevtoolsComponent } from "@renderer/components/blocks/tanstack-devtools";
+import { ThemeProvider } from "@renderer/components/blocks/theme-provider";
 import type { QueryClient } from "@tanstack/react-query";
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 
@@ -12,9 +13,11 @@ export const Route = createRootRouteWithContext<RootRouteContext>()({
 
 function RootLayout() {
   return (
-    <main className="flex flex-col justify-between w-full h-screen">
-      <Outlet />
-      <TanstackDevtoolsComponent />
-    </main>
+    <ThemeProvider defaultTheme="system" storageKey="ui-theme">
+      <main className="flex flex-col justify-between w-full h-screen">
+        <Outlet />
+        <TanstackDevtoolsComponent />
+      </main>
+    </ThemeProvider>
   );
 }
