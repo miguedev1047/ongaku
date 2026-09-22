@@ -5,9 +5,7 @@ use tauri::{AppHandle, Emitter};
 use tokio::io::{AsyncBufReadExt, BufReader};
 use tokio::process::Command;
 
-use crate::helpers::{
-    ensure_binaries, extract_song_id, get_bin_dir, get_ytdlp_path,
-};
+use crate::helpers::{ensure_binaries, extract_song_id, get_bin_dir, get_ytdlp_path};
 
 #[derive(serde::Serialize, Clone, Debug)]
 pub struct DownloadProgress {
