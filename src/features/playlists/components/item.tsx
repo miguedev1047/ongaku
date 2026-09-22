@@ -13,7 +13,7 @@ export function PlaylistItem({ playlist }: PlaylistItemProps) {
       activeOptions={{ exact: true }}
       activeProps={{ className: "font-bold" }}
     >
-      <div className="w-full hover:bg-accent">{playlist.name}</div>
+      <div className="w-full hover:bg-accent p-2">{playlist.name}</div>
     </Link>
   )
 }
