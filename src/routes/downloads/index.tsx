@@ -33,8 +33,8 @@ function RouteComponent() {
 
       <Suspense fallback={<Spinner />}>
         <CheckBinaries />
-        <DownloadForm />
         <DownloadStatus />
+        <DownloadForm />
       </Suspense>
     </div>
   )

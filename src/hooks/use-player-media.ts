@@ -20,6 +20,7 @@ export function usePlayerMedia() {
   useEffect(() => {
     if (!audioRef) return
     audioRef.volume = volume / 10
+    audioRef.muted = volume === 0
   }, [audioRef, volume])
 
   return {
