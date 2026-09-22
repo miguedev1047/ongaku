@@ -3,7 +3,11 @@ import { Spinner } from "@/components/ui/spinner"
 import { checkBinariesQueryOpts } from "@/shared/queries/binaries"
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { Suspense } from "react"
-import { CheckBinaries, DownloadForm } from "@/features/downloads/components"
+import {
+  CheckBinaries,
+  DownloadForm,
+  DownloadStatus
+} from "@/features/downloads/components"
 
 export const Route = createFileRoute("/downloads/")({
   component: RouteComponent,
@@ -30,6 +34,7 @@ function RouteComponent() {
       <Suspense fallback={<Spinner />}>
         <CheckBinaries />
         <DownloadForm />
+        <DownloadStatus />
       </Suspense>
     </div>
   )

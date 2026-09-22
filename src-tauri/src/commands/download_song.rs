@@ -7,7 +7,11 @@ use crate::helpers::{
 };
 
 #[tauri::command]
-pub async fn download_song(url: &str, playlist_name: &str) -> Result<PlaylistSong, String> {
+pub async fn download_song(
+    url: &str,
+    playlist_name: &str,
+    app: tauri::AppHandle,
+) -> Result<PlaylistSong, String> {
     let target_dir = get_playlist_dir().join(playlist_name);
 
     if !target_dir.exists() {
@@ -15,7 +19,7 @@ pub async fn download_song(url: &str, playlist_name: &str) -> Result<PlaylistSon
             .map_err(|err| format!("Failed to create playlist directory: {}", err))?;
     }
 
-    let file_path = download_song_from_url(url, &target_dir).await?;
+    let file_path = download_song_from_url(url, &target_dir, app).await?;
 
     let file_name = file_path
         .file_name()

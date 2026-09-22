@@ -29,7 +29,7 @@ tower-http = { version = "0.7.1", features = ["fs", "cors"] }
 tower = { version = "0.5.3", features = ["util"] }
 lofty = "0.25.4"
 image = { version = "0.25", default-features = false, features = ["jpeg", "png", "webp"] }
-yt-dlp = "2.8"
+yt-dlp = { version = "2.8", features = ["statistics"] }
 
 # Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration
 [profile.release]

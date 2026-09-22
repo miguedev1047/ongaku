@@ -1,16 +1,27 @@
 import { create } from "zustand"
 import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
 
+export interface DownloadProgress {
+  progress: number
+  downloaded_bytes: number
+  total_bytes: number
+  done: boolean
+}
+
 interface DownloadsStore {
   isDownloading: boolean
   song: TPlaylistSong | null
+  downloadProgress: DownloadProgress | null
   setIsDownloading: (isDownloading: boolean) => void
   setSong: (song: TPlaylistSong | null) => void
+  setDownloadProgress: (progress: DownloadProgress | null) => void
 }
 
 export const useDownloadsStore = create<DownloadsStore>((set) => ({
   isDownloading: false,
   song: null,
+  downloadProgress: null,
   setIsDownloading: (isDownloading) => set({ isDownloading }),
-  setSong: (song) => set({ song })
+  setSong: (song) => set({ song }),
+  setDownloadProgress: (downloadProgress) => set({ downloadProgress })
 }))
