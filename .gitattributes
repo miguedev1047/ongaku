@@ -1,0 +1,6 @@
+# Normalize line endings for all text files on checkout
+* text=auto eol=lf
+
+# Force Windows batch files to use CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
