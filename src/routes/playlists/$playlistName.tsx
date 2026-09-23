@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router"
 import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs"
 import { Suspense } from "react"
 import { PlaylistSongsList } from "@/features/playlist-songs/components"
+import { SearchSongs } from "@/components/search"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export const Route = createFileRoute("/playlists/$playlistName")({
   component: RouteComponent,
@@ -17,7 +19,12 @@ function RouteComponent() {
 
   return (
     <div className="h-full flex flex-col gap-2 overflow-hidden w-full">
-      <h2 className="font-semibold shrink-0">Playlist {playlistName}</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="font-semibold shrink-0">Playlist {playlistName}</h2>
+        <Suspense fallback={<Skeleton className="size-8" />}>
+          <SearchSongs />
+        </Suspense>
+      </div>
 
       <div className="flex-1 min-h-0">
         <Suspense fallback={<p>Loading...</p>}>
