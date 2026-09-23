@@ -10,17 +10,28 @@ export const Route = createFileRoute("/playlists/$playlistName")({
   pendingComponent: () => <p>Loading playlists...</p>,
   errorComponent: () => <p>Error to load playlists</p>,
   loader: async ({ context, params }) => {
-    context.queryClient.query(playlistSongsQueryOpts(params.playlistName))
+    const songs = await context.queryClient.query(
+      playlistSongsQueryOpts(params.playlistName)
+    )
+    return { songs }
   }
 })
 
 function RouteComponent() {
   const { playlistName } = Route.useParams()
+  const { songs } = Route.useLoaderData()
+
+  const songsCount = songs.length
 
   return (
     <div className="h-full flex flex-col gap-2 overflow-hidden w-full">
       <div className="flex items-center justify-between">
-        <h2 className="font-semibold shrink-0">Playlist {playlistName}</h2>
+        <h2 className="font-semibold shrink-0">
+          Playlist {playlistName}{" "}
+          <span className="text-muted-foreground font-bold text-sm">
+            ({songsCount})
+          </span>
+        </h2>
         <Suspense fallback={<Skeleton className="size-8" />}>
           <SearchSongs />
         </Suspense>
