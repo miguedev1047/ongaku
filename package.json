@@ -2,7 +2,7 @@
   "name": "ongaku",
   "description": "A lightweight and simple mp3 player",
   "private": true,
-  "version": "0.1.2-alpha",
+  "version": "0.1.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
