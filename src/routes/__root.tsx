@@ -1,5 +1,5 @@
 import { Outlet, createRootRouteWithContext } from "@tanstack/react-router"
-import type { QueryClient } from "@tanstack/react-query"
+import { type QueryClient } from "@tanstack/react-query"
 import { invoke } from "@tauri-apps/api/core"
 import { TanstackDevtool } from "@/components/tanstack-devtools"
 import { Player } from "@/components/player/player"

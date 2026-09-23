@@ -1,9 +1,8 @@
 const FORBIDDEN_CHARS: &[char] = &['<', '>', ':', '"', '/', '\\', '|', '?', '*'];
 
 const RESERVED_NAMES: &[&str] = &[
-    "CON", "PRN", "AUX", "NUL",
-    "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
-    "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9",
+    "CON", "PRN", "AUX", "NUL", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8",
+    "COM9", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9",
 ];
 
 pub fn validate_name(name: &str) -> Result<String, String> {
@@ -17,7 +16,10 @@ pub fn validate_name(name: &str) -> Result<String, String> {
         return Err("The name is too long (maximum 100 characters)".to_string());
     }
 
-    if trimmed.chars().any(|c| FORBIDDEN_CHARS.contains(&c) || c.is_control()) {
+    if trimmed
+        .chars()
+        .any(|c| FORBIDDEN_CHARS.contains(&c) || c.is_control())
+    {
         return Err("The name contains invalid characters (< > : \" / \\ | ? *)".to_string());
     }
 

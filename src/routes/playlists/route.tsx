@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { NewPlaylist, PlaylistList } from "@/features/playlists/components"
 import { SearchPlaylists } from "@/components/search"
 import { Skeleton } from "@/components/ui/skeleton"
+import { UpdaterButton } from "@/components/updater-button"
 
 export const Route = createFileRoute("/playlists")({
   component: RouteComponent,
@@ -18,13 +19,15 @@ export const Route = createFileRoute("/playlists")({
 function RouteComponent() {
   return (
     <div className="h-full flex flex-col p-4 gap-4 overflow-hidden">
-      <div className="shrink-0">
+      <div className="shrink-0 flex items-center justify-between">
         <Button
           nativeButton={false}
           render={<Link to="/downloads" />}
         >
           Downloads
         </Button>
+
+        <UpdaterButton />
       </div>
 
       <div className="flex-1 min-h-0 flex gap-4 overflow-hidden">
