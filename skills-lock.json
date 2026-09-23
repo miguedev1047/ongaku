@@ -19,17 +19,245 @@
       "skillPath": "skills/better-interface/SKILL.md",
       "computedHash": "c7a2c30c0b13709b2fa7e4210eef55907d8887017c15ea43478752db4f935fbf"
     },
+    "coding-guidelines": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/coding-guidelines/SKILL.md",
+      "computedHash": "5aec8481de78884af32ee3ac1efda3c0d355b2ca7c46717dc6ce5f5f1d476b88"
+    },
+    "core-actionbook": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/core-actionbook/SKILL.md",
+      "computedHash": "1cdd75b5f9a4dbf52693a7fec955d7b26225d15f9851aa16fda3155301e64d29"
+    },
+    "core-agent-browser": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/core-agent-browser/SKILL.md",
+      "computedHash": "348ba429bcbb4852f1ced58a23b8c67ea6298d02552be5c1c2c27d193492d7c4"
+    },
+    "core-dynamic-skills": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/core-dynamic-skills/SKILL.md",
+      "computedHash": "336548301d729eee68bbf9afd9f6ca53c6cf7e655982d2c5c470192092bb4a76"
+    },
+    "core-fix-skill-docs": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/core-fix-skill-docs/SKILL.md",
+      "computedHash": "ef39f065f6825b4136ac0e38a0a6b8f80b08d74716d166b1dd4361c2196e973e"
+    },
+    "domain-cli": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/domain-cli/SKILL.md",
+      "computedHash": "557d21b48b4db0065febb7d3db526da8d5f4fe4495da9575c26cb9279f3769cd"
+    },
+    "domain-cloud-native": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/domain-cloud-native/SKILL.md",
+      "computedHash": "6711431158be6eda4f764f8bae7fabd9b83e2598efe87a398846893623f248c0"
+    },
+    "domain-embedded": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/domain-embedded/SKILL.md",
+      "computedHash": "326fa17b7101c4b6fc8980a164eaf90f8b556286c01931320f9c0a3f443a5024"
+    },
+    "domain-fintech": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/domain-fintech/SKILL.md",
+      "computedHash": "d28a626de80da6e22a027c36c65ba6bf7ab7ab6b3715ad505398055a93042f14"
+    },
+    "domain-iot": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/domain-iot/SKILL.md",
+      "computedHash": "5742cf568b68d8e6c23845dd92a81b3914a491e30055546635c1aefb449faeb7"
+    },
+    "domain-ml": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/domain-ml/SKILL.md",
+      "computedHash": "e55738cf7dbac332ecc481876a32e7e98f03e00d7ab31ad74773007b1f0e3e5f"
+    },
+    "domain-web": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/domain-web/SKILL.md",
+      "computedHash": "d149408567c4daeb43fcf71fd516060f6fb7dfb831c49142a17ffe6c1d1d3531"
+    },
     "frontend-design": {
       "source": "anthropics/skills",
       "sourceType": "github",
       "skillPath": "skills/frontend-design/SKILL.md",
       "computedHash": "106acf230014cbb43ca34e6410371321b56ca742f9ee0442e8ec05bf02eb0384"
     },
+    "m01-ownership": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/m01-ownership/SKILL.md",
+      "computedHash": "40ee119397748829904475e81bafcb4e16d0ed474d1d92fc9d1a9bf45e461c2a"
+    },
+    "m02-resource": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/m02-resource/SKILL.md",
+      "computedHash": "06c2cb0985dd7bc33f89e9ba58f25d2ad6814268e13a0cac3afd8e0e20f53ebb"
+    },
+    "m03-mutability": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/m03-mutability/SKILL.md",
+      "computedHash": "4702dc283d5921427bdf620097fa66b5102f44961c8278390cc065c3475b6604"
+    },
+    "m04-zero-cost": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/m04-zero-cost/SKILL.md",
+      "computedHash": "95fd1808fe1240025f9bb448e17cf96a58102c94fe547a2087f2c0ab71117878"
+    },
+    "m05-type-driven": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/m05-type-driven/SKILL.md",
+      "computedHash": "fcdf631b21da764c89c57c40c9bb3907e468c1a8b77ddaab9db0aad6989268c9"
+    },
+    "m06-error-handling": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/m06-error-handling/SKILL.md",
+      "computedHash": "83ea4e20be18f063983b98fe764f4110f35b5101033ddbc933fc298e9d4b8f36"
+    },
+    "m07-concurrency": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/m07-concurrency/SKILL.md",
+      "computedHash": "b8d9a2048345a6d91def369fbc36340b7c47c3cefae974d5aab80aa3c1a0e46c"
+    },
+    "m09-domain": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/m09-domain/SKILL.md",
+      "computedHash": "9d59c8d205e895a2a120d5f800048e2917f50b17a7be7fd52ec38306285910cc"
+    },
+    "m10-performance": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/m10-performance/SKILL.md",
+      "computedHash": "6945acaf86bd024e6cade6b71d23026e4969909592eb12ea03e75ed6d3b3a25e"
+    },
+    "m11-ecosystem": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/m11-ecosystem/SKILL.md",
+      "computedHash": "bf80e501b0acba4fc732fe7282758807372f2a91850fbfd052b7e873915bded2"
+    },
+    "m12-lifecycle": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/m12-lifecycle/SKILL.md",
+      "computedHash": "66895917c0d6ce31b365ecfd930db3682698a0b90794b22c3b7ef4c6c13b1ba6"
+    },
+    "m13-domain-error": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/m13-domain-error/SKILL.md",
+      "computedHash": "20c8eca5a93c0f1ceed93200a96c7c1cb8c0a7cac8118b77e5a3697cfeb5c81d"
+    },
+    "m14-mental-model": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/m14-mental-model/SKILL.md",
+      "computedHash": "604d74ca5f78f8fbca78eb190b6c5ca77ac36d999c3304c965cff89df625e3d1"
+    },
+    "m15-anti-pattern": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/m15-anti-pattern/SKILL.md",
+      "computedHash": "f1734c43801554dd73419f6586af343c04bdf33361318b658641c0c22d094842"
+    },
+    "meta-cognition-parallel": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/meta-cognition-parallel/SKILL.md",
+      "computedHash": "58d63daf7476bd4fab4299ddbb299efb4611ee11938ebae246333d19176bb2fe"
+    },
+    "rust-call-graph": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/rust-call-graph/SKILL.md",
+      "computedHash": "41efd34b87e2397b83af61c8a771261986e59627aaca4895e9c65e44406a5225"
+    },
+    "rust-code-navigator": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/rust-code-navigator/SKILL.md",
+      "computedHash": "a3fc99213b41daed24a90e39bd34498571f072500dc12f978ae5e97b7eb12df0"
+    },
+    "rust-daily": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/rust-daily/SKILL.md",
+      "computedHash": "f05480130f89924a17ea87c9434dc8252515c7e7b0a51e661d2b576576c24fcf"
+    },
+    "rust-deps-visualizer": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/rust-deps-visualizer/SKILL.md",
+      "computedHash": "19b397cb28319a912d62cbad6c33fdb024ef3f8916f4bc693cc6125406edabe5"
+    },
+    "rust-learner": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/rust-learner/SKILL.md",
+      "computedHash": "61453342609f7fc3575f7ab72f2898ed993ad59223eeac46ea493794f9880878"
+    },
+    "rust-refactor-helper": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/rust-refactor-helper/SKILL.md",
+      "computedHash": "0dcbec9380651de430ce900f95e5ebcd93bb85cd371911df9f098a5baf29c50e"
+    },
+    "rust-router": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/rust-router/SKILL.md",
+      "computedHash": "0e253e188e9bad0b6f77e5038fb798ee401434997db1bb4a32ad7c7e08a46d46"
+    },
+    "rust-skill-creator": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/rust-skill-creator/SKILL.md",
+      "computedHash": "c9ea80eb2e0f84b6af172f4260960ded66485a7aaf2725a23b12c3671fa0eac5"
+    },
+    "rust-symbol-analyzer": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/rust-symbol-analyzer/SKILL.md",
+      "computedHash": "6014f13bcb77d9ca5a676be25121451ef462e5c7343cb2a3fff30f0d4d121ed6"
+    },
+    "rust-trait-explorer": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/rust-trait-explorer/SKILL.md",
+      "computedHash": "e3a9f3c4cfdc8534ea0f963e55c5f871e710a9b2fe0ddb09a77701d15dd7ac8a"
+    },
     "shadcn": {
       "source": "shadcn-ui/ui",
       "sourceType": "github",
       "skillPath": "skills/shadcn/SKILL.md",
       "computedHash": "d04e43ec01e921558b93bb8046c14a42a22556689a2827243df900825a4e1604"
+    },
+    "unsafe-checker": {
+      "source": "actionbook/rust-skills",
+      "sourceType": "github",
+      "skillPath": "skills/unsafe-checker/SKILL.md",
+      "computedHash": "b63b238f2d47dc32ca026d8a1401eee24e0083f6057202aaa921075cc29a05eb"
     }
   }
 }
