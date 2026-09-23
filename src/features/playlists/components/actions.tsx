@@ -11,6 +11,7 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 import type { TPlaylist } from "@/shared/types/playlist.types"
@@ -22,7 +23,9 @@ interface PlaylistItemActionsProps {
 }
 
 export function PlaylistItemActions({ playlist }: PlaylistItemActionsProps) {
-  const [dialogAction, setDialogAction] = useState<"rename" | "delete" | null>(null)
+  const [dialogAction, setDialogAction] = useState<"rename" | "delete" | null>(
+    null
+  )
 
   return (
     <>
@@ -40,6 +43,7 @@ export function PlaylistItemActions({ playlist }: PlaylistItemActionsProps) {
         />
         <DropdownMenuContent className="w-40">
           <DropdownMenuGroup>
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem onClick={() => setDialogAction("rename")}>
               <HugeiconsIcon icon={PencilEdit01Icon} />
               Rename playlist
