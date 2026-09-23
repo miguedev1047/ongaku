@@ -47,7 +47,7 @@ pub fn get_playlist_songs(playlist_name: &str) -> Result<Vec<PlaylistSong>, Stri
         })
         .collect();
 
-    playlist_songs.sort_by_key(|key| key.name.to_lowercase());
+    playlist_songs.sort_by_cached_key(|key| key.name.to_lowercase());
 
     Ok(playlist_songs)
 }
