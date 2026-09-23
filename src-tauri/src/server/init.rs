@@ -16,7 +16,6 @@ pub struct MediaServer {
     pub port: u16,
 }
 
-
 pub fn init_server(app: &mut tauri::App) -> std::io::Result<()> {
     let router = Router::new()
         .route("/", get(get_home))
@@ -46,4 +45,3 @@ pub fn init_server(app: &mut tauri::App) -> std::io::Result<()> {
 
     Ok(())
 }
-
