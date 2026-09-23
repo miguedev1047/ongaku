@@ -1,4 +1,4 @@
-export interface THandlePlaylist {
+export interface TPlaylistAction {
   code: string
   message: string
 }

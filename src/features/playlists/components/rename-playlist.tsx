@@ -1,23 +1,13 @@
-import { HugeiconsIcon } from "@hugeicons/react"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
-  DialogTrigger
+  DialogTitle
 } from "@/components/ui/dialog"
-import { PlusIcon } from "@hugeicons/core-free-icons"
-import { useForm } from "@tanstack/react-form"
-import {
-  newPlaylistSchema,
-  type TNewPlaylistSchema
-} from "@/shared/schemas/playlists"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { playlistsQueryOpts } from "@/shared/queries/playlists"
-import { toast } from "sonner"
 import {
   Field,
   FieldDescription,
@@ -26,25 +16,42 @@ import {
   FieldLabel
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { invoke } from "@tauri-apps/api/core"
-import { THandlePlaylist } from "@/shared/types/handle-playlists"
 import { Spinner } from "@/components/ui/spinner"
-import { useState } from "react"
+import { playlistsQueryOpts } from "@/shared/queries/playlists"
+import {
+  renamePlaylistSchema,
+  type TRenamePlaylistSchema
+} from "@/shared/schemas/playlists"
+import type { TPlaylistAction } from "@/shared/types/playlist-actions"
+import type { TPlaylist } from "@/shared/types/playlist.types"
+import { useForm } from "@tanstack/react-form"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
+import { invoke } from "@tauri-apps/api/core"
+import { useEffect } from "react"
+import { toast } from "sonner"
 
-export function NewPlaylist() {
-  const [isOpen, setIsOpen] = useState(false)
+interface RenamePlaylistProps {
+  playlist: TPlaylist
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}
 
+export function RenamePlaylist({
+  playlist,
+  open,
+  onOpenChange
+}: RenamePlaylistProps) {
   const queryClient = useQueryClient()
   const playlistsQueryKey = playlistsQueryOpts().queryKey
-
   const navigate = useNavigate()
 
   const mutation = useMutation({
-    mutationFn: async (value: TNewPlaylistSchema) => {
-      const trimmedPlaylist = value.name.trim()
-      return await invoke<THandlePlaylist>("new_playlist", {
-        name: trimmedPlaylist
+    mutationFn: async (value: TRenamePlaylistSchema) => {
+      const trimmedNewName = value.new_name.trim()
+      return await invoke<TPlaylistAction>("rename_playlist", {
+        oldName: playlist.name,
+        newName: trimmedNewName
       })
     },
     onSuccess: (data, variables) => {
@@ -53,56 +60,63 @@ export function NewPlaylist() {
         return
       }
 
-      setIsOpen(false)
-      form.reset()
-
       toast.success(data.message)
       queryClient.invalidateQueries({ queryKey: playlistsQueryKey })
+      onOpenChange(false)
 
-      const trimmedPlaylist = variables.name.trim()
+      const trimmedNewName = variables.new_name.trim()
       navigate({
         to: "/playlists/$playlistName",
-        params: { playlistName: trimmedPlaylist }
+        params: { playlistName: trimmedNewName }
       })
     },
-    onError: () => {
-      toast.error("An error occurred while creating the playlist")
+    onError: (err) => {
+      console.log(err)
+      toast.error("An error occurred while renaming the playlist")
     }
   })
 
   const form = useForm({
     defaultValues: {
-      name: ""
+      old_name: playlist.name,
+      new_name: playlist.name
     },
     validators: {
-      onSubmit: newPlaylistSchema
+      onSubmit: renamePlaylistSchema
     },
     onSubmit: ({ value }) => {
       mutation.mutate(value)
     }
   })
 
+  // Reset form with latest playlist name when dialog opens
+  useEffect(() => {
+    if (open) {
+      form.reset({
+        old_name: playlist.name,
+        new_name: playlist.name
+      })
+    }
+  }, [open, playlist.name])
+
   const isPending = mutation.isPending
+  const formId = `rename-playlist-form-${playlist.id}`
 
   return (
     <Dialog
-      open={isOpen}
-      onOpenChange={setIsOpen}
+      open={open}
+      onOpenChange={onOpenChange}
     >
-      <DialogTrigger
-        render={
-          <Button size="icon">
-            <HugeiconsIcon icon={PlusIcon} />
-          </Button>
-        }
-      />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add playlist</DialogTitle>
+          <DialogTitle>Rename playlist</DialogTitle>
+          <DialogDescription>
+            Enter a new name for "{playlist.name}".
+          </DialogDescription>
         </DialogHeader>
 
         <form
-          id="new-playlist-form"
+          id={formId}
           className="space-y-4"
           onSubmit={(e) => {
             e.preventDefault()
@@ -111,7 +125,7 @@ export function NewPlaylist() {
         >
           <FieldGroup>
             <form.Field
-              name="name"
+              name="new_name"
               children={(field) => {
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid
@@ -125,12 +139,12 @@ export function NewPlaylist() {
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
-                      placeholder="Rock Playlist"
-                      autoComplete="false"
+                      placeholder="New playlist name"
+                      autoComplete="off"
                       disabled={isPending}
                     />
                     <FieldDescription>
-                      Type the playlist name to create it
+                      Choose a new name for your playlist
                     </FieldDescription>
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
@@ -143,14 +157,14 @@ export function NewPlaylist() {
         </form>
 
         <DialogFooter>
-          <DialogClose render={<Button>Close</Button>} />
+          <DialogClose render={<Button variant="outline">Close</Button>} />
           <Button
             type="submit"
-            form="new-playlist-form"
+            form={formId}
             disabled={isPending}
           >
             {isPending && <Spinner />}
-            Create
+            Rename
           </Button>
         </DialogFooter>
       </DialogContent>

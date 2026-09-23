@@ -2,8 +2,7 @@ import { createFileRoute, Link, Outlet } from "@tanstack/react-router"
 import { playlistsQueryOpts } from "@/shared/queries/playlists"
 import { Suspense } from "react"
 import { Button } from "@/components/ui/button"
-import { PlaylistList } from "@/features/playlists/components"
-import { NewPlaylist } from "@/components/new-playlist"
+import { NewPlaylist, PlaylistList } from "@/features/playlists/components"
 
 export const Route = createFileRoute("/playlists")({
   component: RouteComponent,
