@@ -44,7 +44,9 @@ export function PlaylistSongItem({ song }: PlaylistSongItemProps) {
       </ItemMedia>
       <ItemContent>
         <ItemTitle className="text-xs line-clamp-1">{song.name}</ItemTitle>
-        <ItemDescription>{song.metadata.artist}</ItemDescription>
+        <ItemDescription className="line-clamp-1">
+          {song.metadata.artist}
+        </ItemDescription>
       </ItemContent>
       <ItemActions>{formatDuration(song.metadata.duration ?? 0)}</ItemActions>
     </Item>
