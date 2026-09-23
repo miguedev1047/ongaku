@@ -12,7 +12,7 @@ export function PlaylistSongsList() {
     <div className="size-full">
       <VList
         data={data}
-        className="size-full no-scrollbar"
+        className="size-full no-scrollbar scroll-fade-y"
       >
         {(song) => (
           <PlaylistSongItem
