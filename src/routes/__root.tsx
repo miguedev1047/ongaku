@@ -6,6 +6,7 @@ import { Player } from "@/components/player/player"
 import { Toaster } from "@/components/ui/sonner"
 import { AppProvider } from "@/providers/app-provider"
 import { useShowApp } from "@/hooks/use-show-app"
+import { useMediaSession } from "@/hooks/use-media-session"
 
 interface RouteContext {
   queryClient: QueryClient
@@ -22,6 +23,7 @@ export const Route = createRootRouteWithContext<RouteContext>()({
 
 function RootComponent() {
   useShowApp()
+  useMediaSession()
 
   return (
     <AppProvider>
