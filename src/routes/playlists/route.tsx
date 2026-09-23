@@ -3,6 +3,7 @@ import { playlistsQueryOpts } from "@/shared/queries/playlists"
 import { Suspense } from "react"
 import { Button } from "@/components/ui/button"
 import { PlaylistList } from "@/features/playlists/components"
+import { NewPlaylist } from "@/components/new-playlist"
 
 export const Route = createFileRoute("/playlists")({
   component: RouteComponent,
@@ -27,7 +28,10 @@ function RouteComponent() {
 
       <div className="flex-1 min-h-0 flex gap-4 overflow-hidden">
         <div className="w-70 shrink-0 flex flex-col gap-2 overflow-hidden">
-          <h3 className="font-semibold shrink-0">Playlists</h3>
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold shrink-0">Playlists</h3>
+            <NewPlaylist />
+          </div>
 
           <div className="flex-1 min-h-0">
             <Suspense fallback={<p>Loading...</p>}>
