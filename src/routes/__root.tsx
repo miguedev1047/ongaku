@@ -4,6 +4,7 @@ import { TanstackDevtool } from "@/components/tanstack-devtools"
 import { Player } from "@/components/player/player"
 import { Toaster } from "@/components/ui/sonner"
 import { ThemeProvider } from "@/components/theme-provider"
+import { TooltipProvider } from "@/components/ui/tooltip"
 
 interface RouteContext {
   queryClient: QueryClient
@@ -19,14 +20,16 @@ function RootComponent() {
       storageKey="ongaku-theme"
       defaultTheme="system"
     >
-      <div className="h-screen w-screen flex flex-col overflow-hidden">
-        <TanstackDevtool />
-        <main className="flex-1 min-h-0 overflow-hidden">
-          <Outlet />
-        </main>
-        <Player />
-        <Toaster />
-      </div>
+      <TooltipProvider>
+        <div className="h-screen w-screen flex flex-col overflow-hidden">
+          <TanstackDevtool />
+          <main className="flex-1 min-h-0 overflow-hidden">
+            <Outlet />
+          </main>
+          <Player />
+          <Toaster />
+        </div>
+      </TooltipProvider>
     </ThemeProvider>
   )
 }
