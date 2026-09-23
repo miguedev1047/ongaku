@@ -5,7 +5,8 @@ mod server;
 
 use crate::{
     commands::{
-        check_binaries, download_binaries, download_song, get_playlist_songs, get_playlists,
+        check_binaries, delete_playlist, download_binaries, download_song, get_playlist_songs,
+        get_playlists, new_playlist, rename_playlist,
     },
     helpers::ensure_dirs,
     server::init_server,
@@ -25,6 +26,9 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             get_playlists,
             get_playlist_songs,
+            new_playlist,
+            rename_playlist,
+            delete_playlist,
             download_song,
             download_binaries,
             check_binaries
