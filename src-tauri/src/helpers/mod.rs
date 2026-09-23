@@ -6,6 +6,7 @@ mod paths;
 mod resolve_inside;
 mod song_utils;
 mod validate_name;
+mod single_instance;
 
 pub use binaries::*;
 pub use created_time::*;
@@ -15,3 +16,5 @@ pub use paths::*;
 pub use resolve_inside::*;
 pub use song_utils::*;
 pub use validate_name::*;
+pub use single_instance::*;
+

@@ -8,7 +8,7 @@ import {
   ItemTitle
 } from "@/components/ui/item"
 import { CoverImage } from "@/components/cover-image"
-import { getCoverUrl } from "@/lib/song-utils"
+import { useSongUtils } from "@/hooks/use-song-utils"
 import { formatDuration } from "@/shared/helpers/format-duration"
 import { usePlayerStore } from "@/shared/stores/use-player"
 
@@ -21,6 +21,7 @@ export function PlaylistSongItem({ song }: PlaylistSongItemProps) {
     (state) => state.currentSong?.id === song.id
   )
   const setCurrentSong = usePlayerStore((state) => state.setCurrentSong)
+  const { getCoverUrl } = useSongUtils()
 
   const handleSelectSong = () => {
     if (!isActiveTrack) {
@@ -29,6 +30,7 @@ export function PlaylistSongItem({ song }: PlaylistSongItemProps) {
   }
 
   const coverUrl = getCoverUrl({ song })
+
 
   return (
     <Item

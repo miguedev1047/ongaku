@@ -1,5 +1,6 @@
 import { Outlet, createRootRouteWithContext } from "@tanstack/react-router"
 import type { QueryClient } from "@tanstack/react-query"
+import { invoke } from "@tauri-apps/api/core"
 import { TanstackDevtool } from "@/components/tanstack-devtools"
 import { Player } from "@/components/player/player"
 import { Toaster } from "@/components/ui/sonner"
@@ -7,10 +8,15 @@ import { AppProvider } from "@/providers/app-provider"
 
 interface RouteContext {
   queryClient: QueryClient
+  serverPort?: number
 }
 
 export const Route = createRootRouteWithContext<RouteContext>()({
-  component: RootComponent
+  component: RootComponent,
+  beforeLoad: async () => {
+    const serverPort = await invoke<number>("get_server_port")
+    return { serverPort }
+  }
 })
 
 function RootComponent() {

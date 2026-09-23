@@ -1,5 +1,5 @@
 import { CoverImage } from "@/components/cover-image"
-import { getCoverUrl } from "@/lib/song-utils"
+import { useSongUtils } from "@/hooks/use-song-utils"
 import { usePlayerStore } from "@/shared/stores/use-player"
 import {
   Tooltip,
@@ -9,9 +9,12 @@ import {
 
 export function PlayerCover() {
   const currentSong = usePlayerStore((state) => state.currentSong)
+  const { getCoverUrl } = useSongUtils()
+
   if (!currentSong) return null
 
   const coverUrl = getCoverUrl({ song: currentSong })
+
 
   return (
     <Tooltip>

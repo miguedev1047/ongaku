@@ -6,15 +6,17 @@ mod server;
 use crate::{
     commands::{
         check_binaries, delete_playlist, download_binaries, download_song, get_playlist_songs,
-        get_playlists, new_playlist, rename_playlist,
+        get_playlists, get_server_port, new_playlist, rename_playlist,
     },
-    helpers::ensure_dirs,
+    helpers::{ensure_dirs, single_instance_plugin},
     server::init_server,
 };
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(single_instance_plugin())
+        .plugin(tauri_plugin_opener::init())
         .setup(|app| {
             ensure_dirs()?;
 
@@ -22,10 +24,10 @@ pub fn run() {
 
             Ok(())
         })
-        .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
             get_playlists,
             get_playlist_songs,
+            get_server_port,
             new_playlist,
             rename_playlist,
             delete_playlist,

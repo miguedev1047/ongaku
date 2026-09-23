@@ -1,13 +1,15 @@
 import { usePlayerMedia } from "@/hooks/use-player-media"
-import { getSongUrl } from "@/lib/song-utils"
+import { useSongUtils } from "@/hooks/use-song-utils"
 
 export function PlayerElement() {
   const { songActive, isLoop, handleNextSong, handleTimeUpdate, setAudioRef } =
     usePlayerMedia()
+  const { getSongUrl } = useSongUtils()
 
   if (!songActive) return null
 
   const trackUrl = getSongUrl({ song: songActive })
+
 
   return (
     <audio

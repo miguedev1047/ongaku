@@ -20,17 +20,19 @@ import { useParams } from "@tanstack/react-router"
 import { useHotkey } from "@tanstack/react-hotkeys"
 import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs"
 import { CoverImage } from "@/components/cover-image"
-import { getCoverUrl } from "@/lib/song-utils"
+import { useSongUtils } from "@/hooks/use-song-utils"
 import { usePlayerStore } from "@/shared/stores/use-player"
 
 export function SearchSongs() {
   const { playlistName } = useParams({ from: "/playlists/$playlistName" })
   const { data: songs } = useSuspenseQuery(playlistSongsQueryOpts(playlistName))
   const [isOpen, setIsOpen] = useState(false)
+  const { getCoverUrl } = useSongUtils()
 
   const setCurrentSong = usePlayerStore((state) => state.setCurrentSong)
 
   useHotkey("Control+Alt+S", () => setIsOpen(!isOpen))
+
 
   return (
     <div className="flex flex-col gap-4">
