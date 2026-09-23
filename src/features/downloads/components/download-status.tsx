@@ -103,7 +103,9 @@ export function DownloadStatus() {
           <div className="space-y-1 text-xs">
             <p className="font-medium text-foreground truncate">{song.name}</p>
             <div className="flex items-center gap-2 text-muted-foreground">
-              {song.metadata.artist && <span>{song.metadata.artist}</span>}
+              {song.metadata.artist && (
+                <span className="line-clamp-1">{song.metadata.artist}</span>
+              )}
               {song.metadata.artist && song.metadata.duration && <span>•</span>}
               {song.metadata.duration ? (
                 <span>{formatDuration(song.metadata.duration)}</span>
