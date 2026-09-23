@@ -92,95 +92,93 @@ export function DownloadForm() {
   if (!isBinariesInstalled) return null
 
   return (
-    <div>
-      <form
-        className="space-y-4"
-        onSubmit={(e) => {
-          e.preventDefault()
-          form.handleSubmit()
-        }}
-      >
-        <FieldGroup>
-          <form.Field
-            name="url"
-            children={(field) => {
-              const isInvalid =
-                field.state.meta.isTouched && !field.state.meta.isValid
-              return (
-                <Field data-invalid={isInvalid}>
-                  <FieldLabel htmlFor={field.name}>Youtube URL</FieldLabel>
-                  <Input
+    <form
+      className="space-y-4"
+      onSubmit={(e) => {
+        e.preventDefault()
+        form.handleSubmit()
+      }}
+    >
+      <FieldGroup>
+        <form.Field
+          name="url"
+          children={(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Youtube URL</FieldLabel>
+                <Input
+                  id={field.name}
+                  name={field.name}
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  aria-invalid={isInvalid}
+                  placeholder="https://..."
+                  autoComplete="false"
+                  disabled={isPending}
+                />
+                <FieldDescription>
+                  Put the youtube url song want you download it
+                </FieldDescription>
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            )
+          }}
+        />
+
+        <form.Field
+          name="playlistName"
+          children={(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Playlists</FieldLabel>
+                <Select
+                  name={field.name}
+                  value={field.state.value}
+                  onValueChange={(value) => {
+                    if (value) field.handleChange(value)
+                  }}
+                >
+                  <SelectTrigger
                     id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
                     aria-invalid={isInvalid}
-                    placeholder="https://..."
-                    autoComplete="false"
+                    className="w-full"
                     disabled={isPending}
-                  />
-                  <FieldDescription>
-                    Put the youtube url song want you download it
-                  </FieldDescription>
-                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                </Field>
-              )
-            }}
-          />
-
-          <form.Field
-            name="playlistName"
-            children={(field) => {
-              const isInvalid =
-                field.state.meta.isTouched && !field.state.meta.isValid
-              return (
-                <Field data-invalid={isInvalid}>
-                  <FieldLabel htmlFor={field.name}>Playlists</FieldLabel>
-                  <Select
-                    name={field.name}
-                    value={field.state.value}
-                    onValueChange={(value) => {
-                      if (value) field.handleChange(value)
-                    }}
                   >
-                    <SelectTrigger
-                      id={field.name}
-                      aria-invalid={isInvalid}
-                      className="w-full"
-                      disabled={isPending}
-                    >
-                      <SelectValue placeholder="Select a playlist" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {playlists.map((item) => (
-                        <SelectItem
-                          key={item.id}
-                          value={item.name}
-                        >
-                          {item.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    <SelectValue placeholder="Select a playlist" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {playlists.map((item) => (
+                      <SelectItem
+                        key={item.id}
+                        value={item.name}
+                      >
+                        {item.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
-                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
-                </Field>
-              )
-            }}
-          />
-        </FieldGroup>
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            )
+          }}
+        />
+      </FieldGroup>
 
-        <div className="flex items-center gap-2">
-          <Button
-            type="submit"
-            disabled={isPending}
-          >
-            {isPending && <Spinner />}
-            {isPending ? "Downloading..." : "Download"}
-          </Button>
-        </div>
-      </form>
-    </div>
+      <div className="flex items-center gap-2">
+        <Button
+          type="submit"
+          disabled={isPending}
+        >
+          {isPending && <Spinner />}
+          {isPending ? "Downloading..." : "Download"}
+        </Button>
+      </div>
+    </form>
   )
 }
