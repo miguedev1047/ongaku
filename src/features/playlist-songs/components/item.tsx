@@ -20,11 +20,11 @@ export function PlaylistSongItem({ song }: PlaylistSongItemProps) {
   const isActiveTrack = usePlayerStore(
     (state) => state.currentSong?.id === song.id
   )
-  const setCurrentTrack = usePlayerStore((state) => state.setCurrentSong)
+  const setCurrentSong = usePlayerStore((state) => state.setCurrentSong)
 
-  const handleSelectTrack = () => {
+  const handleSelectSong = () => {
     if (!isActiveTrack) {
-      setCurrentTrack(song)
+      setCurrentSong(song)
     }
   }
 
@@ -33,7 +33,7 @@ export function PlaylistSongItem({ song }: PlaylistSongItemProps) {
   return (
     <Item
       data-active-track={isActiveTrack}
-      onClick={handleSelectTrack}
+      onClick={handleSelectSong}
       className="data-[active-track=true]:bg-accent hover:bg-accent"
     >
       <ItemMedia variant="image">
