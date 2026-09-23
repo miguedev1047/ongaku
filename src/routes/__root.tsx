@@ -5,6 +5,7 @@ import { TanstackDevtool } from "@/components/tanstack-devtools"
 import { Player } from "@/components/player/player"
 import { Toaster } from "@/components/ui/sonner"
 import { AppProvider } from "@/providers/app-provider"
+import { useShowApp } from "@/hooks/use-show-app"
 
 interface RouteContext {
   queryClient: QueryClient
@@ -20,6 +21,8 @@ export const Route = createRootRouteWithContext<RouteContext>()({
 })
 
 function RootComponent() {
+  useShowApp()
+
   return (
     <AppProvider>
       <div className="h-screen w-screen flex flex-col overflow-hidden">
