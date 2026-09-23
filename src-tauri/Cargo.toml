@@ -1,6 +1,6 @@
 [package]
 name = "ongaku"
-version = "0.1.0"
+version = "0.1.1-alpha"
 description = "A lightweight and simple mp3 player"
 authors = ["miguedev1047"]
 edition = "2021"
@@ -29,7 +29,11 @@ tokio = { version = "1.53.1", features = ["process"] }
 tower-http = { version = "0.7.1", features = ["fs", "cors"] }
 tower = { version = "0.5.3", features = ["util"] }
 lofty = "0.25.4"
-image = { version = "0.25", default-features = false, features = ["jpeg", "png", "webp"] }
+image = { version = "0.25", default-features = false, features = [
+    "jpeg",
+    "png",
+    "webp",
+] }
 yt-dlp = { version = "2.8", features = ["statistics"] }
 tauri-plugin-process = "2"
 
