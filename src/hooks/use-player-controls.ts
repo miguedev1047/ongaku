@@ -3,6 +3,7 @@ import { getRandomSong } from "@/shared/helpers/get-random-song"
 import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs"
 import { usePlayerStore } from "@/shared/stores/use-player"
 import { useSuspenseQuery } from "@tanstack/react-query"
+import { useHotkey } from "@tanstack/react-hotkeys"
 import { toast } from "sonner"
 
 export function usePlayerProgressbar() {
@@ -40,10 +41,32 @@ export function usePlayerProgressbar() {
     })
   }
 
+  const handlePreviusSeekSecs = () => {
+    if (!audioRef) return
+    const newTime = Math.max(0, audioRef.currentTime - 5)
+    audioRef.currentTime = newTime
+    setProgress(newTime)
+  }
+
+  const handleNextSeekSecs = () => {
+    if (!audioRef) return
+    const maxDuration = duration || audioRef.duration || 0
+    const newTime = maxDuration
+      ? Math.min(maxDuration, audioRef.currentTime + 5)
+      : audioRef.currentTime + 5
+    audioRef.currentTime = newTime
+    setProgress(newTime)
+  }
+
+  useHotkey("ArrowLeft", () => handlePreviusSeekSecs())
+  useHotkey("ArrowRight", () => handleNextSeekSecs())
+
   return {
     progress,
     duration,
     handleSeek,
+    handleNextSeekSecs,
+    handlePreviusSeekSecs,
     handlePointerDown,
     handlePointerUp
   }
@@ -71,6 +94,8 @@ export function usePlayerNextSong() {
     if (nextSong) setCurrentSong(nextSong)
   }
 
+  useHotkey("N", () => handleNextSong())
+
   return { handleNextSong }
 }
 
@@ -96,6 +121,8 @@ export function usePlayerPreviousSong() {
     if (previousSong) setCurrentSong(previousSong)
   }
 
+  useHotkey("P", () => handlePreviousSong())
+
   return { handlePreviousSong }
 }
 
@@ -103,12 +130,16 @@ export function usePlayerShuffle() {
   const isShuffle = usePlayerStore((state) => state.isShuffle)
   const toggleShuffle = usePlayerStore((state) => state.toggleShuffle)
 
+  useHotkey("S", () => toggleShuffle())
+
   return { isShuffle, toggleShuffle }
 }
 
 export function usePlayerLoop() {
   const isLoop = usePlayerStore((state) => state.isLoop)
   const toggleLoop = usePlayerStore((state) => state.toggleLoop)
+
+  useHotkey("R", () => toggleLoop())
 
   return { isLoop, toggleLoop }
 }
@@ -138,6 +169,8 @@ export function usePlayerToggle() {
       return
     }
   }
+
+  useHotkey("[Space]", () => handlePlayerToggle())
 
   return { isPlaying, handlePlayerToggle }
 }

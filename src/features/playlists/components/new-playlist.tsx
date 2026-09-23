@@ -37,6 +37,8 @@ import {
   TooltipContent,
   TooltipTrigger
 } from "@/components/ui/tooltip"
+import { useHotkey } from "@tanstack/react-hotkeys"
+import { Kbd, KbdGroup } from "@/components/ui/kbd"
 
 export function NewPlaylist() {
   const [isOpen, setIsOpen] = useState(false)
@@ -89,6 +91,8 @@ export function NewPlaylist() {
   })
 
   const isPending = mutation.isPending
+
+  useHotkey("Alt+P", () => setIsOpen(!isOpen))
 
   return (
     <Tooltip>
@@ -173,7 +177,11 @@ export function NewPlaylist() {
       </Dialog>
 
       <TooltipContent>
-        <p>New playlist</p>
+        New playlist
+        <KbdGroup>
+          <Kbd>Alt</Kbd>
+          <Kbd>P</Kbd>
+        </KbdGroup>
       </TooltipContent>
     </Tooltip>
   )
