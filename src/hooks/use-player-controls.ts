@@ -1,4 +1,5 @@
 import { getAdjacentSong } from "@/shared/helpers/get-adjacent-song"
+import { getRandomSong } from "@/shared/helpers/get-random-song"
 import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs"
 import { usePlayerStore } from "@/shared/stores/use-player"
 import { useSuspenseQuery } from "@tanstack/react-query"
@@ -35,7 +36,7 @@ export function usePlayerProgressbar() {
     setIsSeeking(false)
     setPlayerState("playing")
     audioRef.play().catch(() => {
-      toast.error("There are a error to play the song.")
+      toast.error("There was an error playing the song.")
     })
   }
 
@@ -51,6 +52,7 @@ export function usePlayerProgressbar() {
 export function usePlayerNextSong() {
   const currentPlaylist = usePlayerStore((state) => state.currentPlaylist)
   const currentSong = usePlayerStore((state) => state.currentSong)
+  const isShuffle = usePlayerStore((state) => state.isShuffle)
 
   const setCurrentSong = usePlayerStore((state) => state.setCurrentSong)
 
@@ -59,6 +61,12 @@ export function usePlayerNextSong() {
   )
 
   const handleNextSong = () => {
+    if (isShuffle) {
+      const randomSong = getRandomSong(songs, currentSong)
+      if (randomSong) setCurrentSong(randomSong)
+      return
+    }
+
     const nextSong = getAdjacentSong(songs, currentSong, 1)
     if (nextSong) setCurrentSong(nextSong)
   }
@@ -69,6 +77,7 @@ export function usePlayerNextSong() {
 export function usePlayerPreviousSong() {
   const currentPlaylist = usePlayerStore((state) => state.currentPlaylist)
   const currentSong = usePlayerStore((state) => state.currentSong)
+  const isShuffle = usePlayerStore((state) => state.isShuffle)
 
   const setCurrentSong = usePlayerStore((state) => state.setCurrentSong)
 
@@ -77,11 +86,31 @@ export function usePlayerPreviousSong() {
   )
 
   const handlePreviousSong = () => {
+    if (isShuffle) {
+      const randomSong = getRandomSong(songs, currentSong)
+      if (randomSong) setCurrentSong(randomSong)
+      return
+    }
+
     const previousSong = getAdjacentSong(songs, currentSong, -1)
     if (previousSong) setCurrentSong(previousSong)
   }
 
   return { handlePreviousSong }
+}
+
+export function usePlayerShuffle() {
+  const isShuffle = usePlayerStore((state) => state.isShuffle)
+  const toggleShuffle = usePlayerStore((state) => state.toggleShuffle)
+
+  return { isShuffle, toggleShuffle }
+}
+
+export function usePlayerLoop() {
+  const isLoop = usePlayerStore((state) => state.isLoop)
+  const toggleLoop = usePlayerStore((state) => state.toggleLoop)
+
+  return { isLoop, toggleLoop }
 }
 
 export function usePlayerToggle() {
@@ -104,7 +133,7 @@ export function usePlayerToggle() {
     if (playerState === "paused") {
       setPlayerState("playing")
       audioRef.play().catch(() => {
-        toast.error("An ocurred a error to try play song")
+        toast.error("An error occurred while playing the song")
       })
       return
     }

@@ -1,16 +1,35 @@
 import {
   usePlayerToggle,
   usePlayerPreviousSong,
-  usePlayerNextSong
+  usePlayerNextSong,
+  usePlayerShuffle,
+  usePlayerLoop
 } from "@/hooks/use-player-controls"
 import { Button } from "@/components/ui/button"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   PauseIcon,
   PlayIcon,
+  RepeatIcon,
+  ShuffleIcon,
   SkipBack,
   SkipForward
 } from "@hugeicons/core-free-icons"
+
+export function ShuffleButton() {
+  const { isShuffle, toggleShuffle } = usePlayerShuffle()
+
+  return (
+    <Button
+      size="icon"
+      variant={isShuffle ? "default" : "outline"}
+      onClick={toggleShuffle}
+      aria-label={isShuffle ? "Disable shuffle" : "Enable shuffle"}
+    >
+      <HugeiconsIcon icon={ShuffleIcon} />
+    </Button>
+  )
+}
 
 export function ToggleButton() {
   const { isPlaying, handlePlayerToggle } = usePlayerToggle()
@@ -50,6 +69,21 @@ export function PreviusSongButton() {
       onClick={handlePreviousSong}
     >
       <HugeiconsIcon icon={SkipBack} />
+    </Button>
+  )
+}
+
+export function LoopButton() {
+  const { isLoop, toggleLoop } = usePlayerLoop()
+
+  return (
+    <Button
+      size="icon"
+      variant={isLoop ? "default" : "outline"}
+      onClick={toggleLoop}
+      aria-label={isLoop ? "Disable loop" : "Enable loop"}
+    >
+      <HugeiconsIcon icon={RepeatIcon} />
     </Button>
   )
 }

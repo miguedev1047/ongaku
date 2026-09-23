@@ -2,7 +2,7 @@ import { usePlayerMedia } from "@/hooks/use-player-media"
 import { getSongUrl } from "@/lib/song-utils"
 
 export function PlayerElement() {
-  const { songActive, handleNextSong, handleTimeUpdate, setAudioRef } =
+  const { songActive, isLoop, handleNextSong, handleTimeUpdate, setAudioRef } =
     usePlayerMedia()
 
   if (!songActive) return null
@@ -14,6 +14,7 @@ export function PlayerElement() {
       ref={(el) => setAudioRef(el)}
       key={songActive.id}
       src={trackUrl}
+      loop={isLoop}
       controls
       autoPlay
       className="sr-only"

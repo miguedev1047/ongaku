@@ -6,6 +6,7 @@ export function usePlayerMedia() {
   const audioRef = usePlayerStore((state) => state.audioRef)
   const volume = usePlayerStore((state) => state.volume)
   const songActive = usePlayerStore((state) => state.currentSong)
+  const isLoop = usePlayerStore((state) => state.isLoop)
 
   const setProgress = usePlayerStore((state) => state.setProgress)
   const setAudioRef = usePlayerStore((state) => state.setAudioRef)
@@ -21,10 +22,12 @@ export function usePlayerMedia() {
     if (!audioRef) return
     audioRef.volume = volume / 10
     audioRef.muted = volume === 0
-  }, [audioRef, volume])
+    audioRef.loop = isLoop
+  }, [audioRef, volume, isLoop])
 
   return {
     songActive,
+    isLoop,
     setAudioRef,
     handleNextSong,
     handleTimeUpdate

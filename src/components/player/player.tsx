@@ -1,10 +1,12 @@
 import {
+  LoopButton,
   NextSongButton,
   PlayerCover,
   PlayerElement,
   PlayerProgressbar,
   PlayerVolume,
   PreviusSongButton,
+  ShuffleButton,
   ToggleButton
 } from "@/components/player"
 import { usePlayerStore } from "@/shared/stores/use-player"
@@ -28,6 +30,8 @@ export function Player() {
         <div className="flex-1">
           <div className="flex-1 flex items-center justify-between">
             <div className="flex items-center gap-1">
+              <ShuffleButton />
+
               <Suspense fallback={<Skeleton className="size-8" />}>
                 <PreviusSongButton />
               </Suspense>
@@ -37,6 +41,8 @@ export function Player() {
               <Suspense fallback={<Skeleton className="size-8" />}>
                 <NextSongButton />
               </Suspense>
+
+              <LoopButton />
             </div>
 
             <PlayerVolume />
