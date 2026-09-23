@@ -32,6 +32,11 @@ import { TPlaylistAction } from "@/shared/types/playlist-actions"
 import { Spinner } from "@/components/ui/spinner"
 import { useState } from "react"
 import { useNavigate } from "@tanstack/react-router"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
+} from "@/components/ui/tooltip"
 
 export function NewPlaylist() {
   const [isOpen, setIsOpen] = useState(false)
@@ -86,78 +91,90 @@ export function NewPlaylist() {
   const isPending = mutation.isPending
 
   return (
-    <Dialog
-      open={isOpen}
-      onOpenChange={setIsOpen}
-    >
-      <DialogTrigger
-        render={
-          <Button size="icon">
-            <HugeiconsIcon icon={PlusIcon} />
-          </Button>
-        }
-      />
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Add playlist</DialogTitle>
-          <DialogDescription>
-            Enter a name to create a new playlist.
-          </DialogDescription>
-        </DialogHeader>
-
-        <form
-          id="new-playlist-form"
-          className="space-y-4"
-          onSubmit={(e) => {
-            e.preventDefault()
-            form.handleSubmit()
-          }}
-        >
-          <FieldGroup>
-            <form.Field
-              name="name"
-              children={(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid
-                return (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Playlist Name</FieldLabel>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      aria-invalid={isInvalid}
-                      placeholder="Rock Playlist"
-                      autoComplete="off"
-                      disabled={isPending}
-                    />
-                    <FieldDescription>
-                      Type the playlist name to create it
-                    </FieldDescription>
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                )
-              }}
+    <Tooltip>
+      <Dialog
+        open={isOpen}
+        onOpenChange={setIsOpen}
+      >
+        <DialogTrigger
+          render={
+            <TooltipTrigger
+              render={
+                <Button size="icon">
+                  <HugeiconsIcon icon={PlusIcon} />
+                </Button>
+              }
             />
-          </FieldGroup>
-        </form>
+          }
+        />
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add playlist</DialogTitle>
+            <DialogDescription>
+              Enter a name to create a new playlist.
+            </DialogDescription>
+          </DialogHeader>
 
-        <DialogFooter>
-          <DialogClose render={<Button variant="outline">Close</Button>} />
-          <Button
-            type="submit"
-            form="new-playlist-form"
-            disabled={isPending}
+          <form
+            id="new-playlist-form"
+            className="space-y-4"
+            onSubmit={(e) => {
+              e.preventDefault()
+              form.handleSubmit()
+            }}
           >
-            {isPending && <Spinner />}
-            Create
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+            <FieldGroup>
+              <form.Field
+                name="name"
+                children={(field) => {
+                  const isInvalid =
+                    field.state.meta.isTouched && !field.state.meta.isValid
+                  return (
+                    <Field data-invalid={isInvalid}>
+                      <FieldLabel htmlFor={field.name}>
+                        Playlist Name
+                      </FieldLabel>
+                      <Input
+                        id={field.name}
+                        name={field.name}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        aria-invalid={isInvalid}
+                        placeholder="Rock Playlist"
+                        autoComplete="off"
+                        disabled={isPending}
+                      />
+                      <FieldDescription>
+                        Type the playlist name to create it
+                      </FieldDescription>
+                      {isInvalid && (
+                        <FieldError errors={field.state.meta.errors} />
+                      )}
+                    </Field>
+                  )
+                }}
+              />
+            </FieldGroup>
+          </form>
+
+          <DialogFooter>
+            <DialogClose render={<Button variant="outline">Close</Button>} />
+            <Button
+              type="submit"
+              form="new-playlist-form"
+              disabled={isPending}
+            >
+              {isPending && <Spinner />}
+              Create
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <TooltipContent>
+        <p>New playlist</p>
+      </TooltipContent>
+    </Tooltip>
   )
 }
