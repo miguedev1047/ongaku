@@ -19,6 +19,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { YoutubeLoading } from "@/features/youtube-search/ui-states"
 import { useStreamingPlayerStore } from "@/shared/stores/use-streaming-player"
+import { CheckBinaries, DownloadStatus } from "@/features/downloads/components"
 
 export const Route = createFileRoute("/search-youtube/")({
   component: RouteComponent,
@@ -36,23 +37,32 @@ function RouteComponent() {
   return (
     <div className="w-full h-full flex flex-col p-4 gap-4 overflow-hidden">
       <div className="shrink-0 flex flex-col gap-4">
-        <div className="flex items-center gap-3">
-          <Button
-            size="icon"
-            variant="outline"
-            nativeButton={false}
-            render={<Link to="/playlists" />}
-            aria-label="Back to playlists"
-          >
-            <HugeiconsIcon
-              icon={ArrowLeft01Icon}
-              className="size-4"
-            />
-          </Button>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Button
+              size="icon"
+              variant="outline"
+              nativeButton={false}
+              render={<Link to="/playlists" />}
+              aria-label="Back to playlists"
+            >
+              <HugeiconsIcon
+                icon={ArrowLeft01Icon}
+                className="size-4"
+              />
+            </Button>
 
-          <div className="flex items-center gap-4">
-            <h1 className="text-xl font-bold tracking-tight">YouTube Search</h1>
-            <Badge variant="destructive">Alpha</Badge>
+            <div className="flex items-center gap-4">
+              <h1 className="text-xl font-bold tracking-tight">
+                YouTube Search
+              </h1>
+              <Badge variant="destructive">Alpha</Badge>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1">
+            <DownloadStatus />
+            <CheckBinaries />
           </div>
         </div>
 
