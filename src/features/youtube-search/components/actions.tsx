@@ -23,8 +23,11 @@ import {
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { openUrl } from "@tauri-apps/plugin-opener"
-import { PlaylistMenuGroup } from "./playlist-menu-group"
-import { useDownloadSong, useYoutubePlayback } from "../hooks"
+import { PlaylistMenuGroup } from "@/features/youtube-search/components"
+import {
+  useDownloadSong,
+  useYoutubePlayback
+} from "@/features/youtube-search/hooks"
 
 interface YoutubeSongActionsProps {
   item: TYoutubeSearchResult
@@ -48,7 +51,7 @@ export function YoutubeSongActions({
     try {
       await openUrl(item.url)
     } catch (error) {
-      console.error("Error al abrir navegador:", error)
+      console.error("Error to open web browser:", error)
     }
   }
 

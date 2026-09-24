@@ -1,10 +1,5 @@
 import { HugeiconsIcon } from "@hugeicons/react"
-import {
-  PlayIcon,
-  PauseIcon,
-  MusicNote01Icon
-} from "@hugeicons/core-free-icons"
-import { Button } from "@/components/ui/button"
+import { MusicNote01Icon } from "@hugeicons/core-free-icons"
 import { formatDuration } from "@/shared/helpers/format-duration"
 import { useStreamingPlayerStore } from "@/shared/stores/use-streaming-player"
 import { useActivePlayerStore } from "@/shared/stores/use-active-player"
