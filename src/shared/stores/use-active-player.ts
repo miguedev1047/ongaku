@@ -22,6 +22,7 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set) => ({
     // 1. Pause streaming if it was playing
     const streamingState = useStreamingPlayerStore.getState()
     if (streamingState.audioRef) {
+      streamingState.setCurrentTrack(null)
       streamingState.pause()
     }
 
@@ -37,6 +38,7 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set) => ({
     const localState = usePlayerStore.getState()
     if (localState.audioRef) {
       localState.audioRef.pause()
+      localState.setCurrentSong(null)
       localState.setPlayerState("paused")
     }
 
