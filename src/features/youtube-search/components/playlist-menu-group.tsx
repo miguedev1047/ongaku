@@ -8,6 +8,7 @@ import {
 import { playlistsQueryOpts } from "@/shared/queries/playlists"
 import { FolderIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
+import { checkBinariesQueryOpts } from "@/shared/queries/binaries"
 
 interface PlaylistMenuGroupProps {
   onSelectPlaylist: (playlistName: string) => void
@@ -19,13 +20,19 @@ export function PlaylistMenuGroup({
   disabled
 }: PlaylistMenuGroupProps) {
   const { data: playlists = [] } = useSuspenseQuery(playlistsQueryOpts())
+  const { data: isBinariesInstalled } = useSuspenseQuery(
+    checkBinariesQueryOpts()
+  )
 
   return (
     <DropdownMenuGroup>
       <DropdownMenuLabel>Playlists</DropdownMenuLabel>
       <DropdownMenuSeparator />
       {playlists.length === 0 ? (
-        <DropdownMenuItem disabled className="text-xs text-muted-foreground">
+        <DropdownMenuItem
+          disabled
+          className="text-xs text-muted-foreground"
+        >
           No playlists found
         </DropdownMenuItem>
       ) : (
@@ -33,7 +40,7 @@ export function PlaylistMenuGroup({
           <DropdownMenuItem
             key={playlist.id}
             onClick={() => onSelectPlaylist(playlist.name)}
-            disabled={disabled}
+            disabled={disabled || !isBinariesInstalled}
             className="flex items-center gap-2 cursor-pointer text-xs"
           >
             <HugeiconsIcon
