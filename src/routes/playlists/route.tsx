@@ -26,7 +26,7 @@ function RouteComponent() {
             render={
               <Link
                 to="/search-youtube"
-                search={{ q: "Lofi" }}
+                search={{ q: "" }}
               />
             }
           >
