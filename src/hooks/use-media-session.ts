@@ -1,19 +1,48 @@
 import { useEffect } from "react"
 import { usePlayerStore } from "@/shared/stores/use-player"
+import { useStreamingPlayerStore } from "@/shared/stores/use-streaming-player"
 import { useSongUtils } from "@/hooks/use-song-utils"
 import { usePlaybackActions } from "@/hooks/use-playback-actions"
+import { useActivePlayerStore } from "@/shared/stores/use-active-player"
 
 export function useMediaSession() {
+  const activePlayer = useActivePlayerStore((state) => state.activePlayer)
+  const isStreaming = activePlayer === "streaming"
+
   const currentSong = usePlayerStore((state) => state.currentSong)
-  const playerState = usePlayerStore((state) => state.playerState)
-  const duration = usePlayerStore((state) => state.duration)
-  const progress = usePlayerStore((state) => state.progress)
+  const localPlayerState = usePlayerStore((state) => state.playerState)
+  const localDuration = usePlayerStore((state) => state.duration)
+  const localProgress = usePlayerStore((state) => state.progress)
+
+  const currentTrack = useStreamingPlayerStore((state) => state.currentTrack)
+  const streamingPlayerState = useStreamingPlayerStore((state) => state.playerState)
+  const streamingDuration = useStreamingPlayerStore((state) => state.duration)
+  const streamingProgress = useStreamingPlayerStore((state) => state.progress)
 
   const { getCoverUrl } = useSongUtils()
   const { play, pause, nextTrack, prevTrack, seekTo } = usePlaybackActions()
 
+  // Metadata
   useEffect(() => {
     if (!("mediaSession" in navigator)) return
+
+    if (isStreaming && currentTrack) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: currentTrack.title,
+        artist: currentTrack.channel || "YouTube",
+        album: "YouTube",
+        artwork: currentTrack.thumbnail
+          ? [
+              {
+                src: currentTrack.thumbnail,
+                sizes: "512x512",
+                type: "image/jpeg"
+              }
+            ]
+          : []
+      })
+      return
+    }
 
     if (!currentSong) {
       navigator.mediaSession.metadata = null
@@ -37,26 +66,33 @@ export function useMediaSession() {
           ]
         : []
     })
-  }, [currentSong, getCoverUrl])
+  }, [isStreaming, currentTrack, currentSong, getCoverUrl])
 
+  // Playback state
   useEffect(() => {
     if (!("mediaSession" in navigator)) return
 
-    if (playerState === "playing") {
+    const activeState = isStreaming ? streamingPlayerState : localPlayerState
+
+    if (activeState === "playing") {
       navigator.mediaSession.playbackState = "playing"
-    } else if (playerState === "paused") {
+    } else if (activeState === "paused") {
       navigator.mediaSession.playbackState = "paused"
     } else {
       navigator.mediaSession.playbackState = "none"
     }
-  }, [playerState])
+  }, [isStreaming, streamingPlayerState, localPlayerState])
 
+  // Position state
   useEffect(() => {
     if (
       !("mediaSession" in navigator) ||
       !("setPositionState" in navigator.mediaSession)
     )
       return
+
+    const duration = isStreaming ? streamingDuration : localDuration
+    const progress = isStreaming ? streamingProgress : localProgress
 
     if (
       duration > 0 &&
@@ -71,8 +107,9 @@ export function useMediaSession() {
         })
       } catch {}
     }
-  }, [duration, progress])
+  }, [isStreaming, streamingDuration, streamingProgress, localDuration, localProgress])
 
+  // Action handlers
   useEffect(() => {
     if (!("mediaSession" in navigator)) return
 
@@ -85,26 +122,52 @@ export function useMediaSession() {
       } catch {}
     }
 
-    setHandler("play", () => play())
-    setHandler("pause", () => pause())
-    setHandler("stop", () => pause())
-    setHandler("nexttrack", () => nextTrack())
-    setHandler("previoustrack", () => prevTrack())
-    setHandler("seekto", (details) => {
-      if (details.seekTime !== undefined && details.seekTime !== null) {
-        seekTo(details.seekTime)
-      }
-    })
-    setHandler("seekbackward", (details) => {
-      const skipTime = details.seekOffset || 5
-      const currentProgress = usePlayerStore.getState().progress
-      seekTo(currentProgress - skipTime)
-    })
-    setHandler("seekforward", (details) => {
-      const skipTime = details.seekOffset || 5
-      const currentProgress = usePlayerStore.getState().progress
-      seekTo(currentProgress + skipTime)
-    })
+    if (isStreaming) {
+      const { play: streamPlay, pause: streamPause, seekTo: streamSeekTo } =
+        useStreamingPlayerStore.getState()
+
+      setHandler("play", () => streamPlay())
+      setHandler("pause", () => streamPause())
+      setHandler("stop", () => streamPause())
+      setHandler("nexttrack", null)
+      setHandler("previoustrack", null)
+      setHandler("seekto", (details) => {
+        if (details.seekTime !== undefined && details.seekTime !== null) {
+          streamSeekTo(details.seekTime)
+        }
+      })
+      setHandler("seekbackward", (details) => {
+        const skipTime = details.seekOffset || 10
+        const current = useStreamingPlayerStore.getState().progress
+        streamSeekTo(current - skipTime)
+      })
+      setHandler("seekforward", (details) => {
+        const skipTime = details.seekOffset || 10
+        const current = useStreamingPlayerStore.getState().progress
+        streamSeekTo(current + skipTime)
+      })
+    } else {
+      setHandler("play", () => play())
+      setHandler("pause", () => pause())
+      setHandler("stop", () => pause())
+      setHandler("nexttrack", () => nextTrack())
+      setHandler("previoustrack", () => prevTrack())
+      setHandler("seekto", (details) => {
+        if (details.seekTime !== undefined && details.seekTime !== null) {
+          seekTo(details.seekTime)
+        }
+      })
+      setHandler("seekbackward", (details) => {
+        const skipTime = details.seekOffset || 5
+        const current = usePlayerStore.getState().progress
+        seekTo(current - skipTime)
+      })
+      setHandler("seekforward", (details) => {
+        const skipTime = details.seekOffset || 5
+        const current = usePlayerStore.getState().progress
+        seekTo(current + skipTime)
+      })
+    }
 
     return () => {
       setHandler("play", null)
@@ -116,5 +179,5 @@ export function useMediaSession() {
       setHandler("seekbackward", null)
       setHandler("seekforward", null)
     }
-  }, [play, pause, nextTrack, prevTrack, seekTo])
+  }, [isStreaming, play, pause, nextTrack, prevTrack, seekTo])
 }

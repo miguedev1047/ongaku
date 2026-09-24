@@ -19,7 +19,11 @@ pub struct PlaylistSong {
 
 #[tauri::command]
 pub fn get_playlist_songs(playlist_name: &str) -> Result<Vec<PlaylistSong>, String> {
-    let playlist_dir = get_playlist_dir().join(&playlist_name);
+    let playlist_dir = get_playlist_dir().join(playlist_name);
+
+    if !playlist_dir.exists() {
+        return Ok(Vec::new());
+    }
 
     let entries = fs::read_dir(&playlist_dir)
         .map_err(|err| format!("An error ocurred to read the playlist: {}", err))?;

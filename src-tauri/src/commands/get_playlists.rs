@@ -16,6 +16,10 @@ pub struct Playlist {
 pub fn get_playlists() -> Result<Vec<Playlist>, String> {
     let path = get_playlist_dir();
 
+    if !path.exists() {
+        return Ok(Vec::new());
+    }
+
     let entries = fs::read_dir(&path)
         .map_err(|err| format!("An ocurred a error to read the playlist {}", err))?;
 

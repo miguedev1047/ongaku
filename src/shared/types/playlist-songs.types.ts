@@ -2,6 +2,7 @@ export interface SongMetadata {
   duration?: number | null
   artist?: string | null
   album?: string | null
+  coverUrl?: string | null
 }
 
 export interface TPlaylistSong {

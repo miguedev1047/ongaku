@@ -2,7 +2,7 @@ import { Outlet, createRootRouteWithContext } from "@tanstack/react-router"
 import { type QueryClient } from "@tanstack/react-query"
 import { invoke } from "@tauri-apps/api/core"
 import { TanstackDevtool } from "@/components/tanstack-devtools"
-import { Player } from "@/components/player/player"
+import { PlayerRoot } from "@/blocks"
 import { Toaster } from "@/components/ui/sonner"
 import { AppProvider } from "@/providers/app-provider"
 import { useShowApp } from "@/hooks/use-show-app"
@@ -32,7 +32,7 @@ function RootComponent() {
         <main className="flex-1 min-h-0 overflow-hidden">
           <Outlet />
         </main>
-        <Player />
+        <PlayerRoot />
         <Toaster />
       </div>
     </AppProvider>

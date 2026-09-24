@@ -7,6 +7,7 @@ mod resolve_inside;
 mod single_instance;
 mod song_utils;
 mod validate_name;
+mod youtube_utils;
 
 pub use binaries::*;
 pub use created_time::*;
@@ -17,3 +18,4 @@ pub use resolve_inside::*;
 pub use single_instance::*;
 pub use song_utils::*;
 pub use validate_name::*;
+pub use youtube_utils::*;

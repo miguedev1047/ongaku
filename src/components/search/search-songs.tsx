@@ -21,7 +21,7 @@ import { useHotkey } from "@tanstack/react-hotkeys"
 import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs"
 import { CoverImage } from "@/components/cover-image"
 import { useSongUtils } from "@/hooks/use-song-utils"
-import { usePlayerStore } from "@/shared/stores/use-player"
+import { useActivePlayerStore } from "@/shared/stores/use-active-player"
 
 export function SearchSongs() {
   const { playlistName } = useParams({ from: "/playlists/$playlistName" })
@@ -29,7 +29,7 @@ export function SearchSongs() {
   const [isOpen, setIsOpen] = useState(false)
   const { getCoverUrl } = useSongUtils()
 
-  const setCurrentSong = usePlayerStore((state) => state.setCurrentSong)
+  const playSong = useActivePlayerStore((state) => state.playSong)
 
   useHotkey("Control+Alt+S", () => setIsOpen(!isOpen))
 
@@ -80,7 +80,7 @@ export function SearchSongs() {
             {(song) => {
               const handleSelectSong = () => {
                 setIsOpen(false)
-                setCurrentSong(song)
+                playSong(song)
               }
 
               return (

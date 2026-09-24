@@ -20,12 +20,19 @@ function RouteComponent() {
   return (
     <div className="h-full flex flex-col p-4 gap-4 overflow-hidden">
       <div className="shrink-0 flex items-center justify-between">
-        <Button
-          nativeButton={false}
-          render={<Link to="/downloads" />}
-        >
-          Downloads
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            nativeButton={false}
+            render={
+              <Link
+                to="/search-youtube"
+                search={{ q: "Lofi" }}
+              />
+            }
+          >
+            Search YouTube
+          </Button>
+        </div>
 
         <UpdaterButton />
       </div>

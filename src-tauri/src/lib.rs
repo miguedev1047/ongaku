@@ -6,7 +6,8 @@ mod server;
 use crate::{
     commands::{
         check_binaries, delete_playlist, download_binaries, download_song, get_playlist_songs,
-        get_playlists, get_server_port, new_playlist, rename_playlist,
+        get_playlists, get_server_port, get_youtube_stream_url, new_playlist, rename_playlist,
+        search_youtube,
     },
     helpers::{ensure_dirs, single_instance_plugin},
     server::init_server,
@@ -35,7 +36,9 @@ pub fn run() {
             delete_playlist,
             download_song,
             download_binaries,
-            check_binaries
+            check_binaries,
+            search_youtube,
+            get_youtube_stream_url
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

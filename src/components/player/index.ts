@@ -1,6 +1,0 @@
-export * from "./player"
-export * from "./player-element"
-export * from "./player-progressbar"
-export * from "./player-controls"
-export * from "./player-cover"
-export * from "./player-volume"

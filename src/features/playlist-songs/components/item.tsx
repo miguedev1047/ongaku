@@ -11,6 +11,7 @@ import { CoverImage } from "@/components/cover-image"
 import { useSongUtils } from "@/hooks/use-song-utils"
 import { formatDuration } from "@/shared/helpers/format-duration"
 import { usePlayerStore } from "@/shared/stores/use-player"
+import { useActivePlayerStore } from "@/shared/stores/use-active-player"
 
 interface PlaylistSongItemProps {
   song: TPlaylistSong
@@ -20,17 +21,16 @@ export function PlaylistSongItem({ song }: PlaylistSongItemProps) {
   const isActiveTrack = usePlayerStore(
     (state) => state.currentSong?.id === song.id
   )
-  const setCurrentSong = usePlayerStore((state) => state.setCurrentSong)
+  const playSong = useActivePlayerStore((state) => state.playSong)
   const { getCoverUrl } = useSongUtils()
 
   const handleSelectSong = () => {
     if (!isActiveTrack) {
-      setCurrentSong(song)
+      playSong(song)
     }
   }
 
   const coverUrl = getCoverUrl({ song })
-
 
   return (
     <Item

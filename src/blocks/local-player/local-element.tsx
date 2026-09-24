@@ -1,7 +1,7 @@
 import { usePlayerMedia } from "@/hooks/use-player-media"
 import { useSongUtils } from "@/hooks/use-song-utils"
 
-export function PlayerElement() {
+export function LocalPlayerElement() {
   const { songActive, isLoop, handleNextSong, handleTimeUpdate, setAudioRef } =
     usePlayerMedia()
   const { getSongUrl } = useSongUtils()
@@ -9,7 +9,6 @@ export function PlayerElement() {
   if (!songActive) return null
 
   const trackUrl = getSongUrl({ song: songActive })
-
 
   return (
     <audio
