@@ -20,6 +20,14 @@ import {
   type DownloadProgress
 } from "@/shared/stores/use-downloads"
 import { formatDuration } from "@/shared/helpers/format-duration"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from "@/components/ui/popover"
+import { Button } from "@/components/ui/button"
+import { HugeiconsIcon } from "@hugeicons/react"
+import { DownloadIcon } from "@hugeicons/core-free-icons"
 
 export function DownloadStatus() {
   const isDownloading = useDownloadsStore((state) => state.isDownloading)
@@ -65,55 +73,78 @@ export function DownloadStatus() {
       : null
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="text-sm font-semibold flex items-center gap-2">
-          {isDownloading ? (
-            <>
-              <Spinner className="size-3.5" />
-              <span>Downloading Audio</span>
-            </>
-          ) : (
-            <span>Last Downloaded</span>
-          )}
-        </CardTitle>
-        <CardAction>
-          <Badge variant={isDownloading ? "secondary" : "default"}>
-            {isDownloading ? "In progress" : "Completed"}
-          </Badge>
-        </CardAction>
-        <CardDescription>
-          {isDownloading
-            ? downloadProgress && downloadProgress.progress > 0
-              ? `Downloading stream (${downloadedMb} MB${totalMb ? ` / ${totalMb} MB` : ""})`
-              : "Fetching video metadata from YouTube..."
-            : `Saved to playlist "${song?.playlist_name}"`}
-        </CardDescription>
-      </CardHeader>
-
-      <CardContent className="space-y-2">
-        {isDownloading ? (
-          <Progress value={percent}>
-            <ProgressLabel>
-              {percent > 0 ? "Transferring audio stream..." : "Connecting..."}
-            </ProgressLabel>
-            <ProgressValue />
-          </Progress>
-        ) : song ? (
-          <div className="space-y-1 text-xs">
-            <p className="font-medium text-foreground truncate">{song.name}</p>
-            <div className="flex items-center gap-2 text-muted-foreground">
-              {song.metadata.artist && (
-                <span className="line-clamp-1">{song.metadata.artist}</span>
+    <Popover>
+      <PopoverTrigger
+        render={
+          <Button
+            size="icon"
+            variant="ghost"
+          >
+            <HugeiconsIcon
+              icon={DownloadIcon}
+              className="animate-bounce"
+            />
+          </Button>
+        }
+      />
+      <PopoverContent className="w-80">
+        <Card className="w-full">
+          <CardHeader>
+            <CardTitle className="text-sm font-semibold flex items-center gap-2">
+              {isDownloading ? (
+                <>
+                  <Spinner className="size-3.5" />
+                  <span>Downloading Audio</span>
+                </>
+              ) : (
+                <span>Last Downloaded</span>
               )}
-              {song.metadata.artist && song.metadata.duration && <span>•</span>}
-              {song.metadata.duration ? (
-                <span>{formatDuration(song.metadata.duration)}</span>
-              ) : null}
-            </div>
-          </div>
-        ) : null}
-      </CardContent>
-    </Card>
+            </CardTitle>
+            <CardAction>
+              <Badge variant={isDownloading ? "secondary" : "default"}>
+                {isDownloading ? "In progress" : "Completed"}
+              </Badge>
+            </CardAction>
+            <CardDescription>
+              {isDownloading
+                ? downloadProgress && downloadProgress.progress > 0
+                  ? `Downloading stream (${downloadedMb} MB${totalMb ? ` / ${totalMb} MB` : ""})`
+                  : "Fetching video metadata from YouTube..."
+                : `Saved to playlist "${song?.playlist_name}"`}
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent className="space-y-2">
+            {isDownloading ? (
+              <Progress value={percent}>
+                <ProgressLabel>
+                  {percent > 0
+                    ? "Transferring audio stream..."
+                    : "Connecting..."}
+                </ProgressLabel>
+                <ProgressValue />
+              </Progress>
+            ) : song ? (
+              <div className="space-y-1 text-xs">
+                <p className="font-medium text-foreground truncate">
+                  {song.name}
+                </p>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  {song.metadata.artist && (
+                    <span className="line-clamp-1">{song.metadata.artist}</span>
+                  )}
+                  {song.metadata.artist && song.metadata.duration && (
+                    <span>•</span>
+                  )}
+                  {song.metadata.duration && (
+                    <span>{formatDuration(song.metadata.duration)}</span>
+                  )}
+                </div>
+              </div>
+            ) : null}
+          </CardContent>
+        </Card>
+      </PopoverContent>
+    </Popover>
   )
 }
