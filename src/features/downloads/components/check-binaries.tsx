@@ -1,6 +1,12 @@
 import { Button } from "@/components/ui/button"
-import { Spinner } from "@/components/ui/spinner"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
+} from "@/components/ui/tooltip"
 import { checkBinariesQueryOpts } from "@/shared/queries/binaries"
+import { CheckIcon, DownloadIcon } from "@hugeicons/core-free-icons"
+import { HugeiconsIcon } from "@hugeicons/react"
 import {
   useMutation,
   useQueryClient,
@@ -35,19 +41,38 @@ export function CheckBinaries() {
     mutation.mutate()
   }
 
-  if (isBinariesInstalled) return null
+  if (!isBinariesInstalled)
+    return (
+      <Tooltip>
+        <TooltipTrigger
+          render={
+            <Button
+              onClick={handleDownloadBinaries}
+              disabled={isPending}
+              size="icon"
+              variant="ghost"
+            >
+              <HugeiconsIcon icon={DownloadIcon} />
+            </Button>
+          }
+        />
+        <TooltipContent>Install the Yt-dlp and Ffmpeg</TooltipContent>
+      </Tooltip>
+    )
 
   return (
-    <div className="space-y-2">
-      <h3>{isPending ? "Installing..." : "No binaries installed yet"}</h3>
-
-      <Button
-        onClick={handleDownloadBinaries}
-        disabled={isPending}
-      >
-        {isPending && <Spinner />}
-        Download Binaries
-      </Button>
-    </div>
+    <Tooltip>
+      <TooltipTrigger
+        render={
+          <Button
+            size="icon"
+            variant="ghost"
+          >
+            <HugeiconsIcon icon={CheckIcon} />
+          </Button>
+        }
+      />
+      <TooltipContent>YT-Dlp and Ffmpe are installed</TooltipContent>
+    </Tooltip>
   )
 }
