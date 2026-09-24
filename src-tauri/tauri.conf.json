@@ -23,7 +23,7 @@
       "assetProtocol": {
         "enable": true
       },
-      "csp": "default-src 'self'; connect-src 'self' http://127.0.0.1:*; img-src 'self' http://127.0.0.1:*; media-src 'self' asset: https://asset.localhost http://127.0.0.1:*;"
+      "csp": "default-src 'self'; connect-src 'self' http://127.0.0.1:* https://*.googlevideo.com https://*.youtube.com; img-src 'self' data: asset: https://asset.localhost http://127.0.0.1:* https://*.ytimg.com https://i.ytimg.com https://*.ggpht.com https://*.googleusercontent.com https://*.youtube.com; media-src 'self' asset: https://asset.localhost http://127.0.0.1:* https://*.googlevideo.com https://*.youtube.com blob:;"
     }
   },
   "bundle": {

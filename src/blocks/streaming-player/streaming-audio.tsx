@@ -44,7 +44,8 @@ export function StreamingAudio({ track }: StreamingAudioProps) {
     setPlayerState("playing")
   }
 
-  const handleError = () => {
+  const handleError = (e: React.SyntheticEvent<HTMLAudioElement>) => {
+    console.error("Failed to stream audio:", e.currentTarget.error)
     toast.error("Failed to stream audio from YouTube. The link might have expired.")
     setPlayerState("idle")
   }
