@@ -18,7 +18,7 @@ import {
   EmptyTitle
 } from "@/components/ui/empty"
 import { formatDuration } from "@/shared/helpers/format-duration"
-import { SaveSong } from "./save-song"
+import { YoutubeSongActions } from "./actions"
 import { cn } from "cn"
 
 interface YoutubeSongInfoProps {
@@ -29,6 +29,9 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
   const currentTrack = useStreamingPlayerStore((state) => state.currentTrack)
   const isPlaying = useStreamingPlayerStore(
     (state) => state.playerState === "playing"
+  )
+  const isLoading = useStreamingPlayerStore(
+    (state) => state.playerState === "loading"
   )
   const togglePlay = useStreamingPlayerStore((state) => state.togglePlay)
   const [imageError, setImageError] = useState(false)
@@ -132,6 +135,7 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
           variant={isPlaying ? "default" : "outline"}
           onClick={togglePlay}
           className="flex-1 gap-1.5"
+          disabled={isLoading}
         >
           <HugeiconsIcon
             icon={isPlaying ? PauseIcon : PlayIcon}
@@ -140,7 +144,7 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
           <span>{isPlaying ? "Pause" : "Play"}</span>
         </Button>
 
-        <SaveSong item={currentTrack} />
+        <YoutubeSongActions item={currentTrack} />
       </div>
     </Card>
   )

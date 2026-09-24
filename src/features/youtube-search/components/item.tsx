@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button"
 import { formatDuration } from "@/shared/helpers/format-duration"
 import { useStreamingPlayerStore } from "@/shared/stores/use-streaming-player"
 import { useActivePlayerStore } from "@/shared/stores/use-active-player"
-import { SaveSong } from "./save-song"
 import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
+import { YoutubeSongActions } from "./actions"
 import {
   Item,
   ItemActions,
@@ -31,14 +31,9 @@ export function SearchYoutubeItem({ item }: YoutubeCardProps) {
   const isCurrentTrack = useStreamingPlayerStore(
     (state) => state.currentTrack?.id === item.id
   )
-  const isStreamingPlaying = useStreamingPlayerStore(
-    (state) => state.playerState === "playing"
-  )
 
   const togglePlay = useStreamingPlayerStore((s) => s.togglePlay)
   const playStream = useActivePlayerStore((s) => s.playStream)
-
-  const isCurrentPlaying = isCurrentTrack && isStreamingPlaying
 
   const handlePlayToggle = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -89,16 +84,8 @@ export function SearchYoutubeItem({ item }: YoutubeCardProps) {
           </span>
         )}
 
-        <Button
-          size="icon"
-          variant={isCurrentPlaying ? "default" : "outline"}
-          onClick={(e) => handlePlayToggle(e as never)}
-        >
-          <HugeiconsIcon icon={isCurrentPlaying ? PauseIcon : PlayIcon} />
-        </Button>
-
         <Suspense fallback={<Skeleton className="size-7" />}>
-          <SaveSong item={item} />
+          <YoutubeSongActions item={item} />
         </Suspense>
       </ItemActions>
     </Item>
