@@ -1,7 +1,15 @@
-import { createFileRoute } from "@tanstack/react-router"
+import { usePlayerStore } from "@/shared/stores/use-player"
+import { createFileRoute, redirect } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/playlists/")({
-  component: RouteComponent
+  component: RouteComponent,
+  beforeLoad: () => {
+    const currentPlaylist = usePlayerStore.getState().currentPlaylist
+    throw redirect({
+      to: "/playlists/$playlistName",
+      params: { playlistName: currentPlaylist }
+    })
+  }
 })
 
 function RouteComponent() {
