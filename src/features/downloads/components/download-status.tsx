@@ -1,24 +1,6 @@
-import { useEffect } from "react"
-import { listen } from "@tauri-apps/api/event"
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardAction
-} from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import {
-  Progress,
-  ProgressLabel,
-  ProgressValue
-} from "@/components/ui/progress"
+import { Progress } from "@/components/ui/progress"
 import { Spinner } from "@/components/ui/spinner"
-import {
-  useDownloadsStore,
-  type DownloadProgress
-} from "@/shared/stores/use-downloads"
 import { formatDuration } from "@/shared/helpers/format-duration"
 import {
   Popover,
@@ -27,50 +9,29 @@ import {
 } from "@/components/ui/popover"
 import { Button } from "@/components/ui/button"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { DownloadIcon } from "@hugeicons/core-free-icons"
+import {
+  CheckmarkCircle02Icon,
+  Download01Icon,
+  FolderIcon
+} from "@hugeicons/core-free-icons"
+import { Link } from "@tanstack/react-router"
+import { useDownloadStatus } from "../hooks"
 
 export function DownloadStatus() {
-  const isDownloading = useDownloadsStore((state) => state.isDownloading)
-  const song = useDownloadsStore((state) => state.song)
-  const downloadProgress = useDownloadsStore((state) => state.downloadProgress)
-  const setDownloadProgress = useDownloadsStore(
-    (state) => state.setDownloadProgress
-  )
+  const {
+    isDownloading,
+    currentDownload,
+    song,
+    downloadProgress,
+    percent,
+    downloadedMb,
+    totalMb,
+    hasContent
+  } = useDownloadStatus()
 
-  useEffect(() => {
-    let unlistenFn: (() => void) | undefined
-
-    listen<DownloadProgress>("download:progress", (event) => {
-      if (event.payload.done) {
-        setDownloadProgress(null)
-      } else {
-        setDownloadProgress(event.payload)
-      }
-    }).then((unlisten) => {
-      unlistenFn = unlisten
-    })
-
-    return () => {
-      unlistenFn?.()
-    }
-  }, [setDownloadProgress])
-
-  if (!isDownloading && !song) {
+  if (!hasContent) {
     return null
   }
-
-  const percent = downloadProgress
-    ? Math.round(downloadProgress.progress * 100)
-    : 0
-
-  const downloadedMb = downloadProgress
-    ? (downloadProgress.downloaded_bytes / (1024 * 1024)).toFixed(1)
-    : "0"
-
-  const totalMb =
-    downloadProgress && downloadProgress.total_bytes > 0
-      ? (downloadProgress.total_bytes / (1024 * 1024)).toFixed(1)
-      : null
 
   return (
     <Popover>
@@ -79,71 +40,115 @@ export function DownloadStatus() {
           <Button
             size="icon"
             variant="ghost"
+            className="relative"
           >
             <HugeiconsIcon
-              icon={DownloadIcon}
-              className="animate-bounce"
+              icon={Download01Icon}
+              className={`size-3.5 ${isDownloading ? "animate-pulse" : "text-muted-foreground"}`}
             />
           </Button>
         }
       />
-      <PopoverContent className="w-80">
-        <Card className="w-full">
-          <CardHeader>
-            <CardTitle className="text-sm font-semibold flex items-center gap-2">
-              {isDownloading ? (
-                <>
-                  <Spinner className="size-3.5" />
-                  <span>Downloading Audio</span>
-                </>
-              ) : (
-                <span>Last Downloaded</span>
-              )}
-            </CardTitle>
-            <CardAction>
-              <Badge variant={isDownloading ? "secondary" : "default"}>
-                {isDownloading ? "In progress" : "Completed"}
-              </Badge>
-            </CardAction>
-            <CardDescription>
-              {isDownloading
-                ? downloadProgress && downloadProgress.progress > 0
-                  ? `Downloading stream (${downloadedMb} MB${totalMb ? ` / ${totalMb} MB` : ""})`
-                  : "Fetching video metadata from YouTube..."
-                : `Saved to playlist "${song?.playlist_name}"`}
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent className="space-y-2">
+      <PopoverContent
+        align="end"
+        className="w-76 p-3 flex flex-col gap-2.5 text-xs shadow-md"
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5 font-semibold">
             {isDownloading ? (
-              <Progress value={percent}>
-                <ProgressLabel>
-                  {percent > 0
-                    ? "Transferring audio stream..."
-                    : "Connecting..."}
-                </ProgressLabel>
-                <ProgressValue />
-              </Progress>
-            ) : song ? (
-              <div className="space-y-1 text-xs">
-                <p className="font-medium text-foreground truncate">
-                  {song.name}
-                </p>
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  {song.metadata.artist && (
-                    <span className="line-clamp-1">{song.metadata.artist}</span>
-                  )}
-                  {song.metadata.artist && song.metadata.duration && (
-                    <span>•</span>
-                  )}
-                  {song.metadata.duration && (
-                    <span>{formatDuration(song.metadata.duration)}</span>
-                  )}
-                </div>
-              </div>
-            ) : null}
-          </CardContent>
-        </Card>
+              <>
+                <Spinner className="size-3 text-primary" />
+                <span>Downloading Audio</span>
+              </>
+            ) : (
+              <>
+                <HugeiconsIcon
+                  icon={CheckmarkCircle02Icon}
+                  className="size-3.5 text-emerald-500"
+                />
+                <span>Download Complete</span>
+              </>
+            )}
+          </div>
+          <Badge
+            variant={isDownloading ? "secondary" : "outline"}
+            className="text-[10px] px-1.5 py-0"
+          >
+            {isDownloading ? "In progress" : "Saved"}
+          </Badge>
+        </div>
+
+        {/* Content: In Progress vs Completed */}
+        {isDownloading ? (
+          <div className="flex flex-col gap-1.5">
+            <p
+              className="text-xs font-medium text-foreground truncate"
+              title={currentDownload?.title}
+            >
+              {currentDownload?.title || "Audio Stream"}
+            </p>
+
+            {currentDownload?.playlistName && (
+              <p className="text-[11px] text-muted-foreground truncate">
+                To:{" "}
+                <span className="text-foreground font-medium">
+                  {currentDownload.playlistName}
+                </span>
+              </p>
+            )}
+
+            <Progress
+              value={percent}
+              className="h-1.5 my-1"
+            />
+
+            <div className="flex items-center justify-between text-[10px] text-muted-foreground font-mono">
+              <span>{percent > 0 ? `${percent}%` : "Connecting..."}</span>
+              {downloadProgress && downloadProgress.downloaded_bytes > 0 && (
+                <span>
+                  {downloadedMb} MB{totalMb ? ` / ${totalMb} MB` : ""}
+                </span>
+              )}
+            </div>
+          </div>
+        ) : song ? (
+          <div className="flex flex-col gap-2">
+            <p
+              className="font-medium text-foreground truncate"
+              title={song.name}
+            >
+              {song.name}
+            </p>
+
+            <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
+              {song.metadata.artist && (
+                <span className="line-clamp-1">{song.metadata.artist}</span>
+              )}
+              {song.metadata.artist && song.metadata.duration && <span>•</span>}
+              {song.metadata.duration && (
+                <span>{formatDuration(song.metadata.duration)}</span>
+              )}
+            </div>
+
+            <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground pt-1 border-t border-border/50">
+              <HugeiconsIcon
+                icon={FolderIcon}
+                className="size-3 text-muted-foreground shrink-0"
+              />
+              <span className="truncate">
+                Saved to{" "}
+                <Link
+                  to="/playlists/$playlistName"
+                  params={{ playlistName: song.playlist_name }}
+                  className="text-foreground font-medium hover:underline"
+                >
+                  {song.playlist_name}
+                </Link>
+              </span>
+            </div>
+          </div>
+        ) : null}
       </PopoverContent>
     </Popover>
   )

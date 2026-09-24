@@ -1,78 +1,65 @@
 import { Button } from "@/components/ui/button"
+import { Spinner } from "@/components/ui/spinner"
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger
 } from "@/components/ui/tooltip"
-import { checkBinariesQueryOpts } from "@/shared/queries/binaries"
-import { CheckIcon, DownloadIcon } from "@hugeicons/core-free-icons"
+import { Download01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
-import {
-  useMutation,
-  useQueryClient,
-  useSuspenseQuery
-} from "@tanstack/react-query"
-import { invoke } from "@tauri-apps/api/core"
-import { toast } from "sonner"
+import { useBinaries } from "../hooks"
 
-export function CheckBinaries() {
-  const { data: isBinariesInstalled } = useSuspenseQuery(
-    checkBinariesQueryOpts()
-  )
+interface CheckBinariesProps {
+  className?: string
+}
 
-  const queryClient = useQueryClient()
+export function CheckBinaries({ className }: CheckBinariesProps) {
+  const { isBinariesInstalled, isPending, installBinaries } = useBinaries()
 
-  const mutation = useMutation({
-    mutationFn: async () => {
-      return await invoke("download_binaries")
-    },
-    onSuccess: () => {
-      toast.success("Binaries installed successfully")
-      queryClient.invalidateQueries({ queryKey: ["check-binaries"] })
-    },
-    onError: () => {
-      toast.error("An error occurred while downloading the binaries")
-    }
-  })
-
-  const isPending = mutation.isPending
-
-  const handleDownloadBinaries = () => {
-    mutation.mutate()
-  }
-
-  if (!isBinariesInstalled)
+  if (isPending) {
     return (
       <Tooltip>
         <TooltipTrigger
           render={
             <Button
-              onClick={handleDownloadBinaries}
-              disabled={isPending}
               size="icon"
               variant="ghost"
+              disabled
+              aria-label="Installing tools"
+              className={className}
             >
-              <HugeiconsIcon icon={DownloadIcon} />
+              <Spinner className="size-3.5" />
             </Button>
           }
         />
-        <TooltipContent>Install the Yt-dlp and Ffmpeg</TooltipContent>
+        <TooltipContent>Installing tools (yt-dlp & ffmpeg)...</TooltipContent>
       </Tooltip>
     )
+  }
 
-  return (
-    <Tooltip>
-      <TooltipTrigger
-        render={
-          <Button
-            size="icon"
-            variant="ghost"
-          >
-            <HugeiconsIcon icon={CheckIcon} />
-          </Button>
-        }
-      />
-      <TooltipContent>YT-Dlp and Ffmpe are installed</TooltipContent>
-    </Tooltip>
-  )
+  if (!isBinariesInstalled) {
+    return (
+      <Tooltip>
+        <TooltipTrigger
+          render={
+            <Button
+              onClick={installBinaries}
+              size="icon"
+              variant="outline"
+              aria-label="Install tools"
+              className="text-amber-500 bg-amber-500/10 border-amber-500/30 hover:bg-amber-500/20 hover:text-amber-600"
+            >
+              <HugeiconsIcon
+                icon={Download01Icon}
+                className="size-3.5 animate-pulse"
+              />
+            </Button>
+          }
+        />
+        <TooltipContent>Missing tools: Click to install yt-dlp & ffmpeg</TooltipContent>
+      </Tooltip>
+    )
+  }
+
+  return null
 }

@@ -1,6 +1,5 @@
 import {
   createFileRoute,
-  Link,
   useCanGoBack,
   useRouter
 } from "@tanstack/react-router"
