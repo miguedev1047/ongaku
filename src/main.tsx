@@ -1,7 +1,8 @@
-import "./styles/main.css"
+import "@/styles/main.css"
 import { StrictMode } from "react"
 import ReactDOM from "react-dom/client"
-import { queryClient, QueryProvider } from "./lib/query"
+import { queryClient, QueryProvider } from "@/lib/query"
+import { AppProvider } from "@/providers/app-provider"
 import {
   RouterProvider,
   createHashHistory,
@@ -16,6 +17,7 @@ const router = createRouter({
   routeTree,
   history: hashMemory,
   defaultPreload: "intent",
+  scrollRestoration: true,
   defaultPendingMs: 0,
   context: { queryClient },
 
@@ -23,7 +25,9 @@ const router = createRouter({
   defaultErrorComponent: () => <p>Error to load Ongaku</p>,
 
   Wrap: ({ children }: { children: React.ReactNode }) => (
-    <QueryProvider>{children}</QueryProvider>
+    <AppProvider>
+      <QueryProvider>{children}</QueryProvider>
+    </AppProvider>
   )
 })
 

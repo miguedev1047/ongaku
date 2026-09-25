@@ -4,7 +4,6 @@ import { invoke } from "@tauri-apps/api/core"
 import { TanstackDevtool } from "@/components/tanstack-devtools"
 import { PlayerRoot } from "@/blocks"
 import { Toaster } from "@/components/ui/sonner"
-import { AppProvider } from "@/providers/app-provider"
 import { useShowApp } from "@/hooks/use-show-app"
 
 interface RouteContext {
@@ -24,15 +23,13 @@ function RootComponent() {
   useShowApp()
 
   return (
-    <AppProvider>
-      <div className="h-screen w-screen flex flex-col overflow-hidden select-none">
-        <TanstackDevtool />
-        <main className="flex-1 min-h-0 overflow-hidden">
-          <Outlet />
-        </main>
-        <PlayerRoot />
-        <Toaster />
-      </div>
-    </AppProvider>
+    <div className="h-screen w-screen flex flex-col overflow-hidden select-none">
+      <TanstackDevtool />
+      <main className="flex-1 min-h-0 overflow-hidden">
+        <Outlet />
+      </main>
+      <PlayerRoot />
+      <Toaster />
+    </div>
   )
 }
