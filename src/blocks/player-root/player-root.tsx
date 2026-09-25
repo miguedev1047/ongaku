@@ -1,5 +1,6 @@
 import { useActivePlayerStore } from "@/shared/stores/use-active-player"
-import { LocalPlayer, StreamingPlayer } from "./"
+import { LocalPlayer } from "@/blocks/local-player"
+import { StreamingPlayer } from "@/blocks/streaming-player"
 import { useMediaSession } from "@/hooks/use-media-session"
 
 export function PlayerRoot() {
