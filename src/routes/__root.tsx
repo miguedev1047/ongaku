@@ -27,7 +27,7 @@ function RootComponent() {
 
   return (
     <AppProvider>
-      <div className="h-screen w-screen flex flex-col overflow-hidden">
+      <div className="h-screen w-screen flex flex-col overflow-hidden select-none">
         <TanstackDevtool />
         <main className="flex-1 min-h-0 overflow-hidden">
           <Outlet />

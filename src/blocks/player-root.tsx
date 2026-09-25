@@ -1,6 +1,5 @@
 import { useActivePlayerStore } from "@/shared/stores/use-active-player"
-import { LocalPlayer } from "./local-player"
-import { StreamingPlayer } from "./streaming-player"
+import { LocalPlayer, StreamingPlayer } from "@/blocks"
 
 export function PlayerRoot() {
   const activePlayer = useActivePlayerStore((s) => s.activePlayer)
