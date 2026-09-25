@@ -7,6 +7,7 @@ mod get_server_port;
 mod get_youtube_stream_url;
 mod playlist_actions;
 mod search_youtube;
+mod song_actions;
 
 pub use check_binaries::*;
 pub use download_binaries::*;
@@ -17,4 +18,5 @@ pub use get_server_port::*;
 pub use get_youtube_stream_url::*;
 pub use playlist_actions::*;
 pub use search_youtube::*;
+pub use song_actions::*;
 

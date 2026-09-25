@@ -5,9 +5,9 @@ mod server;
 
 use crate::{
     commands::{
-        check_binaries, delete_playlist, download_binaries, download_song, get_playlist_songs,
-        get_playlists, get_server_port, get_youtube_stream_url, new_playlist, rename_playlist,
-        search_youtube,
+        check_binaries, delete_playlist, delete_song, download_binaries, download_song,
+        get_playlist_songs, get_playlists, get_server_port, get_youtube_stream_url, move_song,
+        new_playlist, rename_playlist, search_youtube,
     },
     helpers::{ensure_dirs, single_instance_plugin},
     server::init_server,
@@ -34,6 +34,8 @@ pub fn run() {
             new_playlist,
             rename_playlist,
             delete_playlist,
+            delete_song,
+            move_song,
             download_song,
             download_binaries,
             check_binaries,

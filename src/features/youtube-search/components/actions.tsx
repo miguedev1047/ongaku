@@ -15,7 +15,7 @@ import {
 import { Spinner } from "@/components/ui/spinner"
 import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
 import {
-  MoreHorizontalIcon,
+  MoreHorizontalSquare01Icon,
   Music01Icon,
   PauseIcon,
   PlayIcon,
@@ -70,7 +70,7 @@ export function YoutubeSongActions({
             aria-label="Song actions"
             className={className}
           >
-            <HugeiconsIcon icon={MoreHorizontalIcon} />
+            <HugeiconsIcon icon={MoreHorizontalSquare01Icon} />
             {showLabel && <span>Actions</span>}
           </Button>
         }

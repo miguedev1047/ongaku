@@ -8,6 +8,14 @@
   "permissions": [
     "core:default",
     "opener:default",
+    {
+      "identifier": "opener:allow-open-path",
+      "allow": [
+        {
+          "path": "$AUDIO/ongaku/**"
+        }
+      ]
+    },
     "core:window:allow-show",
     "core:window:allow-set-focus",
     "process:default"

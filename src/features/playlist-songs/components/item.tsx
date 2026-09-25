@@ -12,6 +12,7 @@ import { useSongUtils } from "@/hooks/use-song-utils"
 import { formatDuration } from "@/shared/helpers/format-duration"
 import { usePlayerStore } from "@/shared/stores/use-player"
 import { useActivePlayerStore } from "@/shared/stores/use-active-player"
+import { PlaylistSongActions } from "@/features/playlist-songs/components"
 
 interface PlaylistSongItemProps {
   song: TPlaylistSong
@@ -50,7 +51,12 @@ export function PlaylistSongItem({ song }: PlaylistSongItemProps) {
           {song.metadata.artist}
         </ItemDescription>
       </ItemContent>
-      <ItemActions>{formatDuration(song.metadata.duration ?? 0)}</ItemActions>
+      <ItemActions>
+        <span className="text-xs font-bold text-muted-foreground leading-none">
+          {formatDuration(song.metadata.duration ?? 0)}
+        </span>
+        <PlaylistSongActions song={song} />
+      </ItemActions>
     </Item>
   )
 }

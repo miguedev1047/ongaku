@@ -2,7 +2,7 @@ import { useState } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   Delete01Icon,
-  MoreHorizontalIcon,
+  MoreHorizontalSquare01Icon,
   PencilEdit01Icon
 } from "@hugeicons/core-free-icons"
 import { Button } from "@/components/ui/button"
@@ -37,7 +37,7 @@ export function PlaylistItemActions({ playlist }: PlaylistItemActionsProps) {
               variant="ghost"
               className="group-hover/item:opacity-100 opacity-0"
             >
-              <HugeiconsIcon icon={MoreHorizontalIcon} />
+              <HugeiconsIcon icon={MoreHorizontalSquare01Icon} />
             </Button>
           }
         />
