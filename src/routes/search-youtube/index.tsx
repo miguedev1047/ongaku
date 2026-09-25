@@ -1,8 +1,4 @@
-import {
-  createFileRoute,
-  useCanGoBack,
-  useRouter
-} from "@tanstack/react-router"
+import { createFileRoute, Link } from "@tanstack/react-router"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { YoutubeIcon, ArrowLeft01Icon } from "@hugeicons/core-free-icons"
 import { Button } from "@/components/ui/button"
@@ -38,11 +34,6 @@ function RouteComponent() {
 
   const currentTrack = useStreamingPlayerStore((state) => state.currentTrack)
 
-  const router = useRouter()
-  const canGoBack = useCanGoBack()
-
-  const handleOnBack = () => router.history.back()
-
   return (
     <div className="w-full h-full flex flex-col p-4 gap-4 overflow-hidden">
       <div className="shrink-0 flex flex-col gap-4">
@@ -51,8 +42,8 @@ function RouteComponent() {
             <Button
               size="icon"
               variant="outline"
-              onClick={handleOnBack}
-              disabled={!canGoBack}
+              nativeButton={false}
+              render={<Link to="/playlists" />}
             >
               <HugeiconsIcon
                 icon={ArrowLeft01Icon}
