@@ -22,7 +22,7 @@ export function useDeleteSong({ song, onSuccess }: UseDeleteSongProps) {
   const mutation = useMutation({
     mutationFn: async () => {
       return await invoke<TSongAction>("delete_song", {
-        path: song.path,
+        path: song.path
       })
     },
     onSuccess: (data) => {
@@ -44,19 +44,19 @@ export function useDeleteSong({ song, onSuccess }: UseDeleteSongProps) {
 
       // Invalidate playlist songs query
       queryClient.invalidateQueries({
-        queryKey: playlistSongsQueryOpts(song.playlist_name).queryKey,
+        queryKey: playlistSongsQueryOpts(song.playlist_name).queryKey
       })
 
       // Invalidate playlists query (updates song count in playlists list)
       queryClient.invalidateQueries({
-        queryKey: playlistsQueryOpts().queryKey,
+        queryKey: playlistsQueryOpts().queryKey
       })
 
       onSuccess?.()
     },
     onError: () => {
       toast.error("An error occurred while deleting the song")
-    },
+    }
   })
 
   const handleDeleteSong = () => {
@@ -65,6 +65,6 @@ export function useDeleteSong({ song, onSuccess }: UseDeleteSongProps) {
 
   return {
     handleDeleteSong,
-    isPending: mutation.isPending,
+    isPending: mutation.isPending
   }
 }

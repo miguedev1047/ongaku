@@ -12,9 +12,7 @@ export function StreamingTrackInfo() {
 
   return (
     <PlayerTrackInfo>
-      <PlayerTitle title={currentTrack.title}>
-        {currentTrack.title}
-      </PlayerTitle>
+      <PlayerTitle title={currentTrack.title}>{currentTrack.title}</PlayerTitle>
       <PlayerDescription title={currentTrack.channel}>
         {currentTrack.channel}
       </PlayerDescription>

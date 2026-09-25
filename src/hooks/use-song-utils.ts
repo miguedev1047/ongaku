@@ -1,6 +1,9 @@
 import { useRouteContext } from "@tanstack/react-router"
 import { TPlaylistSong } from "@/shared/types/playlist-songs.types"
-import { getCoverUrl as getBaseCoverUrl, getSongUrl as getBaseSongUrl } from "@/lib/song-utils"
+import {
+  getCoverUrl as getBaseCoverUrl,
+  getSongUrl as getBaseSongUrl
+} from "@/lib/song-utils"
 
 export function useServerPort() {
   const { serverPort } = useRouteContext({ from: "__root__" })
@@ -21,6 +24,6 @@ export function useSongUtils() {
   return {
     serverPort,
     getCoverUrl,
-    getSongUrl,
+    getSongUrl
   }
 }

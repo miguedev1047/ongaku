@@ -25,15 +25,24 @@ export function LocalPlayerControls() {
 
   return (
     <PlayerControls>
-      <PlayerShuffleButton isShuffle={isShuffle} onClick={toggleShuffle} />
+      <PlayerShuffleButton
+        isShuffle={isShuffle}
+        onClick={toggleShuffle}
+      />
       <Suspense fallback={<Skeleton className="size-7" />}>
         <PlayerPreviousButton onClick={handlePreviousSong} />
       </Suspense>
-      <PlayerPlayButton isPlaying={isPlaying} onClick={handlePlayerToggle} />
+      <PlayerPlayButton
+        isPlaying={isPlaying}
+        onClick={handlePlayerToggle}
+      />
       <Suspense fallback={<Skeleton className="size-7" />}>
         <PlayerNextButton onClick={handleNextSong} />
       </Suspense>
-      <PlayerLoopButton isLoop={isLoop} onClick={toggleLoop} />
+      <PlayerLoopButton
+        isLoop={isLoop}
+        onClick={toggleLoop}
+      />
     </PlayerControls>
   )
 }

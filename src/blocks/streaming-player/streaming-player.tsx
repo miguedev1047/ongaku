@@ -6,11 +6,7 @@ import { StreamingControls } from "./streaming-controls"
 import { StreamingTrackInfo } from "./streaming-track-info"
 import { StreamingPlayerProgressbar } from "./streaming-progressbar"
 import { StreamingPlayerVolume } from "./streaming-volume"
-import {
-  Player,
-  PlayerContent,
-  PlayerHeader
-} from "@/components/ui/player"
+import { Player, PlayerContent, PlayerHeader } from "@/components/ui/player"
 import { toast } from "sonner"
 
 interface ErrorBoundaryProps {
@@ -57,7 +53,10 @@ export function StreamingPlayer() {
 
   return (
     <Player>
-      <StreamingAudioErrorBoundary key={currentTrack.id} onError={stop}>
+      <StreamingAudioErrorBoundary
+        key={currentTrack.id}
+        onError={stop}
+      >
         <Suspense fallback={null}>
           <StreamingAudio track={currentTrack} />
         </Suspense>

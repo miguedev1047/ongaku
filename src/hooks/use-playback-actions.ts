@@ -96,7 +96,9 @@ export function usePlaybackActions() {
     if (!audioRef) return
 
     const maxDuration = duration || audioRef.duration || 0
-    const clamped = maxDuration ? Math.min(Math.max(0, time), maxDuration) : Math.max(0, time)
+    const clamped = maxDuration
+      ? Math.min(Math.max(0, time), maxDuration)
+      : Math.max(0, time)
 
     audioRef.currentTime = clamped
     setProgress(clamped)

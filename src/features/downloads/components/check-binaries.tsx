@@ -56,7 +56,9 @@ export function CheckBinaries({ className }: CheckBinariesProps) {
             </Button>
           }
         />
-        <TooltipContent>Missing tools: Click to install yt-dlp & ffmpeg</TooltipContent>
+        <TooltipContent>
+          Missing tools: Click to install yt-dlp & ffmpeg
+        </TooltipContent>
       </Tooltip>
     )
   }

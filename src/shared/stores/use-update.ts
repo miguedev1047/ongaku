@@ -1,6 +1,7 @@
 import { create } from "zustand"
 
-export type UpdateStatus = "idle" | "downloading" | "installing" | "done" | "error"
+export type UpdateStatus =
+  "idle" | "downloading" | "installing" | "done" | "error"
 
 interface UpdateProgress {
   downloaded: number
@@ -21,7 +22,7 @@ export const useUpdateStore = create<UpdateStoreProps>((set) => ({
   progress: {
     downloaded: 0,
     total: 0,
-    percentage: 0,
+    percentage: 0
   },
 
   setStatus: (status) => set({ status }),
@@ -35,6 +36,6 @@ export const useUpdateStore = create<UpdateStoreProps>((set) => ({
   reset: () =>
     set({
       status: "idle",
-      progress: { downloaded: 0, total: 0, percentage: 0 },
-    }),
+      progress: { downloaded: 0, total: 0, percentage: 0 }
+    })
 }))

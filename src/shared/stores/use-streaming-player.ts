@@ -28,78 +28,81 @@ interface StreamingPlayerStore {
   stop: () => void
 }
 
-export const useStreamingPlayerStore = create<StreamingPlayerStore>((set, get) => ({
-  audioRef: null,
-  currentTrack: null,
-  streamUrl: null,
-  playerState: "idle",
-  isSeeking: false,
-  duration: 0,
-  progress: 0,
-  volume: 8,
+export const useStreamingPlayerStore = create<StreamingPlayerStore>(
+  (set, get) => ({
+    audioRef: null,
+    currentTrack: null,
+    streamUrl: null,
+    playerState: "idle",
+    isSeeking: false,
+    duration: 0,
+    progress: 0,
+    volume: 8,
 
-  setAudioRef: (ref) => set({ audioRef: ref }),
-  setCurrentTrack: (track) =>
-    set({
-      currentTrack: track,
-      streamUrl: null,
-      duration: track?.duration ?? 0,
-      progress: 0,
-      playerState: track ? "loading" : "idle"
-    }),
-  setStreamUrl: (url) => set({ streamUrl: url }),
-  setPlayerState: (state) => set({ playerState: state }),
-  setIsSeeking: (isSeeking) => set({ isSeeking }),
-  setDuration: (duration) => set({ duration }),
-  setProgress: (progress) => set({ progress }),
-  setVolume: (volume) => set({ volume }),
+    setAudioRef: (ref) => set({ audioRef: ref }),
+    setCurrentTrack: (track) =>
+      set({
+        currentTrack: track,
+        streamUrl: null,
+        duration: track?.duration ?? 0,
+        progress: 0,
+        playerState: track ? "loading" : "idle"
+      }),
+    setStreamUrl: (url) => set({ streamUrl: url }),
+    setPlayerState: (state) => set({ playerState: state }),
+    setIsSeeking: (isSeeking) => set({ isSeeking }),
+    setDuration: (duration) => set({ duration }),
+    setProgress: (progress) => set({ progress }),
+    setVolume: (volume) => set({ volume }),
 
-  play: () => {
-    const { audioRef } = get()
-    if (!audioRef) return
-    audioRef
-      .play()
-      .then(() => set({ playerState: "playing" }))
-      .catch(() => {})
-  },
+    play: () => {
+      const { audioRef } = get()
+      if (!audioRef) return
+      audioRef
+        .play()
+        .then(() => set({ playerState: "playing" }))
+        .catch(() => {})
+    },
 
-  pause: () => {
-    const { audioRef } = get()
-    if (!audioRef) return
-    audioRef.pause()
-    set({ playerState: "paused" })
-  },
-
-  togglePlay: () => {
-    const { playerState, play, pause } = get()
-    if (playerState === "playing") {
-      pause()
-    } else {
-      play()
-    }
-  },
-
-  seekTo: (time: number) => {
-    const { audioRef, duration } = get()
-    if (!audioRef) return
-    const max = duration || audioRef.duration || 0
-    const clamped = max > 0 ? Math.min(Math.max(0, time), max) : Math.max(0, time)
-    audioRef.currentTime = clamped
-    set({ progress: clamped })
-  },
-
-  stop: () => {
-    const { audioRef } = get()
-    if (audioRef) {
+    pause: () => {
+      const { audioRef } = get()
+      if (!audioRef) return
       audioRef.pause()
-      audioRef.currentTime = 0
+      set({ playerState: "paused" })
+    },
+
+    togglePlay: () => {
+      const { playerState, play, pause } = get()
+      if (playerState === "playing") {
+        pause()
+      } else {
+        play()
+      }
+    },
+
+    seekTo: (time: number) => {
+      const { audioRef, duration } = get()
+      if (!audioRef) return
+      const max = duration || audioRef.duration || 0
+      const clamped =
+        max > 0 ? Math.min(Math.max(0, time), max) : Math.max(0, time)
+      audioRef.currentTime = clamped
+      set({ progress: clamped })
+    },
+
+    stop: () => {
+      const { audioRef } = get()
+      if (audioRef) {
+        audioRef.pause()
+        audioRef.currentTime = 0
+      }
+      set({
+        currentTrack: null,
+        streamUrl: null,
+        playerState: "idle",
+        progress: 0,
+        duration: 0
+      })
     }
-    set({
-      currentTrack: null,
-      streamUrl: null,
-      playerState: "idle",
-      progress: 0,
-      duration: 0
-    })
-  }
-}))
+  })
+)

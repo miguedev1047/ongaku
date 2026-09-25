@@ -13,4 +13,3 @@ export interface TPlaylistSong {
   created: number
   metadata: SongMetadata
 }
-

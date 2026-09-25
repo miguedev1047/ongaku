@@ -33,7 +33,6 @@ export function SearchSongs() {
 
   useHotkey("Control+Alt+S", () => setIsOpen(!isOpen))
 
-
   return (
     <div className="flex flex-col gap-4">
       <Tooltip>

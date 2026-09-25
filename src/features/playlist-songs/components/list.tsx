@@ -34,5 +34,10 @@ export function PlaylistSongsList() {
     )
   }
 
-  return <LocalSongsList data={data} playlistName={playlistName} />
+  return (
+    <LocalSongsList
+      data={data}
+      playlistName={playlistName}
+    />
+  )
 }

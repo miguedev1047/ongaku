@@ -12,10 +12,10 @@ export function LocalPlayerTrackInfo() {
 
   return (
     <PlayerTrackInfo>
-      <PlayerTitle title={currentSong.name}>
-        {currentSong.name}
-      </PlayerTitle>
-      <PlayerDescription title={currentSong.metadata?.artist || "Unknown Artist"}>
+      <PlayerTitle title={currentSong.name}>{currentSong.name}</PlayerTitle>
+      <PlayerDescription
+        title={currentSong.metadata?.artist || "Unknown Artist"}
+      >
         {currentSong.metadata?.artist || "Unknown Artist"}
       </PlayerDescription>
     </PlayerTrackInfo>

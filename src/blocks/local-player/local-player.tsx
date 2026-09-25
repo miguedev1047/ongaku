@@ -5,11 +5,7 @@ import { LocalPlayerTrackInfo } from "./local-track-info"
 import { LocalPlayerVolume } from "./local-volume"
 import { LocalPlayerProgressbar } from "./local-progressbar"
 import { LocalPlayerElement } from "./local-element"
-import {
-  Player,
-  PlayerContent,
-  PlayerHeader
-} from "@/components/ui/player"
+import { Player, PlayerContent, PlayerHeader } from "@/components/ui/player"
 import { usePlayerStore } from "@/shared/stores/use-player"
 
 export function LocalPlayer() {

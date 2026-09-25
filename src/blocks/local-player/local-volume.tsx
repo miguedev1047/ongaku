@@ -14,5 +14,10 @@ export function LocalPlayerVolume() {
     }
   }
 
-  return <PlayerVolume volume={volume} onChange={handleVolumeChange} />
+  return (
+    <PlayerVolume
+      volume={volume}
+      onChange={handleVolumeChange}
+    />
+  )
 }

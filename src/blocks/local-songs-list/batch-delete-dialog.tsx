@@ -36,8 +36,9 @@ export function BatchDeleteDialog({
             Delete {count} {count === 1 ? "song" : "songs"}
           </DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete {count === 1 ? "this song" : "these songs"}?
-            This action cannot be undone and will permanently remove the files from your computer.
+            Are you sure you want to delete{" "}
+            {count === 1 ? "this song" : "these songs"}? This action cannot be
+            undone and will permanently remove the files from your computer.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>

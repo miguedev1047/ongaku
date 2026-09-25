@@ -50,6 +50,6 @@ export function usePlaylistSongActions({ song }: UsePlaylistSongActionsProps) {
     isCurrentSong,
     isPlaying,
     handleTogglePlayback,
-    handleOpenFolder,
+    handleOpenFolder
   }
 }

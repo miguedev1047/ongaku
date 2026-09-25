@@ -62,12 +62,16 @@ export function DeletePlaylist({
   const isPending = mutation.isPending
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog
+      open={open}
+      onOpenChange={onOpenChange}
+    >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Delete playlist "{playlist.name}"</DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete this playlist? This action cannot be undone.
+            Are you sure you want to delete this playlist? This action cannot be
+            undone.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>

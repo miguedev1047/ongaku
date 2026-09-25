@@ -23,7 +23,7 @@ export function useMoveSong({ song, onSuccess }: UseMoveSongProps) {
     mutationFn: async (targetPlaylist: string) => {
       return await invoke<TSongAction>("move_song", {
         path: song.path,
-        targetPlaylist,
+        targetPlaylist
       })
     },
     onSuccess: (data, targetPlaylist) => {
@@ -45,24 +45,24 @@ export function useMoveSong({ song, onSuccess }: UseMoveSongProps) {
 
       // Invalidate source playlist songs
       queryClient.invalidateQueries({
-        queryKey: playlistSongsQueryOpts(song.playlist_name).queryKey,
+        queryKey: playlistSongsQueryOpts(song.playlist_name).queryKey
       })
 
       // Invalidate target playlist songs
       queryClient.invalidateQueries({
-        queryKey: playlistSongsQueryOpts(targetPlaylist).queryKey,
+        queryKey: playlistSongsQueryOpts(targetPlaylist).queryKey
       })
 
       // Invalidate playlists list (updates song counts)
       queryClient.invalidateQueries({
-        queryKey: playlistsQueryOpts().queryKey,
+        queryKey: playlistsQueryOpts().queryKey
       })
 
       onSuccess?.()
     },
     onError: () => {
       toast.error("An error occurred while moving the song")
-    },
+    }
   })
 
   const handleMoveSong = (targetPlaylist: string) => {
@@ -72,6 +72,6 @@ export function useMoveSong({ song, onSuccess }: UseMoveSongProps) {
 
   return {
     handleMoveSong,
-    isPending: mutation.isPending,
+    isPending: mutation.isPending
   }
 }

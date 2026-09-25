@@ -15,7 +15,9 @@ export function useMediaSession() {
   const localProgress = usePlayerStore((state) => state.progress)
 
   const currentTrack = useStreamingPlayerStore((state) => state.currentTrack)
-  const streamingPlayerState = useStreamingPlayerStore((state) => state.playerState)
+  const streamingPlayerState = useStreamingPlayerStore(
+    (state) => state.playerState
+  )
   const streamingDuration = useStreamingPlayerStore((state) => state.duration)
   const streamingProgress = useStreamingPlayerStore((state) => state.progress)
 
@@ -107,7 +109,13 @@ export function useMediaSession() {
         })
       } catch {}
     }
-  }, [isStreaming, streamingDuration, streamingProgress, localDuration, localProgress])
+  }, [
+    isStreaming,
+    streamingDuration,
+    streamingProgress,
+    localDuration,
+    localProgress
+  ])
 
   // Action handlers
   useEffect(() => {
@@ -123,8 +131,11 @@ export function useMediaSession() {
     }
 
     if (isStreaming) {
-      const { play: streamPlay, pause: streamPause, seekTo: streamSeekTo } =
-        useStreamingPlayerStore.getState()
+      const {
+        play: streamPlay,
+        pause: streamPause,
+        seekTo: streamSeekTo
+      } = useStreamingPlayerStore.getState()
 
       setHandler("play", () => streamPlay())
       setHandler("pause", () => streamPause())

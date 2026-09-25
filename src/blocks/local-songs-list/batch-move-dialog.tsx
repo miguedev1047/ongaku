@@ -114,7 +114,8 @@ export function BatchMoveDialog({
             Move {count} {count === 1 ? "song" : "songs"}
           </DialogTitle>
           <DialogDescription>
-            Choose the target playlist to move {count === 1 ? "this song" : "these songs"} into.
+            Choose the target playlist to move{" "}
+            {count === 1 ? "this song" : "these songs"} into.
           </DialogDescription>
         </DialogHeader>
 
