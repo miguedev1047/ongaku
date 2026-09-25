@@ -19,7 +19,7 @@ interface YoutubeSearchErrorProps {
 export function YoutubeSearchError({
   error,
   reset,
-  className,
+  className
 }: YoutubeSearchErrorProps) {
   const errorMessage =
     error instanceof Error
@@ -38,7 +38,10 @@ export function YoutubeSearchError({
       <Empty className="py-16">
         <EmptyHeader>
           <EmptyMedia variant="icon">
-            <HugeiconsIcon icon={AlertIcon} className="size-6 text-destructive" />
+            <HugeiconsIcon
+              icon={AlertIcon}
+              className="size-6 text-destructive"
+            />
           </EmptyMedia>
           <EmptyTitle>Error loading songs</EmptyTitle>
           <EmptyDescription className="max-w-md">
@@ -52,7 +55,10 @@ export function YoutubeSearchError({
             onClick={reset}
             className="mt-2 gap-1.5"
           >
-            <HugeiconsIcon icon={RefreshIcon} className="size-3.5" />
+            <HugeiconsIcon
+              icon={RefreshIcon}
+              className="size-3.5"
+            />
             <span>Try again</span>
           </Button>
         )}

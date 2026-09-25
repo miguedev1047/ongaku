@@ -24,7 +24,10 @@ export function YoutubeSearchEmpty({ className }: YoutubeSearchEmptyProps) {
       <Empty className="py-16">
         <EmptyHeader>
           <EmptyMedia variant="icon">
-            <HugeiconsIcon icon={YoutubeIcon} className="size-6 text-muted-foreground/70" />
+            <HugeiconsIcon
+              icon={YoutubeIcon}
+              className="size-6 text-muted-foreground/70"
+            />
           </EmptyMedia>
           <EmptyTitle>Search music on YouTube</EmptyTitle>
           <EmptyDescription>

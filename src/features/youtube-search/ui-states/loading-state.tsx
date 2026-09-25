@@ -1,12 +1,7 @@
 import { cn } from "cn"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Spinner } from "@/components/ui/spinner"
-import {
-  Item,
-  ItemActions,
-  ItemContent,
-  ItemMedia,
-} from "@/components/ui/item"
+import { Item, ItemActions, ItemContent, ItemMedia } from "@/components/ui/item"
 import { YoutubeIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 
@@ -21,7 +16,7 @@ export function YoutubeItemSkeleton({
   titleWidth = "w-3/5",
   channelWidth = "w-28",
   durationWidth = "w-8",
-  className,
+  className
 }: YoutubeItemSkeletonProps) {
   return (
     <Item
@@ -30,7 +25,10 @@ export function YoutubeItemSkeleton({
         className
       )}
     >
-      <ItemMedia variant="image" className="bg-muted">
+      <ItemMedia
+        variant="image"
+        className="bg-muted"
+      >
         <Skeleton className="size-full rounded-sm" />
       </ItemMedia>
       <ItemContent className="gap-1.5">
@@ -53,7 +51,7 @@ const DEFAULT_SKELETON_ITEMS = [
   { titleWidth: "w-2/3", channelWidth: "w-20", durationWidth: "w-8" },
   { titleWidth: "w-5/6", channelWidth: "w-28", durationWidth: "w-10" },
   { titleWidth: "w-3/5", channelWidth: "w-32", durationWidth: "w-8" },
-  { titleWidth: "w-1/2", channelWidth: "w-24", durationWidth: "w-9" },
+  { titleWidth: "w-1/2", channelWidth: "w-24", durationWidth: "w-9" }
 ]
 
 export interface YoutubeSearchSkeletonProps {
@@ -63,7 +61,7 @@ export interface YoutubeSearchSkeletonProps {
 
 export function YoutubeSearchSkeleton({
   count = 8,
-  className,
+  className
 }: YoutubeSearchSkeletonProps) {
   return (
     <ul
@@ -72,7 +70,8 @@ export function YoutubeSearchSkeleton({
       aria-busy="true"
     >
       {Array.from({ length: count }).map((_, index) => {
-        const item = DEFAULT_SKELETON_ITEMS[index % DEFAULT_SKELETON_ITEMS.length]
+        const item =
+          DEFAULT_SKELETON_ITEMS[index % DEFAULT_SKELETON_ITEMS.length]
         return (
           <li key={index}>
             <YoutubeItemSkeleton
@@ -96,12 +95,12 @@ export interface YoutubeLoadingSpinnerProps {
 export function YoutubeLoadingSpinner({
   message = "Searching YouTube...",
   submessage = "Fetching tracks and audio metadata",
-  className,
+  className
 }: YoutubeLoadingSpinnerProps) {
   return (
     <div
       className={cn(
-        "relative w-full h-full min-h-[260px] flex flex-col items-center justify-center p-8 text-center gap-4",
+        "relative w-full h-full min-h-65 flex flex-col items-center justify-center p-8 text-center gap-4",
         className
       )}
       role="status"
@@ -163,7 +162,7 @@ export function YoutubeLoading({
   count = 8,
   message,
   submessage,
-  className,
+  className
 }: YoutubeLoadingProps) {
   if (variant === "spinner") {
     return (
@@ -175,5 +174,10 @@ export function YoutubeLoading({
     )
   }
 
-  return <YoutubeSearchSkeleton count={count} className={className} />
+  return (
+    <YoutubeSearchSkeleton
+      count={count}
+      className={className}
+    />
+  )
 }
