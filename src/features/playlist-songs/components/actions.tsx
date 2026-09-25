@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
 import {
@@ -16,12 +16,11 @@ import {
   FolderTransferIcon,
   MoreHorizontalSquare01Icon,
   PauseIcon,
-  PlayIcon,
+  PlayIcon
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { DeleteSong } from "./delete-song"
-import { MoveSong } from "./move-song"
-import { usePlaylistSongActions } from "../hooks"
+import { DeleteSong, MoveSong } from "@/features/playlist-songs/components"
+import { usePlaylistSongActions } from "@/features/playlist-songs/hooks"
 
 interface PlaylistSongItemProps {
   song: TPlaylistSong
@@ -30,6 +29,7 @@ interface PlaylistSongItemProps {
 export function PlaylistSongActions({ song }: PlaylistSongItemProps) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false)
+
   const { isPlaying, handleTogglePlayback, handleOpenFolder } =
     usePlaylistSongActions({ song })
 

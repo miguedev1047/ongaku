@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/item"
 import { useState, Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
+import { isItemAction } from "@/shared/helpers/is-item-action"
 
 interface YoutubeCardProps {
   item: TYoutubeSearchResult
@@ -33,7 +34,7 @@ export function SearchYoutubeItem({ item }: YoutubeCardProps) {
   const handlePlayToggle = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
-    e.stopPropagation()
+    if (isItemAction(e)) return
 
     if (isCurrentTrack) {
       togglePlay()
@@ -72,7 +73,7 @@ export function SearchYoutubeItem({ item }: YoutubeCardProps) {
         <ItemTitle className="line-clamp-1">{item.title}</ItemTitle>
         <ItemDescription>{item.channel}</ItemDescription>
       </ItemContent>
-      <ItemActions>
+      <ItemActions onClick={(e) => e.stopPropagation()}>
         {item.duration && (
           <span className="text-xs font-bold text-muted-foreground leading-none">
             {formatDuration(item.duration)}

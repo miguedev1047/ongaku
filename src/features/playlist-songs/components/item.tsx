@@ -13,6 +13,7 @@ import { formatDuration } from "@/shared/helpers/format-duration"
 import { usePlayerStore } from "@/shared/stores/use-player"
 import { useActivePlayerStore } from "@/shared/stores/use-active-player"
 import { PlaylistSongActions } from "@/features/playlist-songs/components"
+import { isItemAction } from "@/shared/helpers/is-item-action"
 
 interface PlaylistSongItemProps {
   song: TPlaylistSong
@@ -25,7 +26,9 @@ export function PlaylistSongItem({ song }: PlaylistSongItemProps) {
   const playSong = useActivePlayerStore((state) => state.playSong)
   const { getCoverUrl } = useSongUtils()
 
-  const handleSelectSong = () => {
+  const handleSelectSong = (e: React.MouseEvent) => {
+    if (isItemAction(e)) return
+
     if (!isActiveTrack) {
       playSong(song)
     }
@@ -51,7 +54,7 @@ export function PlaylistSongItem({ song }: PlaylistSongItemProps) {
           {song.metadata.artist}
         </ItemDescription>
       </ItemContent>
-      <ItemActions>
+      <ItemActions onClick={(e) => e.stopPropagation()}>
         <span className="text-xs font-bold text-muted-foreground leading-none">
           {formatDuration(song.metadata.duration ?? 0)}
         </span>

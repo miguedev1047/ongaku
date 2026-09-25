@@ -9,7 +9,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from "@/components/ui/dialog"
 import {
   Select,
@@ -18,7 +18,7 @@ import {
   SelectItem,
   SelectLabel,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from "@/components/ui/select"
 import { Spinner } from "@/components/ui/spinner"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -34,7 +34,7 @@ interface MoveSongProps {
 function MovePlaylistSelect({
   currentPlaylist,
   value,
-  onValueChange,
+  onValueChange
 }: {
   currentPlaylist: string
   value: string
@@ -46,7 +46,10 @@ function MovePlaylistSelect({
 
   return (
     <div className="flex flex-col gap-2 py-2">
-      <Select value={value} onValueChange={onValueChange}>
+      <Select
+        value={value}
+        onValueChange={onValueChange}
+      >
         <SelectTrigger className="w-full">
           <SelectValue placeholder="Select target playlist" />
         </SelectTrigger>
@@ -71,7 +74,8 @@ function MovePlaylistSelect({
 
       {otherPlaylists.length === 0 && (
         <p className="text-xs text-muted-foreground">
-          No other playlists available. Create another playlist first to move this song.
+          No other playlists available. Create another playlist first to move
+          this song.
         </p>
       )}
     </div>
@@ -80,12 +84,13 @@ function MovePlaylistSelect({
 
 export function MoveSong({ song, open, onOpenChange }: MoveSongProps) {
   const [targetPlaylist, setTargetPlaylist] = useState<string>("")
+
   const { handleMoveSong, isPending } = useMoveSong({
     song,
     onSuccess: () => {
       onOpenChange(false)
       setTargetPlaylist("")
-    },
+    }
   })
 
   const handleSubmit = () => {
