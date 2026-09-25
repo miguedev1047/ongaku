@@ -6,7 +6,6 @@ import { PlayerRoot } from "@/blocks"
 import { Toaster } from "@/components/ui/sonner"
 import { AppProvider } from "@/providers/app-provider"
 import { useShowApp } from "@/hooks/use-show-app"
-import { useMediaSession } from "@/hooks/use-media-session"
 
 interface RouteContext {
   queryClient: QueryClient
