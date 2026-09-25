@@ -269,6 +269,7 @@ function PlayerLoopButton({
 interface PlayerProgressProps {
   progress: number
   duration: number
+  disabled: boolean
   onSeek?: (e: React.ChangeEvent<HTMLInputElement>) => void
   onPointerDown?: () => void
   onPointerUp?: () => void
@@ -278,6 +279,7 @@ interface PlayerProgressProps {
 function PlayerProgress({
   progress,
   duration,
+  disabled,
   onSeek,
   onPointerDown,
   onPointerUp,
@@ -296,6 +298,7 @@ function PlayerProgress({
         onPointerDown={onPointerDown}
         onPointerUp={onPointerUp}
         className="w-full"
+        disabled={disabled}
       />
       <div className="flex items-center justify-between text-xs text-muted-foreground">
         <p>{formatDuration(progress)}</p>

@@ -7,13 +7,12 @@ import {
 } from "@/components/ui/player"
 
 export function StreamingControls() {
-  const playerState = useStreamingPlayerStore((s) => s.playerState)
-  const togglePlay = useStreamingPlayerStore((s) => s.togglePlay)
-  const seekTo = useStreamingPlayerStore((s) => s.seekTo)
+  const isLoading = useStreamingPlayerStore((s) => s.playerState === "loading")
+  const isPlaying = useStreamingPlayerStore((s) => s.playerState == "playing")
   const progress = useStreamingPlayerStore((s) => s.progress)
 
-  const isPlaying = playerState === "playing"
-  const isLoading = playerState === "loading"
+  const togglePlay = useStreamingPlayerStore((s) => s.togglePlay)
+  const seekTo = useStreamingPlayerStore((s) => s.seekTo)
 
   const handlePrevious = () => {
     seekTo(Math.max(0, progress - 10))

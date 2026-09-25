@@ -6,6 +6,8 @@ export function StreamingPlayerProgressbar() {
   const duration = useStreamingPlayerStore((s) => s.duration)
   const progress = useStreamingPlayerStore((s) => s.progress)
   const audioRef = useStreamingPlayerStore((s) => s.audioRef)
+  const isLoading = useStreamingPlayerStore((s) => s.playerState === "loading")
+
   const setProgress = useStreamingPlayerStore((s) => s.setProgress)
   const setIsSeeking = useStreamingPlayerStore((s) => s.setIsSeeking)
   const setPlayerState = useStreamingPlayerStore((s) => s.setPlayerState)
@@ -53,6 +55,7 @@ export function StreamingPlayerProgressbar() {
     <PlayerProgress
       progress={progress}
       duration={duration}
+      disabled={isLoading}
       onSeek={handleSeek}
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
