@@ -24,10 +24,8 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react"
 import { openUrl } from "@tauri-apps/plugin-opener"
 import { PlaylistMenuGroup } from "@/features/youtube-search/components"
-import {
-  useDownloadSong,
-  useYoutubePlayback
-} from "@/features/youtube-search/hooks"
+import { useDownloadQueueStore } from "@/shared/stores/use-download-queue"
+import { useYoutubePlayback } from "@/features/youtube-search/hooks"
 
 interface YoutubeSongActionsProps {
   item: TYoutubeSearchResult
@@ -45,7 +43,7 @@ export function YoutubeSongActions({
   showLabel = false
 }: YoutubeSongActionsProps) {
   const { isPlaying, isLoading, togglePlayback } = useYoutubePlayback(item)
-  const { mutate: downloadSong, isPending: isDownloading } = useDownloadSong()
+  const enqueue = useDownloadQueueStore((state) => state.enqueue)
 
   const handleOpenYoutube = async () => {
     try {
@@ -56,7 +54,7 @@ export function YoutubeSongActions({
   }
 
   const handleSelectPlaylist = (playlistName: string) => {
-    downloadSong({ item, playlistName })
+    enqueue([{ item, playlistName }])
   }
 
   return (
@@ -120,7 +118,6 @@ export function YoutubeSongActions({
               >
                 <PlaylistMenuGroup
                   onSelectPlaylist={handleSelectPlaylist}
-                  disabled={isDownloading}
                 />
               </Suspense>
             </DropdownMenuSubContent>

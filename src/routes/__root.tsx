@@ -5,11 +5,11 @@ import { TanstackDevtool } from "@/components/tanstack-devtools"
 import { PlayerRoot } from "@/blocks/player-root"
 import { Toaster } from "@/components/ui/sonner"
 import { useShowApp } from "@/hooks/use-show-app"
-import { useDownloadQueueListener } from "@/features/downloads/hooks"
 import {
-  DownloadFloatingTrigger,
-  DownloadDialog
-} from "@/features/downloads/components"
+  DownloadQueueDialog,
+  DownloadQueueTrigger,
+  useDownloadQueueListener
+} from "@/features/download-queue"
 
 interface RouteContext {
   queryClient: QueryClient
@@ -34,8 +34,8 @@ function RootComponent() {
       <main className="flex-1 min-h-0 overflow-hidden">
         <Outlet />
       </main>
-      <DownloadDialog />
-      <DownloadFloatingTrigger />
+      <DownloadQueueDialog />
+      <DownloadQueueTrigger />
       <PlayerRoot />
       <Toaster />
     </div>

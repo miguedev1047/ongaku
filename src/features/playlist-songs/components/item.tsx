@@ -10,7 +10,7 @@ import {
 import { CoverImage } from "@/components/cover-image"
 import { useSongUtils } from "@/hooks/use-song-utils"
 import { formatDuration } from "@/shared/helpers/format-duration"
-import { usePlayerStore } from "@/shared/stores/use-player"
+import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
 import { useActivePlayerStore } from "@/shared/stores/use-active-player"
 import { PlaylistSongActions } from "@/features/playlist-songs/components"
 import { isItemAction } from "@/shared/helpers/is-item-action"
@@ -20,7 +20,7 @@ interface PlaylistSongItemProps {
 }
 
 export function PlaylistSongItem({ song }: PlaylistSongItemProps) {
-  const isActiveTrack = usePlayerStore(
+  const isActiveTrack = useLocalPlayerStore(
     (state) => state.currentSong?.id === song.id
   )
   const playSong = useActivePlayerStore((state) => state.playSong)

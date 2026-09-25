@@ -1,9 +1,9 @@
 import { create } from "zustand"
 import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
 
-type PlayerState = "idle" | "playing" | "paused"
+export type LocalPlayerState = "idle" | "playing" | "paused"
 
-interface PlayerStore {
+export interface LocalPlayerStore {
   audioRef: HTMLAudioElement | null
   currentSong: TPlaylistSong | null
   currentPlaylist: string | "Default"
@@ -13,7 +13,7 @@ interface PlayerStore {
   duration: number
   progress: number
   volume: number
-  playerState: PlayerState
+  playerState: LocalPlayerState
 
   setAudioRef: (audio: HTMLAudioElement | null) => void
   setCurrentSong: (song: TPlaylistSong | null) => void
@@ -26,10 +26,10 @@ interface PlayerStore {
   setDuration: (duration: number) => void
   setProgress: (progress: number) => void
   setVolume: (volume: number) => void
-  setPlayerState: (state: PlayerState) => void
+  setPlayerState: (state: LocalPlayerState) => void
 }
 
-export const usePlayerStore = create<PlayerStore>((set) => ({
+export const useLocalPlayerStore = create<LocalPlayerStore>((set) => ({
   audioRef: null,
   currentSong: null,
   currentPlaylist: "Default",

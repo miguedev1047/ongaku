@@ -4,7 +4,7 @@ import {
   usePlayerNextSong,
   usePlayerShuffle,
   usePlayerLoop
-} from "@/hooks/use-player-controls"
+} from "@/blocks/local-player/hooks"
 import {
   PlayerControls,
   PlayerPlayButton,

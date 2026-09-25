@@ -11,7 +11,7 @@ import {
 import { Suspense } from "react"
 import { Badge } from "@/components/ui/badge"
 import { useStreamingPlayerStore } from "@/shared/stores/use-streaming-player"
-import { CheckBinaries, DownloadStatus } from "@/features/downloads/components"
+import { CheckBinaries, DownloadQueueBadge } from "@/features/download-queue"
 import {
   YoutubeSearchEmpty,
   YoutubeLoading,
@@ -58,7 +58,7 @@ function RouteComponent() {
           </div>
 
           <div className="flex items-center gap-1">
-            <DownloadStatus />
+            <DownloadQueueBadge />
             <CheckBinaries />
           </div>
         </div>

@@ -1,19 +1,22 @@
 import { VList } from "virtua"
 import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
 import { Checkbox } from "@/components/ui/checkbox"
-import { useLocalBatchStore } from "@/shared/stores/use-local-batch"
-import { LocalSongItem } from "@/blocks/local-songs-list/local-song-item"
-import { LocalBatchBar } from "@/blocks/local-songs-list/local-batch-bar"
+import { usePlaylistBatchStore } from "@/shared/stores/use-playlist-batch"
+import { PlaylistSongItem } from "@/blocks/playlist-songs-list/playlist-song-item"
+import { PlaylistBatchBar } from "@/blocks/playlist-songs-list/playlist-batch-bar"
 import { FieldLabel } from "@/components/ui/field"
 
-interface LocalSongsListProps {
+interface PlaylistSongsListProps {
   data: TPlaylistSong[]
   playlistName: string
 }
 
-export function LocalSongsList({ data, playlistName }: LocalSongsListProps) {
-  const isAllSelected = useLocalBatchStore((s) => s.isAllSelected(data))
-  const selectAll = useLocalBatchStore((s) => s.selectAll)
+export function PlaylistSongsList({
+  data,
+  playlistName
+}: PlaylistSongsListProps) {
+  const isAllSelected = usePlaylistBatchStore((s) => s.isAllSelected(data))
+  const selectAll = usePlaylistBatchStore((s) => s.selectAll)
 
   return (
     <div className="size-full flex flex-col overflow-hidden">
@@ -38,7 +41,7 @@ export function LocalSongsList({ data, playlistName }: LocalSongsListProps) {
           className="size-full no-scrollbar scroll-fade-y"
         >
           {(song) => (
-            <LocalSongItem
+            <PlaylistSongItem
               key={song.id}
               song={song}
             />
@@ -46,7 +49,7 @@ export function LocalSongsList({ data, playlistName }: LocalSongsListProps) {
         </VList>
       </div>
 
-      <LocalBatchBar currentPlaylistName={playlistName} />
+      <PlaylistBatchBar currentPlaylistName={playlistName} />
     </div>
   )
 }

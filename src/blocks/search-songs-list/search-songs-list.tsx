@@ -1,17 +1,17 @@
 import { VList } from "virtua"
 import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
 import { Checkbox } from "@/components/ui/checkbox"
-import { useStreamingBatchStore } from "@/shared/stores/use-streaming-batch"
-import { StreamingSongItem } from "@/blocks/streaming-songs-list/streaming-song-item"
-import { StreamingBatchBar } from "@/blocks/streaming-songs-list/streaming-batch-bar"
+import { useSearchBatchStore } from "@/shared/stores/use-search-batch"
+import { SearchSongItem } from "@/blocks/search-songs-list/search-song-item"
+import { SearchBatchBar } from "@/blocks/search-songs-list/search-batch-bar"
 
-interface StreamingSongsListProps {
+interface SearchSongsListProps {
   data: TYoutubeSearchResult[]
 }
 
-export function StreamingSongsList({ data }: StreamingSongsListProps) {
-  const isAllSelected = useStreamingBatchStore((s) => s.isAllSelected(data))
-  const selectAll = useStreamingBatchStore((s) => s.selectAll)
+export function SearchSongsList({ data }: SearchSongsListProps) {
+  const isAllSelected = useSearchBatchStore((s) => s.isAllSelected(data))
+  const selectAll = useSearchBatchStore((s) => s.selectAll)
 
   return (
     <div className="size-full flex flex-col overflow-hidden">
@@ -36,17 +36,15 @@ export function StreamingSongsList({ data }: StreamingSongsListProps) {
           className="size-full no-scrollbar scroll-fade-y"
         >
           {(item) => (
-            <div
+            <SearchSongItem
               key={item.id}
-              className="py-0.5"
-            >
-              <StreamingSongItem item={item} />
-            </div>
+              item={item}
+            />
           )}
         </VList>
       </div>
 
-      <StreamingBatchBar />
+      <SearchBatchBar />
     </div>
   )
 }

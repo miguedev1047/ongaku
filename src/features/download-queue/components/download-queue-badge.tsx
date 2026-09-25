@@ -2,11 +2,11 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Download01Icon } from "@hugeicons/core-free-icons"
-import { useDownloadStatus } from "@/features/downloads/hooks"
+import { useDownloadQueue } from "@/features/download-queue/hooks"
 
-export function DownloadStatus() {
-  const { hasTasks, isDownloading, pendingCount, toggleCard } =
-    useDownloadStatus()
+export function DownloadQueueBadge() {
+  const { hasTasks, isDownloading, pendingCount, toggleDialog } =
+    useDownloadQueue()
 
   if (!hasTasks) {
     return null
@@ -17,7 +17,7 @@ export function DownloadStatus() {
       size="icon"
       variant="ghost"
       className="relative size-8"
-      onClick={() => toggleCard()}
+      onClick={() => toggleDialog()}
       title="View download queue"
     >
       <HugeiconsIcon

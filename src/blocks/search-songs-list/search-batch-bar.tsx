@@ -8,15 +8,15 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Spinner } from "@/components/ui/spinner"
 import { PlaylistMenuGroup } from "@/features/youtube-search/components/playlist-menu-group"
-import { useStreamingBatchActions } from "@/blocks/streaming-songs-list/hooks"
+import { useSearchBatchActions } from "@/blocks/search-songs-list/hooks"
 import { useActivePlayerStore } from "@/shared/stores/use-active-player"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Cancel01Icon, Download01Icon } from "@hugeicons/core-free-icons"
 
-export function StreamingBatchBar() {
+export function SearchBatchBar() {
   const activePlayer = useActivePlayerStore((s) => s.activePlayer)
   const { selectedCount, clearSelection, handleBatchDownload } =
-    useStreamingBatchActions()
+    useSearchBatchActions()
 
   if (selectedCount === 0) {
     return null

@@ -1,4 +1,4 @@
-import { usePlayerProgressbar } from "@/hooks/use-player-controls"
+import { usePlayerProgressbar } from "@/blocks/local-player/hooks"
 import { PlayerProgress } from "@/components/ui/player"
 
 export function LocalPlayerProgressbar() {

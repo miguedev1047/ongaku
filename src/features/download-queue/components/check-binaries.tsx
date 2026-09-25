@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/tooltip"
 import { Download01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { useBinaries } from "@/features/downloads/hooks"
+import { useBinaries } from "@/features/download-queue/hooks"
 
 interface CheckBinariesProps {
   className?: string

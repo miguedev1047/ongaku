@@ -1,14 +1,14 @@
-import { useDownloadsStore } from "@/shared/stores/use-downloads"
+import { useDownloadQueueStore } from "@/shared/stores/use-download-queue"
 
-export function useDownloadStatus() {
-  const tasksMap = useDownloadsStore((state) => state.tasks)
-  const taskOrder = useDownloadsStore((state) => state.taskOrder)
-  const isCardOpen = useDownloadsStore((state) => state.isCardOpen)
-  const toggleCard = useDownloadsStore((state) => state.toggleCard)
-  const cancelTask = useDownloadsStore((state) => state.cancelTask)
-  const retryTask = useDownloadsStore((state) => state.retryTask)
-  const removeTask = useDownloadsStore((state) => state.removeTask)
-  const clearFinished = useDownloadsStore((state) => state.clearFinished)
+export function useDownloadQueue() {
+  const tasksMap = useDownloadQueueStore((state) => state.tasks)
+  const taskOrder = useDownloadQueueStore((state) => state.taskOrder)
+  const isDialogOpen = useDownloadQueueStore((state) => state.isDialogOpen)
+  const toggleDialog = useDownloadQueueStore((state) => state.toggleDialog)
+  const cancelTask = useDownloadQueueStore((state) => state.cancelTask)
+  const retryTask = useDownloadQueueStore((state) => state.retryTask)
+  const removeTask = useDownloadQueueStore((state) => state.removeTask)
+  const clearFinished = useDownloadQueueStore((state) => state.clearFinished)
 
   const allTasks = taskOrder.map((id) => tasksMap[id]).filter(Boolean)
 
@@ -32,8 +32,8 @@ export function useDownloadStatus() {
     isDownloading,
     hasTasks,
     pendingCount,
-    isCardOpen,
-    toggleCard,
+    isDialogOpen,
+    toggleDialog,
     cancelTask,
     retryTask,
     removeTask,

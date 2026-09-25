@@ -1,10 +1,10 @@
 import { createPortal } from "react-dom"
 import { Button } from "@/components/ui/button"
-import { useLocalBatchStore } from "@/shared/stores/use-local-batch"
+import { usePlaylistBatchStore } from "@/shared/stores/use-playlist-batch"
 import { useActivePlayerStore } from "@/shared/stores/use-active-player"
-import { useLocalBatchActions } from "@/blocks/local-songs-list/hooks"
-import { BatchDeleteDialog } from "@/blocks/local-songs-list/batch-delete-dialog"
-import { BatchMoveDialog } from "@/blocks/local-songs-list/batch-move-dialog"
+import { usePlaylistBatchActions } from "@/blocks/playlist-songs-list/hooks"
+import { BatchDeleteDialog } from "@/blocks/playlist-songs-list/batch-delete-dialog"
+import { BatchMoveDialog } from "@/blocks/playlist-songs-list/batch-move-dialog"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   Cancel01Icon,
@@ -12,13 +12,15 @@ import {
   Folder01Icon
 } from "@hugeicons/core-free-icons"
 
-interface LocalBatchBarProps {
+interface PlaylistBatchBarProps {
   currentPlaylistName?: string
 }
 
-export function LocalBatchBar({ currentPlaylistName }: LocalBatchBarProps) {
+export function PlaylistBatchBar({
+  currentPlaylistName
+}: PlaylistBatchBarProps) {
   const activePlayer = useActivePlayerStore((s) => s.activePlayer)
-  const clearSelection = useLocalBatchStore((s) => s.clear)
+  const clearSelection = usePlaylistBatchStore((s) => s.clear)
 
   const {
     selectedCount,
@@ -29,7 +31,7 @@ export function LocalBatchBar({ currentPlaylistName }: LocalBatchBarProps) {
     isProcessing,
     handleBatchDelete,
     handleBatchMove
-  } = useLocalBatchActions(currentPlaylistName)
+  } = usePlaylistBatchActions(currentPlaylistName)
 
   if (selectedCount === 0) {
     return null

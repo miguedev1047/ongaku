@@ -1,4 +1,4 @@
-import { usePlayerMedia } from "@/hooks/use-player-media"
+import { usePlayerMedia } from "@/blocks/local-player/hooks"
 import { useSongUtils } from "@/hooks/use-song-utils"
 
 export function LocalPlayerElement() {

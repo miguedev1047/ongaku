@@ -1,5 +1,5 @@
 import { create } from "zustand"
-import { usePlayerStore } from "@/shared/stores/use-player"
+import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
 import { useStreamingPlayerStore } from "@/shared/stores/use-streaming-player"
 import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
 import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
@@ -32,7 +32,7 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set) => ({
     }
 
     // 2. Set song in local player store
-    usePlayerStore.getState().setCurrentSong(song)
+    useLocalPlayerStore.getState().setCurrentSong(song)
 
     // 3. Mark active player as local
     set({ activePlayer: "local" })
@@ -40,7 +40,7 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set) => ({
 
   playStream: (track) => {
     // 1. Pause local audio if it was playing
-    const localState = usePlayerStore.getState()
+    const localState = useLocalPlayerStore.getState()
     if (localState.audioRef) {
       localState.audioRef.pause()
       localState.setCurrentSong(null)

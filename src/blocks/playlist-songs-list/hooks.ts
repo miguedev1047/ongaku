@@ -2,26 +2,26 @@ import { useState } from "react"
 import { useQueryClient } from "@tanstack/react-query"
 import { invoke } from "@tauri-apps/api/core"
 import { toast } from "sonner"
-import { useLocalBatchStore } from "@/shared/stores/use-local-batch"
-import { usePlayerStore } from "@/shared/stores/use-player"
+import { usePlaylistBatchStore } from "@/shared/stores/use-playlist-batch"
+import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
 import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs"
 import { playlistsQueryOpts } from "@/shared/queries/playlists"
 import type { TSongAction } from "@/shared/types/song-actions"
 
-export function useLocalBatchActions(currentPlaylistName?: string) {
+export function usePlaylistBatchActions(currentPlaylistName?: string) {
   const queryClient = useQueryClient()
   const [isMoveOpen, setIsMoveOpen] = useState(false)
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
 
-  const selectedMap = useLocalBatchStore((s) => s.selectedMap)
-  const clearSelection = useLocalBatchStore((s) => s.clear)
+  const selectedMap = usePlaylistBatchStore((s) => s.selectedMap)
+  const clearSelection = usePlaylistBatchStore((s) => s.clear)
   const selectedSongs = Object.values(selectedMap)
 
-  const currentSong = usePlayerStore((s) => s.currentSong)
-  const setCurrentSong = usePlayerStore((s) => s.setCurrentSong)
-  const setPlayerState = usePlayerStore((s) => s.setPlayerState)
-  const audioRef = usePlayerStore((s) => s.audioRef)
+  const currentSong = useLocalPlayerStore((s) => s.currentSong)
+  const setCurrentSong = useLocalPlayerStore((s) => s.setCurrentSong)
+  const setPlayerState = useLocalPlayerStore((s) => s.setPlayerState)
+  const audioRef = useLocalPlayerStore((s) => s.audioRef)
 
   const handleBatchDelete = async () => {
     if (selectedSongs.length === 0) return

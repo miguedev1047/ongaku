@@ -6,10 +6,10 @@ import { LocalPlayerVolume } from "./local-volume"
 import { LocalPlayerProgressbar } from "./local-progressbar"
 import { LocalPlayerElement } from "./local-element"
 import { Player, PlayerContent, PlayerHeader } from "@/components/ui/player"
-import { usePlayerStore } from "@/shared/stores/use-player"
+import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
 
 export function LocalPlayer() {
-  const currentSong = usePlayerStore((state) => state.currentSong)
+  const currentSong = useLocalPlayerStore((state) => state.currentSong)
 
   if (!currentSong) return null
 

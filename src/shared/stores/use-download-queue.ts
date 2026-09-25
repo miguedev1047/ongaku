@@ -8,7 +8,11 @@ import { playlistsQueryOpts } from "@/shared/queries/playlists"
 import { toast } from "sonner"
 
 export type DownloadTaskStatus =
-  "queued" | "downloading" | "completed" | "error" | "cancelled"
+  | "queued"
+  | "downloading"
+  | "completed"
+  | "error"
+  | "cancelled"
 
 export interface DownloadProgressPayload {
   id: string
@@ -31,14 +35,14 @@ export interface DownloadTask {
   queuedAt: number
 }
 
-interface DownloadsStore {
+export interface DownloadQueueStore {
   tasks: Record<string, DownloadTask>
   taskOrder: string[]
   concurrency: number
-  isCardOpen: boolean
+  isDialogOpen: boolean
 
   // Actions
-  toggleCard: (open?: boolean) => void
+  toggleDialog: (open?: boolean) => void
   enqueue: (
     items: { item: TYoutubeSearchResult; playlistName: string }[]
   ) => void
@@ -52,15 +56,15 @@ interface DownloadsStore {
   _processQueue: () => Promise<void>
 }
 
-export const useDownloadsStore = create<DownloadsStore>((set, get) => ({
+export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
   tasks: {},
   taskOrder: [],
   concurrency: 2,
-  isCardOpen: false,
+  isDialogOpen: false,
 
-  toggleCard: (open) => {
+  toggleDialog: (open) => {
     set((state) => ({
-      isCardOpen: typeof open === "boolean" ? open : !state.isCardOpen
+      isDialogOpen: typeof open === "boolean" ? open : !state.isDialogOpen
     }))
   },
 
@@ -278,12 +282,19 @@ export const useDownloadsStore = create<DownloadsStore>((set, get) => ({
 
           // Continue queue
           get()._processQueue()
-        } catch (err: any) {
+        } catch (err: unknown) {
           const currentTask = get().tasks[task.id]
           if (currentTask && currentTask.status === "cancelled") {
             get()._processQueue()
             return
           }
+
+          const errorMessage =
+            typeof err === "string"
+              ? err
+              : err instanceof Error
+                ? err.message
+                : "Download failed"
 
           set((prev) => {
             if (!prev.tasks[task.id]) return prev
@@ -293,10 +304,7 @@ export const useDownloadsStore = create<DownloadsStore>((set, get) => ({
                 [task.id]: {
                   ...prev.tasks[task.id],
                   status: "error",
-                  error:
-                    typeof err === "string"
-                      ? err
-                      : err?.message || "Download failed"
+                  error: errorMessage
                 }
               }
             }

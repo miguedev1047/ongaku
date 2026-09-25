@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { invoke } from "@tauri-apps/api/core"
 import { toast } from "sonner"
-import { usePlayerStore } from "@/shared/stores/use-player"
+import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
 import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs"
 import { playlistsQueryOpts } from "@/shared/queries/playlists"
 import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
@@ -14,10 +14,10 @@ interface UseDeleteSongProps {
 
 export function useDeleteSong({ song, onSuccess }: UseDeleteSongProps) {
   const queryClient = useQueryClient()
-  const currentSong = usePlayerStore((state) => state.currentSong)
-  const setCurrentSong = usePlayerStore((state) => state.setCurrentSong)
-  const setPlayerState = usePlayerStore((state) => state.setPlayerState)
-  const audioRef = usePlayerStore((state) => state.audioRef)
+  const currentSong = useLocalPlayerStore((state) => state.currentSong)
+  const setCurrentSong = useLocalPlayerStore((state) => state.setCurrentSong)
+  const setPlayerState = useLocalPlayerStore((state) => state.setPlayerState)
+  const audioRef = useLocalPlayerStore((state) => state.audioRef)
 
   const mutation = useMutation({
     mutationFn: async () => {

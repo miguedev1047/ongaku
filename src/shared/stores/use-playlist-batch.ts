@@ -1,7 +1,7 @@
 import { create } from "zustand"
 import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
 
-interface LocalBatchState {
+export interface PlaylistBatchState {
   selectedMap: Record<string, TPlaylistSong>
   toggleSelect: (song: TPlaylistSong) => void
   selectMultiple: (songs: TPlaylistSong[]) => void
@@ -13,7 +13,7 @@ interface LocalBatchState {
   isAllSelected: (songs: TPlaylistSong[]) => boolean
 }
 
-export const useLocalBatchStore = create<LocalBatchState>((set, get) => ({
+export const usePlaylistBatchStore = create<PlaylistBatchState>((set, get) => ({
   selectedMap: {},
 
   toggleSelect: (song) => {

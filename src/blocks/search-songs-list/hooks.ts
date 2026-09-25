@@ -1,11 +1,11 @@
 import { toast } from "sonner"
-import { useStreamingBatchStore } from "@/shared/stores/use-streaming-batch"
-import { useDownloadsStore } from "@/shared/stores/use-downloads"
+import { useSearchBatchStore } from "@/shared/stores/use-search-batch"
+import { useDownloadQueueStore } from "@/shared/stores/use-download-queue"
 
-export function useStreamingBatchActions() {
-  const selectedMap = useStreamingBatchStore((s) => s.selectedMap)
-  const clearSelection = useStreamingBatchStore((s) => s.clear)
-  const enqueue = useDownloadsStore((s) => s.enqueue)
+export function useSearchBatchActions() {
+  const selectedMap = useSearchBatchStore((s) => s.selectedMap)
+  const clearSelection = useSearchBatchStore((s) => s.clear)
+  const enqueue = useDownloadQueueStore((s) => s.enqueue)
 
   const selectedSongs = Object.values(selectedMap)
   const selectedCount = selectedSongs.length

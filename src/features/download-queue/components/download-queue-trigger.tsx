@@ -1,20 +1,20 @@
 import { createPortal } from "react-dom"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { useDownloadStatus } from "@/features/downloads/hooks"
+import { useDownloadQueue } from "@/features/download-queue/hooks"
 import { useActivePlayerStore } from "@/shared/stores/use-active-player"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Download01Icon } from "@hugeicons/core-free-icons"
 
-export function DownloadFloatingTrigger() {
+export function DownloadQueueTrigger() {
   const {
     hasTasks,
     isDownloading,
     pendingCount,
     completedTasks,
-    isCardOpen,
-    toggleCard
-  } = useDownloadStatus()
+    isDialogOpen,
+    toggleDialog
+  } = useDownloadQueue()
   const activePlayer = useActivePlayerStore((s) => s.activePlayer)
 
   if (!hasTasks) {
@@ -28,9 +28,9 @@ export function DownloadFloatingTrigger() {
       variant={isDownloading ? "default" : "secondary"}
       size="sm"
       className={`fixed right-4 ${bottomClass} z-40 shadow-lg gap-2 px-3 h-8 rounded-lg transition-all duration-200 ${
-        isCardOpen ? "ring-2 ring-primary" : ""
+        isDialogOpen ? "ring-2 ring-primary" : ""
       }`}
-      onClick={() => toggleCard()}
+      onClick={() => toggleDialog()}
     >
       <HugeiconsIcon
         icon={Download01Icon}

@@ -1,4 +1,4 @@
-import { usePlayerStore } from "@/shared/stores/use-player"
+import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
 import {
   PlayerTrackInfo,
   PlayerTitle,
@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/player"
 
 export function LocalPlayerTrackInfo() {
-  const currentSong = usePlayerStore((state) => state.currentSong)
+  const currentSong = useLocalPlayerStore((state) => state.currentSong)
 
   if (!currentSong) return null
 

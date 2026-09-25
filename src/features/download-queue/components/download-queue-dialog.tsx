@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Spinner } from "@/components/ui/spinner"
-import { useDownloadStatus } from "@/features/downloads/hooks"
+import { useDownloadQueue } from "@/features/download-queue/hooks"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   CheckmarkCircle02Icon,
@@ -21,25 +21,25 @@ import {
 } from "@hugeicons/core-free-icons"
 import { Link } from "@tanstack/react-router"
 
-export function DownloadDialog() {
+export function DownloadQueueDialog() {
   const {
     allTasks,
     activeTasks,
     queuedTasks,
     completedTasks,
     failedTasks,
-    isCardOpen,
-    toggleCard,
+    isDialogOpen,
+    toggleDialog,
     cancelTask,
     retryTask,
     removeTask,
     clearFinished
-  } = useDownloadStatus()
+  } = useDownloadQueue()
 
   return (
     <Dialog
-      open={isCardOpen}
-      onOpenChange={(open) => toggleCard(open)}
+      open={isDialogOpen}
+      onOpenChange={(open) => toggleDialog(open)}
     >
       <DialogContent className="sm:max-w-xl max-h-[80vh] flex flex-col p-4 gap-3">
         {/* Header */}
@@ -253,7 +253,7 @@ export function DownloadDialog() {
                           to="/playlists/$playlistName"
                           params={{ playlistName: task.playlistName }}
                           className="text-primary hover:underline font-medium"
-                          onClick={() => toggleCard(false)}
+                          onClick={() => toggleDialog(false)}
                         >
                           Saved to {task.playlistName}
                         </Link>
@@ -330,6 +330,3 @@ export function DownloadDialog() {
     </Dialog>
   )
 }
-
-// Alias for backwards compatibility
-export const DownloadManagerCard = DownloadDialog

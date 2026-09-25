@@ -1,7 +1,7 @@
 import { youtubeSearchQueryOpts } from "@/shared/queries/youtube"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { useSearch } from "@tanstack/react-router"
-import { StreamingSongsList } from "@/blocks/streaming-songs-list"
+import { SearchSongsList } from "@/blocks/search-songs-list"
 import {
   Empty,
   EmptyDescription,
@@ -33,5 +33,5 @@ export function SearchYoutubeList() {
     )
   }
 
-  return <StreamingSongsList data={results} />
+  return <SearchSongsList data={results} />
 }

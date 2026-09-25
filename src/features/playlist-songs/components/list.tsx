@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs"
 import { useParams } from "@tanstack/react-router"
-import { LocalSongsList } from "@/blocks/local-songs-list"
+import { PlaylistSongsList as PlaylistSongsBlock } from "@/blocks/playlist-songs-list"
 import {
   Empty,
   EmptyDescription,
@@ -35,7 +35,7 @@ export function PlaylistSongsList() {
   }
 
   return (
-    <LocalSongsList
+    <PlaylistSongsBlock
       data={data}
       playlistName={playlistName}
     />

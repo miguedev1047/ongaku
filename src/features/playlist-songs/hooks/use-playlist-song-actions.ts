@@ -1,4 +1,4 @@
-import { usePlayerStore } from "@/shared/stores/use-player"
+import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
 import { useActivePlayerStore } from "@/shared/stores/use-active-player"
 import { getPlaylistPath } from "@/shared/helpers/get-playlist-helper"
 import { openPath } from "@tauri-apps/plugin-opener"
@@ -10,10 +10,10 @@ interface UsePlaylistSongActionsProps {
 }
 
 export function usePlaylistSongActions({ song }: UsePlaylistSongActionsProps) {
-  const currentSong = usePlayerStore((state) => state.currentSong)
-  const playerState = usePlayerStore((state) => state.playerState)
-  const audioRef = usePlayerStore((state) => state.audioRef)
-  const setPlayerState = usePlayerStore((state) => state.setPlayerState)
+  const currentSong = useLocalPlayerStore((state) => state.currentSong)
+  const playerState = useLocalPlayerStore((state) => state.playerState)
+  const audioRef = useLocalPlayerStore((state) => state.audioRef)
+  const setPlayerState = useLocalPlayerStore((state) => state.setPlayerState)
   const playSong = useActivePlayerStore((state) => state.playSong)
 
   const isCurrentSong = currentSong?.id === song.id

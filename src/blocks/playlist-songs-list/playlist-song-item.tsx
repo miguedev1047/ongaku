@@ -12,25 +12,25 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { CoverImage } from "@/components/cover-image"
 import { useSongUtils } from "@/hooks/use-song-utils"
 import { formatDuration } from "@/shared/helpers/format-duration"
-import { usePlayerStore } from "@/shared/stores/use-player"
+import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
 import { useActivePlayerStore } from "@/shared/stores/use-active-player"
-import { useLocalBatchStore } from "@/shared/stores/use-local-batch"
+import { usePlaylistBatchStore } from "@/shared/stores/use-playlist-batch"
 import { PlaylistSongActions } from "@/features/playlist-songs/components"
 import { isItemAction } from "@/shared/helpers/is-item-action"
 
-interface LocalSongItemProps {
+interface PlaylistSongItemProps {
   song: TPlaylistSong
 }
 
-export const LocalSongItem = memo(function LocalSongItem({
+export const PlaylistSongItem = memo(function PlaylistSongItem({
   song
-}: LocalSongItemProps) {
+}: PlaylistSongItemProps) {
   const { getCoverUrl } = useSongUtils()
 
-  const isSelected = useLocalBatchStore((s) => Boolean(s.selectedMap[song.id]))
-  const toggleSelect = useLocalBatchStore((s) => s.toggleSelect)
+  const isSelected = usePlaylistBatchStore((s) => Boolean(s.selectedMap[song.id]))
+  const toggleSelect = usePlaylistBatchStore((s) => s.toggleSelect)
 
-  const isActiveTrack = usePlayerStore(
+  const isActiveTrack = useLocalPlayerStore(
     (state) => state.currentSong?.id === song.id
   )
   const playSong = useActivePlayerStore((state) => state.playSong)
@@ -58,7 +58,6 @@ export const LocalSongItem = memo(function LocalSongItem({
         <Checkbox
           checked={isSelected}
           onCheckedChange={() => {
-            console.log("click")
             toggleSelect(song)
           }}
           aria-label={`Select ${song.name}`}

@@ -4,7 +4,7 @@ import { MusicNote01Icon } from "@hugeicons/core-free-icons"
 import { formatDuration } from "@/shared/helpers/format-duration"
 import { useStreamingPlayerStore } from "@/shared/stores/use-streaming-player"
 import { useActivePlayerStore } from "@/shared/stores/use-active-player"
-import { useStreamingBatchStore } from "@/shared/stores/use-streaming-batch"
+import { useSearchBatchStore } from "@/shared/stores/use-search-batch"
 import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
 import { YoutubeSongActions } from "@/features/youtube-search/components/actions"
 import {
@@ -19,19 +19,19 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Skeleton } from "@/components/ui/skeleton"
 import { isItemAction } from "@/shared/helpers/is-item-action"
 
-interface StreamingSongItemProps {
+interface SearchSongItemProps {
   item: TYoutubeSearchResult
 }
 
-export const StreamingSongItem = memo(function StreamingSongItem({
+export const SearchSongItem = memo(function SearchSongItem({
   item
-}: StreamingSongItemProps) {
+}: SearchSongItemProps) {
   const [hasImageError, setHasImageError] = useState(false)
 
-  const isSelected = useStreamingBatchStore((s) =>
+  const isSelected = useSearchBatchStore((s) =>
     Boolean(s.selectedMap[item.id])
   )
-  const toggleSelect = useStreamingBatchStore((s) => s.toggleSelect)
+  const toggleSelect = useSearchBatchStore((s) => s.toggleSelect)
 
   const isCurrentTrack = useStreamingPlayerStore(
     (state) => state.currentTrack?.id === item.id

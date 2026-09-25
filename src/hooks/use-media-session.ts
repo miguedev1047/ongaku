@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { usePlayerStore } from "@/shared/stores/use-player"
+import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
 import { useStreamingPlayerStore } from "@/shared/stores/use-streaming-player"
 import { useSongUtils } from "@/hooks/use-song-utils"
 import { usePlaybackActions } from "@/hooks/use-playback-actions"
@@ -9,10 +9,10 @@ export function useMediaSession() {
   const activePlayer = useActivePlayerStore((state) => state.activePlayer)
   const isStreaming = activePlayer === "streaming"
 
-  const currentSong = usePlayerStore((state) => state.currentSong)
-  const localPlayerState = usePlayerStore((state) => state.playerState)
-  const localDuration = usePlayerStore((state) => state.duration)
-  const localProgress = usePlayerStore((state) => state.progress)
+  const currentSong = useLocalPlayerStore((state) => state.currentSong)
+  const localPlayerState = useLocalPlayerStore((state) => state.playerState)
+  const localDuration = useLocalPlayerStore((state) => state.duration)
+  const localProgress = useLocalPlayerStore((state) => state.progress)
 
   const currentTrack = useStreamingPlayerStore((state) => state.currentTrack)
   const streamingPlayerState = useStreamingPlayerStore(
@@ -170,12 +170,12 @@ export function useMediaSession() {
       })
       setHandler("seekbackward", (details) => {
         const skipTime = details.seekOffset || 5
-        const current = usePlayerStore.getState().progress
+        const current = useLocalPlayerStore.getState().progress
         seekTo(current - skipTime)
       })
       setHandler("seekforward", (details) => {
         const skipTime = details.seekOffset || 5
-        const current = usePlayerStore.getState().progress
+        const current = useLocalPlayerStore.getState().progress
         seekTo(current + skipTime)
       })
     }
