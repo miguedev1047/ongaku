@@ -8,11 +8,7 @@ import { playlistsQueryOpts } from "@/shared/queries/playlists"
 import { toast } from "sonner"
 
 export type DownloadTaskStatus =
-  | "queued"
-  | "downloading"
-  | "completed"
-  | "error"
-  | "cancelled"
+  "queued" | "downloading" | "completed" | "error" | "cancelled"
 
 export interface DownloadProgressPayload {
   id: string
