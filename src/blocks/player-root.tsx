@@ -1,8 +1,10 @@
 import { useActivePlayerStore } from "@/shared/stores/use-active-player"
 import { LocalPlayer, StreamingPlayer } from "@/blocks"
+import { useMediaSession } from "@/hooks/use-media-session"
 
 export function PlayerRoot() {
   const activePlayer = useActivePlayerStore((s) => s.activePlayer)
+  useMediaSession()
 
   if (activePlayer === "streaming") {
     return <StreamingPlayer />

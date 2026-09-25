@@ -23,7 +23,6 @@ export const Route = createRootRouteWithContext<RouteContext>()({
 
 function RootComponent() {
   useShowApp()
-  useMediaSession()
 
   return (
     <AppProvider>
