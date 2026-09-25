@@ -1,12 +1,17 @@
 import type { TPlaylist } from "@/shared/types/playlist.types"
 import { Link, useLocation } from "@tanstack/react-router"
 import { PlaylistItemActions } from "@/features/playlists/components"
+import { useActivePlayerStore } from "@/shared/stores/use-active-player"
 
 interface PlaylistItemProps {
   playlist: TPlaylist
 }
 
 export function PlaylistItem({ playlist }: PlaylistItemProps) {
+  const setActivePlaylist = useActivePlayerStore(
+    (state) => state.setActivePlaylist
+  )
+
   const pathname = useLocation({
     select: (location) => location.pathname
   })
@@ -19,6 +24,7 @@ export function PlaylistItem({ playlist }: PlaylistItemProps) {
       <Link
         to="/playlists/$playlistName"
         params={{ playlistName: playlist.name }}
+        onClick={() => setActivePlaylist(playlist.name)}
       >
         <h3
           data-same-path={isSamePath}

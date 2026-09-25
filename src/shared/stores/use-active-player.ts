@@ -8,15 +8,20 @@ export type ActivePlayerType = "local" | "streaming" | null
 
 interface ActivePlayerStore {
   activePlayer: ActivePlayerType
+  activePlaylist: string
+
   setActivePlayer: (type: ActivePlayerType) => void
+  setActivePlaylist: (playlistName: string) => void
   playSong: (song: TPlaylistSong) => void
   playStream: (track: TYoutubeSearchResult) => void
 }
 
 export const useActivePlayerStore = create<ActivePlayerStore>((set) => ({
   activePlayer: null,
+  activePlaylist: "Default",
 
   setActivePlayer: (type) => set({ activePlayer: type }),
+  setActivePlaylist: (playlistName) => set({ activePlaylist: playlistName }),
 
   playSong: (song) => {
     // 1. Pause streaming if it was playing
