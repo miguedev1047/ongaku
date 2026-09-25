@@ -1,4 +1,3 @@
-import { toast } from "sonner"
 import { useSearchBatchStore } from "@/shared/stores/use-search-batch"
 import { useDownloadQueueStore } from "@/shared/stores/use-download-queue"
 
@@ -18,12 +17,6 @@ export function useSearchBatchActions() {
         item,
         playlistName
       }))
-    )
-
-    toast.success(
-      selectedCount === 1
-        ? `Added 1 song to download queue for "${playlistName}"`
-        : `Added ${selectedCount} songs to download queue for "${playlistName}"`
     )
 
     clearSelection()

@@ -91,9 +91,21 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
     }))
 
     if (items.length === 1) {
-      toast.info(`"${items[0].item.title}" added to queue`)
+      toast.info(
+        `"${items[0].item.title}" added to download queue for "${items[0].playlistName}"`
+      )
     } else {
-      toast.info(`Added ${items.length} songs to download queue`)
+      const targetPlaylist = items[0]?.playlistName
+      const allSamePlaylist = items.every(
+        (i) => i.playlistName === targetPlaylist
+      )
+      if (allSamePlaylist && targetPlaylist) {
+        toast.info(
+          `Added ${items.length} songs to download queue for "${targetPlaylist}"`
+        )
+      } else {
+        toast.info(`Added ${items.length} songs to download queue`)
+      }
     }
 
     get()._processQueue()
