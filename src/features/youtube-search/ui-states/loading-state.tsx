@@ -106,7 +106,7 @@ export function YoutubeLoadingSpinner({
       role="status"
       aria-live="polite"
     >
-      <div className="relative flex items-center justify-center size-12 rounded-full bg-muted/60 border border-border/50 shadow-xs">
+      <div className="relative flex items-center justify-center size-12  bg-muted/60 border border-border/50 shadow-xs">
         <HugeiconsIcon
           icon={YoutubeIcon}
           className="size-5 text-muted-foreground/70"

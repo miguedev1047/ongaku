@@ -67,9 +67,11 @@ function RouteComponent() {
       </div>
 
       <div className="flex-1 min-h-0 flex gap-4 overflow-hidden">
-        <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar scroll-fade-y">
+        <div className="flex-1 min-h-0 overflow-hidden">
           {searchQuery ? (
-            <YoutubeSearchEmpty />
+            <div className="size-full overflow-y-auto no-scrollbar scroll-fade-y">
+              <YoutubeSearchEmpty />
+            </div>
           ) : (
             <Suspense fallback={<YoutubeLoading />}>
               <SearchYoutubeList />

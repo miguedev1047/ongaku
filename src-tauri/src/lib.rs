@@ -1,13 +1,13 @@
-mod commands;
+pub mod commands;
 mod constants;
-mod helpers;
+pub mod helpers;
 mod server;
 
 use crate::{
     commands::{
-        check_binaries, delete_playlist, delete_song, download_binaries, download_song,
-        get_playlist_songs, get_playlists, get_server_port, get_youtube_stream_url, move_song,
-        new_playlist, rename_playlist, search_youtube,
+        cancel_download, check_binaries, delete_playlist, delete_song, download_binaries,
+        download_song, get_playlist_songs, get_playlists, get_server_port, get_youtube_stream_url,
+        move_song, new_playlist, rename_playlist, search_youtube, DownloadManagerState,
     },
     helpers::{ensure_dirs, single_instance_plugin},
     server::init_server,
@@ -16,6 +16,7 @@ use crate::{
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .manage(DownloadManagerState::default())
         .plugin(single_instance_plugin())
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
@@ -37,6 +38,7 @@ pub fn run() {
             delete_song,
             move_song,
             download_song,
+            cancel_download,
             download_binaries,
             check_binaries,
             search_youtube,

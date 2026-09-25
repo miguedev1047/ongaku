@@ -1,7 +1,7 @@
 import { youtubeSearchQueryOpts } from "@/shared/queries/youtube"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { useSearch } from "@tanstack/react-router"
-import { SearchYoutubeItem } from "@/features/youtube-search/components"
+import { StreamingSongsList } from "@/blocks/streaming-songs-list"
 import {
   Empty,
   EmptyDescription,
@@ -33,12 +33,5 @@ export function SearchYoutubeList() {
     )
   }
 
-  const renderItems = results.map((item) => (
-    <SearchYoutubeItem
-      key={item.id}
-      item={item}
-    />
-  ))
-
-  return <ul className="space-y-1">{renderItems}</ul>
+  return <StreamingSongsList data={results} />
 }

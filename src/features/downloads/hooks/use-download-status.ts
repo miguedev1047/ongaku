@@ -1,61 +1,42 @@
-import { useEffect } from "react"
-import { listen } from "@tauri-apps/api/event"
-import {
-  useDownloadsStore,
-  type DownloadProgress
-} from "@/shared/stores/use-downloads"
+import { useDownloadsStore } from "@/shared/stores/use-downloads"
 
 export function useDownloadStatus() {
-  const isDownloading = useDownloadsStore((state) => state.isDownloading)
-  const currentDownload = useDownloadsStore((state) => state.currentDownload)
-  const song = useDownloadsStore((state) => state.song)
-  const downloadProgress = useDownloadsStore((state) => state.downloadProgress)
+  const tasksMap = useDownloadsStore((state) => state.tasks)
+  const taskOrder = useDownloadsStore((state) => state.taskOrder)
+  const isCardOpen = useDownloadsStore((state) => state.isCardOpen)
+  const toggleCard = useDownloadsStore((state) => state.toggleCard)
+  const cancelTask = useDownloadsStore((state) => state.cancelTask)
+  const retryTask = useDownloadsStore((state) => state.retryTask)
+  const removeTask = useDownloadsStore((state) => state.removeTask)
+  const clearFinished = useDownloadsStore((state) => state.clearFinished)
 
-  const setDownloadProgress = useDownloadsStore(
-    (state) => state.setDownloadProgress
+  const allTasks = taskOrder.map((id) => tasksMap[id]).filter(Boolean)
+
+  const activeTasks = allTasks.filter((t) => t.status === "downloading")
+  const queuedTasks = allTasks.filter((t) => t.status === "queued")
+  const completedTasks = allTasks.filter((t) => t.status === "completed")
+  const failedTasks = allTasks.filter(
+    (t) => t.status === "error" || t.status === "cancelled"
   )
 
-  useEffect(() => {
-    let unlistenFn: (() => void) | undefined
-
-    listen<DownloadProgress>("download:progress", (event) => {
-      if (event.payload.done) {
-        setDownloadProgress(null)
-      } else {
-        setDownloadProgress(event.payload)
-      }
-    }).then((unlisten) => {
-      unlistenFn = unlisten
-    })
-
-    return () => {
-      unlistenFn?.()
-    }
-  }, [setDownloadProgress])
-
-  const percent = downloadProgress
-    ? Math.round(downloadProgress.progress * 100)
-    : 0
-
-  const downloadedMb = downloadProgress
-    ? (downloadProgress.downloaded_bytes / (1024 * 1024)).toFixed(1)
-    : "0"
-
-  const totalMb =
-    downloadProgress && downloadProgress.total_bytes > 0
-      ? (downloadProgress.total_bytes / (1024 * 1024)).toFixed(1)
-      : null
-
-  const hasContent = isDownloading || !!song
+  const isDownloading = activeTasks.length > 0
+  const hasTasks = allTasks.length > 0
+  const pendingCount = activeTasks.length + queuedTasks.length
 
   return {
+    allTasks,
+    activeTasks,
+    queuedTasks,
+    completedTasks,
+    failedTasks,
     isDownloading,
-    currentDownload,
-    song,
-    downloadProgress,
-    percent,
-    downloadedMb,
-    totalMb,
-    hasContent
+    hasTasks,
+    pendingCount,
+    isCardOpen,
+    toggleCard,
+    cancelTask,
+    retryTask,
+    removeTask,
+    clearFinished
   }
 }

@@ -31,6 +31,10 @@ pub fn get_cache_dir() -> PathBuf {
     get_app_dir().join("cache")
 }
 
+pub fn get_staging_dir() -> PathBuf {
+    get_cache_dir().join("staging")
+}
+
 pub fn get_cache_pictures_dir() -> PathBuf {
     get_cache_dir().join("pictures")
 }

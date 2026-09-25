@@ -2,9 +2,14 @@ import { Outlet, createRootRouteWithContext } from "@tanstack/react-router"
 import { type QueryClient } from "@tanstack/react-query"
 import { invoke } from "@tauri-apps/api/core"
 import { TanstackDevtool } from "@/components/tanstack-devtools"
-import { PlayerRoot } from "@/blocks"
+import { PlayerRoot } from "@/blocks/player-root"
 import { Toaster } from "@/components/ui/sonner"
 import { useShowApp } from "@/hooks/use-show-app"
+import { useDownloadQueueListener } from "@/features/downloads/hooks"
+import {
+  DownloadFloatingTrigger,
+  DownloadDialog
+} from "@/features/downloads/components"
 
 interface RouteContext {
   queryClient: QueryClient
@@ -21,6 +26,7 @@ export const Route = createRootRouteWithContext<RouteContext>()({
 
 function RootComponent() {
   useShowApp()
+  useDownloadQueueListener()
 
   return (
     <div className="h-screen w-screen flex flex-col overflow-hidden select-none">
@@ -28,6 +34,8 @@ function RootComponent() {
       <main className="flex-1 min-h-0 overflow-hidden">
         <Outlet />
       </main>
+      <DownloadDialog />
+      <DownloadFloatingTrigger />
       <PlayerRoot />
       <Toaster />
     </div>

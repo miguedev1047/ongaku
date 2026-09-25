@@ -269,7 +269,7 @@ function PlayerLoopButton({
 interface PlayerProgressProps {
   progress: number
   duration: number
-  disabled: boolean
+  disabled?: boolean
   onSeek?: (e: React.ChangeEvent<HTMLInputElement>) => void
   onPointerDown?: () => void
   onPointerUp?: () => void
@@ -279,7 +279,7 @@ interface PlayerProgressProps {
 function PlayerProgress({
   progress,
   duration,
-  disabled,
+  disabled = false,
   onSeek,
   onPointerDown,
   onPointerUp,

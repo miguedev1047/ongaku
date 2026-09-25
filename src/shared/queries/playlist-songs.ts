@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query"
 import { invoke } from "@tauri-apps/api/core"
-import type { TPlaylistSong } from "../types/playlist-songs.types"
+import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
 
 export const playlistSongsQueryOpts = (playlistName: string) =>
   queryOptions({

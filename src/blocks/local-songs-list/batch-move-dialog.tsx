@@ -22,13 +22,14 @@ import {
 } from "@/components/ui/select"
 import { Spinner } from "@/components/ui/spinner"
 import { Skeleton } from "@/components/ui/skeleton"
-import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
-import { useMoveSong } from "@/features/playlist-songs/hooks"
 
-interface MoveSongProps {
-  song: TPlaylistSong
+interface BatchMoveDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  currentPlaylistName?: string
+  count: number
+  onConfirm: (targetPlaylist: string) => void
+  isProcessing: boolean
 }
 
 function MovePlaylistSelect({
@@ -36,12 +37,11 @@ function MovePlaylistSelect({
   value,
   onValueChange
 }: {
-  currentPlaylist: string
+  currentPlaylist?: string
   value: string
   onValueChange: (value: string | null) => void
 }) {
   const { data: playlists = [] } = useSuspenseQuery(playlistsQueryOpts())
-
   const otherPlaylists = playlists.filter((p) => p.name !== currentPlaylist)
 
   return (
@@ -75,65 +75,73 @@ function MovePlaylistSelect({
       {otherPlaylists.length === 0 && (
         <p className="text-xs text-muted-foreground">
           No other playlists available. Create another playlist first to move
-          this song.
+          songs.
         </p>
       )}
     </div>
   )
 }
 
-export function MoveSong({ song, open, onOpenChange }: MoveSongProps) {
+export function BatchMoveDialog({
+  open,
+  onOpenChange,
+  currentPlaylistName,
+  count,
+  onConfirm,
+  isProcessing
+}: BatchMoveDialogProps) {
   const [targetPlaylist, setTargetPlaylist] = useState<string>("")
 
-  const { handleMoveSong, isPending } = useMoveSong({
-    song,
-    onSuccess: () => {
-      onOpenChange(false)
-      setTargetPlaylist("")
-    }
-  })
-
   const handleSubmit = () => {
-    if (!targetPlaylist || targetPlaylist === song.playlist_name) return
-    handleMoveSong(targetPlaylist)
+    if (!targetPlaylist || targetPlaylist === currentPlaylistName) return
+    onConfirm(targetPlaylist)
   }
 
   const isValidTarget =
-    Boolean(targetPlaylist) && targetPlaylist !== song.playlist_name
+    Boolean(targetPlaylist) && targetPlaylist !== currentPlaylistName
 
   return (
     <Dialog
       open={open}
       onOpenChange={(isOpen) => {
-        if (!isOpen) {
-          setTargetPlaylist("")
-        }
+        if (!isOpen) setTargetPlaylist("")
         onOpenChange(isOpen)
       }}
     >
       <DialogContent onClick={(e) => e.stopPropagation()}>
         <DialogHeader>
-          <DialogTitle>Move song "{song.name}"</DialogTitle>
+          <DialogTitle>
+            Move {count} {count === 1 ? "song" : "songs"}
+          </DialogTitle>
           <DialogDescription>
-            Choose the target playlist to move this song into.
+            Choose the target playlist to move {count === 1 ? "this song" : "these songs"} into.
           </DialogDescription>
         </DialogHeader>
 
         <Suspense fallback={<Skeleton className="h-7 w-full my-2" />}>
           <MovePlaylistSelect
-            currentPlaylist={song.playlist_name}
+            currentPlaylist={currentPlaylistName}
             value={targetPlaylist}
             onValueChange={(val) => setTargetPlaylist(val ?? "")}
           />
         </Suspense>
 
         <DialogFooter>
-          <DialogClose render={<Button variant="outline">Cancel</Button>} />
+          <DialogClose
+            render={
+              <Button
+                variant="outline"
+                disabled={isProcessing}
+              >
+                Cancel
+              </Button>
+            }
+          />
           <Button
-            disabled={isPending || !isValidTarget}
+            disabled={isProcessing || !isValidTarget}
             onClick={handleSubmit}
           >
-            {isPending && <Spinner />}
+            {isProcessing && <Spinner />}
             Move
           </Button>
         </DialogFooter>
