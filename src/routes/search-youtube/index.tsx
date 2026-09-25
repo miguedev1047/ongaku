@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { YoutubeIcon, ArrowLeft01Icon } from "@hugeicons/core-free-icons"
+import { ArrowLeft01Icon } from "@hugeicons/core-free-icons"
 import { Button } from "@/components/ui/button"
 import { youtubeSearchSchema } from "@/shared/schemas/youtube-search"
 import {
@@ -9,22 +9,19 @@ import {
   YoutubeSongInfo
 } from "@/features/youtube-search/components"
 import { Suspense } from "react"
-import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle
-} from "@/components/ui/empty"
 import { Badge } from "@/components/ui/badge"
-import { YoutubeLoading } from "@/features/youtube-search/ui-states"
 import { useStreamingPlayerStore } from "@/shared/stores/use-streaming-player"
 import { CheckBinaries, DownloadStatus } from "@/features/downloads/components"
+import {
+  YoutubeSearchEmpty,
+  YoutubeLoading,
+  YoutubeSearchError
+} from "@/features/youtube-search/ui-states"
 
 export const Route = createFileRoute("/search-youtube/")({
   component: RouteComponent,
   pendingComponent: YoutubeLoading,
-  errorComponent: () => <p>Error to show this route...</p>,
+  errorComponent: YoutubeSearchError,
   validateSearch: youtubeSearchSchema,
   loaderDeps: ({ search: { q } }) => ({ q })
 })
@@ -32,7 +29,8 @@ export const Route = createFileRoute("/search-youtube/")({
 function RouteComponent() {
   const { q } = Route.useSearch()
 
-  const currentTrack = useStreamingPlayerStore((state) => state.currentTrack)
+  const activeTrack = useStreamingPlayerStore((state) => state.currentTrack)
+  const searchQuery = !q.trim()
 
   return (
     <div className="w-full h-full flex flex-col p-4 gap-4 overflow-hidden">
@@ -70,20 +68,8 @@ function RouteComponent() {
 
       <div className="flex-1 min-h-0 flex gap-4 overflow-hidden">
         <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar scroll-fade-y">
-          {!q.trim() ? (
-            <div className="h-full flex flex-col items-center justify-center text-center p-8 gap-3 text-muted-foreground">
-              <Empty className="py-16">
-                <EmptyHeader>
-                  <EmptyMedia variant="icon">
-                    <HugeiconsIcon icon={YoutubeIcon} />
-                  </EmptyMedia>
-                  <EmptyTitle>Start search music here</EmptyTitle>
-                  <EmptyDescription>
-                    Type any song name to search and listen.
-                  </EmptyDescription>
-                </EmptyHeader>
-              </Empty>
-            </div>
+          {searchQuery ? (
+            <YoutubeSearchEmpty />
           ) : (
             <Suspense fallback={<YoutubeLoading />}>
               <SearchYoutubeList />
@@ -91,7 +77,7 @@ function RouteComponent() {
           )}
         </div>
 
-        {currentTrack && (
+        {activeTrack && (
           <aside className="hidden md:flex w-72 lg:w-80 xl:w-96 h-full shrink-0 flex-col overflow-y-auto no-scrollbar">
             <YoutubeSongInfo />
           </aside>
