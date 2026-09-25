@@ -1,5 +1,6 @@
 use crate::helpers::{
-    get_ffmpeg_path, get_ytdlp_path, resolve_youtube_thumbnail, validate_youtube_duration,
+    get_cache_dir, get_ffmpeg_path, get_ytdlp_path, resolve_youtube_thumbnail,
+    validate_youtube_duration,
 };
 use yt_dlp::client::{Downloader, Libraries};
 
@@ -22,7 +23,7 @@ pub async fn search_youtube(
     let ffmpeg_path = get_ffmpeg_path();
 
     let libraries = Libraries::new(ytdlp_path, ffmpeg_path);
-    let downloader = Downloader::builder(libraries, "output")
+    let downloader = Downloader::builder(libraries, get_cache_dir())
         .build()
         .await
         .map_err(|e| e.to_string())?;
