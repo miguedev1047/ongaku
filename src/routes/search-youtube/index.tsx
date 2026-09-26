@@ -1,7 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { ArrowLeft01Icon } from "@hugeicons/core-free-icons"
-import { Button } from "@/components/ui/button"
+import { createFileRoute } from "@tanstack/react-router"
 import { youtubeSearchSchema } from "@/shared/schemas/youtube-search"
 import {
   SearchYoutubeList,
@@ -11,7 +8,7 @@ import {
 import { Suspense } from "react"
 import { Badge } from "@/components/ui/badge"
 import { useStreamingPlayerStore } from "@/shared/stores/use-streaming-player"
-import { CheckBinaries, DownloadQueueBadge } from "@/features/download-queue"
+import { CheckBinaries } from "@/features/download-queue"
 import {
   YoutubeSearchEmpty,
   YoutubeLoading,
@@ -36,29 +33,14 @@ function RouteComponent() {
     <div className="w-full h-full flex flex-col p-4 gap-4 overflow-hidden">
       <div className="shrink-0 flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Button
-              size="icon"
-              variant="outline"
-              nativeButton={false}
-              render={<Link to="/playlists" />}
-            >
-              <HugeiconsIcon
-                icon={ArrowLeft01Icon}
-                className="size-4"
-              />
-            </Button>
-
-            <div className="flex items-center gap-4">
-              <h1 className="text-xl font-bold tracking-tight">
-                YouTube Search
-              </h1>
-              <Badge variant="destructive">Alpha</Badge>
-            </div>
+          <div className="flex items-center gap-4">
+            <h1 className="text-xl font-bold tracking-tight">
+              YouTube Search
+            </h1>
+            <Badge variant="destructive">Alpha</Badge>
           </div>
 
           <div className="flex items-center gap-1">
-            <DownloadQueueBadge />
             <CheckBinaries />
           </div>
         </div>

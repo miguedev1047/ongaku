@@ -1,11 +1,9 @@
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router"
+import { createFileRoute, Outlet } from "@tanstack/react-router"
 import { playlistsQueryOpts } from "@/shared/queries/playlists"
 import { Suspense } from "react"
-import { Button } from "@/components/ui/button"
 import { NewPlaylist, PlaylistList } from "@/features/playlists/components"
 import { SearchPlaylists } from "@/components/search"
 import { Skeleton } from "@/components/ui/skeleton"
-import { UpdaterButton } from "@/components/updater-button"
 
 export const Route = createFileRoute("/playlists")({
   component: RouteComponent,
@@ -18,48 +16,28 @@ export const Route = createFileRoute("/playlists")({
 
 function RouteComponent() {
   return (
-    <div className="h-full flex flex-col p-4 gap-4 overflow-hidden">
-      <div className="shrink-0 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Button
-            nativeButton={false}
-            render={
-              <Link
-                to="/search-youtube"
-                search={{ q: "" }}
-              />
-            }
-          >
-            Search YouTube
-          </Button>
+    <div className="h-full flex p-4 gap-4 overflow-hidden">
+      <div className="w-70 shrink-0 flex flex-col gap-2 overflow-hidden">
+        <div className="flex items-center justify-between">
+          <h3 className="font-semibold shrink-0">Playlists</h3>
+
+          <div className="flex items-center gap-1">
+            <Suspense fallback={<Skeleton className="size-8" />}>
+              <SearchPlaylists />
+            </Suspense>
+            <NewPlaylist />
+          </div>
         </div>
 
-        <UpdaterButton />
+        <div className="flex-1 min-h-0">
+          <Suspense fallback={<p>Loading...</p>}>
+            <PlaylistList />
+          </Suspense>
+        </div>
       </div>
 
-      <div className="flex-1 min-h-0 flex gap-4 overflow-hidden">
-        <div className="w-70 shrink-0 flex flex-col gap-2 overflow-hidden">
-          <div className="flex items-center justify-between">
-            <h3 className="font-semibold shrink-0">Playlists</h3>
-
-            <div className="flex items-center gap-1">
-              <Suspense fallback={<Skeleton className="size-8" />}>
-                <SearchPlaylists />
-              </Suspense>
-              <NewPlaylist />
-            </div>
-          </div>
-
-          <div className="flex-1 min-h-0">
-            <Suspense fallback={<p>Loading...</p>}>
-              <PlaylistList />
-            </Suspense>
-          </div>
-        </div>
-
-        <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
-          <Outlet />
-        </div>
+      <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+        <Outlet />
       </div>
     </div>
   )

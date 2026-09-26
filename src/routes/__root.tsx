@@ -9,9 +9,10 @@ import { usePreventWebviewShortcuts } from "@/hooks/use-prevent-shortcuts"
 import { usePlayerShortcuts } from "@/hooks/use-player-shortcuts"
 import {
   DownloadQueueDialog,
-  DownloadQueueTrigger,
   useDownloadQueueListener
 } from "@/features/download-queue"
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/blocks/app-sidebar"
 
 interface RouteContext {
   queryClient: QueryClient
@@ -33,15 +34,19 @@ function RootComponent() {
   usePlayerShortcuts()
 
   return (
-    <div className="h-screen w-screen flex flex-col overflow-hidden select-none">
-      <TanstackDevtool />
-      <main className="flex-1 min-h-0 overflow-hidden">
-        <Outlet />
-      </main>
-      <DownloadQueueDialog />
-      <DownloadQueueTrigger />
-      <PlayerRoot />
-      <Toaster />
-    </div>
+    <SidebarProvider defaultOpen={true}>
+      <div className="h-screen w-screen flex flex-col overflow-hidden select-none">
+        <TanstackDevtool />
+        <div className="flex-1 min-h-0 flex overflow-hidden">
+          <AppSidebar />
+          <SidebarInset className="flex-1 min-h-0 min-w-0 overflow-hidden flex flex-col">
+            <Outlet />
+          </SidebarInset>
+        </div>
+        <DownloadQueueDialog />
+        <PlayerRoot />
+        <Toaster />
+      </div>
+    </SidebarProvider>
   )
 }
