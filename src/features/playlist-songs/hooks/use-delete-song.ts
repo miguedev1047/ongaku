@@ -22,7 +22,8 @@ export function useDeleteSong({ song, onSuccess }: UseDeleteSongProps) {
   const mutation = useMutation({
     mutationFn: async () => {
       return await invoke<TSongAction>("delete_song", {
-        path: song.path
+        path: song.path,
+        id: song.id
       })
     },
     onSuccess: (data) => {

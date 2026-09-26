@@ -2,7 +2,9 @@ use serde::{Deserialize, Serialize};
 use std::fs::{copy, remove_file, rename};
 use std::path::Path;
 
-use crate::helpers::{get_playlist_dir, validate_name};
+use crate::helpers::{
+    extract_song_id, get_cache_pictures_dir, get_playlist_dir, resolve_inside, validate_name,
+};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct SongActionResponse {
@@ -11,7 +13,7 @@ pub struct SongActionResponse {
 }
 
 #[tauri::command]
-pub fn delete_song(path: &str) -> Result<SongActionResponse, String> {
+pub fn delete_song(path: &str, id: Option<String>) -> Result<SongActionResponse, String> {
     let song_path = Path::new(path);
 
     if !song_path.exists() || !song_path.is_file() {
@@ -23,6 +25,27 @@ pub fn delete_song(path: &str) -> Result<SongActionResponse, String> {
 
     remove_file(song_path)
         .map_err(|err| format!("An error occurred while deleting the song: {}", err))?;
+
+    // Determine the song ID: either passed directly or extracted from the file name
+    let song_id = id.or_else(|| {
+        song_path
+            .file_name()
+            .and_then(|n| n.to_str())
+            .map(extract_song_id)
+    });
+
+    if let Some(target_id) = song_id {
+        if !target_id.is_empty() {
+            let cache_pictures_dir = get_cache_pictures_dir();
+            if let Ok(cover_path) =
+                resolve_inside(&cache_pictures_dir, &format!("{}.webp", target_id))
+            {
+                if cover_path.exists() && cover_path.is_file() {
+                    let _ = remove_file(cover_path);
+                }
+            }
+        }
+    }
 
     Ok(SongActionResponse {
         code: "SUCCESS".into(),

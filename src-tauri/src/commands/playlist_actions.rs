@@ -2,7 +2,10 @@ use serde::{Deserialize, Serialize};
 use std::fs::{create_dir_all, remove_dir_all, rename};
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use crate::helpers::{get_playlist_dir, validate_name};
+use crate::helpers::{
+    extract_song_id, get_cache_pictures_dir, get_playlist_dir, is_audio_file, resolve_inside,
+    validate_name,
+};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct PlaylistActionResponse {
@@ -147,6 +150,26 @@ pub fn delete_playlist(name: &str) -> Result<PlaylistActionResponse, String> {
             code: "ERROR".into(),
             message: "The playlist does not exist".into(),
         });
+    }
+
+    // Clean up cached covers of all songs in this playlist
+    let cache_pictures_dir = get_cache_pictures_dir();
+    if let Ok(entries) = std::fs::read_dir(&output_dir) {
+        for entry in entries.flatten() {
+            let entry_path = entry.path();
+            if entry_path.is_file() && is_audio_file(&entry_path) {
+                if let Some(file_name) = entry_path.file_name().and_then(|n| n.to_str()) {
+                    let song_id = extract_song_id(file_name);
+                    if let Ok(cover_path) =
+                        resolve_inside(&cache_pictures_dir, &format!("{}.webp", song_id))
+                    {
+                        if cover_path.exists() && cover_path.is_file() {
+                            let _ = std::fs::remove_file(cover_path);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     remove_dir_all(&output_dir)

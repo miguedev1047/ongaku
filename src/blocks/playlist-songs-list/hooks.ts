@@ -34,7 +34,8 @@ export function usePlaylistBatchActions(currentPlaylistName?: string) {
       for (const song of selectedSongs) {
         try {
           const res = await invoke<TSongAction>("delete_song", {
-            path: song.path
+            path: song.path,
+            id: song.id
           })
           if (res.code === "SUCCESS") {
             successCount++
