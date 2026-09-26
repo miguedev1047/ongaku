@@ -30,7 +30,7 @@ export function YoutubeSearchNavItem() {
           icon={YoutubeIcon}
           className="size-4 shrink-0"
         />
-        <span>YouTube Search</span>
+        <span className="truncate">YouTube Search</span>
         <SidebarMenuBadge>
           <Badge
             variant="destructive"

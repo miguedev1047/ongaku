@@ -70,7 +70,8 @@ export function PlaylistsNavItem({ playlist }: PlaylistsNavItemProps) {
                 />
               }
             >
-              <span>{playlist.name}</span>
+              <HugeiconsIcon icon={FolderIcon} />
+              <span className="truncate">{playlist.name}</span>
             </SidebarMenuSubButton>
           }
         />
