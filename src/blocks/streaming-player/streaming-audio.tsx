@@ -28,7 +28,7 @@ export function StreamingAudio({ track }: StreamingAudioProps) {
 
   useEffect(() => {
     if (audioRef) {
-      audioRef.volume = volume / 10
+      audioRef.volume = volume / 100
       audioRef.muted = volume === 0
     }
   }, [audioRef, volume])

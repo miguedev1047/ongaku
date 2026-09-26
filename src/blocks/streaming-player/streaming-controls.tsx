@@ -5,6 +5,7 @@ import {
   PlayerPreviousButton,
   PlayerNextButton
 } from "@/components/ui/player"
+import { Kbd } from "@/components/ui/kbd"
 
 export function StreamingControls() {
   const isLoading = useStreamingPlayerStore((s) => s.playerState === "loading")
@@ -25,6 +26,8 @@ export function StreamingControls() {
   return (
     <PlayerControls>
       <PlayerPreviousButton
+        tooltip="Rewind 10s"
+        shortcut={<Kbd>←</Kbd>}
         onClick={handlePrevious}
         disabled={isLoading}
       />
@@ -34,6 +37,8 @@ export function StreamingControls() {
         onClick={togglePlay}
       />
       <PlayerNextButton
+        tooltip="Forward 10s"
+        shortcut={<Kbd>→</Kbd>}
         onClick={handleNext}
         disabled={isLoading}
       />

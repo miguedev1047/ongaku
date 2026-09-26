@@ -39,7 +39,7 @@ export const useLocalPlayerStore = create<LocalPlayerStore>((set) => ({
   isSeeking: false,
   duration: 0,
   progress: 0,
-  volume: 8,
+  volume: 80,
 
   setAudioRef: (ref) => set({ audioRef: ref }),
   setCurrentSong: (song) =>

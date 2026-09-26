@@ -37,7 +37,7 @@ export const useStreamingPlayerStore = create<StreamingPlayerStore>(
     isSeeking: false,
     duration: 0,
     progress: 0,
-    volume: 8,
+    volume: 80,
 
     setAudioRef: (ref) => set({ audioRef: ref }),
     setCurrentTrack: (track) =>

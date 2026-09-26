@@ -26,7 +26,7 @@ interface ActivePlayerStore {
 export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => ({
   activePlayer: null,
   activePlaylist: "Default",
-  lastNonZeroVolume: 8,
+  lastNonZeroVolume: 80,
 
   setActivePlayer: (type) => set({ activePlayer: type }),
   setActivePlaylist: (playlistName) => set({ activePlaylist: playlistName }),
@@ -106,7 +106,7 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => ({
   changeVolume: (delta: number) => {
     const localState = useLocalPlayerStore.getState()
     const currentVol = localState.volume
-    const newVol = Math.max(0, Math.min(10, currentVol + delta))
+    const newVol = Math.max(0, Math.min(100, currentVol + delta))
 
     useLocalPlayerStore.getState().setVolume(newVol)
     useStreamingPlayerStore.getState().setVolume(newVol)
@@ -116,13 +116,13 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => ({
     }
 
     if (localState.audioRef) {
-      localState.audioRef.volume = newVol / 10
+      localState.audioRef.volume = newVol / 100
       localState.audioRef.muted = newVol === 0
     }
 
     const streamingState = useStreamingPlayerStore.getState()
     if (streamingState.audioRef) {
-      streamingState.audioRef.volume = newVol / 10
+      streamingState.audioRef.volume = newVol / 100
       streamingState.audioRef.muted = newVol === 0
     }
   },
@@ -133,7 +133,7 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => ({
       set({ lastNonZeroVolume: currentVol })
       get().changeVolume(-currentVol)
     } else {
-      const restore = get().lastNonZeroVolume || 8
+      const restore = get().lastNonZeroVolume || 80
       get().changeVolume(restore)
     }
   }

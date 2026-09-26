@@ -191,7 +191,7 @@ export function usePlayerMedia() {
 
   useEffect(() => {
     if (!audioRef) return
-    audioRef.volume = volume / 10
+    audioRef.volume = volume / 100
     audioRef.muted = volume === 0
     audioRef.loop = isLoop
   }, [audioRef, volume, isLoop])

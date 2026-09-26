@@ -9,7 +9,7 @@ export function StreamingPlayerVolume() {
   const handleVolumeChange = (val: number) => {
     setVolume(val)
     if (audioRef) {
-      audioRef.volume = val / 10
+      audioRef.volume = val / 100
       audioRef.muted = val === 0
     }
   }

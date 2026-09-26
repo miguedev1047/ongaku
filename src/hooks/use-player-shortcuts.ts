@@ -25,16 +25,16 @@ export function usePlayerShortcuts() {
     seek(-5)
   })
 
-  // Volume Up 10% (ArrowUp)
+  // Volume Up 5% (ArrowUp)
   useHotkey("ArrowUp", (e) => {
     e.preventDefault()
-    changeVolume(1)
+    changeVolume(5)
   })
 
-  // Volume Down 10% (ArrowDown)
+  // Volume Down 5% (ArrowDown)
   useHotkey("ArrowDown", (e) => {
     e.preventDefault()
-    changeVolume(-1)
+    changeVolume(-5)
   })
 
   // Mute / Unmute (M)

@@ -101,16 +101,20 @@ pub fn extract_cover(path: &std::path::Path) -> Option<Vec<u8>> {
 }
 
 pub fn encode_webp(bytes: &[u8]) -> Result<Vec<u8>, StatusCode> {
-    let img = image::ImageReader::new(std::io::Cursor::new(bytes))
+    let mut img = image::ImageReader::new(std::io::Cursor::new(bytes))
         .with_guessed_format()
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
         .decode()
         .map_err(|_| StatusCode::UNSUPPORTED_MEDIA_TYPE)?;
 
-    let mut out = std::io::Cursor::new(Vec::new());
+    if img.width() > 800 || img.height() > 800 {
+        img = img.resize(800, 800, image::imageops::FilterType::Lanczos3);
+    }
 
-    img.write_to(&mut out, image::ImageFormat::WebP)
+    let encoder = webp::Encoder::from_image(&img)
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
-    Ok(out.into_inner())
+    let memory = encoder.encode(80.0);
+
+    Ok(memory.to_vec())
 }

@@ -29,14 +29,14 @@ export function LocalPlayerControls() {
         isShuffle={isShuffle}
         onClick={toggleShuffle}
       />
-      <Suspense fallback={<Skeleton className="size-7" />}>
+      <Suspense fallback={<Skeleton className="size-8 rounded-md" />}>
         <PlayerPreviousButton onClick={handlePreviousSong} />
       </Suspense>
       <PlayerPlayButton
         isPlaying={isPlaying}
         onClick={handlePlayerToggle}
       />
-      <Suspense fallback={<Skeleton className="size-7" />}>
+      <Suspense fallback={<Skeleton className="size-8 rounded-md" />}>
         <PlayerNextButton onClick={handleNextSong} />
       </Suspense>
       <PlayerLoopButton

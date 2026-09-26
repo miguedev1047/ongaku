@@ -4,8 +4,10 @@ import { LocalPlayerControls } from "./local-controls"
 import { LocalPlayerTrackInfo } from "./local-track-info"
 import { LocalPlayerVolume } from "./local-volume"
 import { LocalPlayerProgressbar } from "./local-progressbar"
+import { LocalPlayerTime } from "./local-time"
 import { LocalPlayerElement } from "./local-element"
-import { Player, PlayerContent, PlayerHeader } from "@/components/ui/player"
+import { Player } from "@/components/ui/player"
+import { TooltipProvider } from "@/components/ui/tooltip"
 import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
 
 export function LocalPlayer() {
@@ -14,22 +16,29 @@ export function LocalPlayer() {
   if (!currentSong) return null
 
   return (
-    <Player>
-      <Suspense>
-        <LocalPlayerElement />
-      </Suspense>
-
-      <LocalPlayerCover />
-
-      <PlayerContent>
-        <PlayerHeader>
-          <LocalPlayerControls />
-          <LocalPlayerTrackInfo />
-          <LocalPlayerVolume />
-        </PlayerHeader>
+    <TooltipProvider delay={300}>
+      <Player>
+        <Suspense>
+          <LocalPlayerElement />
+        </Suspense>
 
         <LocalPlayerProgressbar />
-      </PlayerContent>
-    </Player>
+
+        {/* Column 1 (Left): Cover & Track Info side by side */}
+        <div className="flex items-center gap-3 min-w-0 overflow-hidden pr-2">
+          <LocalPlayerCover />
+          <LocalPlayerTrackInfo />
+        </div>
+
+        {/* Column 2 (Center): Playback Controls */}
+        <LocalPlayerControls />
+
+        {/* Column 3 (Right): Time & Volume */}
+        <div className="flex items-center justify-end gap-3 min-w-0 pl-2">
+          <LocalPlayerTime />
+          <LocalPlayerVolume />
+        </div>
+      </Player>
+    </TooltipProvider>
   )
 }
