@@ -9,16 +9,24 @@ export type ActivePlayerType = "local" | "streaming" | null
 interface ActivePlayerStore {
   activePlayer: ActivePlayerType
   activePlaylist: string
+  lastNonZeroVolume: number
 
   setActivePlayer: (type: ActivePlayerType) => void
   setActivePlaylist: (playlistName: string) => void
   playSong: (song: TPlaylistSong) => void
   playStream: (track: TYoutubeSearchResult) => void
+
+  // Universal Player Controls
+  togglePlay: () => void
+  seek: (deltaSeconds: number) => void
+  changeVolume: (delta: number) => void
+  toggleMute: () => void
 }
 
-export const useActivePlayerStore = create<ActivePlayerStore>((set) => ({
+export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => ({
   activePlayer: null,
   activePlaylist: "Default",
+  lastNonZeroVolume: 8,
 
   setActivePlayer: (type) => set({ activePlayer: type }),
   setActivePlaylist: (playlistName) => set({ activePlaylist: playlistName }),
@@ -52,5 +60,81 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set) => ({
 
     // 3. Mark active player as streaming
     set({ activePlayer: "streaming" })
+  },
+
+  togglePlay: () => {
+    const { activePlayer } = get()
+    if (activePlayer === "local") {
+      const localState = useLocalPlayerStore.getState()
+      const audioRef = localState.audioRef
+      if (!audioRef || !localState.currentSong) return
+
+      if (localState.playerState === "playing") {
+        localState.setPlayerState("paused")
+        audioRef.pause()
+      } else {
+        localState.setPlayerState("playing")
+        audioRef.play().catch(() => {})
+      }
+    } else if (activePlayer === "streaming") {
+      useStreamingPlayerStore.getState().togglePlay()
+    }
+  },
+
+  seek: (deltaSeconds: number) => {
+    const { activePlayer } = get()
+    if (activePlayer === "local") {
+      const localState = useLocalPlayerStore.getState()
+      const audioRef = localState.audioRef
+      if (!audioRef) return
+      const duration = localState.duration || audioRef.duration || 0
+      const target = Math.max(
+        0,
+        Math.min(duration, audioRef.currentTime + deltaSeconds)
+      )
+      audioRef.currentTime = target
+      localState.setProgress(target)
+    } else if (activePlayer === "streaming") {
+      const streamingState = useStreamingPlayerStore.getState()
+      const audioRef = streamingState.audioRef
+      if (!audioRef) return
+      const current = audioRef.currentTime
+      streamingState.seekTo(current + deltaSeconds)
+    }
+  },
+
+  changeVolume: (delta: number) => {
+    const localState = useLocalPlayerStore.getState()
+    const currentVol = localState.volume
+    const newVol = Math.max(0, Math.min(10, currentVol + delta))
+
+    useLocalPlayerStore.getState().setVolume(newVol)
+    useStreamingPlayerStore.getState().setVolume(newVol)
+
+    if (newVol > 0) {
+      set({ lastNonZeroVolume: newVol })
+    }
+
+    if (localState.audioRef) {
+      localState.audioRef.volume = newVol / 10
+      localState.audioRef.muted = newVol === 0
+    }
+
+    const streamingState = useStreamingPlayerStore.getState()
+    if (streamingState.audioRef) {
+      streamingState.audioRef.volume = newVol / 10
+      streamingState.audioRef.muted = newVol === 0
+    }
+  },
+
+  toggleMute: () => {
+    const currentVol = useLocalPlayerStore.getState().volume
+    if (currentVol > 0) {
+      set({ lastNonZeroVolume: currentVol })
+      get().changeVolume(-currentVol)
+    } else {
+      const restore = get().lastNonZeroVolume || 8
+      get().changeVolume(restore)
+    }
   }
 }))

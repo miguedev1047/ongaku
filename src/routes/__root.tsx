@@ -5,6 +5,8 @@ import { TanstackDevtool } from "@/components/tanstack-devtools"
 import { PlayerRoot } from "@/blocks/player-root"
 import { Toaster } from "@/components/ui/sonner"
 import { useShowApp } from "@/hooks/use-show-app"
+import { usePreventWebviewShortcuts } from "@/hooks/use-prevent-shortcuts"
+import { usePlayerShortcuts } from "@/hooks/use-player-shortcuts"
 import {
   DownloadQueueDialog,
   DownloadQueueTrigger,
@@ -27,6 +29,8 @@ export const Route = createRootRouteWithContext<RouteContext>()({
 function RootComponent() {
   useShowApp()
   useDownloadQueueListener()
+  usePreventWebviewShortcuts()
+  usePlayerShortcuts()
 
   return (
     <div className="h-screen w-screen flex flex-col overflow-hidden select-none">

@@ -59,9 +59,6 @@ export function usePlayerProgressbar() {
     setProgress(newTime)
   }
 
-  useHotkey("ArrowLeft", () => handlePreviusSeekSecs())
-  useHotkey("ArrowRight", () => handleNextSeekSecs())
-
   return {
     progress,
     duration,
@@ -172,8 +169,6 @@ export function usePlayerToggle() {
       return
     }
   }
-
-  useHotkey("[Space]", () => handlePlayerToggle())
 
   return { isPlaying, handlePlayerToggle }
 }
