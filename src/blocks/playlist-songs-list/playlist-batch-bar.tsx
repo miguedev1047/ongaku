@@ -11,6 +11,7 @@ import {
   Delete01Icon,
   Folder01Icon
 } from "@hugeicons/core-free-icons"
+import { cn } from "cn"
 
 interface PlaylistBatchBarProps {
   currentPlaylistName?: string
@@ -42,7 +43,10 @@ export function PlaylistBatchBar({
   return createPortal(
     <>
       <div
-        className={`fixed left-1/2 -translate-x-1/2 ${bottomClass} z-50 bg-card/95 backdrop-blur-md border border-border shadow-2xl rounded-lg px-4 py-2 flex items-center gap-3 animate-in fade-in slide-in-from-bottom-3 duration-200`}
+        className={cn(
+          `fixed left-1/2 -translate-x-1/2 z-50 bg-card/95 backdrop-blur-md border border-border shadow-2xl rounded-lg px-4 py-2 flex items-center gap-3 animate-in fade-in slide-in-from-bottom-3 duration-200`,
+          bottomClass
+        )}
       >
         <div className="flex items-center gap-2">
           <span className="text-xs font-semibold text-foreground">
