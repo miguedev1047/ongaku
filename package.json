@@ -22,7 +22,7 @@
     "@tanstack/react-query-devtools": "^5.103.2",
     "@tanstack/react-router": "^1.170.38",
     "@tanstack/react-router-devtools": "^1.167.2",
-    "@tanstack/react-table": "^8",
+    "@tanstack/react-table": "^9.2.4",
     "@tanstack/react-virtual": "^3.14.13",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2",
