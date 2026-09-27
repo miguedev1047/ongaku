@@ -18,6 +18,36 @@
 
 ---
 
+## 🔀 Renderizado Condicional (`Show`)
+
+- **Prohibido el uso de ternarias en JSX**: Evitar el uso de operadores ternarios en JSX (`condicion ? <ComponentA /> : <ComponentB />`) para renderizado condicional.
+- **Uso Obligatorio de `<Show>`**: Utilizar siempre el componente `Show` (importado desde `@/components/utility/show`).
+- **Sustitución de ternarias mediante `fallback`**:
+  ```tsx
+  import { Show } from "@/components/utility/show"
+
+  // ❌ EVITAR (Ternaria):
+  // {hasPlaylists ? <PlaylistsList /> : <EmptyPlaylists />}
+
+  // ✅ CORRECTO (Uso canónico de Show con fallback):
+  <Show
+    when={hasPlaylists}
+    fallback={<EmptyPlaylists />}
+  >
+    <PlaylistsList />
+  </Show>
+  ```
+- **Evaluación perezosa con render prop (children como función)**:
+  En React, los hijos JSX normales se evalúan antes de pasarse al componente. Cuando los hijos dependan de que `when` no sea nulo o indefinido, **usar una función como hijo** para prevenir errores de acceso a propiedades en `null`/`undefined`:
+  ```tsx
+  // ✅ Pasa una función si el hijo depende de la existencia del objeto
+  <Show when={selectedUser} fallback={<p>No user selected</p>}>
+    {(user) => <UserProfile name={user.name} />}
+  </Show>
+  ```
+
+---
+
 ## 📐 Reglas Generales de Arquitectura y Diseño
 
 1. **Rutas de Importación**:

@@ -11,6 +11,7 @@ import {
 import { Spinner } from "@/components/ui/spinner"
 import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
 import { useDeleteSong } from "@/features/playlist-songs/hooks"
+import { Show } from "@/components/utility/show"
 
 interface DeleteSongProps {
   song: TPlaylistSong
@@ -44,7 +45,9 @@ export function DeleteSong({ song, open, onOpenChange }: DeleteSongProps) {
             onClick={handleDeleteSong}
             variant="destructive"
           >
-            {isPending && <Spinner />}
+            <Show when={isPending}>
+              <Spinner />
+            </Show>
             Delete
           </Button>
         </DialogFooter>

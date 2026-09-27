@@ -9,6 +9,7 @@ import { playlistsQueryOpts } from "@/shared/queries/playlists"
 import { FolderIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { checkBinariesQueryOpts } from "@/shared/queries/binaries"
+import { Show } from "@/components/utility/show"
 
 interface PlaylistMenuGroupProps {
   onSelectPlaylist: (playlistName: string) => void
@@ -24,19 +25,25 @@ export function PlaylistMenuGroup({
     checkBinariesQueryOpts()
   )
 
+  const hasPlaylists = playlists.length > 0
+
   return (
     <DropdownMenuGroup>
       <DropdownMenuLabel>Playlists</DropdownMenuLabel>
       <DropdownMenuSeparator />
-      {playlists.length === 0 ? (
-        <DropdownMenuItem
-          disabled
-          className="text-xs text-muted-foreground"
-        >
-          No playlists found
-        </DropdownMenuItem>
-      ) : (
-        playlists.map((playlist) => (
+
+      <Show
+        when={hasPlaylists}
+        fallback={
+          <DropdownMenuItem
+            disabled
+            className="text-xs text-muted-foreground"
+          >
+            No playlists found
+          </DropdownMenuItem>
+        }
+      >
+        {playlists.map((playlist) => (
           <DropdownMenuItem
             key={playlist.id}
             onClick={() => onSelectPlaylist(playlist.name)}
@@ -49,8 +56,8 @@ export function PlaylistMenuGroup({
             />
             <span className="truncate">{playlist.name}</span>
           </DropdownMenuItem>
-        ))
-      )}
+        ))}
+      </Show>
     </DropdownMenuGroup>
   )
 }

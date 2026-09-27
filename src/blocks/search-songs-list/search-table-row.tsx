@@ -13,6 +13,7 @@ import { isItemAction } from "@/shared/helpers/is-item-action"
 import { Subscribe } from "@tanstack/react-table"
 import { TableRow, TableCell } from "@/components/ui/table"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Show } from "@/components/utility/show"
 
 interface SearchSongTableRowProps {
   row: Row<SearchTableFeatures, TYoutubeSearchResult>
@@ -40,6 +41,9 @@ export const SearchSongTableRow = memo(function SearchSongTableRow({
 
     playStream(item)
   }
+
+  const durationText = item.duration ? formatDuration(item.duration) : "--:--"
+  const thumbnailSrc = !hasImageError && item.thumbnail ? item.thumbnail : null
 
   return (
     <TableRow
@@ -72,20 +76,25 @@ export const SearchSongTableRow = memo(function SearchSongTableRow({
       {/* 2. Cover/Thumbnail (fixed: 36px) */}
       <TableCell className="size-9 shrink-0 p-0">
         <div className="size-9 rounded-md overflow-hidden bg-accent flex items-center justify-center">
-          {item.thumbnail && !hasImageError ? (
-            <img
-              src={item.thumbnail}
-              alt={item.title}
-              className="size-full object-cover"
-              loading="lazy"
-              onError={() => setHasImageError(true)}
-            />
-          ) : (
-            <HugeiconsIcon
-              icon={MusicNote01Icon}
-              className="size-4 text-muted-foreground"
-            />
-          )}
+          <Show
+            when={thumbnailSrc}
+            fallback={
+              <HugeiconsIcon
+                icon={MusicNote01Icon}
+                className="size-4 text-muted-foreground"
+              />
+            }
+          >
+            {(src) => (
+              <img
+                src={src}
+                alt={item.title}
+                className="size-full object-cover"
+                loading="lazy"
+                onError={() => setHasImageError(true)}
+              />
+            )}
+          </Show>
         </div>
       </TableCell>
 
@@ -101,7 +110,7 @@ export const SearchSongTableRow = memo(function SearchSongTableRow({
 
       {/* 4. Duration (fixed: 64px) */}
       <TableCell className="w-16 shrink-0 justify-end p-0 text-right font-mono text-xs text-muted-foreground">
-        {item.duration ? formatDuration(item.duration) : "--:--"}
+        {durationText}
       </TableCell>
 
       {/* 5. Actions (fixed: 36px) */}

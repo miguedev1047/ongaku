@@ -8,6 +8,7 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { DownloadIcon } from "@hugeicons/core-free-icons"
 import { Spinner } from "@/components/ui/spinner"
 import { useUpdater } from "@/hooks/use-updater"
+import { Show } from "@/components/utility/show"
 
 export function UpdaterButton() {
   const { update, progress, isPending, handleInstallUpdate } = useUpdater()
@@ -29,14 +30,15 @@ export function UpdaterButton() {
             size="icon"
             disabled={isPending}
           >
-            {isPending ? (
-              <Spinner />
-            ) : (
+            <Show
+              when={!isPending}
+              fallback={<Spinner />}
+            >
               <HugeiconsIcon
                 icon={DownloadIcon}
                 className="animate-bounce"
               />
-            )}
+            </Show>
           </Button>
         }
       />

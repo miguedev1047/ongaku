@@ -11,6 +11,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Download01Icon, DownloadIcon } from "@hugeicons/core-free-icons"
 import { Spinner } from "@/components/ui/spinner"
+import { Show } from "@/components/utility/show"
 
 interface QueueBadgeProps {
   pendingCount: number
@@ -18,19 +19,23 @@ interface QueueBadgeProps {
 }
 
 function QueueBadge({ pendingCount, completedCount }: QueueBadgeProps) {
-  if (pendingCount > 0) {
-    return (
+  const hasPending = pendingCount > 0
+  const hasCompleted = completedCount > 0
+
+  return (
+    <Show
+      when={hasPending}
+      fallback={
+        <Show when={hasCompleted}>
+          <SidebarMenuBadge>{completedCount}</SidebarMenuBadge>
+        </Show>
+      }
+    >
       <SidebarMenuBadge className="bg-primary text-primary-foreground font-bold">
         {pendingCount}
       </SidebarMenuBadge>
-    )
-  }
-
-  if (completedCount > 0) {
-    return <SidebarMenuBadge>{completedCount}</SidebarMenuBadge>
-  }
-
-  return null
+    </Show>
+  )
 }
 
 function SidebarDownloadQueue() {
@@ -49,6 +54,8 @@ function SidebarDownloadQueue() {
       ? `Downloads (${completedTasks.length} finished)`
       : "Downloads"
 
+  const label = isDownloading ? "Downloading..." : "Downloads"
+
   return (
     <SidebarMenuItem>
       <SidebarMenuButton
@@ -63,7 +70,7 @@ function SidebarDownloadQueue() {
             isDownloading && "animate-pulse text-primary"
           )}
         />
-        <span>{isDownloading ? "Downloading..." : "Downloads"}</span>
+        <span>{label}</span>
         <QueueBadge
           pendingCount={pendingCount}
           completedCount={completedTasks.length}
@@ -74,15 +81,16 @@ function SidebarDownloadQueue() {
 }
 
 function UpdaterIcon({ isPending }: { isPending: boolean }) {
-  if (isPending) {
-    return <Spinner className="size-4 shrink-0" />
-  }
-
   return (
-    <HugeiconsIcon
-      icon={DownloadIcon}
-      className="size-4 shrink-0 animate-bounce"
-    />
+    <Show
+      when={!isPending}
+      fallback={<Spinner className="size-4 shrink-0" />}
+    >
+      <HugeiconsIcon
+        icon={DownloadIcon}
+        className="size-4 shrink-0 animate-bounce"
+      />
+    </Show>
   )
 }
 

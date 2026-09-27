@@ -24,6 +24,7 @@ import { Spinner } from "@/components/ui/spinner"
 import { Skeleton } from "@/components/ui/skeleton"
 import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
 import { useMoveSong } from "@/features/playlist-songs/hooks"
+import { Show } from "@/components/utility/show"
 
 interface MoveSongProps {
   song: TPlaylistSong
@@ -43,6 +44,7 @@ function MovePlaylistSelect({
   const { data: playlists = [] } = useSuspenseQuery(playlistsQueryOpts())
 
   const otherPlaylists = playlists.filter((p) => p.name !== currentPlaylist)
+  const hasNoOtherPlaylists = otherPlaylists.length === 0
 
   return (
     <div className="flex flex-col gap-2 py-2">
@@ -58,13 +60,14 @@ function MovePlaylistSelect({
             <SelectLabel>Playlists</SelectLabel>
             {playlists.map((playlist) => {
               const isCurrent = playlist.name === currentPlaylist
+              const label = isCurrent ? `${playlist.name} (Current)` : playlist.name
               return (
                 <SelectItem
                   key={playlist.name}
                   value={playlist.name}
                   disabled={isCurrent}
                 >
-                  {playlist.name} {isCurrent ? "(Current)" : ""}
+                  {label}
                 </SelectItem>
               )
             })}
@@ -72,12 +75,12 @@ function MovePlaylistSelect({
         </SelectContent>
       </Select>
 
-      {otherPlaylists.length === 0 && (
+      <Show when={hasNoOtherPlaylists}>
         <p className="text-xs text-muted-foreground">
           No other playlists available. Create another playlist first to move
           this song.
         </p>
-      )}
+      </Show>
     </div>
   )
 }
@@ -133,7 +136,9 @@ export function MoveSong({ song, open, onOpenChange }: MoveSongProps) {
             disabled={isPending || !isValidTarget}
             onClick={handleSubmit}
           >
-            {isPending && <Spinner />}
+            <Show when={isPending}>
+              <Spinner />
+            </Show>
             Move
           </Button>
         </DialogFooter>

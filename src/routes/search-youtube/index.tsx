@@ -27,6 +27,7 @@ import {
 import { AlertIcon, Download01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
+import { Show } from "@/components/utility/show"
 
 export const Route = createFileRoute("/search-youtube/")({
   component: RouteComponent,
@@ -42,31 +43,32 @@ interface InstallActionProps {
 }
 
 function InstallAction({ isPending, onInstall }: InstallActionProps) {
-  if (isPending) {
-    return (
+  return (
+    <Show
+      when={!isPending}
+      fallback={
+        <Button
+          disabled
+          size="sm"
+          className="gap-2"
+        >
+          <Spinner className="size-3.5" />
+          Installing tools...
+        </Button>
+      }
+    >
       <Button
-        disabled
+        onClick={onInstall}
         size="sm"
         className="gap-2"
       >
-        <Spinner className="size-3.5" />
-        Installing tools...
+        <HugeiconsIcon
+          icon={Download01Icon}
+          className="size-3.5"
+        />
+        Install Tools
       </Button>
-    )
-  }
-
-  return (
-    <Button
-      onClick={onInstall}
-      size="sm"
-      className="gap-2"
-    >
-      <HugeiconsIcon
-        icon={Download01Icon}
-        className="size-3.5"
-      />
-      Install Tools
-    </Button>
+    </Show>
   )
 }
 
@@ -109,30 +111,31 @@ function YoutubeToolsMissing({ isPending, onInstall }: InstallActionProps) {
 }
 
 function SearchResultsSection({ query }: { query: string }) {
-  if (!query.trim()) {
-    return (
-      <div className="size-full overflow-y-auto no-scrollbar scroll-fade-y">
-        <YoutubeSearchEmpty />
-      </div>
-    )
-  }
+  const hasQuery = Boolean(query.trim())
 
   return (
-    <Suspense fallback={<YoutubeLoading />}>
-      <SearchYoutubeList />
-    </Suspense>
+    <Show
+      when={hasQuery}
+      fallback={
+        <div className="size-full overflow-y-auto no-scrollbar scroll-fade-y">
+          <YoutubeSearchEmpty />
+        </div>
+      }
+    >
+      <Suspense fallback={<YoutubeLoading />}>
+        <SearchYoutubeList />
+      </Suspense>
+    </Show>
   )
 }
 
 function ActiveTrackSidebar({ track }: { track: TYoutubeSearchResult | null }) {
-  if (!track) {
-    return null
-  }
-
   return (
-    <aside className="hidden md:flex w-72 lg:w-80 xl:w-96 h-full shrink-0 flex-col overflow-y-auto no-scrollbar">
-      <YoutubeSongInfo />
-    </aside>
+    <Show when={track}>
+      <aside className="hidden md:flex w-72 lg:w-80 xl:w-96 h-full shrink-0 flex-col overflow-y-auto no-scrollbar">
+        <YoutubeSongInfo />
+      </aside>
+    </Show>
   )
 }
 
@@ -165,14 +168,17 @@ function RouteComponent() {
   const { q } = Route.useSearch()
   const { isBinariesInstalled, isPending, installBinaries } = useBinaries()
 
-  if (!isBinariesInstalled) {
-    return (
-      <YoutubeToolsMissing
-        isPending={isPending}
-        onInstall={installBinaries}
-      />
-    )
-  }
-
-  return <YoutubeSearchActive initialQuery={q} />
+  return (
+    <Show
+      when={isBinariesInstalled}
+      fallback={
+        <YoutubeToolsMissing
+          isPending={isPending}
+          onInstall={installBinaries}
+        />
+      }
+    >
+      <YoutubeSearchActive initialQuery={q} />
+    </Show>
+  )
 }

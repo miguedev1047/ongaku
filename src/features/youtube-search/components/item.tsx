@@ -1,3 +1,4 @@
+import { useState, Suspense } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { MusicNote01Icon } from "@hugeicons/core-free-icons"
 import { formatDuration } from "@/shared/helpers/format-duration"
@@ -13,9 +14,9 @@ import {
   ItemMedia,
   ItemTitle
 } from "@/components/ui/item"
-import { useState, Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { isItemAction } from "@/shared/helpers/is-item-action"
+import { Show } from "@/components/utility/show"
 
 interface YoutubeCardProps {
   item: TYoutubeSearchResult
@@ -44,6 +45,8 @@ export function SearchYoutubeItem({ item }: YoutubeCardProps) {
     playStream(item)
   }
 
+  const thumbnailSrc = !hasImageError && item.thumbnail ? item.thumbnail : null
+
   return (
     <Item
       onClick={(e) => handlePlayToggle(e)}
@@ -54,31 +57,38 @@ export function SearchYoutubeItem({ item }: YoutubeCardProps) {
         variant="image"
         className="bg-accent"
       >
-        {item.thumbnail && !hasImageError ? (
-          <img
-            src={item.thumbnail}
-            alt={item.title}
-            className="w-full h-full object-cover"
-            loading="lazy"
-            onError={() => setHasImageError(true)}
-          />
-        ) : (
-          <HugeiconsIcon
-            icon={MusicNote01Icon}
-            className="text-muted-foreground"
-          />
-        )}
+        <Show
+          when={thumbnailSrc}
+          fallback={
+            <HugeiconsIcon
+              icon={MusicNote01Icon}
+              className="text-muted-foreground"
+            />
+          }
+        >
+          {(src) => (
+            <img
+              src={src}
+              alt={item.title}
+              className="w-full h-full object-cover"
+              loading="lazy"
+              onError={() => setHasImageError(true)}
+            />
+          )}
+        </Show>
       </ItemMedia>
       <ItemContent>
         <ItemTitle className="line-clamp-1">{item.title}</ItemTitle>
         <ItemDescription>{item.channel}</ItemDescription>
       </ItemContent>
       <ItemActions onClick={(e) => e.stopPropagation()}>
-        {item.duration && (
-          <span className="text-xs font-bold text-muted-foreground leading-none">
-            {formatDuration(item.duration)}
-          </span>
-        )}
+        <Show when={item.duration}>
+          {(duration) => (
+            <span className="text-xs font-bold text-muted-foreground leading-none">
+              {formatDuration(duration)}
+            </span>
+          )}
+        </Show>
 
         <Suspense fallback={<Skeleton className="size-7" />}>
           <YoutubeSongActions item={item} />

@@ -18,6 +18,7 @@ import {
   EmptyTitle
 } from "@/components/ui/empty"
 import { formatDuration } from "@/shared/helpers/format-duration"
+import { Show } from "@/components/utility/show"
 import { YoutubeSongActions } from "./actions"
 import { cn } from "cn"
 
@@ -59,6 +60,12 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
     )
   }
 
+  const thumbnailSrc =
+    !imageError && currentTrack.thumbnail ? currentTrack.thumbnail : null
+  const playButtonVariant = isPlaying ? "default" : "outline"
+  const playButtonLabel = isPlaying ? "Pause" : "Play"
+  const playButtonIcon = isPlaying ? PauseIcon : PlayIcon
+
   return (
     <Card
       className={cn(
@@ -67,21 +74,26 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
       )}
     >
       <div className="relative aspect-video rounded-lg overflow-hidden bg-muted border border-border/50 shadow-sm shrink-0">
-        {currentTrack.thumbnail && !imageError ? (
-          <img
-            src={currentTrack.thumbnail}
-            alt={currentTrack.title}
-            className="size-full object-cover"
-            onError={() => setImageError(true)}
-          />
-        ) : (
-          <div className="size-full flex items-center justify-center bg-accent">
-            <HugeiconsIcon
-              icon={Music01Icon}
-              className="size-8 text-muted-foreground"
+        <Show
+          when={thumbnailSrc}
+          fallback={
+            <div className="size-full flex items-center justify-center bg-accent">
+              <HugeiconsIcon
+                icon={Music01Icon}
+                className="size-8 text-muted-foreground"
+              />
+            </div>
+          }
+        >
+          {(src) => (
+            <img
+              src={src}
+              alt={currentTrack.title}
+              className="size-full object-cover"
+              onError={() => setImageError(true)}
             />
-          </div>
-        )}
+          )}
+        </Show>
 
         <div className="absolute top-2 left-2 flex items-center gap-1.5">
           <Badge
@@ -95,21 +107,23 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
             <span>Stream</span>
           </Badge>
 
-          {isPlaying && (
+          <Show when={isPlaying}>
             <Badge
               variant="outline"
               className="text-[10px] px-1.5 py-0.5 border-primary/60 text-primary bg-background/80 backdrop-blur-xs animate-pulse shadow"
             >
               Playing
             </Badge>
-          )}
+          </Show>
         </div>
 
-        {currentTrack.duration ? (
-          <span className="absolute bottom-2 right-2 text-[10px] bg-black/80 text-white font-mono px-1.5 py-0.5 rounded leading-none shadow">
-            {formatDuration(currentTrack.duration)}
-          </span>
-        ) : null}
+        <Show when={currentTrack.duration}>
+          {(duration) => (
+            <span className="absolute bottom-2 right-2 text-[10px] bg-black/80 text-white font-mono px-1.5 py-0.5 rounded leading-none shadow">
+              {formatDuration(duration)}
+            </span>
+          )}
+        </Show>
       </div>
 
       {/* Song Details */}
@@ -132,16 +146,16 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
       <div className="flex items-center gap-2 pt-2 border-t border-border/50">
         <Button
           size="sm"
-          variant={isPlaying ? "default" : "outline"}
+          variant={playButtonVariant}
           onClick={togglePlay}
           className="flex-1 gap-1.5"
           disabled={isLoading}
         >
           <HugeiconsIcon
-            icon={isPlaying ? PauseIcon : PlayIcon}
+            icon={playButtonIcon}
             className="size-3.5"
           />
-          <span>{isPlaying ? "Pause" : "Play"}</span>
+          <span>{playButtonLabel}</span>
         </Button>
 
         <YoutubeSongActions item={currentTrack} />

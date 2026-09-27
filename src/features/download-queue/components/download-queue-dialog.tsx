@@ -20,6 +20,7 @@ import {
   RefreshIcon
 } from "@hugeicons/core-free-icons"
 import { Link } from "@tanstack/react-router"
+import { Show } from "@/components/utility/show"
 
 export function DownloadQueueDialog() {
   const {
@@ -35,6 +36,13 @@ export function DownloadQueueDialog() {
     removeTask,
     clearFinished
   } = useDownloadQueue()
+
+  const hasActiveTasks = activeTasks.length > 0
+  const hasQueuedTasks = queuedTasks.length > 0
+  const hasCompletedTasks = completedTasks.length > 0
+  const hasFailedTasks = failedTasks.length > 0
+  const hasFinishedTasks = hasCompletedTasks || hasFailedTasks
+  const hasTasks = allTasks.length > 0
 
   return (
     <Dialog
@@ -54,42 +62,42 @@ export function DownloadQueueDialog() {
             </DialogTitle>
 
             <div className="flex items-center gap-1">
-              {activeTasks.length > 0 && (
+              <Show when={hasActiveTasks}>
                 <Badge
                   variant="default"
                   className="text-[10px] px-1.5 py-0"
                 >
                   {activeTasks.length} active
                 </Badge>
-              )}
-              {queuedTasks.length > 0 && (
+              </Show>
+              <Show when={hasQueuedTasks}>
                 <Badge
                   variant="secondary"
                   className="text-[10px] px-1.5 py-0"
                 >
                   {queuedTasks.length} queued
                 </Badge>
-              )}
-              {completedTasks.length > 0 && (
+              </Show>
+              <Show when={hasCompletedTasks}>
                 <Badge
                   variant="outline"
                   className="text-[10px] px-1.5 py-0 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
                 >
                   {completedTasks.length} completed
                 </Badge>
-              )}
-              {failedTasks.length > 0 && (
+              </Show>
+              <Show when={hasFailedTasks}>
                 <Badge
                   variant="destructive"
                   className="text-[10px] px-1.5 py-0"
                 >
                   {failedTasks.length} failed
                 </Badge>
-              )}
+              </Show>
             </div>
           </div>
 
-          {(completedTasks.length > 0 || failedTasks.length > 0) && (
+          <Show when={hasFinishedTasks}>
             <Button
               size="sm"
               variant="ghost"
@@ -98,7 +106,7 @@ export function DownloadQueueDialog() {
             >
               Clear completed
             </Button>
-          )}
+          </Show>
         </DialogHeader>
 
         <DialogDescription className="sr-only">
@@ -107,25 +115,37 @@ export function DownloadQueueDialog() {
 
         {/* Task List */}
         <div className="flex-1 overflow-y-auto min-h-0 pr-1 space-y-2 no-scrollbar max-h-[55vh]">
-          {allTasks.length === 0 ? (
-            <div className="py-12 text-center text-xs text-muted-foreground flex flex-col items-center gap-2">
-              <HugeiconsIcon
-                icon={Download01Icon}
-                className="size-8 text-muted-foreground/40"
-              />
-              <span>No active downloads</span>
-            </div>
-          ) : (
-            allTasks.map((task) => {
+          <Show
+            when={hasTasks}
+            fallback={
+              <div className="py-12 text-center text-xs text-muted-foreground flex flex-col items-center gap-2">
+                <HugeiconsIcon
+                  icon={Download01Icon}
+                  className="size-8 text-muted-foreground/40"
+                />
+                <span>No active downloads</span>
+              </div>
+            }
+          >
+            {allTasks.map((task) => {
               const percent = Math.round(task.progress * 100)
               const downloadedMb = (
                 task.downloadedBytes /
                 (1024 * 1024)
               ).toFixed(1)
-              const totalMb =
-                task.totalBytes > 0
-                  ? (task.totalBytes / (1024 * 1024)).toFixed(1)
-                  : null
+              const hasTotalBytes = task.totalBytes > 0
+              const totalMb = hasTotalBytes
+                ? (task.totalBytes / (1024 * 1024)).toFixed(1)
+                : null
+              const hasDownloadedBytes = task.downloadedBytes > 0
+              const isStarting = percent === 0
+              const progressLabel = isStarting
+                ? "Starting download..."
+                : `${percent}%`
+              const sizeLabel = totalMb
+                ? `${downloadedMb} MB / ${totalMb} MB`
+                : `${downloadedMb} MB`
+              const errorMessage = task.error || "Download failed"
 
               if (task.status === "downloading") {
                 return (
@@ -170,14 +190,10 @@ export function DownloadQueueDialog() {
                     />
 
                     <div className="flex items-center justify-between text-[10px] text-muted-foreground font-mono">
-                      <span>
-                        {percent > 0 ? `${percent}%` : "Starting download..."}
-                      </span>
-                      {task.downloadedBytes > 0 && (
-                        <span>
-                          {downloadedMb} MB{totalMb ? ` / ${totalMb} MB` : ""}
-                        </span>
-                      )}
+                      <span>{progressLabel}</span>
+                      <Show when={hasDownloadedBytes}>
+                        <span>{sizeLabel}</span>
+                      </Show>
                     </div>
                   </div>
                 )
@@ -290,7 +306,7 @@ export function DownloadQueueDialog() {
                       {task.item.title}
                     </span>
                     <span className="text-[11px] text-destructive truncate">
-                      {task.error || "Download failed"}
+                      {errorMessage}
                     </span>
                   </div>
 
@@ -323,8 +339,8 @@ export function DownloadQueueDialog() {
                   </div>
                 </div>
               )
-            })
-          )}
+            })}
+          </Show>
         </div>
       </DialogContent>
     </Dialog>

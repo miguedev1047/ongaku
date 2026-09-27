@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { useStreamingPlayerStore } from "@/shared/stores/use-streaming-player"
 import {
   Tooltip,
@@ -7,8 +8,8 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { MusicNote01Icon, YoutubeIcon } from "@hugeicons/core-free-icons"
-import { useState } from "react"
 import { PlayerMedia } from "@/components/ui/player"
+import { Show } from "@/components/utility/show"
 
 export function StreamingCover() {
   const [hasImageError, setHasImageError] = useState(false)
@@ -16,25 +17,33 @@ export function StreamingCover() {
 
   if (!currentTrack) return null
 
+  const thumbnailSrc =
+    !hasImageError && currentTrack.thumbnail ? currentTrack.thumbnail : null
+
   return (
     <Tooltip>
       <TooltipTrigger
         render={
           <PlayerMedia>
-            {currentTrack.thumbnail && !hasImageError ? (
-              <img
-                key={currentTrack.id}
-                src={currentTrack.thumbnail}
-                alt={currentTrack.title}
-                className="size-full object-cover"
-                onError={() => setHasImageError(true)}
-              />
-            ) : (
-              <HugeiconsIcon
-                icon={MusicNote01Icon}
-                className="size-5 text-muted-foreground"
-              />
-            )}
+            <Show
+              when={thumbnailSrc}
+              fallback={
+                <HugeiconsIcon
+                  icon={MusicNote01Icon}
+                  className="size-5 text-muted-foreground"
+                />
+              }
+            >
+              {(src) => (
+                <img
+                  key={currentTrack.id}
+                  src={src}
+                  alt={currentTrack.title}
+                  className="size-full object-cover"
+                  onError={() => setHasImageError(true)}
+                />
+              )}
+            </Show>
 
             <div className="absolute top-0.5 left-0.5 pointer-events-none">
               <Badge

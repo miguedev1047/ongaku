@@ -11,6 +11,7 @@ import {
 import { Spinner } from "@/components/ui/spinner"
 import type { TPlaylist } from "@/shared/types/playlist.types"
 import { useDeletePlaylist } from "@/features/playlists/hooks"
+import { Show } from "@/components/utility/show"
 
 interface DeletePlaylistProps {
   playlist: TPlaylist
@@ -48,7 +49,9 @@ export function DeletePlaylist({
             onClick={handleDeletePlaylist}
             variant="destructive"
           >
-            {isPending && <Spinner />}
+            <Show when={isPending}>
+              <Spinner />
+            </Show>
             Delete
           </Button>
         </DialogFooter>

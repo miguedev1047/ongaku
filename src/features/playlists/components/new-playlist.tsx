@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/tooltip"
 import { Kbd, KbdGroup } from "@/components/ui/kbd"
 import { useNewPlaylist } from "@/features/playlists/hooks"
+import { Show } from "@/components/utility/show"
 
 interface NewPlaylistProps {
   open?: boolean
@@ -98,9 +99,9 @@ export function NewPlaylist({
                   <FieldDescription>
                     Type the playlist name to create it
                   </FieldDescription>
-                  {isInvalid && (
+                  <Show when={isInvalid}>
                     <FieldError errors={field.state.meta.errors} />
-                  )}
+                  </Show>
                 </Field>
               )
             }}
@@ -115,51 +116,54 @@ export function NewPlaylist({
           form="new-playlist-form"
           disabled={isPending}
         >
-          {isPending && <Spinner />}
+          <Show when={isPending}>
+            <Spinner />
+          </Show>
           Create
         </Button>
       </DialogFooter>
     </DialogContent>
   )
 
-  if (!showTrigger) {
-    return (
-      <Dialog
-        open={isOpen}
-        onOpenChange={setIsOpen}
-      >
-        {dialogContent}
-      </Dialog>
-    )
-  }
-
   return (
-    <Tooltip>
-      <Dialog
-        open={isOpen}
-        onOpenChange={setIsOpen}
-      >
-        <DialogTrigger
-          render={
-            <TooltipTrigger
-              render={
-                <Button size="icon">
-                  <HugeiconsIcon icon={PlusIcon} />
-                </Button>
-              }
-            />
-          }
-        />
-        {dialogContent}
-      </Dialog>
+    <Show
+      when={showTrigger}
+      fallback={
+        <Dialog
+          open={isOpen}
+          onOpenChange={setIsOpen}
+        >
+          {dialogContent}
+        </Dialog>
+      }
+    >
+      <Tooltip>
+        <Dialog
+          open={isOpen}
+          onOpenChange={setIsOpen}
+        >
+          <DialogTrigger
+            render={
+              <TooltipTrigger
+                render={
+                  <Button size="icon">
+                    <HugeiconsIcon icon={PlusIcon} />
+                  </Button>
+                }
+              />
+            }
+          />
+          {dialogContent}
+        </Dialog>
 
-      <TooltipContent>
-        New playlist
-        <KbdGroup>
-          <Kbd>Alt</Kbd>
-          <Kbd>P</Kbd>
-        </KbdGroup>
-      </TooltipContent>
-    </Tooltip>
+        <TooltipContent>
+          New playlist
+          <KbdGroup>
+            <Kbd>Alt</Kbd>
+            <Kbd>P</Kbd>
+          </KbdGroup>
+        </TooltipContent>
+      </Tooltip>
+    </Show>
   )
 }

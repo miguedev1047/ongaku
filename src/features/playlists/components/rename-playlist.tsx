@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
 import type { TPlaylist } from "@/shared/types/playlist.types"
 import { useRenamePlaylist } from "@/features/playlists/hooks"
+import { Show } from "@/components/utility/show"
 
 interface RenamePlaylistProps {
   playlist: TPlaylist
@@ -83,9 +84,9 @@ export function RenamePlaylist({
                     <FieldDescription>
                       Choose a new name for your playlist
                     </FieldDescription>
-                    {isInvalid && (
+                    <Show when={isInvalid}>
                       <FieldError errors={field.state.meta.errors} />
-                    )}
+                    </Show>
                   </Field>
                 )
               }}
@@ -100,7 +101,9 @@ export function RenamePlaylist({
             form={formId}
             disabled={isPending}
           >
-            {isPending && <Spinner />}
+            <Show when={isPending}>
+              <Spinner />
+            </Show>
             Rename
           </Button>
         </DialogFooter>
