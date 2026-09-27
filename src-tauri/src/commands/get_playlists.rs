@@ -82,7 +82,11 @@ pub fn get_playlists() -> Result<Vec<Playlist>, String> {
         })
         .collect();
 
-    playlists.sort_by_cached_key(|key| key.name.to_lowercase());
+    playlists.sort_by(|a, b| {
+        a.created
+            .cmp(&b.created)
+            .then_with(|| a.name.to_lowercase().cmp(&b.name.to_lowercase()))
+    });
 
     Ok(playlists)
 }

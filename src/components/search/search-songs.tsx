@@ -9,12 +9,7 @@ import { Button } from "@/components/ui/button"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Search01Icon } from "@hugeicons/core-free-icons"
 import { useSuspenseQuery } from "@tanstack/react-query"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger
-} from "@/components/ui/tooltip"
-import { Kbd, KbdGroup } from "@/components/ui/kbd"
+import { Kbd } from "@/components/ui/kbd"
 import { useState } from "react"
 import { useParams } from "@tanstack/react-router"
 import { useHotkey } from "@tanstack/react-hotkeys"
@@ -24,37 +19,33 @@ import { useSongUtils } from "@/hooks/use-song-utils"
 import { useActivePlayerStore } from "@/shared/stores/player"
 
 export function SearchSongs() {
+  const [isOpen, setIsOpen] = useState(false)
+
   const { playlistName } = useParams({ from: "/playlists/$playlistName" })
   const { data: songs } = useSuspenseQuery(playlistSongsQueryOpts(playlistName))
-  const [isOpen, setIsOpen] = useState(false)
+
   const { getCoverUrl } = useSongUtils()
 
   const playSong = useActivePlayerStore((state) => state.playSong)
 
-  useHotkey("Control+Alt+S", () => setIsOpen(!isOpen))
+  useHotkey("Control+K", () => setIsOpen(!isOpen))
 
   return (
     <div className="flex flex-col gap-4">
-      <Tooltip>
-        <TooltipTrigger
-          render={
-            <Button
-              onClick={() => setIsOpen(true)}
-              size="icon"
-            >
-              <HugeiconsIcon icon={Search01Icon} />
-            </Button>
-          }
+      <Button
+        onClick={() => setIsOpen(true)}
+        variant="outline"
+        className="w-52"
+        size="sm"
+      >
+        <HugeiconsIcon
+          icon={Search01Icon}
+          className="size-4"
         />
-        <TooltipContent>
-          Search songs
-          <KbdGroup>
-            <Kbd>Ctrl</Kbd>
-            <Kbd>Alt</Kbd>
-            <Kbd>S</Kbd>
-          </KbdGroup>
-        </TooltipContent>
-      </Tooltip>
+        Search songs...
+        <Kbd className="ml-auto">⌘K</Kbd>
+      </Button>
+
       <CommandDialog
         open={isOpen}
         onOpenChange={setIsOpen}

@@ -43,8 +43,10 @@ export function NewPlaylist({
   showTrigger = true
 }: NewPlaylistProps = {}) {
   const [internalOpen, setInternalOpen] = useState(false)
+
   const isControlled = externalOpen !== undefined
   const isOpen = isControlled ? externalOpen : internalOpen
+
   const setIsOpen = (next: boolean) => {
     if (isControlled) {
       setExternalOpen?.(next)
@@ -146,7 +148,10 @@ export function NewPlaylist({
             render={
               <TooltipTrigger
                 render={
-                  <Button size="icon">
+                  <Button
+                    size="icon"
+                    variant="outline"
+                  >
                     <HugeiconsIcon icon={PlusIcon} />
                   </Button>
                 }

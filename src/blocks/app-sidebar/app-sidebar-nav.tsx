@@ -4,9 +4,9 @@ import {
   SidebarGroupLabel,
   SidebarMenu
 } from "@/components/ui/sidebar"
-import { PlaylistsNav } from "@/blocks/app-sidebar/playlists-nav"
 import { YoutubeSearchNav } from "@/blocks/app-sidebar/navigations/youtube-search-nav"
-import { LibraryNav } from "./navigations/library-nav"
+import { PlaylistNav } from "@/blocks/app-sidebar/navigations/playlist-nav"
+import { LibraryNav } from "@/blocks/app-sidebar/navigations/library-nav"
 
 export function AppSidebarNav() {
   return (
@@ -14,7 +14,7 @@ export function AppSidebarNav() {
       <SidebarGroupLabel>Navigation</SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
-          <PlaylistsNav />
+          <PlaylistNav />
           <LibraryNav />
           <YoutubeSearchNav />
         </SidebarMenu>

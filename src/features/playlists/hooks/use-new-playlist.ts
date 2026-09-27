@@ -1,6 +1,5 @@
 import { useForm } from "@tanstack/react-form"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { useNavigate } from "@tanstack/react-router"
 import { invoke } from "@tauri-apps/api/core"
 import { toast } from "sonner"
 import { playlistsQueryOpts } from "@/shared/queries/playlists"
@@ -17,7 +16,6 @@ interface UseNewPlaylistProps {
 export function useNewPlaylist({ onSuccess }: UseNewPlaylistProps = {}) {
   const queryClient = useQueryClient()
   const playlistsQueryKey = playlistsQueryOpts().queryKey
-  const navigate = useNavigate()
 
   const mutation = useMutation({
     mutationFn: async (value: TNewPlaylistSchema) => {
@@ -26,7 +24,7 @@ export function useNewPlaylist({ onSuccess }: UseNewPlaylistProps = {}) {
         name: trimmedPlaylist
       })
     },
-    onSuccess: (data, variables) => {
+    onSuccess: (data) => {
       if (data.code === "ERROR") {
         toast.error(data.message)
         return
@@ -37,12 +35,6 @@ export function useNewPlaylist({ onSuccess }: UseNewPlaylistProps = {}) {
 
       toast.success(data.message)
       queryClient.invalidateQueries({ queryKey: playlistsQueryKey })
-
-      const trimmedPlaylist = variables.name.trim()
-      navigate({
-        to: "/playlists/$playlistName",
-        params: { playlistName: trimmedPlaylist }
-      })
     },
     onError: () => {
       toast.error("An error occurred while creating the playlist")

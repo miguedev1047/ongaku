@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { memo, useMemo, useState } from "react"
 
 interface FolderProps {
   color?: string
@@ -28,27 +28,33 @@ const darkenColor = (hex: string, percent: number): string => {
   )
 }
 
-function Folder({
+const Folder = memo(function Folder({
   color = "#5227FF",
   size = 1,
   items = [],
   className = ""
 }: FolderProps) {
   const maxItems = 3
-  const papers = items.slice(0, maxItems)
-  while (papers.length < maxItems) {
-    papers.push(null)
-  }
+  const papers = useMemo(() => {
+    const p = items.slice(0, maxItems)
+    while (p.length < maxItems) {
+      p.push(null)
+    }
+    return p
+  }, [items])
 
   const [open, setOpen] = useState(false)
   const [paperOffsets, setPaperOffsets] = useState<{ x: number; y: number }[]>(
     Array.from({ length: maxItems }, () => ({ x: 0, y: 0 }))
   )
 
-  const folderBackColor = darkenColor(color, 0.08)
-  const paper1 = darkenColor("#ffffff", 0.1)
-  const paper2 = darkenColor("#ffffff", 0.05)
-  const paper3 = "#ffffff"
+  const { folderBackColor, paper1, paper2, paper3 } = useMemo(() => {
+    const folderBackColor = darkenColor(color, 0.08)
+    const paper1 = darkenColor("#ffffff", 0.1)
+    const paper2 = darkenColor("#ffffff", 0.05)
+    const paper3 = "#ffffff"
+    return { folderBackColor, paper1, paper2, paper3 }
+  }, [color])
 
   const handleClick = () => {
     setOpen((prev) => !prev)
@@ -108,7 +114,7 @@ function Folder({
       className={className}
     >
       <div
-        className={`group relative transition-all duration-200 ease-in cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 ${!open ? "hover:-translate-y-2" : ""}`}
+        className={`group relative transition-all duration-200 ease-in cursor-pointer outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 ring-0 ${!open ? "hover:-translate-y-2" : ""}`}
         style={{
           ...folderStyle,
           transform: open ? "translateY(-8px)" : undefined
@@ -120,7 +126,7 @@ function Folder({
             handleClick()
           }
         }}
-        tabIndex={0}
+        tabIndex={-1}
         role="button"
         aria-expanded={open}
         aria-label={open ? "Close folder" : "Open folder"}
@@ -186,6 +192,6 @@ function Folder({
       </div>
     </div>
   )
-}
+})
 
 export { Folder }
