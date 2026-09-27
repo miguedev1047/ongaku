@@ -1,4 +1,4 @@
-import { Link, useLocation } from "@tanstack/react-router"
+import { Link } from "@tanstack/react-router"
 import {
   SidebarMenuBadge,
   SidebarMenuButton,
@@ -7,12 +7,10 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { YoutubeIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
+import { isActivePathname } from "@/shared/helpers/is-active-path"
 
-export function YoutubeSearchNavItem() {
-  const pathname = useLocation({
-    select: (location) => location.pathname
-  })
-  const isYoutubeActive = pathname.startsWith("/search-youtube")
+export function YoutubeSearchNav() {
+  const isYoutubeActive = isActivePathname("/search-youtube")
 
   return (
     <SidebarMenuItem>

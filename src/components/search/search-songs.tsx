@@ -79,7 +79,10 @@ export function SearchSongs() {
             {(song) => {
               const handleSelectSong = () => {
                 setIsOpen(false)
-                playSong(song)
+                playSong(song, {
+                  type: "playlist",
+                  playlistName: playlistName || song.playlist_name
+                })
               }
 
               return (

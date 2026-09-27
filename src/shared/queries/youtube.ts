@@ -10,7 +10,7 @@ export const youtubeSearchQueryOpts = (searchName: string) =>
       if (!searchName.trim()) return []
       return invoke<TYoutubeSearchResult[]>("search_youtube", {
         searchName: searchName.trim(),
-        maxResults: 30
+        maxResults: 40
       })
     },
     staleTime: TEN_MINUTES,

@@ -4,6 +4,7 @@ import { openPath } from "@tauri-apps/plugin-opener"
 import { toast } from "sonner"
 import type { TPlaylist } from "@/shared/types/playlist.types"
 import { useActivePlayerStore } from "@/shared/stores/use-active-player"
+import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
 import {
   SidebarMenuSubButton,
   SidebarMenuSubItem
@@ -31,10 +32,6 @@ interface PlaylistsNavItemProps {
 export function PlaylistsNavItem({ playlist }: PlaylistsNavItemProps) {
   const [isRenameOpen, setIsRenameOpen] = useState(false)
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
-
-  const setActivePlaylist = useActivePlayerStore(
-    (state) => state.setActivePlaylist
-  )
 
   const pathname = useLocation({
     select: (location) => location.pathname
@@ -66,7 +63,13 @@ export function PlaylistsNavItem({ playlist }: PlaylistsNavItemProps) {
                 <Link
                   to="/playlists/$playlistName"
                   params={{ playlistName: playlist.name }}
-                  onClick={() => setActivePlaylist(playlist.name)}
+                  onClick={() => {
+                    useActivePlayerStore.getState().setActivePlaylist(playlist.name)
+                    useLocalPlayerStore.getState().setPlaybackContext({
+                      type: "playlist",
+                      playlistName: playlist.name
+                    })
+                  }}
                 />
               }
             >

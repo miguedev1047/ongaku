@@ -3,10 +3,14 @@ import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
 
 export type LocalPlayerState = "idle" | "playing" | "paused"
 
+export type PlaybackContext =
+  { type: "playlist"; playlistName: string } | { type: "library" }
+
 export interface LocalPlayerStore {
   audioRef: HTMLAudioElement | null
   currentSong: TPlaylistSong | null
   currentPlaylist: string | "Default"
+  playbackContext: PlaybackContext
   isShuffle: boolean
   isLoop: boolean
   isSeeking: boolean
@@ -16,8 +20,12 @@ export interface LocalPlayerStore {
   playerState: LocalPlayerState
 
   setAudioRef: (audio: HTMLAudioElement | null) => void
-  setCurrentSong: (song: TPlaylistSong | null) => void
+  setCurrentSong: (
+    song: TPlaylistSong | null,
+    context?: PlaybackContext
+  ) => void
   setCurrentPlaylist: (playlist: string | "Default") => void
+  setPlaybackContext: (context: PlaybackContext) => void
   setIsShuffle: (isShuffle: boolean) => void
   setIsLoop: (isLoop: boolean) => void
   toggleShuffle: () => void
@@ -33,6 +41,7 @@ export const useLocalPlayerStore = create<LocalPlayerStore>((set) => ({
   audioRef: null,
   currentSong: null,
   currentPlaylist: "Default",
+  playbackContext: { type: "playlist", playlistName: "Default" },
   isLoop: false,
   isShuffle: false,
   playerState: "idle",
@@ -42,15 +51,40 @@ export const useLocalPlayerStore = create<LocalPlayerStore>((set) => ({
   volume: 80,
 
   setAudioRef: (ref) => set({ audioRef: ref }),
-  setCurrentSong: (song) =>
-    set({
-      currentSong: song,
-      currentPlaylist: song?.playlist_name,
-      duration: song?.metadata.duration ?? 0,
-      progress: 0,
-      playerState: "playing"
+  setCurrentSong: (song, context) =>
+    set((state) => {
+      const nextContext: PlaybackContext = context
+        ? context
+        : song?.playlist_name
+          ? { type: "playlist", playlistName: song.playlist_name }
+          : state.playbackContext
+
+      const nextPlaylist =
+        nextContext.type === "playlist" ? nextContext.playlistName : "Library"
+
+      return {
+        currentSong: song,
+        playbackContext: nextContext,
+        currentPlaylist: nextPlaylist,
+        duration: song?.metadata.duration ?? 0,
+        progress: 0,
+        playerState: "playing"
+      }
     }),
-  setCurrentPlaylist: (playlist) => set({ currentPlaylist: playlist }),
+  setCurrentPlaylist: (playlist) =>
+    set({
+      currentPlaylist: playlist,
+      playbackContext:
+        playlist === "Library" || playlist === "library"
+          ? { type: "library" }
+          : { type: "playlist", playlistName: playlist }
+    }),
+  setPlaybackContext: (context) =>
+    set({
+      playbackContext: context,
+      currentPlaylist:
+        context.type === "playlist" ? context.playlistName : "Library"
+    }),
   setIsLoop: (isLoop) =>
     set({
       isLoop,

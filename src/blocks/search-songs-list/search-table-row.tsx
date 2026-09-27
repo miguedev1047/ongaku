@@ -49,9 +49,9 @@ export const SearchSongTableRow = memo(function SearchSongTableRow({
     <TableRow
       onClick={handleRowClick}
       data-active-track={isCurrentTrack}
-      className="w-full h-full px-3 gap-3 border-b border-border/20 cursor-pointer select-none"
+      className="group w-full h-full px-3 gap-3 border-b border-border/20 cursor-pointer select-none"
     >
-      {/* 1. Selection Checkbox (fixed width: 32px) */}
+      {/* 1. Selection / Index (fixed width: 32px) */}
       <TableCell
         className="w-8 shrink-0 justify-center p-0"
         onClick={(e) => e.stopPropagation()}
@@ -59,16 +59,35 @@ export const SearchSongTableRow = memo(function SearchSongTableRow({
       >
         <Subscribe
           source={row.table.atoms.rowSelection}
-          selector={(selection: Record<string, boolean>) =>
-            Boolean(selection?.[row.id])
-          }
+          selector={(selection: Record<string, boolean>) => {
+            const isSelected = Boolean(selection?.[row.id])
+            const hasSelection = Object.values(selection || {}).some(Boolean)
+            return { isSelected, hasSelection }
+          }}
         >
-          {(selected) => (
-            <Checkbox
-              checked={selected}
-              onCheckedChange={() => row.toggleSelected()}
-              aria-label={`Select ${item.title}`}
-            />
+          {({ isSelected, hasSelection }) => (
+            <Show
+              when={hasSelection}
+              fallback={
+                <div className="size-full flex items-center justify-center">
+                  <span className="text-xs font-mono text-muted-foreground/70 group-hover:hidden">
+                    {row.index + 1}
+                  </span>
+                  <Checkbox
+                    className="hidden group-hover:flex"
+                    checked={false}
+                    onCheckedChange={() => row.toggleSelected()}
+                    aria-label={`Select ${item.title}`}
+                  />
+                </div>
+              }
+            >
+              <Checkbox
+                checked={isSelected}
+                onCheckedChange={() => row.toggleSelected()}
+                aria-label={`Select ${item.title}`}
+              />
+            </Show>
           )}
         </Subscribe>
       </TableCell>

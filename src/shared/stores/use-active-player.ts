@@ -1,5 +1,8 @@
 import { create } from "zustand"
-import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
+import {
+  useLocalPlayerStore,
+  type PlaybackContext
+} from "@/shared/stores/use-local-player"
 import { useStreamingPlayerStore } from "@/shared/stores/use-streaming-player"
 import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
 import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
@@ -13,7 +16,7 @@ interface ActivePlayerStore {
 
   setActivePlayer: (type: ActivePlayerType) => void
   setActivePlaylist: (playlistName: string) => void
-  playSong: (song: TPlaylistSong) => void
+  playSong: (song: TPlaylistSong, context?: PlaybackContext) => void
   playStream: (track: TYoutubeSearchResult) => void
 
   // Universal Player Controls
@@ -31,7 +34,7 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => ({
   setActivePlayer: (type) => set({ activePlayer: type }),
   setActivePlaylist: (playlistName) => set({ activePlaylist: playlistName }),
 
-  playSong: (song) => {
+  playSong: (song, context) => {
     // 1. Pause streaming if it was playing
     const streamingState = useStreamingPlayerStore.getState()
     if (streamingState.audioRef) {
@@ -39,11 +42,18 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => ({
       streamingState.pause()
     }
 
-    // 2. Set song in local player store
-    useLocalPlayerStore.getState().setCurrentSong(song)
+    // 2. Set song in local player store with context
+    useLocalPlayerStore.getState().setCurrentSong(song, context)
 
-    // 3. Mark active player as local
-    set({ activePlayer: "local" })
+    // 3. Mark active player as local and record active playlist / source
+    const nextPlaylist =
+      context?.type === "playlist"
+        ? context.playlistName
+        : context?.type === "library"
+          ? "Library"
+          : song?.playlist_name || "Default"
+
+    set({ activePlayer: "local", activePlaylist: nextPlaylist })
   },
 
   playStream: (track) => {

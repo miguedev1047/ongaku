@@ -27,6 +27,16 @@ export function useMoveSong({ song, onSuccess }: UseMoveSongProps) {
       })
     },
     onSuccess: (data, targetPlaylist) => {
+      if (data.code === "SAME_FILE") {
+        toast.info(data.message)
+        return
+      }
+
+      if (data.code === "ALREADY_EXISTS") {
+        toast.warning(data.message)
+        return
+      }
+
       if (data.code === "ERROR") {
         toast.error(data.message)
         return
@@ -56,6 +66,11 @@ export function useMoveSong({ song, onSuccess }: UseMoveSongProps) {
       // Invalidate playlists list (updates song counts)
       queryClient.invalidateQueries({
         queryKey: playlistsQueryOpts().queryKey
+      })
+
+      // Invalidate library songs list
+      queryClient.invalidateQueries({
+        queryKey: ["library-songs"]
       })
 
       onSuccess?.()

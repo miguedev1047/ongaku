@@ -53,6 +53,11 @@ export function useDeleteSong({ song, onSuccess }: UseDeleteSongProps) {
         queryKey: playlistsQueryOpts().queryKey
       })
 
+      // Invalidate library songs query
+      queryClient.invalidateQueries({
+        queryKey: ["library-songs"]
+      })
+
       onSuccess?.()
     },
     onError: () => {

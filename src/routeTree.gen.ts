@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PlaylistsRouteRouteImport } from './routes/playlists/route'
+import { Route as LibraryIndexRouteImport } from './routes/library/index'
 import { Route as PlaylistsIndexRouteImport } from './routes/playlists/index'
 import { Route as PlaylistsPlaylistNameRouteImport } from './routes/playlists/$playlistName'
 import { Route as SearchYoutubeIndexRouteImport } from './routes/search-youtube/index'
@@ -23,6 +24,11 @@ const IndexRoute = IndexRouteImport.update({
 const PlaylistsRouteRoute = PlaylistsRouteRouteImport.update({
   id: '/playlists',
   path: '/playlists',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LibraryIndexRoute = LibraryIndexRouteImport.update({
+  id: '/library/',
+  path: '/library/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlaylistsIndexRoute = PlaylistsIndexRouteImport.update({
@@ -45,12 +51,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/playlists': typeof PlaylistsRouteRouteWithChildren
   '/playlists/$playlistName': typeof PlaylistsPlaylistNameRoute
+  '/library/': typeof LibraryIndexRoute
   '/playlists/': typeof PlaylistsIndexRoute
   '/search-youtube/': typeof SearchYoutubeIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/playlists/$playlistName': typeof PlaylistsPlaylistNameRoute
+  '/library': typeof LibraryIndexRoute
   '/playlists': typeof PlaylistsIndexRoute
   '/search-youtube': typeof SearchYoutubeIndexRoute
 }
@@ -59,6 +67,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/playlists': typeof PlaylistsRouteRouteWithChildren
   '/playlists/$playlistName': typeof PlaylistsPlaylistNameRoute
+  '/library/': typeof LibraryIndexRoute
   '/playlists/': typeof PlaylistsIndexRoute
   '/search-youtube/': typeof SearchYoutubeIndexRoute
 }
@@ -68,15 +77,22 @@ export interface FileRouteTypes {
     | '/'
     | '/playlists'
     | '/playlists/$playlistName'
+    | '/library/'
     | '/playlists/'
     | '/search-youtube/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/playlists/$playlistName' | '/playlists' | '/search-youtube'
+  to:
+    | '/'
+    | '/playlists/$playlistName'
+    | '/library'
+    | '/playlists'
+    | '/search-youtube'
   id:
     | '__root__'
     | '/'
     | '/playlists'
     | '/playlists/$playlistName'
+    | '/library/'
     | '/playlists/'
     | '/search-youtube/'
   fileRoutesById: FileRoutesById
@@ -84,6 +100,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PlaylistsRouteRoute: typeof PlaylistsRouteRouteWithChildren
+  LibraryIndexRoute: typeof LibraryIndexRoute
   SearchYoutubeIndexRoute: typeof SearchYoutubeIndexRoute
 }
 
@@ -101,6 +118,13 @@ declare module '@tanstack/react-router' {
       path: '/playlists'
       fullPath: '/playlists'
       preLoaderRoute: typeof PlaylistsRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/library/': {
+      id: '/library/'
+      path: '/library'
+      fullPath: '/library/'
+      preLoaderRoute: typeof LibraryIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/playlists/': {
@@ -144,6 +168,7 @@ const PlaylistsRouteRouteWithChildren = PlaylistsRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PlaylistsRouteRoute: PlaylistsRouteRouteWithChildren,
+  LibraryIndexRoute: LibraryIndexRoute,
   SearchYoutubeIndexRoute: SearchYoutubeIndexRoute,
 }
 export const routeTree = rootRouteImport

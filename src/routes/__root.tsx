@@ -1,6 +1,7 @@
 import { Outlet, createRootRouteWithContext } from "@tanstack/react-router"
 import { type QueryClient } from "@tanstack/react-query"
 import { invoke } from "@tauri-apps/api/core"
+import { Suspense } from "react"
 import { TanstackDevtool } from "@/components/tanstack-devtools"
 import { PlayerRoot } from "@/blocks/player-root"
 import { Toaster } from "@/components/ui/sonner"
@@ -42,7 +43,9 @@ function RootComponent() {
           </SidebarInset>
         </div>
         <DownloadQueueDialog />
-        <PlayerRoot />
+        <Suspense fallback={null}>
+          <PlayerRoot />
+        </Suspense>
         <Toaster />
       </div>
     </SidebarProvider>

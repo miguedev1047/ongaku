@@ -7,7 +7,7 @@ use crate::{
     commands::{
         cancel_download, check_binaries, delete_playlist, delete_song, download_binaries,
         download_song, get_binaries_info, get_playlist_songs, get_playlists, get_server_port, get_youtube_stream_url,
-        move_song, new_playlist, rename_playlist, search_youtube, DownloadManagerState,
+        library, move_song, new_playlist, rename_playlist, search_youtube, DownloadManagerState,
     },
     helpers::{ensure_dirs, single_instance_plugin},
     server::init_server,
@@ -31,6 +31,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             get_playlists,
             get_playlist_songs,
+            library,
             get_server_port,
             new_playlist,
             rename_playlist,

@@ -18,7 +18,7 @@ export function LocalPlayer() {
   return (
     <TooltipProvider delay={300}>
       <Player>
-        <Suspense>
+        <Suspense fallback={null}>
           <LocalPlayerElement />
         </Suspense>
 
@@ -31,7 +31,9 @@ export function LocalPlayer() {
         </div>
 
         {/* Column 2 (Center): Playback Controls */}
-        <LocalPlayerControls />
+        <Suspense fallback={null}>
+          <LocalPlayerControls />
+        </Suspense>
 
         {/* Column 3 (Right): Time & Volume */}
         <div className="flex items-center justify-end gap-3 min-w-0 pl-2">

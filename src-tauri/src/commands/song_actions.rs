@@ -98,14 +98,14 @@ pub fn move_song(path: &str, target_playlist: &str) -> Result<SongActionResponse
 
     if source_path == dest_path {
         return Ok(SongActionResponse {
-            code: "ERROR".into(),
+            code: "SAME_FILE".into(),
             message: "The song is already in this playlist".into(),
         });
     }
 
     if dest_path.exists() {
         return Ok(SongActionResponse {
-            code: "ERROR".into(),
+            code: "ALREADY_EXISTS".into(),
             message: format!(
                 "A song with name '{}' already exists in playlist '{}'",
                 file_name.to_string_lossy(),

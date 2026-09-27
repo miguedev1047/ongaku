@@ -33,7 +33,7 @@ export function usePlaylistSongActions({ song }: UsePlaylistSongActionsProps) {
       return
     }
 
-    playSong(song)
+    playSong(song, { type: "playlist", playlistName: song.playlist_name })
   }
 
   const handleOpenFolder = async () => {

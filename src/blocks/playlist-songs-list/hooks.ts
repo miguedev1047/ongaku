@@ -71,6 +71,9 @@ export function usePlaylistBatchActions(currentPlaylistName?: string) {
       queryClient.invalidateQueries({
         queryKey: playlistsQueryOpts().queryKey
       })
+      queryClient.invalidateQueries({
+        queryKey: ["library-songs"]
+      })
 
       clearSelection()
       setIsDeleteOpen(false)
@@ -85,6 +88,7 @@ export function usePlaylistBatchActions(currentPlaylistName?: string) {
 
     try {
       let successCount = 0
+      let alreadyExistsCount = 0
       let failCount = 0
 
       for (const song of selectedSongs) {
@@ -101,6 +105,10 @@ export function usePlaylistBatchActions(currentPlaylistName?: string) {
               setCurrentSong(null)
               setPlayerState("idle")
             }
+          } else if (res.code === "ALREADY_EXISTS") {
+            alreadyExistsCount++
+          } else if (res.code === "SAME_FILE") {
+            // Already in playlist, ignore
           } else {
             failCount++
           }
@@ -114,6 +122,13 @@ export function usePlaylistBatchActions(currentPlaylistName?: string) {
           successCount === 1
             ? `1 song moved to "${targetPlaylist}"`
             : `${successCount} songs moved to "${targetPlaylist}"`
+        )
+      }
+      if (alreadyExistsCount > 0) {
+        toast.warning(
+          alreadyExistsCount === 1
+            ? `1 song already exists in "${targetPlaylist}"`
+            : `${alreadyExistsCount} songs already exist in "${targetPlaylist}"`
         )
       }
       if (failCount > 0) {
@@ -130,6 +145,9 @@ export function usePlaylistBatchActions(currentPlaylistName?: string) {
       })
       queryClient.invalidateQueries({
         queryKey: playlistsQueryOpts().queryKey
+      })
+      queryClient.invalidateQueries({
+        queryKey: ["library-songs"]
       })
 
       clearSelection()

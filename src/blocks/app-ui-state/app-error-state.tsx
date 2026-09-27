@@ -76,10 +76,10 @@ export function AppErrorState({ error, reset }: ErrorComponentProps) {
 
   return (
     <div className="w-full h-screen min-h-screen flex flex-col items-center justify-center p-6 bg-background text-foreground select-none">
-      <Empty className="border border-border/40 bg-card/40 max-w-md w-full shadow-sm rounded-xl">
+      <Empty className="border border-border/40 bg-card/40 w-full shadow-sm rounded-xl">
         <EmptyMedia
           variant="icon"
-          className="bg-destructive/10 text-destructive size-10"
+          className="bg-destructive/10 text-destructive size-10 max-w-md! mx-auto"
         >
           <HugeiconsIcon
             icon={AlertIcon}
