@@ -1,5 +1,6 @@
 import { queryOptions } from "@tanstack/react-query"
 import { invoke } from "@tauri-apps/api/core"
+import { TWENTY_FIVE_MINUTES, ONE_HOUR } from "@/constants/times"
 
 export const youtubeStreamQueryOpts = (videoId: string) =>
   queryOptions({
@@ -9,7 +10,7 @@ export const youtubeStreamQueryOpts = (videoId: string) =>
       if (!cleanId) return ""
       return invoke<string>("get_youtube_stream_url", { videoId: cleanId })
     },
-    staleTime: 1000 * 60 * 25, // 25 minutes
-    refetchInterval: 1000 * 60 * 60,
+    staleTime: TWENTY_FIVE_MINUTES,
+    refetchInterval: ONE_HOUR,
     enabled: Boolean(videoId)
   })

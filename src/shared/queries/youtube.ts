@@ -1,5 +1,6 @@
 import { queryOptions } from "@tanstack/react-query"
 import { invoke } from "@tauri-apps/api/core"
+import { TEN_MINUTES, ONE_HOUR } from "@/constants/times"
 import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
 
 export const youtubeSearchQueryOpts = (searchName: string) =>
@@ -12,7 +13,7 @@ export const youtubeSearchQueryOpts = (searchName: string) =>
         maxResults: 30
       })
     },
-    staleTime: 1000 * 60 * 10,
-    refetchInterval: 1000 * 60 * 60,
+    staleTime: TEN_MINUTES,
+    refetchInterval: ONE_HOUR,
     enabled: Boolean(searchName.trim())
   })
