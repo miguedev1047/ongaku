@@ -2,6 +2,7 @@ import "@/styles/main.css"
 import { StrictMode } from "react"
 import ReactDOM from "react-dom/client"
 import { queryClient, QueryProvider } from "@/lib/query"
+import { AppLoadingState, AppErrorState } from "@/blocks/app-ui-state"
 import { AppProvider } from "@/providers/app-provider"
 import {
   RouterProvider,
@@ -20,8 +21,8 @@ const router = createRouter({
   defaultPendingMs: 0,
   context: { queryClient },
 
-  defaultPendingComponent: () => <p>Loading Ongaku...</p>,
-  defaultErrorComponent: () => <p>Error to load Ongaku</p>,
+  defaultPendingComponent: AppLoadingState,
+  defaultErrorComponent: AppErrorState,
 
   Wrap: ({ children }: { children: React.ReactNode }) => (
     <AppProvider>

@@ -1,4 +1,8 @@
-import { checkBinariesQueryOpts } from "@/shared/queries/binaries"
+import {
+  checkBinariesQueryOpts,
+  binariesInfoQueryOpts,
+  type TBinariesInfo
+} from "@/shared/queries/binaries"
 import {
   useMutation,
   useQueryClient,
@@ -7,10 +11,13 @@ import {
 import { invoke } from "@tauri-apps/api/core"
 import { toast } from "sonner"
 
+export type { TBinariesInfo }
+
 export function useBinaries() {
   const { data: isBinariesInstalled } = useSuspenseQuery(
     checkBinariesQueryOpts()
   )
+  const { data: binariesInfo } = useSuspenseQuery(binariesInfoQueryOpts())
 
   const queryClient = useQueryClient()
 
@@ -21,6 +28,7 @@ export function useBinaries() {
     onSuccess: () => {
       toast.success("Tools installed successfully (yt-dlp & ffmpeg)")
       queryClient.invalidateQueries({ queryKey: ["check-binaries"] })
+      queryClient.invalidateQueries({ queryKey: ["binaries-info"] })
     },
     onError: () => {
       toast.error("An error occurred while downloading tools")
@@ -33,6 +41,7 @@ export function useBinaries() {
 
   return {
     isBinariesInstalled,
+    binariesInfo,
     isPending: mutation.isPending,
     installBinaries
   }

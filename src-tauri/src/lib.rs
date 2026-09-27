@@ -6,7 +6,7 @@ mod server;
 use crate::{
     commands::{
         cancel_download, check_binaries, delete_playlist, delete_song, download_binaries,
-        download_song, get_playlist_songs, get_playlists, get_server_port, get_youtube_stream_url,
+        download_song, get_binaries_info, get_playlist_songs, get_playlists, get_server_port, get_youtube_stream_url,
         move_song, new_playlist, rename_playlist, search_youtube, DownloadManagerState,
     },
     helpers::{ensure_dirs, single_instance_plugin},
@@ -41,6 +41,7 @@ pub fn run() {
             cancel_download,
             download_binaries,
             check_binaries,
+            get_binaries_info,
             search_youtube,
             get_youtube_stream_url
         ])

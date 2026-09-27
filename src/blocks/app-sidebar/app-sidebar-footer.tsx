@@ -1,5 +1,5 @@
 import { cn } from "cn"
-import { useDownloadQueue } from "@/features/download-queue"
+import { useDownloadQueue, CheckBinaries } from "@/features/download-queue"
 import { useUpdater } from "@/hooks/use-updater"
 import {
   SidebarMenu,
@@ -10,6 +10,27 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Download01Icon, DownloadIcon } from "@hugeicons/core-free-icons"
 import { Spinner } from "@/components/ui/spinner"
+
+interface QueueBadgeProps {
+  pendingCount: number
+  completedCount: number
+}
+
+function QueueBadge({ pendingCount, completedCount }: QueueBadgeProps) {
+  if (pendingCount > 0) {
+    return (
+      <SidebarMenuBadge className="bg-primary text-primary-foreground font-bold">
+        {pendingCount}
+      </SidebarMenuBadge>
+    )
+  }
+
+  if (completedCount > 0) {
+    return <SidebarMenuBadge>{completedCount}</SidebarMenuBadge>
+  }
+
+  return null
+}
 
 function SidebarDownloadQueue() {
   const {
@@ -42,16 +63,25 @@ function SidebarDownloadQueue() {
           )}
         />
         <span>{isDownloading ? "Downloading..." : "Downloads"}</span>
-
-        {pendingCount > 0 ? (
-          <SidebarMenuBadge className="bg-primary text-primary-foreground font-bold">
-            {pendingCount}
-          </SidebarMenuBadge>
-        ) : completedTasks.length > 0 ? (
-          <SidebarMenuBadge>{completedTasks.length}</SidebarMenuBadge>
-        ) : null}
+        <QueueBadge
+          pendingCount={pendingCount}
+          completedCount={completedTasks.length}
+        />
       </SidebarMenuButton>
     </SidebarMenuItem>
+  )
+}
+
+function UpdaterIcon({ isPending }: { isPending: boolean }) {
+  if (isPending) {
+    return <Spinner className="size-4 shrink-0" />
+  }
+
+  return (
+    <HugeiconsIcon
+      icon={DownloadIcon}
+      className="size-4 shrink-0 animate-bounce"
+    />
   )
 }
 
@@ -78,14 +108,7 @@ function SidebarUpdater() {
         tooltip={tooltipText}
         className="bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary"
       >
-        {isPending ? (
-          <Spinner className="size-4 shrink-0" />
-        ) : (
-          <HugeiconsIcon
-            icon={DownloadIcon}
-            className="size-4 shrink-0 animate-bounce"
-          />
-        )}
+        <UpdaterIcon isPending={isPending} />
         <span>{label}</span>
       </SidebarMenuButton>
     </SidebarMenuItem>
@@ -97,6 +120,7 @@ export function AppSidebarFooter() {
     <SidebarMenu>
       <SidebarUpdater />
       <SidebarDownloadQueue />
+      <CheckBinaries />
     </SidebarMenu>
   )
 }
