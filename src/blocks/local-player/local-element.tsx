@@ -1,5 +1,6 @@
 import { usePlayerMedia } from "@/blocks/local-player/hooks"
 import { useSongUtils } from "@/hooks/use-song-utils"
+import { toast } from "sonner"
 
 export function LocalPlayerElement() {
   const { songActive, isLoop, handleNextSong, handleTimeUpdate, setAudioRef } =
@@ -9,6 +10,11 @@ export function LocalPlayerElement() {
   if (!songActive) return null
 
   const trackUrl = getSongUrl({ song: songActive })
+
+  const handleError = () => {
+    toast.error(`Cannot play "${songActive.name}"`)
+    handleNextSong()
+  }
 
   return (
     <audio
@@ -21,6 +27,7 @@ export function LocalPlayerElement() {
       className="sr-only"
       onTimeUpdate={handleTimeUpdate}
       onEnded={handleNextSong}
+      onError={handleError}
     />
   )
 }

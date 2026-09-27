@@ -1,4 +1,4 @@
-import { useStreamingPlayerStore } from "@/shared/stores/use-streaming-player"
+import { useStreamingPlayerStore } from "@/shared/stores/player"
 import { PlayerTime } from "@/components/ui/player"
 
 export function StreamingPlayerTime() {

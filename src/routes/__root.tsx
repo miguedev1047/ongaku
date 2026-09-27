@@ -43,7 +43,7 @@ function RootComponent() {
           </SidebarInset>
         </div>
         <DownloadQueueDialog />
-        <Suspense fallback={null}>
+        <Suspense>
           <PlayerRoot />
         </Suspense>
         <Toaster />

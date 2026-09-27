@@ -8,7 +8,7 @@ import { LocalPlayerTime } from "./local-time"
 import { LocalPlayerElement } from "./local-element"
 import { Player } from "@/components/ui/player"
 import { TooltipProvider } from "@/components/ui/tooltip"
-import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
+import { useLocalPlayerStore } from "@/shared/stores/player"
 
 export function LocalPlayer() {
   const currentSong = useLocalPlayerStore((state) => state.currentSong)

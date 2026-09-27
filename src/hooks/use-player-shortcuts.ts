@@ -1,5 +1,5 @@
 import { useHotkey } from "@tanstack/react-hotkeys"
-import { useActivePlayerStore } from "@/shared/stores/use-active-player"
+import { useActivePlayerStore } from "@/shared/stores/player"
 
 export function usePlayerShortcuts() {
   const togglePlay = useActivePlayerStore((s) => s.togglePlay)

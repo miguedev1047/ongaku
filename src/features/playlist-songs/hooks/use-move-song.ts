@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { invoke } from "@tauri-apps/api/core"
 import { toast } from "sonner"
-import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
+import { useLocalPlayerStore } from "@/shared/stores/player"
 import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs"
 import { playlistsQueryOpts } from "@/shared/queries/playlists"
 import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
@@ -43,6 +43,8 @@ export function useMoveSong({ song, onSuccess }: UseMoveSongProps) {
       }
 
       toast.success(data.message)
+
+      useLocalPlayerStore.getState().removeFromQueue(song.id)
 
       // If the moved song is currently playing, reset playback
       if (currentSong?.id === song.id) {

@@ -1,5 +1,5 @@
-import { useStreamingPlayerStore } from "@/shared/stores/use-streaming-player"
-import { useActivePlayerStore } from "@/shared/stores/use-active-player"
+import { useStreamingPlayerStore } from "@/shared/stores/player"
+import { useActivePlayerStore } from "@/shared/stores/player"
 import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
 
 export function useYoutubePlayback(item: TYoutubeSearchResult) {

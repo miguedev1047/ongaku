@@ -3,8 +3,6 @@ import { Link, useLocation } from "@tanstack/react-router"
 import { openPath } from "@tauri-apps/plugin-opener"
 import { toast } from "sonner"
 import type { TPlaylist } from "@/shared/types/playlist.types"
-import { useActivePlayerStore } from "@/shared/stores/use-active-player"
-import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
 import {
   SidebarMenuSubButton,
   SidebarMenuSubItem
@@ -63,13 +61,6 @@ export function PlaylistsNavItem({ playlist }: PlaylistsNavItemProps) {
                 <Link
                   to="/playlists/$playlistName"
                   params={{ playlistName: playlist.name }}
-                  onClick={() => {
-                    useActivePlayerStore.getState().setActivePlaylist(playlist.name)
-                    useLocalPlayerStore.getState().setPlaybackContext({
-                      type: "playlist",
-                      playlistName: playlist.name
-                    })
-                  }}
                 />
               }
             >

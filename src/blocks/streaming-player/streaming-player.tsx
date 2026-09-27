@@ -1,5 +1,5 @@
 import { Component, type ReactNode, Suspense } from "react"
-import { useStreamingPlayerStore } from "@/shared/stores/use-streaming-player"
+import { useStreamingPlayerStore } from "@/shared/stores/player"
 import { StreamingAudio } from "./streaming-audio"
 import { StreamingCover } from "./streaming-cover"
 import { StreamingControls } from "./streaming-controls"

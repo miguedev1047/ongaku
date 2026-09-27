@@ -21,6 +21,8 @@ export function YoutubeSearchNav() {
           <Link
             to="/search-youtube"
             search={{ q: "" }}
+            activeOptions={{ includeSearch: false, exact: true }}
+            activeProps={{ className: "bg-accent" }}
           />
         }
       >

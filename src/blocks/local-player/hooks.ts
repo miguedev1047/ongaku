@@ -1,13 +1,9 @@
 import { useEffect } from "react"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useHotkey } from "@tanstack/react-hotkeys"
 import { toast } from "sonner"
 import { getAdjacentSong } from "@/shared/helpers/get-adjacent-song"
 import { getRandomSong } from "@/shared/helpers/get-random-song"
-import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs"
-import { librarySongsQueryOpts } from "@/shared/queries/library"
-import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
-import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
+import { useLocalPlayerStore } from "@/shared/stores/player"
 
 export function usePlayerProgressbar() {
   const audioRef = useLocalPlayerStore((state) => state.audioRef)
@@ -39,7 +35,8 @@ export function usePlayerProgressbar() {
 
     setIsSeeking(false)
     setPlayerState("playing")
-    audioRef.play().catch(() => {
+    audioRef.play().catch((err: unknown) => {
+      if (err instanceof Error && err.name === "AbortError") return
       toast.error("There was an error playing the song.")
     })
   }
@@ -73,41 +70,22 @@ export function usePlayerProgressbar() {
 }
 
 export function usePlayerNextSong() {
-  const playbackContext = useLocalPlayerStore((state) => state.playbackContext)
   const currentSong = useLocalPlayerStore((state) => state.currentSong)
+  const queue = useLocalPlayerStore((state) => state.queue)
   const isShuffle = useLocalPlayerStore((state) => state.isShuffle)
   const setCurrentSong = useLocalPlayerStore((state) => state.setCurrentSong)
-  const queryClient = useQueryClient()
 
-  const queryOpts =
-    playbackContext?.type === "library"
-      ? librarySongsQueryOpts()
-      : playlistSongsQueryOpts(playbackContext?.playlistName || "Default")
-
-  const { data: songs = [] } = useQuery(queryOpts)
-
-  const handleNextSong = async () => {
-    let queue = songs
-    if (queue.length === 0) {
-      queue = queryClient.getQueryData<TPlaylistSong[]>(queryOpts.queryKey) || []
-      if (queue.length === 0) {
-        try {
-          queue = await queryClient.ensureQueryData(queryOpts)
-        } catch {
-          return
-        }
-      }
-    }
+  const handleNextSong = () => {
     if (queue.length === 0) return
 
     if (isShuffle) {
       const randomSong = getRandomSong(queue, currentSong)
-      if (randomSong) setCurrentSong(randomSong, playbackContext)
+      if (randomSong) setCurrentSong(randomSong)
       return
     }
 
     const nextSong = getAdjacentSong(queue, currentSong, 1)
-    if (nextSong) setCurrentSong(nextSong, playbackContext)
+    if (nextSong) setCurrentSong(nextSong)
   }
 
   useHotkey("N", () => handleNextSong())
@@ -116,41 +94,22 @@ export function usePlayerNextSong() {
 }
 
 export function usePlayerPreviousSong() {
-  const playbackContext = useLocalPlayerStore((state) => state.playbackContext)
   const currentSong = useLocalPlayerStore((state) => state.currentSong)
+  const queue = useLocalPlayerStore((state) => state.queue)
   const isShuffle = useLocalPlayerStore((state) => state.isShuffle)
   const setCurrentSong = useLocalPlayerStore((state) => state.setCurrentSong)
-  const queryClient = useQueryClient()
 
-  const queryOpts =
-    playbackContext?.type === "library"
-      ? librarySongsQueryOpts()
-      : playlistSongsQueryOpts(playbackContext?.playlistName || "Default")
-
-  const { data: songs = [] } = useQuery(queryOpts)
-
-  const handlePreviousSong = async () => {
-    let queue = songs
-    if (queue.length === 0) {
-      queue = queryClient.getQueryData<TPlaylistSong[]>(queryOpts.queryKey) || []
-      if (queue.length === 0) {
-        try {
-          queue = await queryClient.ensureQueryData(queryOpts)
-        } catch {
-          return
-        }
-      }
-    }
+  const handlePreviousSong = () => {
     if (queue.length === 0) return
 
     if (isShuffle) {
       const randomSong = getRandomSong(queue, currentSong)
-      if (randomSong) setCurrentSong(randomSong, playbackContext)
+      if (randomSong) setCurrentSong(randomSong)
       return
     }
 
     const previousSong = getAdjacentSong(queue, currentSong, -1)
-    if (previousSong) setCurrentSong(previousSong, playbackContext)
+    if (previousSong) setCurrentSong(previousSong)
   }
 
   useHotkey("P", () => handlePreviousSong())
@@ -197,7 +156,8 @@ export function usePlayerToggle() {
 
     if (playerState === "paused") {
       setPlayerState("playing")
-      audioRef.play().catch(() => {
+      audioRef.play().catch((err: unknown) => {
+        if (err instanceof Error && err.name === "AbortError") return
         toast.error("An error occurred while playing the song")
       })
       return

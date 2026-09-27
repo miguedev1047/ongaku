@@ -6,8 +6,8 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { CoverImage } from "@/components/cover-image"
 import { useSongUtils } from "@/hooks/use-song-utils"
 import { formatDuration } from "@/shared/helpers/format-duration"
-import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
-import { useActivePlayerStore } from "@/shared/stores/use-active-player"
+import { useLocalPlayerStore } from "@/shared/stores/player"
+import { useActivePlayerStore } from "@/shared/stores/player"
 import { PlaylistSongActions } from "@/features/playlist-songs/components"
 import { isItemAction } from "@/shared/helpers/is-item-action"
 import { Subscribe } from "@tanstack/react-table"
@@ -33,7 +33,10 @@ export const PlaylistSongTableRow = memo(function PlaylistSongTableRow({
     if (isItemAction(e)) return
 
     if (!isActiveTrack) {
-      playSong(song, { type: "playlist", playlistName: song.playlist_name })
+      playSong(song, row.table.options.data, {
+        type: "playlist",
+        playlistName: song.playlist_name
+      })
     }
   }
 

@@ -1,9 +1,9 @@
 import { useEffect } from "react"
-import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
-import { useStreamingPlayerStore } from "@/shared/stores/use-streaming-player"
+import { useLocalPlayerStore } from "@/shared/stores/player"
+import { useStreamingPlayerStore } from "@/shared/stores/player"
 import { useSongUtils } from "@/hooks/use-song-utils"
 import { usePlaybackActions } from "@/hooks/use-playback-actions"
-import { useActivePlayerStore } from "@/shared/stores/use-active-player"
+import { useActivePlayerStore } from "@/shared/stores/player"
 
 export function useMediaSession() {
   const activePlayer = useActivePlayerStore((state) => state.activePlayer)

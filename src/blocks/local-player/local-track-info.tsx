@@ -1,4 +1,4 @@
-import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
+import { useLocalPlayerStore } from "@/shared/stores/player"
 import {
   PlayerTrackInfo,
   PlayerTitle,

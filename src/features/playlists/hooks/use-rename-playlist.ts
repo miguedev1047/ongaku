@@ -5,6 +5,8 @@ import { useNavigate } from "@tanstack/react-router"
 import { invoke } from "@tauri-apps/api/core"
 import { toast } from "sonner"
 import { playlistsQueryOpts } from "@/shared/queries/playlists"
+import { useLocalPlayerStore } from "@/shared/stores/player"
+import { useActivePlayerStore } from "@/shared/stores/player"
 import {
   renamePlaylistSchema,
   type TRenamePlaylistSchema
@@ -46,6 +48,52 @@ export function useRenamePlaylist({
       onSuccess?.()
 
       const trimmedNewName = variables.new_name.trim()
+
+      // If the renamed playlist is currently playing, update playbackContext, queue, and currentSong paths
+      const {
+        playbackContext,
+        setPlaybackContext,
+        queue,
+        setQueue,
+        currentSong,
+        setCurrentSong
+      } = useLocalPlayerStore.getState()
+
+      if (
+        playbackContext.type === "playlist" &&
+        playbackContext.playlistName === playlist.name
+      ) {
+        setPlaybackContext({ type: "playlist", playlistName: trimmedNewName })
+        useActivePlayerStore.getState().setActivePlaylist(trimmedNewName)
+
+        const updatedQueue = queue.map((s) =>
+          s.playlist_name === playlist.name
+            ? {
+                ...s,
+                playlist_name: trimmedNewName,
+                path: s.path
+                  .replace(`/${playlist.name}/`, `/${trimmedNewName}/`)
+                  .replace(`\\${playlist.name}\\`, `\\${trimmedNewName}\\`)
+              }
+            : s
+        )
+        setQueue(updatedQueue)
+
+        if (currentSong && currentSong.playlist_name === playlist.name) {
+          setCurrentSong(
+            {
+              ...currentSong,
+              playlist_name: trimmedNewName,
+              path: currentSong.path
+                .replace(`/${playlist.name}/`, `/${trimmedNewName}/`)
+                .replace(`\\${playlist.name}\\`, `\\${trimmedNewName}\\`)
+            },
+            updatedQueue,
+            { type: "playlist", playlistName: trimmedNewName }
+          )
+        }
+      }
+
       navigate({
         to: "/playlists/$playlistName",
         params: { playlistName: trimmedNewName }

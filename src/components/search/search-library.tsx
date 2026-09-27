@@ -15,7 +15,7 @@ import { Kbd } from "@/components/ui/kbd"
 import { useHotkey } from "@tanstack/react-hotkeys"
 import { CoverImage } from "@/components/cover-image"
 import { useSongUtils } from "@/hooks/use-song-utils"
-import { useActivePlayerStore } from "@/shared/stores/use-active-player"
+import { useActivePlayerStore } from "@/shared/stores/player"
 
 interface SearchLibraryProps {
   open?: boolean
@@ -74,7 +74,7 @@ export function SearchLibrary({
           {(song) => {
             const handleSelectSong = () => {
               setIsOpen(false)
-              playSong(song, { type: "library" })
+              playSong(song, songs, { type: "library" })
             }
 
             return (

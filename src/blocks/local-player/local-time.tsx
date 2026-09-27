@@ -1,4 +1,4 @@
-import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
+import { useLocalPlayerStore } from "@/shared/stores/player"
 import { PlayerTime } from "@/components/ui/player"
 
 export function LocalPlayerTime() {

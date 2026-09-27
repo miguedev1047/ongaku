@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useStreamingPlayerStore } from "@/shared/stores/use-streaming-player"
+import { useStreamingPlayerStore } from "@/shared/stores/player"
 import {
   Tooltip,
   TooltipContent,

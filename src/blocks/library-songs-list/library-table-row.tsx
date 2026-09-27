@@ -6,8 +6,8 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { CoverImage } from "@/components/cover-image"
 import { useSongUtils } from "@/hooks/use-song-utils"
 import { formatDuration } from "@/shared/helpers/format-duration"
-import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
-import { useActivePlayerStore } from "@/shared/stores/use-active-player"
+import { useLocalPlayerStore } from "@/shared/stores/player"
+import { useActivePlayerStore } from "@/shared/stores/player"
 import { PlaylistSongActions } from "@/features/playlist-songs/components"
 import { isItemAction } from "@/shared/helpers/is-item-action"
 import { Subscribe } from "@tanstack/react-table"
@@ -33,12 +33,11 @@ export const LibrarySongTableRow = memo(function LibrarySongTableRow({
     if (isItemAction(e)) return
 
     if (!isActiveTrack) {
-      playSong(song, { type: "library" })
+      playSong(song, row.table.options.data, { type: "library" })
     }
   }
 
   const coverUrl = getCoverUrl({ song })
-  const extension = song.path.split(".").pop()?.toUpperCase() || "MP3"
   const artistName = song.metadata.artist || "Unknown Artist"
   const albumName = song.metadata.album || "Unknown Album"
 
@@ -104,9 +103,6 @@ export const LibrarySongTableRow = memo(function LibrarySongTableRow({
       <TableCell className="flex-1 min-w-0 flex items-center gap-2 p-0">
         <span className="text-xs font-medium text-foreground truncate">
           {song.name}
-        </span>
-        <span className="px-1 py-0.5 rounded text-[10px] font-mono font-semibold bg-muted text-muted-foreground border border-border/40 shrink-0 uppercase tracking-wide">
-          {extension}
         </span>
       </TableCell>
 

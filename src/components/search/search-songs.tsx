@@ -21,7 +21,7 @@ import { useHotkey } from "@tanstack/react-hotkeys"
 import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs"
 import { CoverImage } from "@/components/cover-image"
 import { useSongUtils } from "@/hooks/use-song-utils"
-import { useActivePlayerStore } from "@/shared/stores/use-active-player"
+import { useActivePlayerStore } from "@/shared/stores/player"
 
 export function SearchSongs() {
   const { playlistName } = useParams({ from: "/playlists/$playlistName" })
@@ -79,7 +79,7 @@ export function SearchSongs() {
             {(song) => {
               const handleSelectSong = () => {
                 setIsOpen(false)
-                playSong(song, {
+                playSong(song, songs, {
                   type: "playlist",
                   playlistName: playlistName || song.playlist_name
                 })

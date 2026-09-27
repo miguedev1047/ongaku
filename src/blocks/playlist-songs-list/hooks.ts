@@ -2,8 +2,8 @@ import { useState } from "react"
 import { useQueryClient } from "@tanstack/react-query"
 import { invoke } from "@tauri-apps/api/core"
 import { toast } from "sonner"
-import { usePlaylistBatchStore } from "@/shared/stores/use-playlist-batch"
-import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
+import { usePlaylistBatchStore } from "@/shared/stores/batch-operations"
+import { useLocalPlayerStore } from "@/shared/stores/player"
 import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs"
 import { playlistsQueryOpts } from "@/shared/queries/playlists"
 import type { TSongAction } from "@/shared/types/song-actions"
@@ -39,6 +39,7 @@ export function usePlaylistBatchActions(currentPlaylistName?: string) {
           })
           if (res.code === "SUCCESS") {
             successCount++
+            useLocalPlayerStore.getState().removeFromQueue(song.id)
             if (currentSong?.id === song.id) {
               audioRef?.pause()
               setCurrentSong(null)
@@ -100,6 +101,7 @@ export function usePlaylistBatchActions(currentPlaylistName?: string) {
           })
           if (res.code === "SUCCESS") {
             successCount++
+            useLocalPlayerStore.getState().removeFromQueue(song.id)
             if (currentSong?.id === song.id) {
               audioRef?.pause()
               setCurrentSong(null)

@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { youtubeStreamQueryOpts } from "@/shared/queries/youtube-stream"
-import { useStreamingPlayerStore } from "@/shared/stores/use-streaming-player"
+import { useStreamingPlayerStore } from "@/shared/stores/player"
 import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
 
 interface StreamingAudioProps {

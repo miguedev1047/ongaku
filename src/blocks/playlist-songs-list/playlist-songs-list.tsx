@@ -14,7 +14,7 @@ import {
   TableRow,
   TableHead
 } from "@/components/ui/table"
-import { usePlaylistBatchStore } from "@/shared/stores/use-playlist-batch"
+import { usePlaylistBatchStore } from "@/shared/stores/batch-operations"
 import { PlaylistBatchBar } from "@/blocks/playlist-songs-list/playlist-batch-bar"
 import { playlistTableFeatures } from "@/blocks/playlist-songs-list/playlist-table-features"
 import { playlistSongColumns } from "@/blocks/playlist-songs-list/playlist-table-columns"
@@ -70,9 +70,9 @@ export function PlaylistSongsList({
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => scrollRef.current,
-    estimateSize: () => 52, // Exact 52px height prevents measurement recalculations on scroll
+    estimateSize: () => 52,
     getItemKey: (index) => rows[index]?.id ?? index,
-    overscan: 8
+    overscan: 3
   })
 
   return (

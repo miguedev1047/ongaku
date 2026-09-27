@@ -2,7 +2,7 @@ import { createPortal } from "react-dom"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useDownloadQueue } from "@/features/download-queue/hooks"
-import { useActivePlayerStore } from "@/shared/stores/use-active-player"
+import { useActivePlayerStore } from "@/shared/stores/player"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Download01Icon } from "@hugeicons/core-free-icons"
 

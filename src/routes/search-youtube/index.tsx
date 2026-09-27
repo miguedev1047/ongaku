@@ -17,7 +17,7 @@ import {
   EmptyMedia,
   EmptyTitle
 } from "@/components/ui/empty"
-import { useStreamingPlayerStore } from "@/shared/stores/use-streaming-player"
+import { useStreamingPlayerStore } from "@/shared/stores/player"
 import { useBinaries } from "@/features/download-queue/hooks"
 import {
   YoutubeSearchEmpty,

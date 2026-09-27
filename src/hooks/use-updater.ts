@@ -1,5 +1,5 @@
 import { updatesQueryOpts } from "@/shared/queries/updates"
-import { useUpdateStore } from "@/shared/stores/use-update"
+import { useUpdateStore } from "@/shared/stores/actions"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { relaunch } from "@tauri-apps/plugin-process"
 import { toast } from "sonner"

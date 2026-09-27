@@ -1,14 +1,8 @@
-import { useQueryClient } from "@tanstack/react-query"
-import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs"
-import { librarySongsQueryOpts } from "@/shared/queries/library"
-import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
+import { useLocalPlayerStore } from "@/shared/stores/player"
 import { getAdjacentSong } from "@/shared/helpers/get-adjacent-song"
 import { getRandomSong } from "@/shared/helpers/get-random-song"
-import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
 
 export function usePlaybackActions() {
-  const queryClient = useQueryClient()
-
   const play = () => {
     const { audioRef, setPlayerState } = useLocalPlayerStore.getState()
     if (!audioRef) return
@@ -32,79 +26,45 @@ export function usePlaybackActions() {
     }
   }
 
-  const nextTrack = async () => {
-    const { isShuffle, currentSong, playbackContext, setCurrentSong } =
+  const nextTrack = () => {
+    const { isShuffle, currentSong, queue, setCurrentSong } =
       useLocalPlayerStore.getState()
 
-    const queryOpts =
-      playbackContext?.type === "library"
-        ? librarySongsQueryOpts()
-        : playlistSongsQueryOpts(playbackContext?.playlistName || "Default")
-
-    let songs = queryClient.getQueryData<TPlaylistSong[]>(queryOpts.queryKey)
-
-    if (!songs || songs.length === 0) {
-      try {
-        songs = await queryClient.ensureQueryData(queryOpts)
-      } catch {
-        return
-      }
-    }
-
-    if (!songs || songs.length === 0) return
+    if (!queue || queue.length === 0) return
 
     if (isShuffle) {
-      const randomSong = getRandomSong(songs, currentSong)
-      if (randomSong) setCurrentSong(randomSong, playbackContext)
+      const randomSong = getRandomSong(queue, currentSong)
+      if (randomSong) setCurrentSong(randomSong)
       return
     }
 
-    const next = getAdjacentSong(songs, currentSong, 1)
-    if (next) setCurrentSong(next, playbackContext)
+    const next = getAdjacentSong(queue, currentSong, 1)
+    if (next) setCurrentSong(next)
   }
 
-  const prevTrack = async () => {
-    const { isShuffle, currentSong, playbackContext, setCurrentSong } =
+  const prevTrack = () => {
+    const { isShuffle, currentSong, queue, setCurrentSong } =
       useLocalPlayerStore.getState()
 
-    const queryOpts =
-      playbackContext?.type === "library"
-        ? librarySongsQueryOpts()
-        : playlistSongsQueryOpts(playbackContext?.playlistName || "Default")
-
-    let songs = queryClient.getQueryData<TPlaylistSong[]>(queryOpts.queryKey)
-
-    if (!songs || songs.length === 0) {
-      try {
-        songs = await queryClient.ensureQueryData(queryOpts)
-      } catch {
-        return
-      }
-    }
-
-    if (!songs || songs.length === 0) return
+    if (!queue || queue.length === 0) return
 
     if (isShuffle) {
-      const randomSong = getRandomSong(songs, currentSong)
-      if (randomSong) setCurrentSong(randomSong, playbackContext)
+      const randomSong = getRandomSong(queue, currentSong)
+      if (randomSong) setCurrentSong(randomSong)
       return
     }
 
-    const prev = getAdjacentSong(songs, currentSong, -1)
-    if (prev) setCurrentSong(prev, playbackContext)
+    const prev = getAdjacentSong(queue, currentSong, -1)
+    if (prev) setCurrentSong(prev)
   }
 
   const seekTo = (time: number) => {
     const { audioRef, duration, setProgress } = useLocalPlayerStore.getState()
     if (!audioRef) return
 
-    const maxDuration = duration || audioRef.duration || 0
-    const clamped = maxDuration
-      ? Math.min(Math.max(0, time), maxDuration)
-      : Math.max(0, time)
-
-    audioRef.currentTime = clamped
-    setProgress(clamped)
+    const clampedTime = Math.max(0, Math.min(time, duration))
+    audioRef.currentTime = clampedTime
+    setProgress(clampedTime)
   }
 
   return {

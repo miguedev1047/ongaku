@@ -1,5 +1,5 @@
 export function getAdjacentSong<T extends { id: string }>(
-  songs: T[],
+  songs: readonly T[],
   currentTrack: T | null,
   direction: 1 | -1
 ): T | undefined {

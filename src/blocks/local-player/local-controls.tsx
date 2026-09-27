@@ -13,8 +13,6 @@ import {
   PlayerShuffleButton,
   PlayerLoopButton
 } from "@/components/ui/player"
-import { Suspense } from "react"
-import { Skeleton } from "@/components/ui/skeleton"
 
 export function LocalPlayerControls() {
   const { isShuffle, toggleShuffle } = usePlayerShuffle()
@@ -29,16 +27,12 @@ export function LocalPlayerControls() {
         isShuffle={isShuffle}
         onClick={toggleShuffle}
       />
-      <Suspense fallback={<Skeleton className="size-8 rounded-md" />}>
-        <PlayerPreviousButton onClick={handlePreviousSong} />
-      </Suspense>
+      <PlayerPreviousButton onClick={handlePreviousSong} />
       <PlayerPlayButton
         isPlaying={isPlaying}
         onClick={handlePlayerToggle}
       />
-      <Suspense fallback={<Skeleton className="size-8 rounded-md" />}>
-        <PlayerNextButton onClick={handleNextSong} />
-      </Suspense>
+      <PlayerNextButton onClick={handleNextSong} />
       <PlayerLoopButton
         isLoop={isLoop}
         onClick={toggleLoop}

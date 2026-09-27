@@ -1,5 +1,5 @@
-import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
-import { useActivePlayerStore } from "@/shared/stores/use-active-player"
+import { useLocalPlayerStore } from "@/shared/stores/player"
+import { useActivePlayerStore } from "@/shared/stores/player"
 import { getPlaylistPath } from "@/shared/helpers/get-playlist-helper"
 import { openPath } from "@tauri-apps/plugin-opener"
 import { toast } from "sonner"

@@ -1,13 +1,9 @@
 import { create } from "zustand"
-import {
-  useLocalPlayerStore,
-  type PlaybackContext
-} from "@/shared/stores/use-local-player"
-import { useStreamingPlayerStore } from "@/shared/stores/use-streaming-player"
+import { useLocalPlayerStore } from "./use-local-player"
+import { useStreamingPlayerStore } from "./use-streaming-player"
+import type { PlaybackContext, ActivePlayerType } from "./types"
 import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
 import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
-
-export type ActivePlayerType = "local" | "streaming" | null
 
 interface ActivePlayerStore {
   activePlayer: ActivePlayerType
@@ -16,7 +12,11 @@ interface ActivePlayerStore {
 
   setActivePlayer: (type: ActivePlayerType) => void
   setActivePlaylist: (playlistName: string) => void
-  playSong: (song: TPlaylistSong, context?: PlaybackContext) => void
+  playSong: (
+    song: TPlaylistSong,
+    queueOrContext?: readonly TPlaylistSong[] | PlaybackContext,
+    context?: PlaybackContext
+  ) => void
   playStream: (track: TYoutubeSearchResult) => void
 
   // Universal Player Controls
@@ -34,7 +34,7 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => ({
   setActivePlayer: (type) => set({ activePlayer: type }),
   setActivePlaylist: (playlistName) => set({ activePlaylist: playlistName }),
 
-  playSong: (song, context) => {
+  playSong: (song, queueOrContext, context) => {
     // 1. Pause streaming if it was playing
     const streamingState = useStreamingPlayerStore.getState()
     if (streamingState.audioRef) {
@@ -42,14 +42,33 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => ({
       streamingState.pause()
     }
 
-    // 2. Set song in local player store with context
-    useLocalPlayerStore.getState().setCurrentSong(song, context)
+    // 2. Resolve queue and context
+    let resolvedQueue: readonly TPlaylistSong[] | undefined
+    let resolvedContext: PlaybackContext | undefined
 
-    // 3. Mark active player as local and record active playlist / source
+    if (Array.isArray(queueOrContext)) {
+      resolvedQueue = queueOrContext
+      resolvedContext = context
+    } else if (
+      queueOrContext &&
+      typeof queueOrContext === "object" &&
+      "type" in queueOrContext
+    ) {
+      resolvedQueue = undefined
+      resolvedContext = queueOrContext
+    } else {
+      resolvedQueue = undefined
+      resolvedContext = context
+    }
+
+    // 3. Set song in local player store with context and queue
+    useLocalPlayerStore.getState().setCurrentSong(song, resolvedQueue, resolvedContext)
+
+    // 4. Mark active player as local and record active playlist / source
     const nextPlaylist =
-      context?.type === "playlist"
-        ? context.playlistName
-        : context?.type === "library"
+      resolvedContext?.type === "playlist"
+        ? resolvedContext.playlistName
+        : resolvedContext?.type === "library"
           ? "Library"
           : song?.playlist_name || "Default"
 

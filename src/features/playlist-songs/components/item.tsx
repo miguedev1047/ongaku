@@ -10,8 +10,8 @@ import {
 import { CoverImage } from "@/components/cover-image"
 import { useSongUtils } from "@/hooks/use-song-utils"
 import { formatDuration } from "@/shared/helpers/format-duration"
-import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
-import { useActivePlayerStore } from "@/shared/stores/use-active-player"
+import { useLocalPlayerStore } from "@/shared/stores/player"
+import { useActivePlayerStore } from "@/shared/stores/player"
 import { PlaylistSongActions } from "@/features/playlist-songs/components"
 import { isItemAction } from "@/shared/helpers/is-item-action"
 

@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router"
 import { invoke } from "@tauri-apps/api/core"
 import { toast } from "sonner"
 import { playlistsQueryOpts } from "@/shared/queries/playlists"
+import { useLocalPlayerStore } from "@/shared/stores/player"
 import type { TDeletePlaylistSchema } from "@/shared/schemas/playlists"
 import type { TPlaylistAction } from "@/shared/types/playlist-actions"
 import type { TPlaylist } from "@/shared/types/playlist.types"
@@ -33,6 +34,21 @@ export function useDeletePlaylist({
       }
 
       toast.success(data.message)
+
+      // Reset playback if the active playlist is the one being deleted
+      const { playbackContext, audioRef, setCurrentSong, setPlayerState, setQueue } =
+        useLocalPlayerStore.getState()
+
+      if (
+        playbackContext.type === "playlist" &&
+        playbackContext.playlistName === playlist.name
+      ) {
+        audioRef?.pause()
+        setCurrentSong(null)
+        setQueue([])
+        setPlayerState("idle")
+      }
+
       navigate({ to: "/playlists" })
       queryClient.invalidateQueries({ queryKey: playlistsQueryKey })
       onSuccess?.()

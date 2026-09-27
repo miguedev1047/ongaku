@@ -1,16 +1,13 @@
 import { create } from "zustand"
 import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
-
-export type LocalPlayerState = "idle" | "playing" | "paused"
-
-export type PlaybackContext =
-  { type: "playlist"; playlistName: string } | { type: "library" }
+import type { LocalPlayerState, PlaybackContext } from "./types"
 
 export interface LocalPlayerStore {
   audioRef: HTMLAudioElement | null
   currentSong: TPlaylistSong | null
   currentPlaylist: string | "Default"
   playbackContext: PlaybackContext
+  queue: readonly TPlaylistSong[]
   isShuffle: boolean
   isLoop: boolean
   isSeeking: boolean
@@ -22,8 +19,11 @@ export interface LocalPlayerStore {
   setAudioRef: (audio: HTMLAudioElement | null) => void
   setCurrentSong: (
     song: TPlaylistSong | null,
+    queueOrContext?: readonly TPlaylistSong[] | PlaybackContext,
     context?: PlaybackContext
   ) => void
+  setQueue: (queue: readonly TPlaylistSong[]) => void
+  removeFromQueue: (songId: string) => void
   setCurrentPlaylist: (playlist: string | "Default") => void
   setPlaybackContext: (context: PlaybackContext) => void
   setIsShuffle: (isShuffle: boolean) => void
@@ -42,6 +42,7 @@ export const useLocalPlayerStore = create<LocalPlayerStore>((set) => ({
   currentSong: null,
   currentPlaylist: "Default",
   playbackContext: { type: "playlist", playlistName: "Default" },
+  queue: [],
   isLoop: false,
   isShuffle: false,
   playerState: "idle",
@@ -51,10 +52,24 @@ export const useLocalPlayerStore = create<LocalPlayerStore>((set) => ({
   volume: 80,
 
   setAudioRef: (ref) => set({ audioRef: ref }),
-  setCurrentSong: (song, context) =>
+  setCurrentSong: (song, queueOrContext, context) =>
     set((state) => {
-      const nextContext: PlaybackContext = context
-        ? context
+      let resolvedQueue: readonly TPlaylistSong[] | undefined
+      let resolvedContext: PlaybackContext | undefined
+
+      if (Array.isArray(queueOrContext)) {
+        resolvedQueue = queueOrContext
+        resolvedContext = context
+      } else if (queueOrContext && typeof queueOrContext === "object" && "type" in queueOrContext) {
+        resolvedQueue = undefined
+        resolvedContext = queueOrContext
+      } else {
+        resolvedQueue = undefined
+        resolvedContext = context
+      }
+
+      const nextContext: PlaybackContext = resolvedContext
+        ? resolvedContext
         : song?.playlist_name
           ? { type: "playlist", playlistName: song.playlist_name }
           : state.playbackContext
@@ -64,6 +79,7 @@ export const useLocalPlayerStore = create<LocalPlayerStore>((set) => ({
 
       return {
         currentSong: song,
+        queue: resolvedQueue !== undefined ? resolvedQueue : state.queue,
         playbackContext: nextContext,
         currentPlaylist: nextPlaylist,
         duration: song?.metadata.duration ?? 0,
@@ -71,6 +87,11 @@ export const useLocalPlayerStore = create<LocalPlayerStore>((set) => ({
         playerState: "playing"
       }
     }),
+  setQueue: (queue) => set({ queue }),
+  removeFromQueue: (songId) =>
+    set((state) => ({
+      queue: state.queue.filter((s) => s.id !== songId)
+    })),
   setCurrentPlaylist: (playlist) =>
     set({
       currentPlaylist: playlist,

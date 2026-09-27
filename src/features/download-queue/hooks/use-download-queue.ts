@@ -1,4 +1,4 @@
-import { useDownloadQueueStore } from "@/shared/stores/use-download-queue"
+import { useDownloadQueueStore } from "@/shared/stores/actions"
 
 export function useDownloadQueue() {
   const tasksMap = useDownloadQueueStore((state) => state.tasks)

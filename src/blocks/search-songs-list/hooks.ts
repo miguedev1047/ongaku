@@ -1,5 +1,5 @@
-import { useSearchBatchStore } from "@/shared/stores/use-search-batch"
-import { useDownloadQueueStore } from "@/shared/stores/use-download-queue"
+import { useSearchBatchStore } from "@/shared/stores/batch-operations"
+import { useDownloadQueueStore } from "@/shared/stores/actions"
 
 export function useSearchBatchActions() {
   const selectedMap = useSearchBatchStore((s) => s.selectedMap)

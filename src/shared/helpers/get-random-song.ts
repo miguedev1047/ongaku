@@ -1,5 +1,5 @@
 export function getRandomSong<T extends { id: string }>(
-  songs: T[],
+  songs: readonly T[],
   currentTrack: T | null
 ): T | undefined {
   if (!songs.length) return undefined

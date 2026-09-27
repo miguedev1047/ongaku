@@ -14,7 +14,7 @@ import {
   TableRow,
   TableHead
 } from "@/components/ui/table"
-import { useSearchBatchStore } from "@/shared/stores/use-search-batch"
+import { useSearchBatchStore } from "@/shared/stores/batch-operations"
 import { SearchBatchBar } from "@/blocks/search-songs-list/search-batch-bar"
 import { searchTableFeatures } from "@/blocks/search-songs-list/search-table-features"
 import { searchSongColumns } from "@/blocks/search-songs-list/search-table-columns"
@@ -66,9 +66,9 @@ export function SearchSongsList({ data }: SearchSongsListProps) {
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => scrollRef.current,
-    estimateSize: () => 52, // Exact 52px height prevents measurement recalculations on scroll
+    estimateSize: () => 52,
     getItemKey: (index) => rows[index]?.id ?? index,
-    overscan: 8
+    overscan: 3
   })
 
   return (

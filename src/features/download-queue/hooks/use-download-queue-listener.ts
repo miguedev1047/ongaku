@@ -3,7 +3,7 @@ import { listen } from "@tauri-apps/api/event"
 import {
   useDownloadQueueStore,
   type DownloadProgressPayload
-} from "@/shared/stores/use-download-queue"
+} from "@/shared/stores/actions"
 
 export function useDownloadQueueListener() {
   const updateProgress = useDownloadQueueStore((s) => s._updateProgress)

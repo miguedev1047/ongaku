@@ -24,7 +24,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react"
 import { openUrl } from "@tauri-apps/plugin-opener"
 import { PlaylistMenuGroup } from "@/features/youtube-search/components"
-import { useDownloadQueueStore } from "@/shared/stores/use-download-queue"
+import { useDownloadQueueStore } from "@/shared/stores/actions"
 import { useYoutubePlayback } from "@/features/youtube-search/hooks"
 
 interface YoutubeSongActionsProps {

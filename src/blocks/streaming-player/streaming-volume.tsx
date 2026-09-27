@@ -1,4 +1,4 @@
-import { useStreamingPlayerStore } from "@/shared/stores/use-streaming-player"
+import { useStreamingPlayerStore } from "@/shared/stores/player"
 import { PlayerVolume } from "@/components/ui/player"
 
 export function StreamingPlayerVolume() {

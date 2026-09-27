@@ -1,6 +1,6 @@
 import { CoverImage } from "@/components/cover-image"
 import { useSongUtils } from "@/hooks/use-song-utils"
-import { useLocalPlayerStore } from "@/shared/stores/use-local-player"
+import { useLocalPlayerStore } from "@/shared/stores/player"
 import { PlayerMedia } from "@/components/ui/player"
 import {
   Tooltip,
