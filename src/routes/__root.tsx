@@ -7,10 +7,8 @@ import { Toaster } from "@/components/ui/sonner"
 import { useShowApp } from "@/hooks/use-show-app"
 import { usePreventWebviewShortcuts } from "@/hooks/use-prevent-shortcuts"
 import { usePlayerShortcuts } from "@/hooks/use-player-shortcuts"
-import {
-  DownloadQueueDialog,
-  useDownloadQueueListener
-} from "@/features/download-queue"
+import { DownloadQueueDialog } from "@/features/download-queue/components"
+import { useDownloadQueueListener } from "@/features/download-queue/hooks"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/blocks/app-sidebar"
 

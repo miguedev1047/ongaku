@@ -9,14 +9,8 @@ import {
   DialogTitle
 } from "@/components/ui/dialog"
 import { Spinner } from "@/components/ui/spinner"
-import { playlistsQueryOpts } from "@/shared/queries/playlists"
-import type { TDeletePlaylistSchema } from "@/shared/schemas/playlists"
-import type { TPlaylistAction } from "@/shared/types/playlist-actions"
 import type { TPlaylist } from "@/shared/types/playlist.types"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { useNavigate } from "@tanstack/react-router"
-import { invoke } from "@tauri-apps/api/core"
-import { toast } from "sonner"
+import { useDeletePlaylist } from "@/features/playlists/hooks"
 
 interface DeletePlaylistProps {
   playlist: TPlaylist
@@ -29,37 +23,10 @@ export function DeletePlaylist({
   open,
   onOpenChange
 }: DeletePlaylistProps) {
-  const queryClient = useQueryClient()
-  const playlistsQueryKey = playlistsQueryOpts().queryKey
-  const navigate = useNavigate()
-
-  const mutation = useMutation({
-    mutationFn: async (value: TDeletePlaylistSchema) => {
-      return await invoke<TPlaylistAction>("delete_playlist", {
-        name: value.name
-      })
-    },
-    onSuccess: (data) => {
-      if (data.code === "ERROR") {
-        toast.error(data.message)
-        return
-      }
-
-      toast.success(data.message)
-      navigate({ to: "/playlists" })
-      queryClient.invalidateQueries({ queryKey: playlistsQueryKey })
-      onOpenChange(false)
-    },
-    onError: () => {
-      toast.error("An error occurred while deleting the playlist")
-    }
+  const { handleDeletePlaylist, isPending } = useDeletePlaylist({
+    playlist,
+    onSuccess: () => onOpenChange(false)
   })
-
-  const handleDeletePlaylist = () => {
-    mutation.mutate({ name: playlist.name })
-  }
-
-  const isPending = mutation.isPending
 
   return (
     <Dialog

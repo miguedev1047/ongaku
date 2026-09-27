@@ -1,5 +1,6 @@
 import { cn } from "cn"
-import { useDownloadQueue, CheckBinaries } from "@/features/download-queue"
+import { CheckBinaries } from "@/features/download-queue/components"
+import { useDownloadQueue } from "@/features/download-queue/hooks"
 import { useUpdater } from "@/hooks/use-updater"
 import {
   SidebarMenu,

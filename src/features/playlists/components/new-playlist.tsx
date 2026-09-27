@@ -1,4 +1,7 @@
+import { useState } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
+import { PlusIcon } from "@hugeicons/core-free-icons"
+import { useHotkey } from "@tanstack/react-hotkeys"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -10,15 +13,6 @@ import {
   DialogTitle,
   DialogTrigger
 } from "@/components/ui/dialog"
-import { PlusIcon } from "@hugeicons/core-free-icons"
-import { useForm } from "@tanstack/react-form"
-import {
-  newPlaylistSchema,
-  type TNewPlaylistSchema
-} from "@/shared/schemas/playlists"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { playlistsQueryOpts } from "@/shared/queries/playlists"
-import { toast } from "sonner"
 import {
   Field,
   FieldDescription,
@@ -27,18 +21,14 @@ import {
   FieldLabel
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { invoke } from "@tauri-apps/api/core"
-import { TPlaylistAction } from "@/shared/types/playlist-actions"
 import { Spinner } from "@/components/ui/spinner"
-import { useState } from "react"
-import { useNavigate } from "@tanstack/react-router"
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger
 } from "@/components/ui/tooltip"
-import { useHotkey } from "@tanstack/react-hotkeys"
 import { Kbd, KbdGroup } from "@/components/ui/kbd"
+import { useNewPlaylist } from "@/features/playlists/hooks"
 
 interface NewPlaylistProps {
   open?: boolean
@@ -62,54 +52,9 @@ export function NewPlaylist({
     }
   }
 
-  const queryClient = useQueryClient()
-  const playlistsQueryKey = playlistsQueryOpts().queryKey
-
-  const navigate = useNavigate()
-
-  const mutation = useMutation({
-    mutationFn: async (value: TNewPlaylistSchema) => {
-      const trimmedPlaylist = value.name.trim()
-      return await invoke<TPlaylistAction>("new_playlist", {
-        name: trimmedPlaylist
-      })
-    },
-    onSuccess: (data, variables) => {
-      if (data.code === "ERROR") {
-        toast.error(data.message)
-        return
-      }
-
-      setIsOpen(false)
-      form.reset()
-
-      toast.success(data.message)
-      queryClient.invalidateQueries({ queryKey: playlistsQueryKey })
-
-      const trimmedPlaylist = variables.name.trim()
-      navigate({
-        to: "/playlists/$playlistName",
-        params: { playlistName: trimmedPlaylist }
-      })
-    },
-    onError: () => {
-      toast.error("An error occurred while creating the playlist")
-    }
+  const { form, isPending } = useNewPlaylist({
+    onSuccess: () => setIsOpen(false)
   })
-
-  const form = useForm({
-    defaultValues: {
-      name: ""
-    },
-    validators: {
-      onSubmit: newPlaylistSchema
-    },
-    onSubmit: ({ value }) => {
-      mutation.mutate(value)
-    }
-  })
-
-  const isPending = mutation.isPending
 
   useHotkey("Alt+P", () => setIsOpen(!isOpen))
 
