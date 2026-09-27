@@ -4,6 +4,10 @@
   <p>Un reproductor de música de escritorio y descargador de YouTube ligero, minimalista y ultra rápido.</p>
 
   <p>
+    <a href="https://github.com/miguedev1047/ongaku/releases"><b>📥 Descargar Última Versión</b></a>
+  </p>
+
+  <p>
     <a href="README.md"><b>English</b></a> •
     <a href="README.es.md"><b>Español</b></a>
   </p>
@@ -20,6 +24,16 @@
   <br/><br/>
   <img src="src/assets/demo/demo-app-3.png" alt="Reproductor y Cola Ongaku" width="100%" />
 </div>
+
+---
+
+## 📥 Descargas
+
+Obtén el instalador o ejecutable más reciente para tu plataforma directamente desde [GitHub Releases](https://github.com/miguedev1047/ongaku/releases):
+
+- **Windows**: `ongaku_*_x64-setup.exe`
+- **macOS**: `ongaku_*_x64.dmg` / `ongaku_*_aarch64.dmg`
+- **Linux**: `ongaku_*_amd64.AppImage` / `ongaku_*_amd64.deb`
 
 ---
 
@@ -79,4 +93,3 @@ bun run tauri build
 ```
 
 Los binarios optimizados y el instalador se generarán en la carpeta `src-tauri/target/release/bundle/`.
-
