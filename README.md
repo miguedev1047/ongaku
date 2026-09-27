@@ -4,12 +4,13 @@
   <p>A lightweight, minimal, and blazing-fast desktop music player and YouTube downloader.</p>
 
   <p>
-    <a href="https://github.com/miguedev1047/ongaku/releases"><b>📥 Download Latest Release</b></a>
+    <a href="https://github.com/miguedev1047/ongaku/releases"><b>Download Latest Release</b></a> •
+    <a href="docs/en/welcome.md"><b>Documentation</b></a>
   </p>
 
   <p>
     <a href="README.md"><b>English</b></a> •
-    <a href="docs/README.es.md"><b>Español</b></a>
+    <a href="README.es.md"><b>Español</b></a>
   </p>
 </div>
 
@@ -37,59 +38,9 @@ Get the latest installer or executable for your platform directly from [GitHub R
 
 ---
 
-## ✨ Highlights
+## 📖 Documentation
 
-- 🔍 **YouTube Search & Direct Streaming**: Search tracks directly in the app and stream music instantly without needing an external browser.
-- 📥 **`yt-dlp` Integration & Smart Download Queue**: 
-  - Concurrent worker pool with rate-limit protection (prevents HTTP 429 and CPU spikes).
-  - Automatic conversion to `.mp3` with embedded album artwork and metadata.
-  - URL sanitization that automatically strips radio mixes, parameters, and playlist queues.
-- 🎛️ **Minimalist Audio Player**:
-  - Clean 3-column symmetric layout with edge-to-edge top scrubber line.
-  - Smooth continuous volume control (0–100%) throttled at 60 FPS via `requestAnimationFrame`.
-  - Keyboard shortcuts documented visually with interactive tooltip badges.
-- 📂 **Local Offline Library**: Organize songs into playlists mapped directly to your physical file system. Perform atomic batch operations (batch move, batch delete, batch download).
-- ⚡ **Ultra-Fast Virtualized Lists**: Powered by TanStack Table v9 and virtualized rendering for 60+ FPS scrolling across massive libraries.
-- 🖼️ **Optimized Rust Backend**: Built-in HTTP server with Lanczos3 image downscaling and WebP compression, keeping the image cache lightweight (~16MB).
+For detailed setup, troubleshooting, complete features, and developer guides:
 
----
-
-## 💻 Platform Compatibility
-
-| Platform | Status | Notes |
-| :--- | :---: | :--- |
-| **Windows** | ✅ Tested | Works out of the box. Since release binaries are not code-signed with a commercial certificate, Windows SmartScreen may show an *"Unknown Publisher"* warning (Click **More info** &rarr; **Run anyway**). |
-| **macOS** | ⚠️ *Untested* | Pre-built `.dmg` binaries are provided. macOS Gatekeeper security policies might block opening unsigned apps by default (`xattr -cr /Applications/Ongaku.app` or right-click &rarr; *Open*). |
-| **Linux** | ⚠️ *Untested* | Pre-built `.AppImage` and `.deb` packages are provided. Depending on your distribution, you may need to install system libraries such as `webkit2gtk-4.1` and `gstreamer` multimedia plugins. |
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- [Bun](https://bun.sh/) (Recommended package manager)
-- [Rust](https://www.rust-lang.org/) (Latest stable toolchain via `rustup`)
-- C++ Build Tools (Visual Studio on Windows)
-
-### Development
-
-```bash
-# Clone the repository
-git clone https://github.com/miguedev1047/ongaku.git
-cd ongaku
-
-# Install frontend dependencies
-bun install
-
-# Start the application in development mode
-bun run tauri dev
-```
-
-### Production Build
-
-```bash
-bun run tauri build
-```
-
-The optimized binaries and platform installer will be generated in `src-tauri/target/release/bundle/`.
+- [Platform Compatibility & Requirements](docs/en/compatibility.md) *(Windows SmartScreen, macOS Gatekeeper approval, Linux multimedia dependencies)*
+- [Complete Documentation & Architecture](docs/en/welcome.md) *(Key features, tech stack, and development setup)*
