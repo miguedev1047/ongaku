@@ -31,12 +31,22 @@ export function usePreventWebviewShortcuts() {
       }
     }
 
+    const handleContextMenu = (e: MouseEvent) => {
+      // Prevent default webview context menu in production
+      // In development, it remains available for inspecting elements
+      if (import.meta.env.PROD) {
+        e.preventDefault()
+      }
+    }
+
     window.addEventListener("keydown", handleKeyDown)
     window.addEventListener("wheel", handleWheel, { passive: false })
+    window.addEventListener("contextmenu", handleContextMenu)
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown)
       window.removeEventListener("wheel", handleWheel)
+      window.removeEventListener("contextmenu", handleContextMenu)
     }
   }, [])
 }

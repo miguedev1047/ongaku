@@ -32,7 +32,7 @@ function RootComponent() {
   usePlayerShortcuts()
 
   return (
-    <SidebarProvider defaultOpen={false}>
+    <SidebarProvider defaultOpen={true}>
       <div className="h-screen w-screen flex flex-col overflow-hidden select-none">
         <TanstackDevtool />
         <div className="flex-1 min-h-0 flex overflow-hidden">

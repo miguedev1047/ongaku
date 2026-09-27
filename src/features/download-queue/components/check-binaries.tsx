@@ -2,11 +2,6 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Spinner } from "@/components/ui/spinner"
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger
-} from "@/components/ui/hover-card"
-import {
   SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem
@@ -16,6 +11,11 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { useBinaries } from "@/features/download-queue/hooks"
 import { openPath } from "@tauri-apps/plugin-opener"
 import { toast } from "sonner"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from "@/components/ui/popover"
 
 interface StatusProps {
   isPending: boolean
@@ -176,10 +176,14 @@ export function CheckBinaries() {
 
   return (
     <SidebarMenuItem>
-      <HoverCard>
-        <HoverCardTrigger
+      <Popover>
+        <PopoverTrigger
           render={
-            <SidebarMenuButton>
+            <SidebarMenuButton
+              tooltip={
+                isBinariesInstalled ? "Tools & Binaries" : "Install Tools"
+              }
+            >
               <BinaryStatusIcon
                 isPending={isPending}
                 isInstalled={isBinariesInstalled}
@@ -194,7 +198,7 @@ export function CheckBinaries() {
             </SidebarMenuButton>
           }
         />
-        <HoverCardContent
+        <PopoverContent
           sideOffset={8}
           className="w-100 p-3.5 space-y-3 bg-popover/95 backdrop-blur border border-border shadow-lg rounded-md"
         >
@@ -285,8 +289,8 @@ export function CheckBinaries() {
             isInstalled={isBinariesInstalled}
             onInstall={installBinaries}
           />
-        </HoverCardContent>
-      </HoverCard>
+        </PopoverContent>
+      </Popover>
     </SidebarMenuItem>
   )
 }
