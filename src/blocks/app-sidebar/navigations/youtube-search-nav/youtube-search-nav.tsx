@@ -7,15 +7,11 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { YoutubeIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { isActivePathname } from "@/shared/helpers/is-active-path"
 
 export function YoutubeSearchNav() {
-  const isYoutubeActive = isActivePathname("/search-youtube")
-
   return (
     <SidebarMenuItem>
       <SidebarMenuButton
-        isActive={isYoutubeActive}
         tooltip="YouTube Search"
         render={
           <Link
