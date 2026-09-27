@@ -80,8 +80,3 @@ bun run tauri build
 
 The optimized binaries and platform installer will be generated in `src-tauri/target/release/bundle/`.
 
----
-
-## 📄 License
-
-Distributed under the [MIT License](LICENSE).

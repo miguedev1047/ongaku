@@ -80,8 +80,3 @@ bun run tauri build
 
 Los binarios optimizados y el instalador se generarán en la carpeta `src-tauri/target/release/bundle/`.
 
----
-
-## 📄 Licencia
-
-Distribuido bajo la [Licencia MIT](LICENSE).
