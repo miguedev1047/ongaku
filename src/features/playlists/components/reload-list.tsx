@@ -23,7 +23,7 @@ export function PlaylistsReloadList() {
             variant="outline"
             onClick={() => refetch()}
             disabled={isLoading}
-            size="icon"
+            size="icon-sm"
           >
             <Show
               when={isLoading}

@@ -32,7 +32,7 @@ export function LibraryReloadList() {
             variant="outline"
             onClick={handleReload}
             disabled={isLoading}
-            size="icon"
+            size="icon-sm"
           >
             <Show
               when={isLoading}

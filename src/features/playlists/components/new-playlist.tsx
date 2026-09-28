@@ -149,7 +149,7 @@ export function NewPlaylist({
               <TooltipTrigger
                 render={
                   <Button
-                    size="icon"
+                    size="icon-sm"
                     variant="outline"
                   >
                     <HugeiconsIcon icon={PlusIcon} />
