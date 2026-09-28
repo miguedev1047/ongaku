@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Suspense } from "react"
+import { PlaylistsReloadList } from "@/features/playlists/components"
 
 export function PlaylistHeader() {
   return (
@@ -27,9 +28,12 @@ export function PlaylistHeader() {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <Suspense fallback={<Skeleton className="ml-auto w-52 h-8" />}>
-          <SearchPlaylists />
-        </Suspense>
+        <div className="flex items-center gap-1 ml-auto">
+          <PlaylistsReloadList />
+          <Suspense fallback={<Skeleton className="ml-auto w-52 h-8" />}>
+            <SearchPlaylists />
+          </Suspense>
+        </div>
       </div>
     </header>
   )

@@ -9,6 +9,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Suspense } from "react"
 import { SearchLibrary } from "@/components/search"
+import { LibraryReloadList } from "@/features/library/components"
 
 export function LibraryHeader() {
   return (
@@ -27,9 +28,12 @@ export function LibraryHeader() {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <Suspense fallback={<Skeleton className="ml-auto w-52 h-8" />}>
-          <SearchLibrary />
-        </Suspense>
+        <div className="flex items-center gap-1 ml-auto">
+          <LibraryReloadList />
+          <Suspense fallback={<Skeleton className="ml-auto w-52 h-8" />}>
+            <SearchLibrary />
+          </Suspense>
+        </div>
       </div>
     </header>
   )

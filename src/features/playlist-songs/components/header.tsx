@@ -12,6 +12,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Link, useParams } from "@tanstack/react-router"
 import { Suspense } from "react"
+import { PlaylistSongsReloadList } from "@/features/playlist-songs/components"
 
 export function PlaylistSongHeader() {
   const { playlistName } = useParams({ from: "/playlists/$playlistName" })
@@ -38,9 +39,12 @@ export function PlaylistSongHeader() {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <Suspense fallback={<Skeleton className="ml-auto w-52 h-8" />}>
-          <SearchSongs />
-        </Suspense>
+        <div className="flex items-center gap-1 ml-auto">
+          <PlaylistSongsReloadList />
+          <Suspense fallback={<Skeleton className="ml-auto w-52 h-8" />}>
+            <SearchSongs />
+          </Suspense>
+        </div>
       </div>
     </header>
   )
