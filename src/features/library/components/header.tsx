@@ -1,3 +1,9 @@
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbPage
+} from "@/components/ui/breadcrumb"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -13,7 +19,13 @@ export function LibraryHeader() {
           orientation="vertical"
           className="mx-2 data-[orientation=vertical]:h-4 max-md:block hidden"
         />
-        <h1 className="text-base font-medium">Your Library</h1>
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbPage>Your Library</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
 
         <Suspense fallback={<Skeleton className="ml-auto w-52 h-8" />}>
           <SearchLibrary />
