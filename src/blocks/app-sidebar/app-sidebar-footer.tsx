@@ -70,7 +70,9 @@ function SidebarDownloadQueue() {
             isDownloading && "animate-pulse text-primary"
           )}
         />
-        <span>{label}</span>
+        <span className={cn(isDownloading && "shimmer text-muted-foreground")}>
+          {label}
+        </span>
         <QueueBadge
           pendingCount={pendingCount}
           completedCount={completedTasks.length}
@@ -118,7 +120,9 @@ function SidebarUpdater() {
         className="bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary"
       >
         <UpdaterIcon isPending={isPending} />
-        <span>{label}</span>
+        <span className={cn(isPending && "shimmer text-muted-foreground")}>
+          {label}
+        </span>
       </SidebarMenuButton>
     </SidebarMenuItem>
   )
