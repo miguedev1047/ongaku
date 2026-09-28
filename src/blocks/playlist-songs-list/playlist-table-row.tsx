@@ -41,6 +41,8 @@ export const PlaylistSongTableRow = memo(function PlaylistSongTableRow({
   }
 
   const coverUrl = getCoverUrl({ song })
+  const artistName = song.metadata.artist || "Unknown Artist"
+  const albumName = song.metadata.album || "Unknown Album"
 
   return (
     <TableRow
@@ -100,22 +102,29 @@ export const PlaylistSongTableRow = memo(function PlaylistSongTableRow({
         </div>
       </TableCell>
 
-      {/* 3. Title & Artist (fluid flex-1 min-w-0: stretches across entire screen width without jumping) */}
-      <TableCell className="flex-1 min-w-0 flex flex-col justify-center items-start p-0">
-        <span className="text-xs font-medium text-foreground truncate w-full">
+      {/* 3. Title column (fluid flex-1 min-w-0) */}
+      <TableCell className="flex-1 min-w-0 flex items-center gap-2 p-0">
+        <span className="text-xs font-medium text-foreground truncate">
           {song.name}
-        </span>
-        <span className="text-[11px] text-muted-foreground truncate w-full">
-          {song.metadata.artist || "Unknown Artist"}
         </span>
       </TableCell>
 
-      {/* 4. Duration (fixed: 64px) */}
+      {/* 4. Artist Column (fixed: 160px or fluid min-w-0) */}
+      <TableCell className="w-40 shrink-0 p-0 hidden sm:flex items-center text-xs text-muted-foreground truncate">
+        <span className="truncate w-full">{artistName}</span>
+      </TableCell>
+
+      {/* 5. Album Column (fixed: 160px or fluid min-w-0) */}
+      <TableCell className="w-40 shrink-0 p-0 hidden md:flex items-center text-xs text-muted-foreground truncate">
+        <span className="truncate w-full">{albumName}</span>
+      </TableCell>
+
+      {/* 6. Duration (fixed: 64px) */}
       <TableCell className="w-16 shrink-0 justify-end p-0 text-right font-mono text-xs text-muted-foreground">
         {formatDuration(song.metadata.duration ?? 0)}
       </TableCell>
 
-      {/* 5. Actions (fixed: 36px) */}
+      {/* 7. Actions (fixed: 36px) */}
       <TableCell
         className="w-9 shrink-0 justify-end p-0"
         onClick={(e) => e.stopPropagation()}

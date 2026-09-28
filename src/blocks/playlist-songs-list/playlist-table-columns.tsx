@@ -9,9 +9,21 @@ export const playlistSongColumns = helper.columns([
     id: "select",
     header: "Select"
   }),
+  helper.display({
+    id: "cover",
+    header: "Cover"
+  }),
   helper.accessor("name", {
     id: "name",
     header: "Title"
+  }),
+  helper.accessor((row) => row.metadata?.artist || "Unknown Artist", {
+    id: "artist",
+    header: "Artist"
+  }),
+  helper.accessor((row) => row.metadata?.album || "Unknown Album", {
+    id: "album",
+    header: "Album"
   }),
   helper.accessor((row) => row.metadata?.duration ?? 0, {
     id: "duration",

@@ -113,12 +113,22 @@ export function PlaylistSongsList({
               </span>
             </TableHead>
 
-            {/* 4. Duration column header (64px) */}
+            {/* 4. Artist column header (w-40) */}
+            <TableHead className="w-40 shrink-0 p-0 hidden sm:flex items-center">
+              Artist
+            </TableHead>
+
+            {/* 5. Album column header (w-40) */}
+            <TableHead className="w-40 shrink-0 p-0 hidden md:flex items-center">
+              Album
+            </TableHead>
+
+            {/* 6. Duration column header (64px) */}
             <TableHead className="w-16 shrink-0 justify-end p-0 text-right">
               Time
             </TableHead>
 
-            {/* 5. Actions spacer (36px) */}
+            {/* 7. Actions spacer (36px) */}
             <TableHead className="w-9 shrink-0 p-0" />
           </TableRow>
         </TableHeader>

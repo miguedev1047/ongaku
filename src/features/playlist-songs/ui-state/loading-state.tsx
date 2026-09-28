@@ -15,14 +15,14 @@ export interface PlaylistSongsLoadingStateProps {
 }
 
 const DEFAULT_ROW_WIDTHS = [
-  { title: "w-48", subtitle: "w-28", time: "w-10" },
-  { title: "w-64", subtitle: "w-36", time: "w-8" },
-  { title: "w-40", subtitle: "w-24", time: "w-11" },
-  { title: "w-56", subtitle: "w-32", time: "w-9" },
-  { title: "w-52", subtitle: "w-20", time: "w-10" },
-  { title: "w-60", subtitle: "w-28", time: "w-8" },
-  { title: "w-44", subtitle: "w-36", time: "w-12" },
-  { title: "w-52", subtitle: "w-24", time: "w-9" }
+  { title: "w-48", subtitle: "w-28", artist: "w-32", album: "w-32", time: "w-10" },
+  { title: "w-64", subtitle: "w-36", artist: "w-28", album: "w-36", time: "w-8" },
+  { title: "w-40", subtitle: "w-24", artist: "w-36", album: "w-28", time: "w-11" },
+  { title: "w-56", subtitle: "w-32", artist: "w-32", album: "w-40", time: "w-9" },
+  { title: "w-52", subtitle: "w-20", artist: "w-24", album: "w-32", time: "w-10" },
+  { title: "w-60", subtitle: "w-28", artist: "w-36", album: "w-36", time: "w-8" },
+  { title: "w-44", subtitle: "w-36", artist: "w-32", album: "w-24", time: "w-12" },
+  { title: "w-52", subtitle: "w-24", artist: "w-28", album: "w-32", time: "w-9" }
 ]
 
 export function PlaylistSongsLoadingState({
@@ -53,6 +53,12 @@ export function PlaylistSongsLoadingState({
             </TableHead>
             <TableHead className="flex-1 min-w-0 flex items-center gap-2 p-0">
               <span>Title</span>
+            </TableHead>
+            <TableHead className="w-40 shrink-0 p-0 hidden sm:flex items-center">
+              Artist
+            </TableHead>
+            <TableHead className="w-40 shrink-0 p-0 hidden md:flex items-center">
+              Album
             </TableHead>
             <TableHead className="w-16 shrink-0 justify-end p-0 text-right">
               Time
@@ -88,12 +94,22 @@ export function PlaylistSongsLoadingState({
                   />
                 </TableCell>
 
-                {/* 4. Duration column (64px) */}
+                {/* 4. Artist column (w-40) */}
+                <TableCell className="w-40 shrink-0 hidden sm:flex items-center p-0">
+                  <Skeleton className={cn("h-3 rounded-sm opacity-60", width.artist)} />
+                </TableCell>
+
+                {/* 5. Album column (w-40) */}
+                <TableCell className="w-40 shrink-0 hidden md:flex items-center p-0">
+                  <Skeleton className={cn("h-3 rounded-sm opacity-50", width.album)} />
+                </TableCell>
+
+                {/* 6. Duration column (64px) */}
                 <TableCell className="w-16 shrink-0 justify-end p-0 text-right">
                   <Skeleton className={cn("h-3 rounded-sm opacity-50", width.time)} />
                 </TableCell>
 
-                {/* 5. Actions spacer (36px) */}
+                {/* 7. Actions spacer (36px) */}
                 <TableCell className="w-9 shrink-0 justify-end p-0">
                   <Skeleton className="size-7 rounded-md opacity-40" />
                 </TableCell>
