@@ -99,10 +99,6 @@ export const PlaylistItem = memo(
                   />
                   <TooltipContent side="bottom">
                     <p className="font-medium">{playlist.name}</p>
-                    <p className="text-muted-foreground">
-                      {playlist.tracks}{" "}
-                      {playlist.tracks === 1 ? "track" : "tracks"}
-                    </p>
                   </TooltipContent>
                 </Tooltip>
               </div>
