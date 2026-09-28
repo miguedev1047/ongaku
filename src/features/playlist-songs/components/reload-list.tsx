@@ -11,6 +11,7 @@ import { ReloadIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useQuery } from "@tanstack/react-query"
 import { useParams } from "@tanstack/react-router"
+import { invoke } from "@tauri-apps/api/core"
 
 export function PlaylistSongsReloadList() {
   const { playlistName } = useParams({ from: "/playlists/$playlistName" })
@@ -19,13 +20,21 @@ export function PlaylistSongsReloadList() {
   )
   const isLoading = isPending || isRefetching
 
+  const handleReload = async () => {
+    try {
+      await invoke("sync_library")
+    } finally {
+      await refetch()
+    }
+  }
+
   return (
     <Tooltip>
       <TooltipTrigger
         render={
           <Button
             variant="outline"
-            onClick={() => refetch()}
+            onClick={handleReload}
             disabled={isLoading}
             size="icon-sm"
           >

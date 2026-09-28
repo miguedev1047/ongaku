@@ -1,7 +1,9 @@
 use serde::{Deserialize, Serialize};
 use std::fs::{create_dir_all, remove_dir_all, rename};
 use std::time::{SystemTime, UNIX_EPOCH};
+use tauri::State;
 
+use crate::db::DbPool;
 use crate::helpers::{
     extract_song_id, get_cache_pictures_dir, get_playlist_dir, is_audio_file, resolve_inside,
     validate_name,
@@ -14,7 +16,10 @@ pub struct PlaylistActionResponse {
 }
 
 #[tauri::command]
-pub fn new_playlist(name: &str) -> Result<PlaylistActionResponse, String> {
+pub fn new_playlist(
+    db: State<DbPool>,
+    name: &str,
+) -> Result<PlaylistActionResponse, String> {
     let safe_name = match validate_name(name) {
         Ok(valid) => valid,
         Err(err_msg) => {
@@ -37,6 +42,20 @@ pub fn new_playlist(name: &str) -> Result<PlaylistActionResponse, String> {
 
     create_dir_all(&output_dir).map_err(|err| format!("Failed to create the playlist: {}", err))?;
 
+    if let Ok(conn) = db.get() {
+        let new_id = safe_name.to_lowercase().replace(' ', "-");
+        let new_path = output_dir.to_string_lossy().to_string();
+        let created_at = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .map(|d| d.as_millis() as i64)
+            .unwrap_or(0);
+        let _ = conn.execute(
+            "INSERT INTO playlists (id, name, path, created_at) VALUES (?1, ?2, ?3, ?4)
+             ON CONFLICT(name) DO UPDATE SET id = excluded.id, path = excluded.path",
+            rusqlite::params![new_id, safe_name, new_path, created_at],
+        );
+    }
+
     Ok(PlaylistActionResponse {
         code: "SUCCESS".into(),
         message: "Playlist created successfully".into(),
@@ -44,7 +63,11 @@ pub fn new_playlist(name: &str) -> Result<PlaylistActionResponse, String> {
 }
 
 #[tauri::command]
-pub fn rename_playlist(old_name: &str, new_name: &str) -> Result<PlaylistActionResponse, String> {
+pub fn rename_playlist(
+    db: State<DbPool>,
+    old_name: &str,
+    new_name: &str,
+) -> Result<PlaylistActionResponse, String> {
     let safe_old_name = match validate_name(old_name) {
         Ok(valid) => valid,
         Err(err_msg) => {
@@ -92,8 +115,6 @@ pub fn rename_playlist(old_name: &str, new_name: &str) -> Result<PlaylistActionR
         });
     }
 
-    // Windows filesystem is case-insensitive. Changing only the case (e.g. "rock" -> "Rock")
-    // requires a two-step rename through a temporary directory name to avoid collision errors.
     if is_case_only_change {
         let timestamp = SystemTime::now()
             .duration_since(UNIX_EPOCH)
@@ -105,7 +126,6 @@ pub fn rename_playlist(old_name: &str, new_name: &str) -> Result<PlaylistActionR
             .map_err(|err| format!("An error occurred while preparing playlist rename: {}", err))?;
 
         if let Err(err) = rename(&temp_dir, &output_new_dir) {
-            // Attempt rollback to original directory if second rename fails
             let _ = rename(&temp_dir, &output_old_dir);
             return Err(format!(
                 "An error occurred while renaming the playlist: {}",
@@ -117,6 +137,18 @@ pub fn rename_playlist(old_name: &str, new_name: &str) -> Result<PlaylistActionR
             .map_err(|err| format!("An error occurred while renaming the playlist: {}", err))?;
     }
 
+    if let Ok(mut conn) = db.get() {
+        let new_id = safe_new_name.to_lowercase().replace(' ', "-");
+        let new_path = output_new_dir.to_string_lossy().to_string();
+        let _ = crate::db::queries::rename_playlist_in_db(
+            &mut conn,
+            &safe_old_name,
+            &safe_new_name,
+            &new_path,
+            &new_id,
+        );
+    }
+
     Ok(PlaylistActionResponse {
         code: "SUCCESS".into(),
         message: "Playlist renamed successfully".into(),
@@ -124,7 +156,10 @@ pub fn rename_playlist(old_name: &str, new_name: &str) -> Result<PlaylistActionR
 }
 
 #[tauri::command]
-pub fn delete_playlist(name: &str) -> Result<PlaylistActionResponse, String> {
+pub fn delete_playlist(
+    db: State<DbPool>,
+    name: &str,
+) -> Result<PlaylistActionResponse, String> {
     let safe_name = match validate_name(name) {
         Ok(valid) => valid,
         Err(err_msg) => {
@@ -152,7 +187,6 @@ pub fn delete_playlist(name: &str) -> Result<PlaylistActionResponse, String> {
         });
     }
 
-    // Clean up cached covers of all songs in this playlist
     let cache_pictures_dir = get_cache_pictures_dir();
     if let Ok(entries) = std::fs::read_dir(&output_dir) {
         for entry in entries.flatten() {
@@ -174,6 +208,10 @@ pub fn delete_playlist(name: &str) -> Result<PlaylistActionResponse, String> {
 
     remove_dir_all(&output_dir)
         .map_err(|err| format!("An error occurred while deleting the playlist: {}", err))?;
+
+    if let Ok(conn) = db.get() {
+        let _ = crate::db::queries::delete_playlist_in_db(&conn, &safe_name);
+    }
 
     Ok(PlaylistActionResponse {
         code: "SUCCESS".into(),

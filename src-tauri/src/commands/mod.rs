@@ -9,6 +9,7 @@ mod library;
 mod playlist_actions;
 mod search_youtube;
 mod song_actions;
+mod sync_library;
 
 pub use check_binaries::*;
 pub use download_binaries::*;
@@ -21,4 +22,5 @@ pub use library::*;
 pub use playlist_actions::*;
 pub use search_youtube::*;
 pub use song_actions::*;
+pub use sync_library::*;
 

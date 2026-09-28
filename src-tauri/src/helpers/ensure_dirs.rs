@@ -1,8 +1,8 @@
 use std::fs::{create_dir_all, exists};
 
 use crate::helpers::{
-    ensure_paths_config, get_bin_dir, get_cache_dir, get_config_dir, get_playlist_default_dir,
-    get_playlist_dir, get_staging_dir,
+    ensure_paths_config, get_bin_dir, get_cache_dir, get_config_dir, get_db_dir,
+    get_playlist_default_dir, get_playlist_dir, get_staging_dir,
 };
 
 pub fn ensure_dirs() -> std::io::Result<()> {
@@ -12,6 +12,7 @@ pub fn ensure_dirs() -> std::io::Result<()> {
         get_bin_dir(),
         get_config_dir(),
         get_playlist_default_dir(),
+        get_db_dir(),
     ];
 
     for path in &paths {

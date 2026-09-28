@@ -11,6 +11,7 @@ import { playlistsQueryOpts } from "@/shared/queries/playlists"
 import { ReloadIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { invoke } from "@tauri-apps/api/core"
 
 export function LibraryReloadList() {
   const queryClient = useQueryClient()
@@ -18,10 +19,14 @@ export function LibraryReloadList() {
   const isLoading = isPending || isRefetching
 
   const handleReload = async () => {
-    await Promise.all([
-      refetch(),
-      queryClient.invalidateQueries(playlistsQueryOpts())
-    ])
+    try {
+      await invoke("sync_library")
+    } finally {
+      await Promise.all([
+        refetch(),
+        queryClient.invalidateQueries(playlistsQueryOpts())
+      ])
+    }
   }
 
   return (

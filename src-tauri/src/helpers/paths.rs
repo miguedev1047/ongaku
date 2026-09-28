@@ -12,11 +12,20 @@ pub struct AppPaths {
     pub cache_pictures_dir: PathBuf,
     pub bin_dir: PathBuf,
     pub config_dir: PathBuf,
+    pub db_dir: PathBuf,
 }
 
 pub fn get_app_dir() -> PathBuf {
     let path = dirs::audio_dir().expect("The dir path not found");
     path.join("ongaku")
+}
+
+pub fn get_db_dir() -> PathBuf {
+    get_app_dir().join("db")
+}
+
+pub fn get_db_path() -> PathBuf {
+    get_db_dir().join("ongaku.db")
 }
 
 pub fn get_playlist_dir() -> PathBuf {
@@ -60,6 +69,7 @@ pub fn get_app_paths() -> AppPaths {
         cache_pictures_dir: get_cache_pictures_dir(),
         bin_dir: get_bin_dir(),
         config_dir: get_config_dir(),
+        db_dir: get_db_dir(),
     }
 }
 

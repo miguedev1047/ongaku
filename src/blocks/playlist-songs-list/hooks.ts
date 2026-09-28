@@ -6,7 +6,6 @@ import { usePlaylistBatchStore } from "@/shared/stores/batch-operations"
 import { useLocalPlayerStore } from "@/shared/stores/player"
 import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs"
 import { playlistsQueryOpts } from "@/shared/queries/playlists"
-import type { TSongAction } from "@/shared/types/song-actions"
 
 export function usePlaylistBatchActions(currentPlaylistName?: string) {
   const queryClient = useQueryClient()
@@ -23,45 +22,42 @@ export function usePlaylistBatchActions(currentPlaylistName?: string) {
   const setPlayerState = useLocalPlayerStore((s) => s.setPlayerState)
   const audioRef = useLocalPlayerStore((s) => s.audioRef)
 
+interface BatchActionResponse {
+  success_count: number
+  failed_count: number
+  failed_items: string[]
+}
+
   const handleBatchDelete = async () => {
     if (selectedSongs.length === 0) return
     setIsProcessing(true)
 
     try {
-      let successCount = 0
-      let failCount = 0
+      const items = selectedSongs.map((song) => ({
+        path: song.path,
+        id: song.id || undefined
+      }))
+
+      const res = await invoke<BatchActionResponse>("batch_delete_songs", { items })
 
       for (const song of selectedSongs) {
-        try {
-          const res = await invoke<TSongAction>("delete_song", {
-            path: song.path,
-            id: song.id
-          })
-          if (res.code === "SUCCESS") {
-            successCount++
-            useLocalPlayerStore.getState().removeFromQueue(song.id)
-            if (currentSong?.id === song.id) {
-              audioRef?.pause()
-              setCurrentSong(null)
-              setPlayerState("idle")
-            }
-          } else {
-            failCount++
-          }
-        } catch {
-          failCount++
+        useLocalPlayerStore.getState().removeFromQueue(song.id)
+        if (currentSong?.id === song.id) {
+          audioRef?.pause()
+          setCurrentSong(null)
+          setPlayerState("idle")
         }
       }
 
-      if (successCount > 0) {
+      if (res.success_count > 0) {
         toast.success(
-          successCount === 1
+          res.success_count === 1
             ? "1 song deleted successfully"
-            : `${successCount} songs deleted successfully`
+            : `${res.success_count} songs deleted successfully`
         )
       }
-      if (failCount > 0) {
-        toast.error(`Failed to delete ${failCount} song(s)`)
+      if (res.failed_count > 0) {
+        toast.error(`Failed to delete ${res.failed_count} song(s)`)
       }
 
       if (currentPlaylistName) {
@@ -78,6 +74,8 @@ export function usePlaylistBatchActions(currentPlaylistName?: string) {
 
       clearSelection()
       setIsDeleteOpen(false)
+    } catch (err) {
+      toast.error(typeof err === "string" ? err : "Failed to execute batch deletion")
     } finally {
       setIsProcessing(false)
     }
@@ -88,53 +86,38 @@ export function usePlaylistBatchActions(currentPlaylistName?: string) {
     setIsProcessing(true)
 
     try {
-      let successCount = 0
-      let alreadyExistsCount = 0
-      let failCount = 0
+      const candidateSongs = selectedSongs.filter((song) => song.playlist_name !== targetPlaylist)
+      const paths = candidateSongs.map((song) => song.path)
 
-      for (const song of selectedSongs) {
-        if (song.playlist_name === targetPlaylist) continue
-        try {
-          const res = await invoke<TSongAction>("move_song", {
-            path: song.path,
-            targetPlaylist
-          })
-          if (res.code === "SUCCESS") {
-            successCount++
-            useLocalPlayerStore.getState().removeFromQueue(song.id)
-            if (currentSong?.id === song.id) {
-              audioRef?.pause()
-              setCurrentSong(null)
-              setPlayerState("idle")
-            }
-          } else if (res.code === "ALREADY_EXISTS") {
-            alreadyExistsCount++
-          } else if (res.code === "SAME_FILE") {
-            // Already in playlist, ignore
-          } else {
-            failCount++
-          }
-        } catch {
-          failCount++
+      if (paths.length === 0) {
+        toast.info(`Selected songs are already in "${targetPlaylist}"`)
+        setIsMoveOpen(false)
+        return
+      }
+
+      const res = await invoke<BatchActionResponse>("batch_move_songs", {
+        paths,
+        targetPlaylist
+      })
+
+      for (const song of candidateSongs) {
+        useLocalPlayerStore.getState().removeFromQueue(song.id)
+        if (currentSong?.id === song.id) {
+          audioRef?.pause()
+          setCurrentSong(null)
+          setPlayerState("idle")
         }
       }
 
-      if (successCount > 0) {
+      if (res.success_count > 0) {
         toast.success(
-          successCount === 1
+          res.success_count === 1
             ? `1 song moved to "${targetPlaylist}"`
-            : `${successCount} songs moved to "${targetPlaylist}"`
+            : `${res.success_count} songs moved to "${targetPlaylist}"`
         )
       }
-      if (alreadyExistsCount > 0) {
-        toast.warning(
-          alreadyExistsCount === 1
-            ? `1 song already exists in "${targetPlaylist}"`
-            : `${alreadyExistsCount} songs already exist in "${targetPlaylist}"`
-        )
-      }
-      if (failCount > 0) {
-        toast.error(`Failed to move ${failCount} song(s)`)
+      if (res.failed_count > 0) {
+        toast.error(`Failed to move ${res.failed_count} song(s)`)
       }
 
       if (currentPlaylistName) {

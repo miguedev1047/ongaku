@@ -1,6 +1,6 @@
 [package]
 name = "ongaku"
-version = "0.1.10"
+version = "0.1.11"
 description = "A lightweight and simple mp3 player"
 authors = ["miguedev1047"]
 edition = "2021"
@@ -37,6 +37,10 @@ image = { version = "0.25", default-features = false, features = [
 webp = "0.3"
 yt-dlp = { version = "2.8", features = ["statistics"] }
 tauri-plugin-process = "2"
+rusqlite = { version = "0.32", features = ["bundled"] }
+r2d2 = "0.8"
+r2d2_sqlite = "0.25"
+rayon = "1.10"
 
 # Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration
 [profile.release]
