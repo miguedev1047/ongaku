@@ -5,25 +5,33 @@ import {
   PlaylistSongHeader,
   PlaylistSongsList
 } from "@/features/playlist-songs/components"
+import { PlaylistSongsLoadingState } from "@/features/playlist-songs/ui-state"
+import { RouteSection } from "@/components/ui/route-section"
+import { RoutePendingState, RouteErrorState } from "@/components/route-ui-state"
 
 export const Route = createFileRoute("/playlists/$playlistName")({
-  component: RouteComponent,
-  pendingComponent: () => <p>Loading playlists...</p>,
-  errorComponent: () => <p>Error to load playlists</p>,
+  pendingComponent: () => (
+    <RoutePendingState
+      title="Loading playlist"
+      message="Fetching playlist tracks"
+    />
+  ),
+  errorComponent: RouteErrorState,
   loader: async ({ context, params }) => {
     context.queryClient.query(playlistSongsQueryOpts(params.playlistName))
-  }
+  },
+  component: RouteComponent
 })
 
 function RouteComponent() {
   return (
-    <div className="h-full flex flex-col gap-4 overflow-hidden w-full">
+    <div className="size-full flex flex-col overflow-hidden">
       <PlaylistSongHeader />
-      <div className="flex-1 min-h-0 px-4 pb-4">
-        <Suspense fallback={<p>Loading...</p>}>
+      <RouteSection>
+        <Suspense fallback={<PlaylistSongsLoadingState />}>
           <PlaylistSongsList />
         </Suspense>
-      </div>
+      </RouteSection>
     </div>
   )
 }

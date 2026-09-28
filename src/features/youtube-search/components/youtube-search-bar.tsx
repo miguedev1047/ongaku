@@ -33,6 +33,7 @@ export function YoutubeSearchBar({ initialQuery = "" }: YoutubeSearchBarProps) {
 
   return (
     <form
+      className="w-100 ml-auto"
       onSubmit={(e) => {
         e.preventDefault()
         form.handleSubmit()

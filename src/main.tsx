@@ -2,7 +2,7 @@ import "@/styles/main.css"
 import { StrictMode } from "react"
 import ReactDOM from "react-dom/client"
 import { queryClient, QueryProvider } from "@/lib/query"
-import { AppLoadingState, AppErrorState } from "@/blocks/app-ui-state"
+import { RoutePendingState, RouteErrorState } from "@/components/route-ui-state"
 import { AppProvider } from "@/providers/app-provider"
 import {
   RouterProvider,
@@ -21,8 +21,8 @@ const router = createRouter({
   defaultPendingMs: 0,
   context: { queryClient },
 
-  defaultPendingComponent: AppLoadingState,
-  defaultErrorComponent: AppErrorState,
+  defaultPendingComponent: RoutePendingState,
+  defaultErrorComponent: RouteErrorState,
 
   Wrap: ({ children }: { children: React.ReactNode }) => (
     <AppProvider>

@@ -2,11 +2,10 @@ import { createFileRoute } from "@tanstack/react-router"
 import { youtubeSearchSchema } from "@/shared/schemas/youtube-search"
 import {
   SearchYoutubeList,
-  YoutubeSearchBar,
+  YoutubeSearchHeader,
   YoutubeSongInfo
 } from "@/features/youtube-search/components"
 import { Suspense } from "react"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 import {
@@ -21,18 +20,24 @@ import { useStreamingPlayerStore } from "@/shared/stores/player"
 import { useBinaries } from "@/features/download-queue/hooks"
 import {
   YoutubeSearchEmpty,
-  YoutubeLoading,
-  YoutubeSearchError
+  YoutubeLoading
 } from "@/features/youtube-search/ui-states"
 import { AlertIcon, Download01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
 import { Show } from "@/components/utility/show"
+import { RouteSection } from "@/components/ui/route-section"
+import { RoutePendingState, RouteErrorState } from "@/components/route-ui-state"
 
 export const Route = createFileRoute("/search-youtube/")({
   component: RouteComponent,
-  pendingComponent: YoutubeLoading,
-  errorComponent: YoutubeSearchError,
+  pendingComponent: () => (
+    <RoutePendingState
+      title="Loading YouTube Search"
+      message="Preparing search service"
+    />
+  ),
+  errorComponent: RouteErrorState,
   validateSearch: youtubeSearchSchema,
   loaderDeps: ({ search: { q } }) => ({ q })
 })
@@ -74,8 +79,8 @@ function InstallAction({ isPending, onInstall }: InstallActionProps) {
 
 function YoutubeToolsMissing({ isPending, onInstall }: InstallActionProps) {
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center p-6">
-      <Empty className="border border-border/40 bg-card/30 w-full">
+    <RouteSection className="flex items-center justify-center select-none">
+      <Empty className="border border-border/40 bg-card/30 max-w-lg w-full">
         <EmptyMedia
           variant="icon"
           className="bg-amber-500/10 text-amber-500"
@@ -106,7 +111,7 @@ function YoutubeToolsMissing({ isPending, onInstall }: InstallActionProps) {
           />
         </EmptyContent>
       </Empty>
-    </div>
+    </RouteSection>
   )
 }
 
@@ -143,24 +148,12 @@ function YoutubeSearchActive({ initialQuery }: { initialQuery: string }) {
   const activeTrack = useStreamingPlayerStore((state) => state.currentTrack)
 
   return (
-    <div className="w-full h-full flex flex-col p-4 gap-4 overflow-hidden">
-      <div className="shrink-0 flex flex-col gap-4">
-        <div className="flex items-center gap-4">
-          <h1 className="text-xl font-bold tracking-tight">YouTube Search</h1>
-          <Badge variant="destructive">Alpha</Badge>
-        </div>
-
-        <YoutubeSearchBar initialQuery={initialQuery} />
+    <RouteSection className="flex gap-4">
+      <div className="flex-1 min-h-0 overflow-hidden">
+        <SearchResultsSection query={initialQuery} />
       </div>
-
-      <div className="flex-1 min-h-0 flex gap-4 overflow-hidden">
-        <div className="flex-1 min-h-0 overflow-hidden">
-          <SearchResultsSection query={initialQuery} />
-        </div>
-
-        <ActiveTrackSidebar track={activeTrack} />
-      </div>
-    </div>
+      <ActiveTrackSidebar track={activeTrack} />
+    </RouteSection>
   )
 }
 
@@ -169,16 +162,19 @@ function RouteComponent() {
   const { isBinariesInstalled, isPending, installBinaries } = useBinaries()
 
   return (
-    <Show
-      when={isBinariesInstalled}
-      fallback={
-        <YoutubeToolsMissing
-          isPending={isPending}
-          onInstall={installBinaries}
-        />
-      }
-    >
-      <YoutubeSearchActive initialQuery={q} />
-    </Show>
+    <div className="size-full flex flex-col overflow-hidden">
+      <YoutubeSearchHeader initialQuery={q} />
+      <Show
+        when={isBinariesInstalled}
+        fallback={
+          <YoutubeToolsMissing
+            isPending={isPending}
+            onInstall={installBinaries}
+          />
+        }
+      >
+        <YoutubeSearchActive initialQuery={q} />
+      </Show>
+    </div>
   )
 }

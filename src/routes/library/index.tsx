@@ -1,25 +1,47 @@
 import { Suspense } from "react"
-import { LibraryHeader, LibraryList } from "@/features/library/components"
+import {
+  LibraryHeader,
+  LibraryStats,
+  LibraryList
+} from "@/features/library/components"
+import {
+  LibraryLoadingState,
+  LibraryStatsSkeleton
+} from "@/features/library/ui-state"
+import { RouteSection } from "@/components/ui/route-section"
+import { RoutePendingState, RouteErrorState } from "@/components/route-ui-state"
 import { createFileRoute } from "@tanstack/react-router"
-import { Skeleton } from "@/components/ui/skeleton"
 import { librarySongsQueryOpts } from "@/shared/queries/library"
 
 export const Route = createFileRoute("/library/")({
-  component: RouteComponent,
+  pendingComponent: () => (
+    <RoutePendingState
+      title="Loading library"
+      message="Fetching your tracks and statistics"
+    />
+  ),
+  errorComponent: RouteErrorState,
   loader: ({ context }) => {
     context.queryClient.query(librarySongsQueryOpts())
-  }
+  },
+  component: RouteComponent
 })
 
 function RouteComponent() {
   return (
-    <div className="h-full flex flex-col gap-4 overflow-hidden w-full">
+    <div className="size-full flex flex-col overflow-hidden">
       <LibraryHeader />
-      <div className="flex-1 min-h-0 px-4 pb-4">
-        <Suspense fallback={<Skeleton className="size-full rounded-md" />}>
-          <LibraryList />
+      <RouteSection className="flex flex-col gap-4">
+        <Suspense fallback={<LibraryStatsSkeleton />}>
+          <LibraryStats />
         </Suspense>
-      </div>
+
+        <div className="flex-1 min-h-0">
+          <Suspense fallback={<LibraryLoadingState />}>
+            <LibraryList />
+          </Suspense>
+        </div>
+      </RouteSection>
     </div>
   )
 }
