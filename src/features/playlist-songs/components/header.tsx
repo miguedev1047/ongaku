@@ -22,7 +22,7 @@ export function PlaylistSongHeader() {
         <SidebarTrigger className="-ml-1 max-md:block hidden" />
         <Separator
           orientation="vertical"
-          className="mx-2 data-[orientation=vertical]:h-4 max-md:block hidden"
+          className="mx-2 data-[orientation=vertical]:h-4 max-md:block hidden my-auto"
         />
         <Breadcrumb>
           <BreadcrumbList>
