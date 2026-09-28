@@ -8,6 +8,7 @@ import {
 import { PlaylistSongsLoadingState } from "@/features/playlist-songs/ui-state"
 import { RouteSection } from "@/components/ui/route-section"
 import { RoutePendingState, RouteErrorState } from "@/components/route-ui-state"
+import { PlaylistSongHero } from "@/features/playlists/components/hero"
 
 export const Route = createFileRoute("/playlists/$playlistName")({
   pendingComponent: () => (
@@ -27,6 +28,7 @@ function RouteComponent() {
   return (
     <div className="size-full flex flex-col overflow-hidden">
       <PlaylistSongHeader />
+      <PlaylistSongHero />
       <RouteSection>
         <Suspense fallback={<PlaylistSongsLoadingState />}>
           <PlaylistSongsList />
