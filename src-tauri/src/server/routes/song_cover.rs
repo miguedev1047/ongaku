@@ -46,6 +46,8 @@ fn build_cover(song_path: &std::path::Path, cached: &std::path::Path) -> Result<
     Ok(())
 }
 
+use axum::http::header::{CACHE_CONTROL, HeaderValue};
+
 pub async fn get_song_cover(
     Query(params): Query<SongCoverApi>,
     req: Request<Body>,
@@ -57,21 +59,35 @@ pub async fn get_song_cover(
     let cache_pictures_dir = get_cache_pictures_dir();
     let cached = cache_pictures_dir.join(format!("{}.webp", params.id));
 
-    if cached.is_file() {
-        return Ok(ServeFile::new(&cached).oneshot(req).await);
-    }
+    let response = if cached.is_file() {
+        ServeFile::new(&cached)
+            .oneshot(req)
+            .await
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
+    } else {
+        let song_path = resolve_song_path(&params)?;
 
-    let song_path = resolve_song_path(&params)?;
+        let cached_for_task = cached.clone();
+        tauri::async_runtime::spawn_blocking(move || {
+            if !cached_for_task.is_file() {
+                build_cover(&song_path, &cached_for_task)?;
+            }
+            Ok::<(), StatusCode>(())
+        })
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)??;
 
-    let cached_for_task = cached.clone();
-    tauri::async_runtime::spawn_blocking(move || {
-        if !cached_for_task.is_file() {
-            build_cover(&song_path, &cached_for_task)?;
-        }
-        Ok::<(), StatusCode>(())
-    })
-    .await
-    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)??;
+        ServeFile::new(&cached)
+            .oneshot(req)
+            .await
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
+    };
 
-    Ok(ServeFile::new(&cached).oneshot(req).await)
+    let mut res = response.into_response();
+    res.headers_mut().insert(
+        CACHE_CONTROL,
+        HeaderValue::from_static("public, max-age=31536000, immutable"),
+    );
+
+    Ok(res)
 }

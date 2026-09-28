@@ -23,6 +23,8 @@ export function CoverImage({ className, src, alt, ...props }: CoverImageProps) {
     <img
       src={src}
       alt={alt}
+      loading="lazy"
+      decoding="async"
       className={cn("size-full object-cover", className)}
       onError={() => setError(true)}
       {...props}

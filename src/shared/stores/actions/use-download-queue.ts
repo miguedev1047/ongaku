@@ -5,6 +5,7 @@ import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
 import { queryClient } from "@/lib/query"
 import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs"
 import { playlistsQueryOpts } from "@/shared/queries/playlists"
+import { librarySongsQueryOpts } from "@/shared/queries/library"
 import { toast } from "sonner"
 
 export type DownloadTaskStatus =
@@ -277,12 +278,15 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
             }
           })
 
-          // Invalidate React Query cache so playlist updates immediately
+          // Invalidate React Query cache so playlist and library update immediately
           queryClient.invalidateQueries({
             queryKey: playlistSongsQueryOpts(task.playlistName).queryKey
           })
           queryClient.invalidateQueries({
             queryKey: playlistsQueryOpts().queryKey
+          })
+          queryClient.invalidateQueries({
+            queryKey: librarySongsQueryOpts().queryKey
           })
 
           // Notify completed song

@@ -63,6 +63,7 @@ pub async fn download_song(
     url: String,
     playlist_name: String,
     state: State<'_, DownloadManagerState>,
+    db: State<'_, crate::db::DbPool>,
     app: tauri::AppHandle,
 ) -> Result<PlaylistSong, String> {
     let target_dir = get_playlist_dir().join(&playlist_name);
@@ -111,6 +112,45 @@ pub async fn download_song(
         created,
         metadata,
     };
+
+    let mtime = file_path
+        .metadata()
+        .ok()
+        .and_then(|m| m.modified().ok())
+        .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok())
+        .map(|d| d.as_millis() as i64)
+        .unwrap_or(0);
+    let file_size = file_path.metadata().map(|m| m.len() as i64).unwrap_or(0);
+
+    if let Ok(conn) = db.get() {
+        let _ = conn.execute(
+            "INSERT INTO songs (path, id, playlist_name, file_name, title, artist, album, duration, file_size, mtime, created_at)
+             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)
+             ON CONFLICT(path) DO UPDATE SET
+                 id = excluded.id,
+                 playlist_name = excluded.playlist_name,
+                 file_name = excluded.file_name,
+                 title = excluded.title,
+                 artist = excluded.artist,
+                 album = excluded.album,
+                 duration = excluded.duration,
+                 file_size = excluded.file_size,
+                 mtime = excluded.mtime",
+            rusqlite::params![
+                song.path,
+                song.id,
+                song.playlist_name,
+                file_name,
+                song.name,
+                song.metadata.artist,
+                song.metadata.album,
+                song.metadata.duration,
+                file_size,
+                mtime,
+                song.created as i64,
+            ],
+        );
+    }
 
     Ok(song)
 }
