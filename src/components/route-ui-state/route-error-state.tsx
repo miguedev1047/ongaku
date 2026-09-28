@@ -40,11 +40,11 @@ export function RouteErrorState({
   return (
     <RouteSection
       className={cn(
-        "flex flex-col items-center justify-center text-center select-none",
+        "w-full h-screen flex flex-col items-center justify-center text-center select-none",
         className
       )}
     >
-      <Empty className="w-full max-w-md border border-border/40 bg-card/40 shadow-xs rounded-xl py-8">
+      <Empty className="w-full border border-dashed py-8">
         <EmptyMedia
           variant="icon"
           className="bg-destructive/10 text-destructive size-10"

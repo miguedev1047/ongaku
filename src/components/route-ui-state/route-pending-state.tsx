@@ -16,21 +16,23 @@ export function RoutePendingState({
   return (
     <RouteSection
       className={cn(
-        "flex flex-col items-center justify-center text-center select-none",
+        "w-full h-screen items-center justify-center text-center select-none",
         className
       )}
     >
-      <div className="relative flex items-center justify-center size-12 rounded-xl bg-card/60 border border-border/40 shadow-xs mb-3">
-        <Spinner className="size-5 text-primary" />
-      </div>
+      <div className="size-full border border-dashed py-8 flex flex-col justify-center items-center">
+        <div className="relative flex items-center justify-center size-12 shadow-xs mb-3">
+          <Spinner className="size-5 text-primary" />
+        </div>
 
-      <div className="flex flex-col items-center gap-1">
-        <h4 className="font-heading text-sm font-semibold tracking-tight text-foreground">
-          {title}
-        </h4>
-        <p className="text-xs font-mono text-muted-foreground animate-pulse">
-          {message}
-        </p>
+        <div className="flex flex-col items-center gap-1">
+          <h4 className="font-heading text-sm font-semibold tracking-tight text-foreground">
+            {title}
+          </h4>
+          <p className="text-xs font-mono text-muted-foreground shimmer">
+            {message}
+          </p>
+        </div>
       </div>
     </RouteSection>
   )
