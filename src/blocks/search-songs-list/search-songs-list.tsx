@@ -68,7 +68,7 @@ export function SearchSongsList({ data }: SearchSongsListProps) {
     getScrollElement: () => scrollRef.current,
     estimateSize: () => 52,
     getItemKey: (index) => rows[index]?.id ?? index,
-    overscan: 3
+    overscan: 5
   })
 
   return (

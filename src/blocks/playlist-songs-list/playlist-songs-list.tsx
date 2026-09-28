@@ -37,9 +37,7 @@ export function PlaylistSongsList({
     columns: playlistSongColumns,
     data,
     getRowId: (row) => row.id,
-    state: {
-      rowSelection
-    },
+    state: { rowSelection },
     onRowSelectionChange: setRowSelection
   })
 
@@ -72,7 +70,7 @@ export function PlaylistSongsList({
     getScrollElement: () => scrollRef.current,
     estimateSize: () => 52,
     getItemKey: (index) => rows[index]?.id ?? index,
-    overscan: 3
+    overscan: 5
   })
 
   return (
