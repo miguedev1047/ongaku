@@ -30,7 +30,7 @@ export function LibraryHeader() {
 
         <div className="flex items-center gap-1 ml-auto">
           <LibraryReloadList />
-          <Suspense fallback={<Skeleton className="ml-auto w-52 h-8" />}>
+          <Suspense fallback={<Skeleton className="ml-auto w-52 h-6" />}>
             <SearchLibrary />
           </Suspense>
         </div>

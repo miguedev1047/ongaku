@@ -41,7 +41,7 @@ export function PlaylistSongHeader() {
 
         <div className="flex items-center gap-1 ml-auto">
           <PlaylistSongsReloadList />
-          <Suspense fallback={<Skeleton className="ml-auto w-52 h-8" />}>
+          <Suspense fallback={<Skeleton className="ml-auto w-52 h-6" />}>
             <SearchSongs />
           </Suspense>
         </div>
