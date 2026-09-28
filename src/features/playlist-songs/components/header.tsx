@@ -6,7 +6,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator
 } from "@/components/ui/breadcrumb"
-import { SearchPlaylists } from "@/components/search"
+import { SearchSongs } from "@/components/search"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -39,7 +39,7 @@ export function PlaylistSongHeader() {
         </Breadcrumb>
 
         <Suspense fallback={<Skeleton className="ml-auto w-52 h-8" />}>
-          <SearchPlaylists />
+          <SearchSongs />
         </Suspense>
       </div>
     </header>

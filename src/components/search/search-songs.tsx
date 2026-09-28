@@ -31,7 +31,7 @@ export function SearchSongs() {
   useHotkey("Control+K", () => setIsOpen(!isOpen))
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="ml-auto flex items-center gap-2">
       <Button
         onClick={() => setIsOpen(true)}
         variant="outline"
@@ -54,7 +54,7 @@ export function SearchSongs() {
           className="max-w-sm rounded-lg border"
           shouldFilter={false}
         >
-          <CommandInput placeholder="Type a command or search..." />
+          <CommandInput placeholder="Type a song..." />
           <CommandVirtualList
             data={songs}
             filter={(song, search) => {
