@@ -1,7 +1,7 @@
 import { useLocalPlayerStore } from "@/shared/stores/player"
 import { useActivePlayerStore } from "@/shared/stores/player"
 import { getPlaylistPath } from "@/shared/helpers/get-playlist-helper"
-import { openPath } from "@tauri-apps/plugin-opener"
+import { openFolder } from "@/shared/helpers/open-folder"
 import { toast } from "sonner"
 import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
 
@@ -39,7 +39,7 @@ export function usePlaylistSongActions({ song }: UsePlaylistSongActionsProps) {
   const handleOpenFolder = async () => {
     try {
       const songPath = getPlaylistPath(song.path)
-      await openPath(songPath)
+      await openFolder(songPath)
       toast.info(`Opened folder for "${song.playlist_name}"`)
     } catch (err) {
       console.log(err)

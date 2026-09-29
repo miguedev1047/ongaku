@@ -9,7 +9,7 @@ import {
 import { Download01Icon, FolderIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useBinaries } from "@/features/download-queue/hooks"
-import { openPath } from "@tauri-apps/plugin-opener"
+import { openFolder } from "@/shared/helpers/open-folder"
 import { toast } from "sonner"
 import {
   Popover,
@@ -168,7 +168,7 @@ export function CheckBinaries() {
     e?.stopPropagation()
     if (!binariesInfo?.bin_dir) return
     try {
-      await openPath(binariesInfo.bin_dir)
+      await openFolder(binariesInfo.bin_dir)
     } catch {
       toast.error("Failed to open binaries folder")
     }

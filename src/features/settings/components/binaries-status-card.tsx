@@ -4,7 +4,7 @@ import { Spinner } from "@/components/ui/spinner"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Download01Icon, FolderIcon, Wrench01Icon } from "@hugeicons/core-free-icons"
 import { useBinaries } from "@/features/download-queue/hooks"
-import { openPath } from "@tauri-apps/plugin-opener"
+import { openFolder } from "@/shared/helpers/open-folder"
 import { toast } from "sonner"
 import { Show } from "@/components/utility/show"
 
@@ -15,7 +15,7 @@ export function BinariesStatusCard() {
   const handleOpenFolder = async () => {
     if (!binariesInfo?.bin_dir) return
     try {
-      await openPath(binariesInfo.bin_dir)
+      await openFolder(binariesInfo.bin_dir)
     } catch {
       toast.error("Failed to open binaries folder")
     }

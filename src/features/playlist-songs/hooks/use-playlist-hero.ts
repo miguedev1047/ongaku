@@ -3,7 +3,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { extractColors } from "extract-colors";
-import { openPath } from "@tauri-apps/plugin-opener";
+import { getPlaylistPath } from "@/shared/helpers/get-playlist-helper";
+import { openFolder } from "@/shared/helpers/open-folder";
 import { toast } from "sonner";
 
 import { useSongUtils } from "@/hooks/use-song-utils";
@@ -71,18 +72,9 @@ export function usePlaylistHero() {
   }, [coverUrl]);
 
   const handleOpenFolder = useCallback(async () => {
-    const getDirectoryPath = (filePath: string) => {
-      const lastIndex = Math.max(
-        filePath.lastIndexOf("/"),
-        filePath.lastIndexOf("\\"),
-      );
-      if (lastIndex === -1) return filePath;
-      return filePath.slice(0, lastIndex);
-    };
-
     const targetPath =
       currentPlaylist?.path ||
-      (firstSong?.path ? getDirectoryPath(firstSong.path) : null);
+      (firstSong?.path ? getPlaylistPath(firstSong.path) : null);
 
     if (!targetPath) {
       toast.error("Playlist folder not found");
@@ -90,7 +82,7 @@ export function usePlaylistHero() {
     }
 
     try {
-      await openPath(targetPath);
+      await openFolder(targetPath);
       toast.info(`Opened folder for "${playlistName}"`);
     } catch {
       toast.error("Error opening playlist folder");

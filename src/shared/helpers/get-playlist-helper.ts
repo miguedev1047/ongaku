@@ -1,7 +1,11 @@
 export function getPlaylistPath(songPath: string): string {
-  const segments = songPath.split(/[/\\]/)
+  const lastIndex = Math.max(
+    songPath.lastIndexOf('/'),
+    songPath.lastIndexOf('\\'),
+  )
 
-  segments.pop()
+  if (lastIndex === -1) return songPath
+  if (lastIndex === 0) return '/'
 
-  return segments.join("\\")
+  return songPath.slice(0, lastIndex)
 }

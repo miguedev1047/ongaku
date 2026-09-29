@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { FolderIcon, AlertCircleIcon } from "@hugeicons/core-free-icons"
-import { openPath } from "@tauri-apps/plugin-opener"
+import { openFolder } from "@/shared/helpers/open-folder"
 import { toast } from "sonner"
 import { Show } from "@/components/utility/show"
 import { useSuspenseQuery } from "@tanstack/react-query"
@@ -15,7 +15,7 @@ export function DirectoriesStatusCard() {
 
   const handleOpen = async (path: string) => {
     try {
-      await openPath(path)
+      await openFolder(path)
     } catch {
       toast.error(`Failed to open folder: ${path}`)
     }
