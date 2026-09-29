@@ -41,7 +41,8 @@ export function usePlaylistSongActions({ song }: UsePlaylistSongActionsProps) {
       const songPath = getPlaylistPath(song.path)
       await openPath(songPath)
       toast.info(`Opened folder for "${song.playlist_name}"`)
-    } catch {
+    } catch (err) {
+      console.log(err)
       toast.error("Error opening playlist folder")
     }
   }

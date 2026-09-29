@@ -1,34 +1,34 @@
-import { memo, useMemo } from "react"
-import { Link } from "@tanstack/react-router"
-import { HugeiconsIcon } from "@hugeicons/react"
+import { memo, useMemo } from "react";
+import { Link } from "@tanstack/react-router";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   DeleteIcon,
   FolderIcon,
   Music01Icon,
-  PencilEdit01Icon
-} from "@hugeicons/core-free-icons"
-import { Folder } from "@/components/ui/folder"
+  PencilEdit01Icon,
+} from "@hugeicons/core-free-icons";
+import { Folder } from "@/components/ui/folder";
 import {
   Tooltip,
   TooltipContent,
-  TooltipTrigger
-} from "@/components/ui/tooltip"
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuGroup,
   ContextMenuItem,
-  ContextMenuTrigger
-} from "@/components/ui/context-menu"
-import { CoverImage } from "@/components/cover-image"
-import { DeletePlaylist } from "@/features/playlists/components/delete-playlist"
-import { RenamePlaylist } from "@/features/playlists/components/rename-playlist"
-import { Show } from "@/components/utility/show"
-import { usePlaylistItem } from "@/features/playlists/components/hooks"
-import type { TPlaylist } from "@/shared/types/playlist.types"
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
+import { CoverImage } from "@/components/cover-image";
+import { DeletePlaylist } from "@/features/playlists/components/delete-playlist";
+import { RenamePlaylist } from "@/features/playlists/components/rename-playlist";
+import { Show } from "@/components/utility/show";
+import { usePlaylistItem } from "@/features/playlists/hooks";
+import type { TPlaylist } from "@/shared/types/playlist.types";
 
 interface PlaylistItemProps {
-  playlist: TPlaylist
+  playlist: TPlaylist;
 }
 
 export const PlaylistItem = memo(
@@ -41,8 +41,8 @@ export const PlaylistItem = memo(
       handlePreload,
       handleNavigate,
       handleOpenFolder,
-      previewCovers
-    } = usePlaylistItem({ playlist })
+      previewCovers,
+    } = usePlaylistItem({ playlist });
 
     const previewItems = useMemo(() => {
       return previewCovers.map((cover) => (
@@ -52,8 +52,8 @@ export const PlaylistItem = memo(
           alt={cover.name}
           className="size-full object-cover rounded-[10px]"
         />
-      ))
-    }, [previewCovers])
+      ));
+    }, [previewCovers]);
 
     return (
       <>
@@ -71,10 +71,7 @@ export const PlaylistItem = memo(
                   className="w-full flex items-center justify-center pt-4 pb-2"
                   onDoubleClick={(e) => e.stopPropagation()}
                 >
-                  <Folder
-                    items={previewItems}
-                    color="#507dbc"
-                  />
+                  <Folder items={previewItems} color="#507dbc" />
                 </div>
 
                 <Tooltip>
@@ -145,11 +142,11 @@ export const PlaylistItem = memo(
           />
         </Show>
       </>
-    )
+    );
   },
   (prev, next) =>
     prev.playlist.id === next.playlist.id &&
     prev.playlist.name === next.playlist.name &&
     prev.playlist.tracks === next.playlist.tracks &&
-    prev.playlist.previewTracks === next.playlist.previewTracks
-)
+    prev.playlist.previewTracks === next.playlist.previewTracks,
+);

@@ -1,14 +1,17 @@
-import { createFileRoute } from "@tanstack/react-router"
-import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs"
-import { Suspense } from "react"
+import { createFileRoute } from "@tanstack/react-router";
+import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs";
+import { Suspense } from "react";
 import {
   PlaylistSongHeader,
-  PlaylistSongsList
-} from "@/features/playlist-songs/components"
-import { PlaylistSongsLoadingState } from "@/features/playlist-songs/ui-state"
-import { RouteSection } from "@/components/ui/route-section"
-import { RoutePendingState, RouteErrorState } from "@/components/route-ui-state"
-import { PlaylistSongHero } from "@/features/playlists/components/hero"
+  PlaylistSongHero,
+  PlaylistSongsList,
+} from "@/features/playlist-songs/components";
+import { PlaylistSongsLoadingState } from "@/features/playlist-songs/ui-state";
+import { RouteSection } from "@/components/ui/route-section";
+import {
+  RoutePendingState,
+  RouteErrorState,
+} from "@/components/route-ui-state";
 
 export const Route = createFileRoute("/playlists/$playlistName")({
   pendingComponent: () => (
@@ -19,10 +22,10 @@ export const Route = createFileRoute("/playlists/$playlistName")({
   ),
   errorComponent: RouteErrorState,
   loader: async ({ context, params }) => {
-    context.queryClient.query(playlistSongsQueryOpts(params.playlistName))
+    context.queryClient.query(playlistSongsQueryOpts(params.playlistName));
   },
-  component: RouteComponent
-})
+  component: RouteComponent,
+});
 
 function RouteComponent() {
   return (
@@ -35,5 +38,5 @@ function RouteComponent() {
         </Suspense>
       </RouteSection>
     </div>
-  )
+  );
 }
