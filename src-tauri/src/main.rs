@@ -4,7 +4,6 @@
 fn main() {
     #[cfg(target_os = "linux")]
     {
-        // Evita fallos y pantallas en blanco por DMA-BUF en WebKitGTK sobre Wayland
         if std::env::var_os("WEBKIT_DISABLE_DMABUF_RENDERER").is_none() {
             std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
         }
