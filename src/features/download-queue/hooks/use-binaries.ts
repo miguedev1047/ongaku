@@ -1,8 +1,9 @@
 import {
-  checkBinariesQueryOpts,
-  binariesInfoQueryOpts,
+  systemBinariesCheckQueryOptions,
+  systemBinariesInfoQueryOptions,
+  systemKeys,
   type TBinariesInfo
-} from "@/shared/queries/binaries"
+} from "@/shared/queries/system"
 import {
   useMutation,
   useQueryClient,
@@ -15,9 +16,11 @@ export type { TBinariesInfo }
 
 export function useBinaries() {
   const { data: isBinariesInstalled } = useSuspenseQuery(
-    checkBinariesQueryOpts()
+    systemBinariesCheckQueryOptions()
   )
-  const { data: binariesInfo } = useSuspenseQuery(binariesInfoQueryOpts())
+  const { data: binariesInfo } = useSuspenseQuery(
+    systemBinariesInfoQueryOptions()
+  )
 
   const queryClient = useQueryClient()
 
@@ -27,8 +30,7 @@ export function useBinaries() {
     },
     onSuccess: () => {
       toast.success("Tools installed successfully (yt-dlp & ffmpeg)")
-      queryClient.invalidateQueries({ queryKey: ["check-binaries"] })
-      queryClient.invalidateQueries({ queryKey: ["binaries-info"] })
+      queryClient.invalidateQueries({ queryKey: systemKeys.all })
     },
     onError: () => {
       toast.error("An error occurred while downloading tools")

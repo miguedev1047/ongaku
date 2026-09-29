@@ -8,7 +8,7 @@ import {
 import { playlistsQueryOpts } from "@/shared/queries/playlists"
 import { FolderIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { checkBinariesQueryOpts } from "@/shared/queries/binaries"
+import { systemBinariesCheckQueryOptions } from "@/shared/queries/system"
 import { Show } from "@/components/utility/show"
 
 interface PlaylistMenuGroupProps {
@@ -22,7 +22,7 @@ export function PlaylistMenuGroup({
 }: PlaylistMenuGroupProps) {
   const { data: playlists = [] } = useSuspenseQuery(playlistsQueryOpts())
   const { data: isBinariesInstalled } = useSuspenseQuery(
-    checkBinariesQueryOpts()
+    systemBinariesCheckQueryOptions()
   )
 
   const hasPlaylists = playlists.length > 0

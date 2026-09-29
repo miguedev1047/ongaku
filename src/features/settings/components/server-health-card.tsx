@@ -1,0 +1,94 @@
+import { Badge } from "@/components/ui/badge"
+import { HugeiconsIcon } from "@hugeicons/react"
+import { CloudServerIcon, CheckmarkCircle02Icon, AlertCircleIcon } from "@hugeicons/core-free-icons"
+import { Show } from "@/components/utility/show"
+import { useSuspenseQuery } from "@tanstack/react-query"
+import { systemHealthQueryOptions } from "@/shared/queries/system"
+
+export function ServerHealthCard() {
+  const { data: health } = useSuspenseQuery(systemHealthQueryOptions())
+
+  const isHealthy = health.serverHealthy && health.serverPort > 0
+  const port = health.serverPort
+  const host = health.serverHost
+  const url = `http://${host}:${port}`
+
+  return (
+    <div className="p-4 rounded-md border border-border/50 bg-card/60 backdrop-blur-sm space-y-3">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2.5">
+          <div className="size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary">
+            <HugeiconsIcon
+              icon={CloudServerIcon}
+              className="size-4"
+            />
+          </div>
+          <div>
+            <h2 className="text-sm font-semibold text-foreground">
+              Internal Streaming Server
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              Local HTTP service delivering high-fidelity audio and cover art
+            </p>
+          </div>
+        </div>
+
+        <Show
+          when={isHealthy}
+          fallback={
+            <Badge
+              variant="destructive"
+              className="text-[10px] gap-1"
+            >
+              <HugeiconsIcon
+                icon={AlertCircleIcon}
+                className="size-3"
+              />
+              Offline
+            </Badge>
+          }
+        >
+          <Badge
+            variant="secondary"
+            className="text-[10px] gap-1 bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+          >
+            <HugeiconsIcon
+              icon={CheckmarkCircle02Icon}
+              className="size-3"
+            />
+            Healthy
+          </Badge>
+        </Show>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 text-xs">
+        <div className="p-2.5 rounded-md bg-muted/40 border border-border/30">
+          <span className="text-[10px] text-muted-foreground block uppercase tracking-wider font-semibold">
+            Binding Host
+          </span>
+          <span className="font-mono font-medium text-foreground mt-0.5 block">
+            {host}
+          </span>
+        </div>
+
+        <div className="p-2.5 rounded-md bg-muted/40 border border-border/30">
+          <span className="text-[10px] text-muted-foreground block uppercase tracking-wider font-semibold">
+            Allocated Port
+          </span>
+          <span className="font-mono font-medium text-foreground mt-0.5 block">
+            {port}
+          </span>
+        </div>
+
+        <div className="p-2.5 rounded-md bg-muted/40 border border-border/30">
+          <span className="text-[10px] text-muted-foreground block uppercase tracking-wider font-semibold">
+            Base Endpoint
+          </span>
+          <span className="font-mono font-medium text-foreground mt-0.5 block truncate" title={url}>
+            {url}
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
