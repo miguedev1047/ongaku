@@ -8,7 +8,7 @@ import { MusicNote01Icon } from "@hugeicons/core-free-icons"
 import { formatDuration } from "@/shared/helpers/format-duration"
 import { useStreamingPlayerStore } from "@/shared/stores/player"
 import { useActivePlayerStore } from "@/shared/stores/player"
-import { YoutubeSongActions } from "@/features/youtube-search/components/actions"
+import { SearchSongActions } from "@/blocks/song-actions/search-songs"
 import { isItemAction } from "@/shared/helpers/is-item-action"
 import { Subscribe } from "@tanstack/react-table"
 import { TableRow, TableCell } from "@/components/ui/table"
@@ -138,7 +138,7 @@ export const SearchSongTableRow = memo(function SearchSongTableRow({
         onClick={(e) => e.stopPropagation()}
       >
         <Suspense fallback={<Skeleton className="size-7 rounded-md" />}>
-          <YoutubeSongActions item={item} />
+          <SearchSongActions item={item} />
         </Suspense>
       </TableCell>
     </TableRow>

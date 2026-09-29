@@ -8,7 +8,7 @@ import { useSongUtils } from "@/hooks/use-song-utils"
 import { formatDuration } from "@/shared/helpers/format-duration"
 import { useLocalPlayerStore } from "@/shared/stores/player"
 import { useActivePlayerStore } from "@/shared/stores/player"
-import { PlaylistSongActions } from "@/features/playlist-songs/components"
+import { LibrarySongActions } from "@/blocks/song-actions/library-songs"
 import { isItemAction } from "@/shared/helpers/is-item-action"
 import { Subscribe } from "@tanstack/react-table"
 import { TableRow, TableCell } from "@/components/ui/table"
@@ -126,7 +126,7 @@ export const LibrarySongTableRow = memo(function LibrarySongTableRow({
         className="w-9 shrink-0 justify-end p-0"
         onClick={(e) => e.stopPropagation()}
       >
-        <PlaylistSongActions song={song} />
+        <LibrarySongActions song={song} />
       </TableCell>
     </TableRow>
   )
