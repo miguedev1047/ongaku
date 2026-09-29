@@ -39,6 +39,7 @@
     ],
     "linux": {
       "appimage": {
+        "bundleMediaFramework": true,
         "files": {
           "apprun-hooks/wayland-compat.sh": "appimage/apprun-wayland-compat.sh"
         }

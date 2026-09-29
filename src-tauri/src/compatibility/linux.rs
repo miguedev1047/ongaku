@@ -84,6 +84,19 @@ pub fn init() {
         }
     }
 
+    // Ensure GStreamer plugins within AppImage are properly discovered
+    if let Some(appdir) = std::env::var_os("APPDIR") {
+        let bundled_gst = Path::new(&appdir).join("usr/lib/gstreamer-1.0");
+        if bundled_gst.exists() {
+            if std::env::var_os("GST_PLUGIN_SYSTEM_PATH").is_none() {
+                std::env::set_var("GST_PLUGIN_SYSTEM_PATH", &bundled_gst);
+            }
+            if std::env::var_os("GST_PLUGIN_SYSTEM_PATH_1_0").is_none() {
+                std::env::set_var("GST_PLUGIN_SYSTEM_PATH_1_0", &bundled_gst);
+            }
+        }
+    }
+
     // Prevents crashes and blank screens due to DMA-BUF issues in WebKitGTK on Wayland / NVIDIA
     if std::env::var_os("WEBKIT_DISABLE_DMABUF_RENDERER").is_none() {
         std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
