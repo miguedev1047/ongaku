@@ -41,6 +41,7 @@ export function usePlaylistHero() {
   const trackLabel = tracksCount === 1 ? "track" : "tracks";
   const durationText = songs ? formatPlaylistDuration(songs) : "0m";
   const bgCardColor = imgColor ? `${imgColor.hex}35` : undefined;
+  const hasShowCover = tracksCount > 0
 
   const currentPlaylist = playlists.find((p) => p.name === playlistName);
 
@@ -122,6 +123,7 @@ export function usePlaylistHero() {
     tracksCount,
     trackLabel,
     durationText,
+    hasShowCover,
     bgCardColor,
     isPlaylistPlaying,
     playTooltipText,
