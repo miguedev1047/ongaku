@@ -40,7 +40,7 @@
     "linux": {
       "appimage": {
         "files": {
-          "appimage/apprun-wayland-compat.sh": "apprun-hooks/wayland-compat.sh"
+          "apprun-hooks/wayland-compat.sh": "appimage/apprun-wayland-compat.sh"
         }
       }
     }
