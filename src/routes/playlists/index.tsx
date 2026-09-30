@@ -1,28 +1,30 @@
-import { RouteSection } from "@/components/ui/route-section"
-import { PlaylistHeader, PlaylistList } from "@/features/playlists/components"
-import { PlaylistsLoadingState } from "@/features/playlists/ui-state"
-import { RoutePendingState, RouteErrorState } from "@/components/route-ui-state"
-import { playlistsQueryOpts } from "@/shared/queries/playlists"
-import { createFileRoute } from "@tanstack/react-router"
-import { Suspense } from "react"
+import { RouteSection } from '@/components/ui/route-section'
+import { PlaylistHeader, PlaylistList } from '@/features/playlists/components'
+import { PlaylistsLoadingState } from '@/features/playlists/ui-state'
+import { RoutePendingState, RouteErrorState } from '@/components/route-ui-state'
+import { playlistsQueryOpts } from '@/shared/queries/playlists'
+import { systemConfigQueryOptions } from '@/shared/queries/system'
+import { createFileRoute } from '@tanstack/react-router'
+import { Suspense } from 'react'
 
-export const Route = createFileRoute("/playlists/")({
+export const Route = createFileRoute('/playlists/')({
   pendingComponent: () => (
     <RoutePendingState
-      title="Loading playlists"
-      message="Fetching your music collections"
+      title='Loading playlists'
+      message='Fetching your music collections'
     />
   ),
   errorComponent: RouteErrorState,
   loader: async ({ context }) => {
     context.queryClient.query(playlistsQueryOpts())
+    context.queryClient.query(systemConfigQueryOptions())
   },
-  component: RouteComponent
+  component: RouteComponent,
 })
 
 function RouteComponent() {
   return (
-    <div className="size-full flex flex-col overflow-hidden">
+    <div className='size-full flex flex-col overflow-hidden'>
       <PlaylistHeader />
       <RouteSection scrollable>
         <Suspense fallback={<PlaylistsLoadingState />}>

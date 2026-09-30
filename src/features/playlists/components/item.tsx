@@ -1,5 +1,6 @@
 import { memo, useMemo } from "react";
 import { Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   DeleteIcon,
@@ -25,6 +26,7 @@ import { DeletePlaylist } from "@/features/playlists/components/delete-playlist"
 import { RenamePlaylist } from "@/features/playlists/components/rename-playlist";
 import { Show } from "@/components/utility/show";
 import { usePlaylistItem } from "@/features/playlists/hooks";
+import { systemConfigQueryOptions } from "@/shared/queries/system";
 import type { TPlaylist } from "@/shared/types/playlist.types";
 
 interface PlaylistItemProps {
@@ -33,6 +35,9 @@ interface PlaylistItemProps {
 
 export const PlaylistItem = memo(
   function PlaylistItem({ playlist }: PlaylistItemProps) {
+    const { data: config } = useQuery(systemConfigQueryOptions());
+    const folderColor = config?.folder_colors ?? "#507dbc";
+
     const {
       isRenameOpen,
       setIsRenameOpen,
@@ -71,7 +76,7 @@ export const PlaylistItem = memo(
                   className="w-full flex items-center justify-center pt-4 pb-2"
                   onDoubleClick={(e) => e.stopPropagation()}
                 >
-                  <Folder items={previewItems} color="#507dbc" />
+                  <Folder items={previewItems} color={folderColor} />
                 </div>
 
                 <Tooltip>

@@ -1,7 +1,7 @@
-import { queryOptions } from "@tanstack/react-query"
-import { invoke } from "@tauri-apps/api/core"
-import { checkForUpdates } from "@/lib/check-updates"
-import { ONE_HOUR } from "@/constants/times"
+import { queryOptions } from '@tanstack/react-query'
+import { invoke } from '@tauri-apps/api/core'
+import { checkForUpdates } from '@/lib/check-updates'
+import { ONE_HOUR } from '@/constants/times'
 
 export interface TDirectoryHealth {
   id: string
@@ -32,19 +32,33 @@ export interface TBinariesInfo {
   ffmpeg_installed: boolean
 }
 
+export interface TAppConfig {
+  theme: "light" | "dark" | "system"
+  folder_colors: string
+  app_dir: string
+}
+
 export const systemKeys = {
-  all: ["system"] as const,
-  health: () => [...systemKeys.all, "health"] as const,
-  updates: () => [...systemKeys.all, "updates"] as const,
-  binaries: () => [...systemKeys.all, "binaries"] as const,
-  binariesCheck: () => [...systemKeys.binaries(), "check"] as const,
-  binariesInfo: () => [...systemKeys.binaries(), "info"] as const,
+  all: ['system'] as const,
+  config: () => [...systemKeys.all, 'config'] as const,
+  health: () => [...systemKeys.all, 'health'] as const,
+  updates: () => [...systemKeys.all, 'updates'] as const,
+  binaries: () => [...systemKeys.all, 'binaries'] as const,
+  binariesCheck: () => [...systemKeys.binaries(), 'check'] as const,
+  binariesInfo: () => [...systemKeys.binaries(), 'info'] as const,
 } as const
+
+export const systemConfigQueryOptions = () =>
+  queryOptions({
+    queryKey: systemKeys.config(),
+    queryFn: async () => invoke<TAppConfig>('get_app_config'),
+    staleTime: Infinity,
+  })
 
 export const systemHealthQueryOptions = () =>
   queryOptions({
     queryKey: systemKeys.health(),
-    queryFn: async () => invoke<TSystemHealthInfo>("get_system_health"),
+    queryFn: async () => invoke<TSystemHealthInfo>('get_system_health'),
     staleTime: 10_000,
   })
 
@@ -60,7 +74,7 @@ export const systemUpdatesQueryOptions = () =>
 export const systemBinariesCheckQueryOptions = () =>
   queryOptions({
     queryKey: systemKeys.binariesCheck(),
-    queryFn: async () => invoke<boolean>("check_binaries"),
+    queryFn: async () => invoke<boolean>('check_binaries'),
     staleTime: Infinity,
     refetchInterval: false,
   })
@@ -68,7 +82,7 @@ export const systemBinariesCheckQueryOptions = () =>
 export const systemBinariesInfoQueryOptions = () =>
   queryOptions({
     queryKey: systemKeys.binariesInfo(),
-    queryFn: async () => invoke<TBinariesInfo>("get_binaries_info"),
+    queryFn: async () => invoke<TBinariesInfo>('get_binaries_info'),
     staleTime: Infinity,
     refetchInterval: false,
   })

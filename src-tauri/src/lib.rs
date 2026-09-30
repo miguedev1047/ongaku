@@ -9,10 +9,11 @@ use tauri::Manager;
 
 use crate::{
     commands::{
-        batch_delete_songs, batch_move_songs, cancel_download, check_binaries, delete_playlist,
-        delete_song, download_binaries, download_song, get_binaries_info, get_playlist_songs,
-        get_playlists, get_server_port, get_system_health, get_youtube_stream_url, library, move_song, new_playlist,
-        open_folder, rename_playlist, search_youtube, sync_library, DownloadManagerState,
+        batch_delete_songs, batch_move_songs, cancel_download, change_app_dir, check_binaries,
+        delete_playlist, delete_song, download_binaries, download_song, get_app_config,
+        get_binaries_info, get_playlist_songs, get_playlists, get_server_port, get_system_health,
+        get_youtube_stream_url, library, move_song, new_playlist, open_folder, rename_playlist,
+        search_youtube, select_directory, set_app_config, sync_library, DownloadManagerState,
     },
     helpers::{ensure_dirs, get_db_path, single_instance_plugin},
     server::init_server,
@@ -63,7 +64,11 @@ pub fn run() {
             get_system_health,
             search_youtube,
             get_youtube_stream_url,
-            open_folder
+            open_folder,
+            get_app_config,
+            set_app_config,
+            select_directory,
+            change_app_dir
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

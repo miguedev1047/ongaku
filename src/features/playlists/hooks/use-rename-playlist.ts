@@ -1,18 +1,17 @@
-import { useEffect } from "react"
-import { useForm } from "@tanstack/react-form"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { useNavigate } from "@tanstack/react-router"
-import { invoke } from "@tauri-apps/api/core"
-import { toast } from "sonner"
-import { playlistsQueryOpts } from "@/shared/queries/playlists"
-import { useLocalPlayerStore } from "@/shared/stores/player"
-import { useActivePlayerStore } from "@/shared/stores/player"
+import { useEffect } from 'react'
+import { useForm } from '@tanstack/react-form'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { invoke } from '@tauri-apps/api/core'
+import { toast } from 'sonner'
+import { playlistsQueryOpts } from '@/shared/queries/playlists'
+import { useLocalPlayerStore } from '@/shared/stores/player'
+import { useActivePlayerStore } from '@/shared/stores/player'
 import {
   renamePlaylistSchema,
-  type TRenamePlaylistSchema
-} from "@/shared/schemas/playlists"
-import type { TPlaylistAction } from "@/shared/types/playlist-actions"
-import type { TPlaylist } from "@/shared/types/playlist.types"
+  type TRenamePlaylistSchema,
+} from '@/shared/schemas/playlists'
+import type { TPlaylistAction } from '@/shared/types/playlist-actions'
+import type { TPlaylist } from '@/shared/types/playlist.types'
 
 interface UseRenamePlaylistProps {
   playlist: TPlaylist
@@ -23,22 +22,21 @@ interface UseRenamePlaylistProps {
 export function useRenamePlaylist({
   playlist,
   open,
-  onSuccess
+  onSuccess,
 }: UseRenamePlaylistProps) {
   const queryClient = useQueryClient()
   const playlistsQueryKey = playlistsQueryOpts().queryKey
-  const navigate = useNavigate()
 
   const mutation = useMutation({
     mutationFn: async (value: TRenamePlaylistSchema) => {
       const trimmedNewName = value.new_name.trim()
-      return await invoke<TPlaylistAction>("rename_playlist", {
+      return await invoke<TPlaylistAction>('rename_playlist', {
         oldName: playlist.name,
-        newName: trimmedNewName
+        newName: trimmedNewName,
       })
     },
     onSuccess: (data, variables) => {
-      if (data.code === "ERROR") {
+      if (data.code === 'ERROR') {
         toast.error(data.message)
         return
       }
@@ -56,14 +54,14 @@ export function useRenamePlaylist({
         queue,
         setQueue,
         currentSong,
-        setCurrentSong
+        setCurrentSong,
       } = useLocalPlayerStore.getState()
 
       if (
-        playbackContext.type === "playlist" &&
+        playbackContext.type === 'playlist' &&
         playbackContext.playlistName === playlist.name
       ) {
-        setPlaybackContext({ type: "playlist", playlistName: trimmedNewName })
+        setPlaybackContext({ type: 'playlist', playlistName: trimmedNewName })
         useActivePlayerStore.getState().setActivePlaylist(trimmedNewName)
 
         const updatedQueue = queue.map((s) =>
@@ -73,9 +71,9 @@ export function useRenamePlaylist({
                 playlist_name: trimmedNewName,
                 path: s.path
                   .replace(`/${playlist.name}/`, `/${trimmedNewName}/`)
-                  .replace(`\\${playlist.name}\\`, `\\${trimmedNewName}\\`)
+                  .replace(`\\${playlist.name}\\`, `\\${trimmedNewName}\\`),
               }
-            : s
+            : s,
         )
         setQueue(updatedQueue)
 
@@ -86,49 +84,44 @@ export function useRenamePlaylist({
               playlist_name: trimmedNewName,
               path: currentSong.path
                 .replace(`/${playlist.name}/`, `/${trimmedNewName}/`)
-                .replace(`\\${playlist.name}\\`, `\\${trimmedNewName}\\`)
+                .replace(`\\${playlist.name}\\`, `\\${trimmedNewName}\\`),
             },
             updatedQueue,
-            { type: "playlist", playlistName: trimmedNewName }
+            { type: 'playlist', playlistName: trimmedNewName },
           )
         }
       }
-
-      navigate({
-        to: "/playlists/$playlistName",
-        params: { playlistName: trimmedNewName }
-      })
     },
     onError: (err) => {
       console.log(err)
-      toast.error("An error occurred while renaming the playlist")
-    }
+      toast.error('An error occurred while renaming the playlist')
+    },
   })
 
   const form = useForm({
     defaultValues: {
       old_name: playlist.name,
-      new_name: playlist.name
+      new_name: playlist.name,
     },
     validators: {
-      onSubmit: renamePlaylistSchema
+      onSubmit: renamePlaylistSchema,
     },
     onSubmit: ({ value }) => {
       mutation.mutate(value)
-    }
+    },
   })
 
   useEffect(() => {
     if (open) {
       form.reset({
         old_name: playlist.name,
-        new_name: playlist.name
+        new_name: playlist.name,
       })
     }
   }, [open, playlist.name])
 
   return {
     form,
-    isPending: mutation.isPending
+    isPending: mutation.isPending,
   }
 }
