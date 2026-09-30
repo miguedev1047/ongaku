@@ -1,168 +1,33 @@
-import { createFileRoute } from "@tanstack/react-router"
-import { youtubeSearchSchema } from "@/shared/schemas/youtube-search"
+import { createFileRoute } from '@tanstack/react-router'
+import { youtubeSearchSchema } from '@/shared/schemas/youtube-search'
 import {
-  SearchYoutubeList,
   YoutubeSearchHeader,
-  YoutubeSongInfo
-} from "@/features/youtube-search/components"
-import { Suspense } from "react"
-import { Button } from "@/components/ui/button"
-import { Spinner } from "@/components/ui/spinner"
-import {
-  Empty,
-  EmptyContent,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle
-} from "@/components/ui/empty"
-import { useStreamingPlayerStore } from "@/shared/stores/player"
-import { useBinaries } from "@/features/download-queue/hooks"
-import {
-  YoutubeSearchEmpty,
-  YoutubeLoading
-} from "@/features/youtube-search/ui-states"
-import { AlertIcon, Download01Icon } from "@hugeicons/core-free-icons"
-import { HugeiconsIcon } from "@hugeicons/react"
-import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
-import { Show } from "@/components/utility/show"
-import { RouteSection } from "@/components/ui/route-section"
-import { RoutePendingState, RouteErrorState } from "@/components/route-ui-state"
+  YoutubeSearchActive,
+} from '@/features/youtube-search/components'
+import { YoutubeToolsMissing } from '@/features/youtube-search/ui-states'
+import { useBinaries } from '@/features/download-queue/hooks'
+import { Show } from '@/components/utility/show'
+import { RoutePendingState, RouteErrorState } from '@/components/route-ui-state'
 
-export const Route = createFileRoute("/search-youtube/")({
+export const Route = createFileRoute('/search-youtube/')({
   component: RouteComponent,
   pendingComponent: () => (
     <RoutePendingState
-      title="Loading YouTube Search"
-      message="Preparing search service"
+      title='Loading YouTube Search'
+      message='Preparing search service'
     />
   ),
   errorComponent: RouteErrorState,
   validateSearch: youtubeSearchSchema,
-  loaderDeps: ({ search: { q } }) => ({ q })
+  loaderDeps: ({ search: { q } }) => ({ q }),
 })
-
-interface InstallActionProps {
-  isPending: boolean
-  onInstall: () => void
-}
-
-function InstallAction({ isPending, onInstall }: InstallActionProps) {
-  return (
-    <Show
-      when={!isPending}
-      fallback={
-        <Button
-          disabled
-          size="sm"
-          className="gap-2"
-        >
-          <Spinner className="size-3.5" />
-          Installing tools...
-        </Button>
-      }
-    >
-      <Button
-        onClick={onInstall}
-        size="sm"
-        className="gap-2"
-      >
-        <HugeiconsIcon
-          icon={Download01Icon}
-          className="size-3.5"
-        />
-        Install Tools
-      </Button>
-    </Show>
-  )
-}
-
-function YoutubeToolsMissing({ isPending, onInstall }: InstallActionProps) {
-  return (
-    <RouteSection className="flex items-center justify-center select-none">
-      <Empty className="border border-border/40 bg-card/30 max-w-lg w-full">
-        <EmptyMedia
-          variant="icon"
-          className="bg-amber-500/10 text-amber-500"
-        >
-          <HugeiconsIcon
-            icon={AlertIcon}
-            className="size-5"
-          />
-        </EmptyMedia>
-        <EmptyHeader>
-          <EmptyTitle>Tools Required</EmptyTitle>
-          <EmptyDescription>
-            YouTube search and audio playback require auxiliary binaries (
-            <span className="font-mono text-foreground font-semibold">
-              yt-dlp
-            </span>{" "}
-            and{" "}
-            <span className="font-mono text-foreground font-semibold">
-              ffmpeg
-            </span>
-            ). This content cannot be displayed until they are installed.
-          </EmptyDescription>
-        </EmptyHeader>
-        <EmptyContent>
-          <InstallAction
-            isPending={isPending}
-            onInstall={onInstall}
-          />
-        </EmptyContent>
-      </Empty>
-    </RouteSection>
-  )
-}
-
-function SearchResultsSection({ query }: { query: string }) {
-  const hasQuery = Boolean(query.trim())
-
-  return (
-    <Show
-      when={hasQuery}
-      fallback={
-        <div className="size-full overflow-y-auto no-scrollbar scroll-fade-y">
-          <YoutubeSearchEmpty />
-        </div>
-      }
-    >
-      <Suspense fallback={<YoutubeLoading />}>
-        <SearchYoutubeList />
-      </Suspense>
-    </Show>
-  )
-}
-
-function ActiveTrackSidebar({ track }: { track: TYoutubeSearchResult | null }) {
-  return (
-    <Show when={track}>
-      <aside className="hidden md:flex w-72 lg:w-80 xl:w-96 h-full shrink-0 flex-col overflow-y-auto no-scrollbar">
-        <YoutubeSongInfo />
-      </aside>
-    </Show>
-  )
-}
-
-function YoutubeSearchActive({ initialQuery }: { initialQuery: string }) {
-  const activeTrack = useStreamingPlayerStore((state) => state.currentTrack)
-
-  return (
-    <RouteSection className="flex gap-4">
-      <div className="flex-1 min-h-0 overflow-hidden">
-        <SearchResultsSection query={initialQuery} />
-      </div>
-      <ActiveTrackSidebar track={activeTrack} />
-    </RouteSection>
-  )
-}
 
 function RouteComponent() {
   const { q } = Route.useSearch()
   const { isBinariesInstalled, isPending, installBinaries } = useBinaries()
 
   return (
-    <div className="size-full flex flex-col overflow-hidden">
+    <div className='size-full flex flex-col overflow-hidden'>
       <YoutubeSearchHeader initialQuery={q} />
       <Show
         when={isBinariesInstalled}

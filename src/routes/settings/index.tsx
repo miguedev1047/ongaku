@@ -7,10 +7,7 @@ import {
   systemConfigQueryOptions,
 } from '@/shared/queries/system'
 import { RouteSection } from '@/components/ui/route-section'
-import {
-  RoutePendingState,
-  RouteErrorState,
-} from '@/components/route-ui-state'
+import { RoutePendingState, RouteErrorState } from '@/components/route-ui-state'
 import {
   SettingsHeader,
   ServerHealthCard,
