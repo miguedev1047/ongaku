@@ -5,8 +5,6 @@ pub mod db;
 pub mod helpers;
 mod server;
 
-use tauri::Manager;
-
 use crate::{
     commands::{
         batch_delete_songs, batch_move_songs, cancel_download, change_app_dir, check_binaries,
@@ -15,8 +13,7 @@ use crate::{
         get_youtube_stream_url, library, move_song, new_playlist, open_folder, rename_playlist,
         search_youtube, select_directory, set_app_config, sync_library, DownloadManagerState,
     },
-    helpers::{ensure_dirs, get_db_path, single_instance_plugin},
-    server::init_server,
+    helpers::{setup_app, single_instance_plugin},
 };
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -28,19 +25,7 @@ pub fn run() {
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
         .setup(|app| {
-            ensure_dirs()?;
-
-            let db_pool = crate::db::init_db(&get_db_path())
-                .map_err(|err| format!("Failed to initialize database: {}", err))?;
-
-            if let Ok(mut conn) = db_pool.get() {
-                let _ = crate::db::sync::sync_library(&mut conn);
-            }
-
-            app.manage(db_pool);
-
-            init_server(app)?;
-
+            setup_app(app)?;
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![

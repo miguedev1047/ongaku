@@ -1,36 +1,57 @@
-use std::fs::{create_dir_all, exists};
+use std::fs::create_dir_all;
 
 use crate::helpers::{
     ensure_paths_config, get_bin_dir, get_cache_dir, get_config_dir, get_db_dir,
-    get_playlist_default_dir, get_playlist_dir, get_staging_dir,
+    get_playlist_dir, get_staging_dir,
 };
 
-pub fn ensure_dirs() -> std::io::Result<()> {
+pub fn ensure_dirs() -> Result<(), Box<dyn std::error::Error>> {
     let paths = [
-        get_playlist_dir(),
-        get_cache_dir(),
-        get_bin_dir(),
-        get_config_dir(),
-        get_playlist_default_dir(),
-        get_db_dir(),
+        ("playlists", get_playlist_dir()),
+        ("cache", get_cache_dir()),
+        ("bin", get_bin_dir()),
+        ("config", get_config_dir()),
+        ("database", get_db_dir()),
     ];
 
-    for path in &paths {
-        if !exists(path)? {
-            println!("Create the folder: {}", path.display())
+    for (name, path) in &paths {
+        if !path.exists() {
+            println!("[ONGAKU]: Creating {} directory: {}", name, path.display());
         }
 
-        create_dir_all(path)?;
+        create_dir_all(path).map_err(|err| {
+            format!(
+                "Failed to create {} directory at '{}': {}",
+                name,
+                path.display(),
+                err
+            )
+        })?;
     }
 
     // Clean any leftover staging files from previous sessions
     let staging_dir = get_staging_dir();
     if staging_dir.exists() {
-        let _ = std::fs::remove_dir_all(&staging_dir);
+        if let Err(err) = std::fs::remove_dir_all(&staging_dir) {
+            eprintln!(
+                "[ONGAKU WARNING]: Could not clean staging directory '{}': {}",
+                staging_dir.display(),
+                err
+            );
+        }
     }
-    create_dir_all(&staging_dir)?;
 
-    ensure_paths_config()?;
+    create_dir_all(&staging_dir).map_err(|err| {
+        format!(
+            "Failed to create staging directory at '{}': {}",
+            staging_dir.display(),
+            err
+        )
+    })?;
+
+    ensure_paths_config().map_err(|err| {
+        format!("Failed to write initial paths configuration file: {}", err)
+    })?;
 
     Ok(())
 }

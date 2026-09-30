@@ -8,7 +8,6 @@ use std::sync::{OnceLock, RwLock};
 pub struct AppPaths {
     pub app_dir: PathBuf,
     pub playlist_dir: PathBuf,
-    pub playlist_default_dir: PathBuf,
     pub cache_dir: PathBuf,
     pub cache_pictures_dir: PathBuf,
     pub bin_dir: PathBuf,
@@ -42,7 +41,10 @@ pub fn get_app_dir() -> PathBuf {
             return custom.clone();
         }
     }
-    let path = dirs::audio_dir().expect("The dir path not found");
+    let path = dirs::audio_dir()
+        .or_else(dirs::data_local_dir)
+        .or_else(dirs::home_dir)
+        .unwrap_or_else(|| PathBuf::from("."));
     path.join("ongaku")
 }
 
@@ -70,10 +72,6 @@ pub fn get_db_path() -> PathBuf {
 
 pub fn get_playlist_dir() -> PathBuf {
     get_app_dir().join("playlists")
-}
-
-pub fn get_playlist_default_dir() -> PathBuf {
-    get_playlist_dir().join("Default")
 }
 
 pub fn get_cache_dir() -> PathBuf {
@@ -104,7 +102,6 @@ pub fn get_app_paths() -> AppPaths {
     AppPaths {
         app_dir: get_app_dir(),
         playlist_dir: get_playlist_dir(),
-        playlist_default_dir: get_playlist_default_dir(),
         cache_dir: get_cache_dir(),
         cache_pictures_dir: get_cache_pictures_dir(),
         bin_dir: get_bin_dir(),
