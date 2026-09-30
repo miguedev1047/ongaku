@@ -28,7 +28,7 @@ interface ActivePlayerStore {
 
 export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => ({
   activePlayer: null,
-  activePlaylist: "Default",
+  activePlaylist: "",
   lastNonZeroVolume: 80,
 
   setActivePlayer: (type) => set({ activePlayer: type }),
@@ -70,7 +70,7 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => ({
         ? resolvedContext.playlistName
         : resolvedContext?.type === "library"
           ? "Library"
-          : song?.playlist_name || "Default"
+          : song?.playlist_name || ""
 
     set({ activePlayer: "local", activePlaylist: nextPlaylist })
   },

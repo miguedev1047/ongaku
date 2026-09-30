@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Moon, Sun, ComputerIcon } from '@hugeicons/core-free-icons'
 import { useTheme } from '@/components/theme-provider'
-import { useUpdateConfig } from '@/shared/queries/config'
+import { useUpdateConfig } from '@/features/settings/hooks/use-config'
 
 export function ThemeSelection() {
   const { theme, setTheme } = useTheme()

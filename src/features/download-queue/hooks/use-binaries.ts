@@ -1,40 +1,39 @@
 import {
-  systemBinariesCheckQueryOptions,
-  systemBinariesInfoQueryOptions,
-  systemKeys,
-  type TBinariesInfo
-} from "@/shared/queries/system"
+  binariesCheckQueryOpts,
+  binariesInfoQueryOpts,
+  type TBinariesInfo,
+} from '@/shared/queries/binaries'
 import {
   useMutation,
   useQueryClient,
-  useSuspenseQuery
-} from "@tanstack/react-query"
-import { invoke } from "@tauri-apps/api/core"
-import { toast } from "sonner"
+  useSuspenseQuery,
+} from '@tanstack/react-query'
+import { invoke } from '@tauri-apps/api/core'
+import { toast } from 'sonner'
 
 export type { TBinariesInfo }
 
 export function useBinaries() {
   const { data: isBinariesInstalled } = useSuspenseQuery(
-    systemBinariesCheckQueryOptions()
+    binariesCheckQueryOpts()
   )
   const { data: binariesInfo } = useSuspenseQuery(
-    systemBinariesInfoQueryOptions()
+    binariesInfoQueryOpts()
   )
 
   const queryClient = useQueryClient()
 
   const mutation = useMutation({
     mutationFn: async () => {
-      return await invoke("download_binaries")
+      return await invoke('download_binaries')
     },
     onSuccess: () => {
-      toast.success("Tools installed successfully (yt-dlp & ffmpeg)")
-      queryClient.invalidateQueries({ queryKey: systemKeys.all })
+      toast.success('Tools installed successfully (yt-dlp & ffmpeg)')
+      queryClient.invalidateQueries({ queryKey: ['system'] })
     },
     onError: () => {
-      toast.error("An error occurred while downloading tools")
-    }
+      toast.error('An error occurred while downloading tools')
+    },
   })
 
   const installBinaries = () => {
@@ -45,6 +44,6 @@ export function useBinaries() {
     isBinariesInstalled,
     binariesInfo,
     isPending: mutation.isPending,
-    installBinaries
+    installBinaries,
   }
 }

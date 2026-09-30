@@ -1,9 +1,14 @@
-import { useState } from "react"
-import { useLocalPlayerStore, useActivePlayerStore } from "@/shared/stores/player"
-import { getPlaylistPath } from "@/shared/helpers/get-playlist-helper"
-import { openFolder } from "@/shared/helpers/open-folder"
-import { toast } from "sonner"
-import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
+import { useState } from 'react'
+import {
+  useLocalPlayerStore,
+  useActivePlayerStore,
+} from '@/shared/stores/player'
+import { getPlaylistPath } from '@/shared/helpers/get-playlist-helper'
+import { openFolder } from '@/shared/helpers/open-folder'
+import { toast } from 'sonner'
+import { useQuery } from '@tanstack/react-query'
+import { systemHealthQueryOpts } from '@/shared/queries/system-health'
+import type { TPlaylistSong } from '@/shared/types/playlist-songs.types'
 
 export interface UseLibrarySongActionsProps {
   song: TPlaylistSong
@@ -12,6 +17,7 @@ export interface UseLibrarySongActionsProps {
 export function useLibrarySongActions({ song }: UseLibrarySongActionsProps) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false)
+  const { data: health } = useQuery(systemHealthQueryOpts())
 
   const currentSong = useLocalPlayerStore((state) => state.currentSong)
   const playerState = useLocalPlayerStore((state) => state.playerState)
@@ -20,23 +26,28 @@ export function useLibrarySongActions({ song }: UseLibrarySongActionsProps) {
   const playSong = useActivePlayerStore((state) => state.playSong)
 
   const isCurrentSong = currentSong?.id === song.id
-  const isPlaying = isCurrentSong && playerState === "playing"
+  const isPlaying = isCurrentSong && playerState === 'playing'
 
   const handleTogglePlayback = () => {
+    if (health && !health.serverHealthy) {
+      toast.error('Media server is offline. Cannot play local tracks.')
+      return
+    }
+
     if (isCurrentSong) {
       if (isPlaying) {
-        setPlayerState("paused")
+        setPlayerState('paused')
         audioRef?.pause()
       } else {
-        setPlayerState("playing")
+        setPlayerState('playing')
         audioRef?.play().catch(() => {
-          toast.error("An error occurred while playing the song")
+          toast.error('An error occurred while playing the song')
         })
       }
       return
     }
 
-    playSong(song, { type: "library" })
+    playSong(song, { type: 'library' })
   }
 
   const handleOpenFolder = async () => {
@@ -45,7 +56,7 @@ export function useLibrarySongActions({ song }: UseLibrarySongActionsProps) {
       await openFolder(songPath)
       toast.info(`Opened folder for "${song.playlist_name}"`)
     } catch {
-      toast.error("Error opening playlist folder")
+      toast.error('Error opening playlist folder')
     }
   }
 
@@ -57,6 +68,6 @@ export function useLibrarySongActions({ song }: UseLibrarySongActionsProps) {
     isMoveDialogOpen,
     setIsMoveDialogOpen,
     handleTogglePlayback,
-    handleOpenFolder
+    handleOpenFolder,
   }
 }

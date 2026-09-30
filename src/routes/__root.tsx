@@ -13,7 +13,8 @@ import { useDownloadQueueListener } from '@/features/download-queue/hooks'
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar'
 import { AppSidebar } from '@/blocks/app-sidebar'
 
-import { systemConfigQueryOptions } from '@/shared/queries/system'
+import { systemConfigQueryOpts } from '@/shared/queries/config'
+import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 
 interface RouteContext {
   queryClient: QueryClient
@@ -24,7 +25,8 @@ export const Route = createRootRouteWithContext<RouteContext>()({
   component: RootComponent,
   beforeLoad: async ({ context }) => {
     const serverPort = await invoke<number>('get_server_port')
-    context.queryClient.ensureQueryData(systemConfigQueryOptions())
+    context.queryClient.query(systemConfigQueryOpts())
+    context.queryClient.query(systemHealthQueryOpts())
     return { serverPort }
   },
 })

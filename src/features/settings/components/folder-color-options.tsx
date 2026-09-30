@@ -3,14 +3,14 @@ import { cn } from 'cn'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { FolderIcon } from '@hugeicons/core-free-icons'
 import { useQuery } from '@tanstack/react-query'
-import { systemConfigQueryOptions } from '@/shared/queries/system'
-import { useUpdateConfig } from '@/shared/queries/config'
+import { systemConfigQueryOpts } from '@/shared/queries/config'
+import { useUpdateConfig } from '@/features/settings/hooks/use-config'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Folder } from '@/components/ui/folder'
 import { FOLDER_COLOR_PRESETS } from '@/constants'
 
 export function FolderColorOptions() {
-  const { data: config } = useQuery(systemConfigQueryOptions())
+  const { data: config } = useQuery(systemConfigQueryOpts())
   const updateConfig = useUpdateConfig()
 
   const currentColor = config?.folder_colors ?? '#507dbc'

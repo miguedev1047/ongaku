@@ -1,4 +1,4 @@
-import { systemUpdatesQueryOptions } from "@/shared/queries/system"
+import { updatesQueryOpts } from "@/shared/queries/updates"
 import { useUpdateStore } from "@/shared/stores/actions"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { relaunch } from "@tauri-apps/plugin-process"
@@ -7,7 +7,7 @@ import { toast } from "sonner"
 const RESTARTING_DELAY = 1500
 
 export function useUpdater() {
-  const { data: update } = useQuery(systemUpdatesQueryOptions())
+  const { data: update } = useQuery(updatesQueryOpts())
 
   const progress = useUpdateStore((state) => state.progress)
   const setProgress = useUpdateStore((state) => state.setProgress)

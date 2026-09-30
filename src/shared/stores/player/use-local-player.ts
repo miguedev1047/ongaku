@@ -5,7 +5,7 @@ import type { LocalPlayerState, PlaybackContext } from "./types"
 export interface LocalPlayerStore {
   audioRef: HTMLAudioElement | null
   currentSong: TPlaylistSong | null
-  currentPlaylist: string | "Default"
+  currentPlaylist: string
   playbackContext: PlaybackContext
   queue: readonly TPlaylistSong[]
   isShuffle: boolean
@@ -24,7 +24,7 @@ export interface LocalPlayerStore {
   ) => void
   setQueue: (queue: readonly TPlaylistSong[]) => void
   removeFromQueue: (songId: string) => void
-  setCurrentPlaylist: (playlist: string | "Default") => void
+  setCurrentPlaylist: (playlist: string) => void
   setPlaybackContext: (context: PlaybackContext) => void
   setIsShuffle: (isShuffle: boolean) => void
   setIsLoop: (isLoop: boolean) => void
@@ -40,8 +40,8 @@ export interface LocalPlayerStore {
 export const useLocalPlayerStore = create<LocalPlayerStore>((set) => ({
   audioRef: null,
   currentSong: null,
-  currentPlaylist: "Default",
-  playbackContext: { type: "playlist", playlistName: "Default" },
+  currentPlaylist: "",
+  playbackContext: { type: "library" },
   queue: [],
   isLoop: false,
   isShuffle: false,

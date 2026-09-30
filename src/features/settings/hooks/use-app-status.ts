@@ -1,11 +1,9 @@
-import { useQuery } from "@tanstack/react-query"
-import {
-  systemUpdatesQueryOptions,
-  systemBinariesInfoQueryOptions,
-  systemHealthQueryOptions
-} from "@/shared/queries/system"
+import { useQuery } from '@tanstack/react-query'
+import { updatesQueryOpts } from '@/shared/queries/updates'
+import { binariesInfoQueryOpts } from '@/shared/queries/binaries'
+import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 
-export type AppStateStatus = "idle" | "update" | "error"
+export type AppStateStatus = 'idle' | 'update' | 'error'
 
 export interface AppStatusResult {
   status: AppStateStatus
@@ -18,25 +16,25 @@ export interface AppStatusResult {
 }
 
 export function useAppStatus(): AppStatusResult {
-  const { data: update } = useQuery(systemUpdatesQueryOptions())
-  const { data: binariesInfo } = useQuery(systemBinariesInfoQueryOptions())
-  const { data: health } = useQuery(systemHealthQueryOptions())
+  const { data: update } = useQuery(updatesQueryOpts())
+  const { data: binariesInfo } = useQuery(binariesInfoQueryOpts())
+  const { data: health } = useQuery(systemHealthQueryOpts())
 
   const errorReasons: string[] = []
 
   // Check 1: Auxiliary binaries
   if (binariesInfo) {
     if (!binariesInfo.ytdlp_installed) {
-      errorReasons.push("yt-dlp is not installed")
+      errorReasons.push('yt-dlp is not installed')
     }
     if (!binariesInfo.ffmpeg_installed) {
-      errorReasons.push("ffmpeg is not installed")
+      errorReasons.push('ffmpeg is not installed')
     }
   }
 
   // Check 2: Server health
   if (health && !health.serverHealthy) {
-    errorReasons.push("Internal audio streaming server is offline")
+    errorReasons.push('Internal audio streaming server is offline')
   }
 
   // Check 3: Directory permissions and existence
@@ -55,35 +53,35 @@ export function useAppStatus(): AppStatusResult {
 
   if (hasError) {
     return {
-      status: "error",
-      badgeText: "Issue",
-      tooltipText: `Settings • ${errorReasons.length} system ${errorReasons.length === 1 ? "issue" : "issues"} detected`,
+      status: 'error',
+      badgeText: 'Issue',
+      tooltipText: `Settings • ${errorReasons.length} system ${errorReasons.length === 1 ? 'issue' : 'issues'} detected`,
       hasError: true,
       hasUpdate,
       updateVersion: update?.version,
-      errorReasons
+      errorReasons,
     }
   }
 
   if (hasUpdate && update) {
     return {
-      status: "update",
+      status: 'update',
       badgeText: `v${update.version}`,
       tooltipText: `Settings • Update available: v${update.version}`,
       hasError: false,
       hasUpdate: true,
       updateVersion: update.version,
-      errorReasons: []
+      errorReasons: [],
     }
   }
 
   return {
-    status: "idle",
+    status: 'idle',
     badgeText: undefined,
-    tooltipText: "Settings & System Status",
+    tooltipText: 'Settings & System Status',
     hasError: false,
     hasUpdate: false,
     updateVersion: undefined,
-    errorReasons: []
+    errorReasons: [],
   }
 }

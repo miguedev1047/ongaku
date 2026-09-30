@@ -1,21 +1,20 @@
 import {
-  systemKeys,
-  systemHealthQueryOptions,
+  systemHealthQueryOpts,
   type TSystemHealthInfo,
-  type TDirectoryHealth
-} from "@/shared/queries/system"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+  type TDirectoryHealth,
+} from '@/shared/queries/system-health'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 export type { TSystemHealthInfo, TDirectoryHealth }
 
 export function useSystemHealth() {
   const { data: health, isLoading, isError, refetch } = useQuery(
-    systemHealthQueryOptions()
+    systemHealthQueryOpts()
   )
   const queryClient = useQueryClient()
 
   const refreshHealth = () => {
-    queryClient.invalidateQueries({ queryKey: systemKeys.all })
+    queryClient.invalidateQueries({ queryKey: ['system'] })
     refetch()
   }
 
@@ -23,6 +22,6 @@ export function useSystemHealth() {
     health,
     isLoading,
     isError,
-    refreshHealth
+    refreshHealth,
   }
 }

@@ -26,7 +26,7 @@ import { DeletePlaylist } from "@/features/playlists/components/delete-playlist"
 import { RenamePlaylist } from "@/features/playlists/components/rename-playlist";
 import { Show } from "@/components/utility/show";
 import { usePlaylistItem } from "@/features/playlists/hooks";
-import { systemConfigQueryOptions } from "@/shared/queries/system";
+import { systemConfigQueryOpts } from "@/shared/queries/config";
 import type { TPlaylist } from "@/shared/types/playlist.types";
 
 interface PlaylistItemProps {
@@ -35,7 +35,7 @@ interface PlaylistItemProps {
 
 export const PlaylistItem = memo(
   function PlaylistItem({ playlist }: PlaylistItemProps) {
-    const { data: config } = useQuery(systemConfigQueryOptions());
+    const { data: config } = useQuery(systemConfigQueryOpts());
     const folderColor = config?.folder_colors ?? "#507dbc";
 
     const {

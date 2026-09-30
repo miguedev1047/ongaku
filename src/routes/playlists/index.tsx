@@ -3,7 +3,7 @@ import { PlaylistHeader, PlaylistList } from '@/features/playlists/components'
 import { PlaylistsLoadingState } from '@/features/playlists/ui-state'
 import { RoutePendingState, RouteErrorState } from '@/components/route-ui-state'
 import { playlistsQueryOpts } from '@/shared/queries/playlists'
-import { systemConfigQueryOptions } from '@/shared/queries/system'
+import { systemConfigQueryOpts } from '@/shared/queries/config'
 import { createFileRoute } from '@tanstack/react-router'
 import { Suspense } from 'react'
 
@@ -17,7 +17,7 @@ export const Route = createFileRoute('/playlists/')({
   errorComponent: RouteErrorState,
   loader: async ({ context }) => {
     context.queryClient.query(playlistsQueryOpts())
-    context.queryClient.query(systemConfigQueryOptions())
+    context.queryClient.query(systemConfigQueryOpts())
   },
   component: RouteComponent,
 })

@@ -3,10 +3,10 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { CloudServerIcon, CheckmarkCircle02Icon, AlertCircleIcon } from "@hugeicons/core-free-icons"
 import { Show } from "@/components/utility/show"
 import { useSuspenseQuery } from "@tanstack/react-query"
-import { systemHealthQueryOptions } from "@/shared/queries/system"
+import { systemHealthQueryOpts } from "@/shared/queries/system-health"
 
 export function ServerHealthCard() {
-  const { data: health } = useSuspenseQuery(systemHealthQueryOptions())
+  const { data: health } = useSuspenseQuery(systemHealthQueryOpts())
 
   const isHealthy = health.serverHealthy && health.serverPort > 0
   const port = health.serverPort

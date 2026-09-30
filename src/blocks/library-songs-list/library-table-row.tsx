@@ -1,57 +1,66 @@
-import React, { memo } from "react"
-import type { Row } from "@tanstack/react-table"
-import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
-import type { LibraryTableFeatures } from "@/blocks/library-songs-list/library-table-features"
-import { Checkbox } from "@/components/ui/checkbox"
-import { CoverImage } from "@/components/cover-image"
-import { useSongUtils } from "@/hooks/use-song-utils"
-import { formatDuration } from "@/shared/helpers/format-duration"
-import { useLocalPlayerStore } from "@/shared/stores/player"
-import { useActivePlayerStore } from "@/shared/stores/player"
-import { LibrarySongActions } from "@/blocks/song-actions/library-songs"
-import { isItemAction } from "@/shared/helpers/is-item-action"
-import { Subscribe } from "@tanstack/react-table"
-import { TableRow, TableCell } from "@/components/ui/table"
-import { Show } from "@/components/utility/show"
+import React, { memo } from 'react'
+import type { Row } from '@tanstack/react-table'
+import type { TPlaylistSong } from '@/shared/types/playlist-songs.types'
+import type { LibraryTableFeatures } from '@/blocks/library-songs-list/library-table-features'
+import { Checkbox } from '@/components/ui/checkbox'
+import { CoverImage } from '@/components/cover-image'
+import { useSongUtils } from '@/hooks/use-song-utils'
+import { formatDuration } from '@/shared/helpers/format-duration'
+import { useLocalPlayerStore } from '@/shared/stores/player'
+import { useActivePlayerStore } from '@/shared/stores/player'
+import { LibrarySongActions } from '@/blocks/song-actions/library-songs'
+import { isItemAction } from '@/shared/helpers/is-item-action'
+import { Subscribe } from '@tanstack/react-table'
+import { TableRow, TableCell } from '@/components/ui/table'
+import { Show } from '@/components/utility/show'
+import { useQuery } from '@tanstack/react-query'
+import { systemHealthQueryOpts } from '@/shared/queries/system-health'
+import { toast } from 'sonner'
 
 interface LibrarySongTableRowProps {
   row: Row<LibraryTableFeatures, TPlaylistSong>
 }
 
 export const LibrarySongTableRow = memo(function LibrarySongTableRow({
-  row
+  row,
 }: LibrarySongTableRowProps) {
   const song = row.original
   const { getCoverUrl } = useSongUtils()
+  const { data: health } = useQuery(systemHealthQueryOpts())
 
   const isActiveTrack = useLocalPlayerStore(
-    (state) => state.currentSong?.id === song.id
+    (state) => state.currentSong?.id === song.id,
   )
   const playSong = useActivePlayerStore((state) => state.playSong)
 
   const handleRowClick = (e: React.MouseEvent) => {
     if (isItemAction(e)) return
 
+    if (health && !health.serverHealthy) {
+      toast.error('Media server is offline. Cannot play local tracks.')
+      return
+    }
+
     if (!isActiveTrack) {
-      playSong(song, row.table.options.data, { type: "library" })
+      playSong(song, row.table.options.data, { type: 'library' })
     }
   }
 
   const coverUrl = getCoverUrl({ song })
-  const artistName = song.metadata.artist || "Unknown Artist"
-  const albumName = song.metadata.album || "Unknown Album"
+  const artistName = song.metadata.artist || 'Unknown Artist'
+  const albumName = song.metadata.album || 'Unknown Album'
 
   return (
     <TableRow
       onClick={handleRowClick}
       data-active-track={isActiveTrack}
-      className="group w-full h-full px-3 gap-3 border-b border-border/20 cursor-pointer select-none"
+      className='group w-full h-full px-3 gap-3 border-b border-border/20 cursor-pointer select-none'
     >
       {/* 1. Selection / Index (fixed width: 32px) */}
       <TableCell
-        className="w-8 shrink-0 justify-center p-0"
+        className='w-8 shrink-0 justify-center p-0'
         onClick={(e) => e.stopPropagation()}
-        data-slot="item-actions"
+        data-slot='item-actions'
       >
         <Subscribe
           source={row.table.atoms.rowSelection}
@@ -65,12 +74,12 @@ export const LibrarySongTableRow = memo(function LibrarySongTableRow({
             <Show
               when={hasSelection}
               fallback={
-                <div className="size-full flex items-center justify-center">
-                  <span className="text-xs font-mono text-muted-foreground/70 group-hover:hidden">
+                <div className='size-full flex items-center justify-center'>
+                  <span className='text-xs font-mono text-muted-foreground/70 group-hover:hidden'>
                     {row.index + 1}
                   </span>
                   <Checkbox
-                    className="hidden group-hover:flex"
+                    className='hidden group-hover:flex'
                     checked={false}
                     onCheckedChange={() => row.toggleSelected()}
                     aria-label={`Select ${song.name}`}
@@ -89,41 +98,41 @@ export const LibrarySongTableRow = memo(function LibrarySongTableRow({
       </TableCell>
 
       {/* 2. Cover image (fixed: 36px) */}
-      <TableCell className="size-9 shrink-0 p-0">
-        <div className="size-9 rounded-md overflow-hidden bg-muted">
+      <TableCell className='size-9 shrink-0 p-0'>
+        <div className='size-9 rounded-md overflow-hidden bg-muted'>
           <CoverImage
             src={coverUrl}
             alt={song.name}
-            className="size-full object-cover"
+            className='size-full object-cover'
           />
         </div>
       </TableCell>
 
       {/* 3. Title & Audio Format badge (fluid flex-1 min-w-0) */}
-      <TableCell className="flex-1 min-w-0 flex items-center gap-2 p-0">
-        <span className="text-xs font-medium text-foreground truncate">
+      <TableCell className='flex-1 min-w-0 flex items-center gap-2 p-0'>
+        <span className='text-xs font-medium text-foreground truncate'>
           {song.name}
         </span>
       </TableCell>
 
       {/* 4. Artist Column (fixed: 160px or fluid min-w-0) */}
-      <TableCell className="w-40 shrink-0 p-0 hidden sm:flex items-center text-xs text-muted-foreground truncate">
-        <span className="truncate w-full">{artistName}</span>
+      <TableCell className='w-40 shrink-0 p-0 hidden sm:flex items-center text-xs text-muted-foreground truncate'>
+        <span className='truncate w-full'>{artistName}</span>
       </TableCell>
 
       {/* 5. Album Column (fixed: 160px or fluid min-w-0) */}
-      <TableCell className="w-40 shrink-0 p-0 hidden md:flex items-center text-xs text-muted-foreground truncate">
-        <span className="truncate w-full">{albumName}</span>
+      <TableCell className='w-40 shrink-0 p-0 hidden md:flex items-center text-xs text-muted-foreground truncate'>
+        <span className='truncate w-full'>{albumName}</span>
       </TableCell>
 
       {/* 6. Duration (fixed: 64px) */}
-      <TableCell className="w-16 shrink-0 justify-end p-0 text-right font-mono text-xs text-muted-foreground">
+      <TableCell className='w-16 shrink-0 justify-end p-0 text-right font-mono text-xs text-muted-foreground'>
         {formatDuration(song.metadata.duration ?? 0)}
       </TableCell>
 
       {/* 7. Actions (fixed: 36px) */}
       <TableCell
-        className="w-9 shrink-0 justify-end p-0"
+        className='w-9 shrink-0 justify-end p-0'
         onClick={(e) => e.stopPropagation()}
       >
         <LibrarySongActions song={song} />

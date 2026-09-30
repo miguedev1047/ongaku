@@ -24,13 +24,13 @@
 - **Uso Obligatorio de `<Show>`**: Utilizar siempre el componente `Show` (importado desde `@/components/utility/show`).
 - **Sustitución de ternarias mediante `fallback`**:
   ```tsx
-  import { Show } from "@/components/utility/show"
+  import { Show } from '@/components/utility/show'
 
   // ❌ EVITAR (Ternaria):
   // {hasPlaylists ? <PlaylistsList /> : <EmptyPlaylists />}
 
   // ✅ CORRECTO (Uso canónico de Show con fallback):
-  <Show
+  ;<Show
     when={hasPlaylists}
     fallback={<EmptyPlaylists />}
   >
@@ -41,7 +41,10 @@
   En React, los hijos JSX normales se evalúan antes de pasarse al componente. Cuando los hijos dependan de que `when` no sea nulo o indefinido, **usar una función como hijo** para prevenir errores de acceso a propiedades en `null`/`undefined`:
   ```tsx
   // ✅ Pasa una función si el hijo depende de la existencia del objeto
-  <Show when={selectedUser} fallback={<p>No user selected</p>}>
+  <Show
+    when={selectedUser}
+    fallback={<p>No user selected</p>}
+  >
     {(user) => <UserProfile name={user.name} />}
   </Show>
   ```
@@ -60,3 +63,7 @@
 
 3. **Idioma de la Interfaz**:
    - Todo el contenido de cara al usuario en la UI (textos, botones, diálogos, títulos de columnas, aria-labels y notificaciones toast) debe estar en **inglés**.
+
+4. **ensureQuery Deprecado**:
+
+- En nuevas versiones esa api ".ensureQuery" para precargar datos esta deprecada y solo se usa ".query" en su lugar

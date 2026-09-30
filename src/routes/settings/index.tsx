@@ -1,11 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { systemHealthQueryOpts } from '@/shared/queries/system-health'
+import { updatesQueryOpts } from '@/shared/queries/updates'
 import {
-  systemHealthQueryOptions,
-  systemUpdatesQueryOptions,
-  systemBinariesInfoQueryOptions,
-  systemBinariesCheckQueryOptions,
-  systemConfigQueryOptions,
-} from '@/shared/queries/system'
+  binariesInfoQueryOpts,
+  binariesCheckQueryOpts,
+} from '@/shared/queries/binaries'
+import { systemConfigQueryOpts } from '@/shared/queries/config'
 import { RouteSection } from '@/components/ui/route-section'
 import { RoutePendingState, RouteErrorState } from '@/components/route-ui-state'
 import {
@@ -31,11 +31,11 @@ export const Route = createFileRoute('/settings/')({
   ),
   errorComponent: RouteErrorState,
   loader: ({ context }) => {
-    context.queryClient.query(systemConfigQueryOptions())
-    context.queryClient.query(systemHealthQueryOptions())
-    context.queryClient.query(systemUpdatesQueryOptions())
-    context.queryClient.query(systemBinariesInfoQueryOptions())
-    context.queryClient.query(systemBinariesCheckQueryOptions())
+    context.queryClient.query(systemConfigQueryOpts())
+    context.queryClient.query(systemHealthQueryOpts())
+    context.queryClient.query(updatesQueryOpts())
+    context.queryClient.query(binariesInfoQueryOpts())
+    context.queryClient.query(binariesCheckQueryOpts())
   },
   component: RouteComponent,
 })
