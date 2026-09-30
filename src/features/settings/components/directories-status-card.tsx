@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
@@ -18,60 +17,23 @@ import {
   AlertCircleIcon,
   FolderEditIcon,
 } from '@hugeicons/core-free-icons'
-import { openFolder } from '@/shared/helpers/open-folder'
-import { toast } from 'sonner'
 import { Show } from '@/components/utility/show'
-import { useSuspenseQuery } from '@tanstack/react-query'
-import {
-  systemHealthQueryOpts,
-  type TDirectoryHealth,
-} from '@/shared/queries/system-health'
-import { systemConfigQueryOpts } from '@/shared/queries/config'
-import {
-  useChangeAppDir,
-  selectDirectory,
-} from '@/features/settings/hooks/use-config'
+import { type TDirectoryHealth } from '@/shared/queries/system-health'
 import { Spinner } from '@/components/ui/spinner'
+import { useDirectoriesStatus } from '@/features/settings/hooks'
 
 export function DirectoriesStatusCard() {
-  const { data: health } = useSuspenseQuery(systemHealthQueryOpts())
-  const { data: config } = useSuspenseQuery(systemConfigQueryOpts())
-  const directories: TDirectoryHealth[] = health.directories
-
-  const [pendingPath, setPendingPath] = useState<string | null>(null)
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
-
-  const { mutate: changeAppDir, isPending: isChangingDir } = useChangeAppDir()
-
-  const handleOpen = async (path: string) => {
-    try {
-      await openFolder(path)
-    } catch {
-      toast.error(`Failed to open folder: ${path}`)
-    }
-  }
-
-  const handleSelectDirectory = async () => {
-    try {
-      const selected = await selectDirectory()
-      if (selected) {
-        setPendingPath(selected)
-        setIsConfirmOpen(true)
-      }
-    } catch {
-      toast.error('Failed to select directory')
-    }
-  }
-
-  const handleConfirmMove = () => {
-    if (!pendingPath) return
-    changeAppDir(pendingPath, {
-      onSettled: () => {
-        setIsConfirmOpen(false)
-        setPendingPath(null)
-      },
-    })
-  }
+  const {
+    config,
+    directories,
+    pendingPath,
+    isConfirmOpen,
+    setIsConfirmOpen,
+    isChangingDir,
+    handleOpen,
+    handleSelectDirectory,
+    handleConfirmMove,
+  } = useDirectoriesStatus()
 
   return (
     <div className='p-4 rounded-md border border-border/50 bg-card/60 backdrop-blur-sm space-y-4'>
