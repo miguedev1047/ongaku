@@ -1,17 +1,17 @@
-import { Outlet, createRootRouteWithContext } from "@tanstack/react-router"
-import { type QueryClient } from "@tanstack/react-query"
-import { invoke } from "@tauri-apps/api/core"
-import { Suspense } from "react"
-import { TanstackDevtool } from "@/components/tanstack-devtools"
-import { PlayerRoot } from "@/blocks/player-root"
-import { Toaster } from "@/components/ui/sonner"
-import { useShowApp } from "@/hooks/use-show-app"
-import { usePreventWebviewShortcuts } from "@/hooks/use-prevent-shortcuts"
-import { usePlayerShortcuts } from "@/hooks/use-player-shortcuts"
-import { DownloadQueueDialog } from "@/features/download-queue/components"
-import { useDownloadQueueListener } from "@/features/download-queue/hooks"
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
-import { AppSidebar } from "@/blocks/app-sidebar"
+import { Outlet, createRootRouteWithContext } from '@tanstack/react-router'
+import { type QueryClient } from '@tanstack/react-query'
+import { invoke } from '@tauri-apps/api/core'
+import { Suspense } from 'react'
+import { TanstackDevtool } from '@/components/tanstack-devtools'
+import { PlayerRoot } from '@/blocks/player-root'
+import { Toaster } from '@/components/ui/sonner'
+import { useShowApp } from '@/hooks/use-show-app'
+import { usePreventWebviewShortcuts } from '@/hooks/use-prevent-shortcuts'
+import { usePlayerShortcuts } from '@/hooks/use-player-shortcuts'
+import { DownloadQueueDialog } from '@/features/download-queue/components'
+import { useDownloadQueueListener } from '@/features/download-queue/hooks'
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar'
+import { AppSidebar } from '@/blocks/app-sidebar'
 
 interface RouteContext {
   queryClient: QueryClient
@@ -21,9 +21,9 @@ interface RouteContext {
 export const Route = createRootRouteWithContext<RouteContext>()({
   component: RootComponent,
   beforeLoad: async () => {
-    const serverPort = await invoke<number>("get_server_port")
+    const serverPort = await invoke<number>('get_server_port')
     return { serverPort }
-  }
+  },
 })
 
 function RootComponent() {
@@ -33,12 +33,12 @@ function RootComponent() {
   usePlayerShortcuts()
 
   return (
-    <SidebarProvider defaultOpen={true}>
-      <div className="h-screen w-screen flex flex-col overflow-hidden select-none">
+    <SidebarProvider defaultOpen={false}>
+      <div className='h-screen w-screen flex flex-col overflow-hidden select-none'>
         <TanstackDevtool />
-        <div className="flex-1 min-h-0 flex overflow-hidden">
+        <div className='flex-1 min-h-0 flex overflow-hidden'>
           <AppSidebar />
-          <SidebarInset className="flex-1 min-h-0 min-w-0 overflow-hidden flex flex-col">
+          <SidebarInset className='flex-1 min-h-0 min-w-0 overflow-hidden flex flex-col'>
             <Outlet />
           </SidebarInset>
         </div>

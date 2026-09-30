@@ -1,2 +1,3 @@
-export * from "./use-download-queue"
-export * from "./use-update"
+export * from './use-download-queue'
+export * from './use-update'
+export * from './use-youtube-search'

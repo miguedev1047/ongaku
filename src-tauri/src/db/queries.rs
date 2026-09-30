@@ -1,4 +1,5 @@
-use rusqlite::{params, Connection, Result};
+use rusqlite::{params, Connection, OptionalExtension, Result};
+use std::collections::HashMap;
 
 use crate::commands::{Playlist, PlaylistSong};
 use crate::helpers::SongMetadata;
@@ -7,6 +8,7 @@ pub fn get_all_songs(conn: &Connection) -> Result<Vec<PlaylistSong>> {
     let mut stmt = conn.prepare(
         "SELECT title, id, playlist_name, path, created_at, duration, artist, album
          FROM songs
+         GROUP BY id
          ORDER BY title COLLATE NOCASE ASC",
     )?;
 
@@ -184,8 +186,14 @@ pub fn move_song_in_db(
 }
 
 pub fn delete_playlist_in_db(conn: &Connection, playlist_name: &str) -> Result<()> {
-    conn.execute("DELETE FROM songs WHERE playlist_name = ?1", params![playlist_name])?;
-    conn.execute("DELETE FROM playlists WHERE name = ?1", params![playlist_name])?;
+    conn.execute(
+        "DELETE FROM songs WHERE playlist_name = ?1",
+        params![playlist_name],
+    )?;
+    conn.execute(
+        "DELETE FROM playlists WHERE name = ?1",
+        params![playlist_name],
+    )?;
     Ok(())
 }
 
@@ -213,5 +221,39 @@ pub fn rename_playlist_in_db(
     )?;
 
     tx.commit()?;
+    Ok(())
+}
+
+pub fn get_config(conn: &Connection, key: &str) -> Result<Option<String>> {
+    conn.query_row(
+        "SELECT value FROM config WHERE key = ?1",
+        params![key],
+        |row| row.get(0),
+    )
+    .optional()
+}
+
+pub fn get_all_config(conn: &Connection) -> Result<HashMap<String, String>> {
+    let mut stmt = conn.prepare("SELECT key, value FROM config")?;
+    let rows = stmt.query_map([], |row| {
+        let key: String = row.get(0)?;
+        let value: String = row.get(1)?;
+        Ok((key, value))
+    })?;
+
+    let mut map = HashMap::new();
+    for item in rows {
+        let (k, v) = item?;
+        map.insert(k, v);
+    }
+    Ok(map)
+}
+
+pub fn set_config(conn: &Connection, key: &str, value: &str) -> Result<()> {
+    conn.execute(
+        "INSERT INTO config (key, value) VALUES (?1, ?2)
+         ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+        params![key, value],
+    )?;
     Ok(())
 }

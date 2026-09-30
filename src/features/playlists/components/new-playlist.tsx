@@ -1,8 +1,8 @@
-import { useState } from "react"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { PlusIcon } from "@hugeicons/core-free-icons"
-import { useHotkey } from "@tanstack/react-hotkeys"
-import { Button } from "@/components/ui/button"
+import { useState } from 'react'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { PlusIcon } from '@hugeicons/core-free-icons'
+import { useHotkey } from '@tanstack/react-hotkeys'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogClose,
@@ -11,164 +11,159 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
-} from "@/components/ui/dialog"
+} from '@/components/ui/dialog'
 import {
   Field,
   FieldDescription,
   FieldError,
   FieldGroup,
-  FieldLabel
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { Spinner } from "@/components/ui/spinner"
+  FieldLabel,
+} from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
+import { Spinner } from '@/components/ui/spinner'
 import {
   Tooltip,
   TooltipContent,
-  TooltipTrigger
-} from "@/components/ui/tooltip"
-import { Kbd, KbdGroup } from "@/components/ui/kbd"
-import { useNewPlaylist } from "@/features/playlists/hooks"
-import { Show } from "@/components/utility/show"
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import { Kbd, KbdGroup } from '@/components/ui/kbd'
+import { useNewPlaylist } from '@/features/playlists/hooks'
+import { Show } from '@/components/utility/show'
+import { cn } from 'cn'
 
-interface NewPlaylistProps {
-  open?: boolean
-  onOpenChange?: (open: boolean) => void
-  showTrigger?: boolean
+export interface CreatePlaylistDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
-export function NewPlaylist({
-  open: externalOpen,
-  onOpenChange: setExternalOpen,
-  showTrigger = true
-}: NewPlaylistProps = {}) {
-  const [internalOpen, setInternalOpen] = useState(false)
-
-  const isControlled = externalOpen !== undefined
-  const isOpen = isControlled ? externalOpen : internalOpen
-
-  const setIsOpen = (next: boolean) => {
-    if (isControlled) {
-      setExternalOpen?.(next)
-    } else {
-      setInternalOpen(next)
-    }
-  }
-
+export function CreatePlaylistDialog({
+  open,
+  onOpenChange,
+}: CreatePlaylistDialogProps) {
   const { form, isPending } = useNewPlaylist({
-    onSuccess: () => setIsOpen(false)
+    onSuccess: () => onOpenChange(false),
   })
 
-  useHotkey("Alt+P", () => setIsOpen(!isOpen))
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={onOpenChange}
+    >
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Add playlist</DialogTitle>
+          <DialogDescription>
+            Enter a name to create a new playlist.
+          </DialogDescription>
+        </DialogHeader>
 
-  const dialogContent = (
-    <DialogContent>
-      <DialogHeader>
-        <DialogTitle>Add playlist</DialogTitle>
-        <DialogDescription>
-          Enter a name to create a new playlist.
-        </DialogDescription>
-      </DialogHeader>
-
-      <form
-        id="new-playlist-form"
-        className="space-y-4"
-        onSubmit={(e) => {
-          e.preventDefault()
-          form.handleSubmit()
-        }}
-      >
-        <FieldGroup>
-          <form.Field
-            name="name"
-            children={(field) => {
-              const isInvalid =
-                field.state.meta.isTouched && !field.state.meta.isValid
-              return (
-                <Field data-invalid={isInvalid}>
-                  <FieldLabel htmlFor={field.name}>Playlist Name</FieldLabel>
-                  <Input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    aria-invalid={isInvalid}
-                    placeholder="Rock Playlist"
-                    autoComplete="off"
-                    disabled={isPending}
-                  />
-                  <FieldDescription>
-                    Type the playlist name to create it
-                  </FieldDescription>
-                  <Show when={isInvalid}>
-                    <FieldError errors={field.state.meta.errors} />
-                  </Show>
-                </Field>
-              )
-            }}
-          />
-        </FieldGroup>
-      </form>
-
-      <DialogFooter>
-        <DialogClose render={<Button variant="outline">Close</Button>} />
-        <Button
-          type="submit"
-          form="new-playlist-form"
-          disabled={isPending}
+        <form
+          id='new-playlist-form'
+          className='space-y-4'
+          onSubmit={(e) => {
+            e.preventDefault()
+            form.handleSubmit()
+          }}
         >
-          <Show when={isPending}>
-            <Spinner />
-          </Show>
-          Create
-        </Button>
-      </DialogFooter>
-    </DialogContent>
+          <FieldGroup>
+            <form.Field
+              name='name'
+              children={(field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid
+                return (
+                  <Field data-invalid={isInvalid}>
+                    <FieldLabel htmlFor={field.name}>Playlist Name</FieldLabel>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      aria-invalid={isInvalid}
+                      placeholder='Rock Playlist'
+                      autoComplete='off'
+                      disabled={isPending}
+                    />
+                    <FieldDescription>
+                      Type the playlist name to create it
+                    </FieldDescription>
+                    <Show when={isInvalid}>
+                      <FieldError errors={field.state.meta.errors} />
+                    </Show>
+                  </Field>
+                )
+              }}
+            />
+          </FieldGroup>
+        </form>
+
+        <DialogFooter>
+          <DialogClose render={<Button variant='outline'>Close</Button>} />
+          <Button
+            type='submit'
+            form='new-playlist-form'
+            disabled={isPending}
+          >
+            <Show when={isPending}>
+              <Spinner />
+            </Show>
+            Create
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
+}
+
+export interface NewPlaylistCardProps {
+  className?: string
+}
+
+export function NewPlaylistCard({ className }: NewPlaylistCardProps = {}) {
+  const [isOpen, setIsOpen] = useState(false)
+
+  useHotkey('Alt+P', () => setIsOpen((prev) => !prev))
 
   return (
-    <Show
-      when={showTrigger}
-      fallback={
-        <Dialog
-          open={isOpen}
-          onOpenChange={setIsOpen}
-        >
-          {dialogContent}
-        </Dialog>
-      }
-    >
+    <>
       <Tooltip>
-        <Dialog
-          open={isOpen}
-          onOpenChange={setIsOpen}
-        >
-          <DialogTrigger
-            render={
-              <TooltipTrigger
-                render={
-                  <Button
-                    size="icon-sm"
-                    variant="outline"
-                  >
-                    <HugeiconsIcon icon={PlusIcon} />
-                  </Button>
-                }
+        <TooltipTrigger
+          render={
+            <button
+              type='button'
+              onClick={() => setIsOpen(true)}
+              className={cn(
+                'group relative flex min-h-47.5 flex-col items-center justify-center p-4 rounded-xl border-2 border-dashed border-border/60 bg-card/40 hover:bg-accent/40 hover:border-muted-foreground/50 text-muted-foreground hover:text-primary transition-all duration-200 select-none cursor-pointer outline-none focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 ring-0',
+                className,
+              )}
+            >
+              <HugeiconsIcon
+                icon={PlusIcon}
+                className='size-20'
               />
-            }
-          />
-          {dialogContent}
-        </Dialog>
-
-        <TooltipContent>
-          New playlist
+            </button>
+          }
+        />
+        <TooltipContent
+          side='bottom'
+          className='flex items-center gap-1.5'
+        >
+          <span>Add new playlist</span>
           <KbdGroup>
             <Kbd>Alt</Kbd>
             <Kbd>P</Kbd>
           </KbdGroup>
         </TooltipContent>
       </Tooltip>
-    </Show>
+
+      <CreatePlaylistDialog
+        open={isOpen}
+        onOpenChange={setIsOpen}
+      />
+    </>
   )
 }
+
+/** Alias for backward compatibility */
+export const NewPlaylistGrid = NewPlaylistCard

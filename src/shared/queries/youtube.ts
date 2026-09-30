@@ -1,19 +1,19 @@
-import { queryOptions } from "@tanstack/react-query"
-import { invoke } from "@tauri-apps/api/core"
-import { TEN_MINUTES, ONE_HOUR } from "@/constants/times"
-import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
+import { queryOptions } from '@tanstack/react-query'
+import { invoke } from '@tauri-apps/api/core'
+import { TEN_MINUTES, ONE_HOUR } from '@/constants/times'
+import type { TYoutubeSearchResult } from '@/shared/types/youtube.types'
 
 export const youtubeSearchQueryOpts = (searchName: string) =>
   queryOptions({
-    queryKey: ["youtube-search", searchName],
+    queryKey: ['youtube-search', searchName],
     queryFn: async () => {
       if (!searchName.trim()) return []
-      return invoke<TYoutubeSearchResult[]>("search_youtube", {
+      return invoke<TYoutubeSearchResult[]>('search_youtube', {
         searchName: searchName.trim(),
-        maxResults: 40
+        maxResults: 50,
       })
     },
     staleTime: TEN_MINUTES,
     refetchInterval: ONE_HOUR,
-    enabled: Boolean(searchName.trim())
+    enabled: Boolean(searchName.trim()),
   })

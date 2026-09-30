@@ -59,11 +59,23 @@ pub fn init_schema(conn: &Connection) -> Result<()> {
             created_at INTEGER NOT NULL
         );
 
+        CREATE TABLE IF NOT EXISTS config (
+            key TEXT PRIMARY KEY,
+            value TEXT NOT NULL
+        );
+
         CREATE INDEX IF NOT EXISTS idx_songs_playlist_name ON songs(playlist_name);
         CREATE INDEX IF NOT EXISTS idx_songs_id ON songs(id);
         CREATE INDEX IF NOT EXISTS idx_songs_title ON songs(title COLLATE NOCASE);
         "#,
     )?;
 
+    let default_app_dir = crate::helpers::get_app_dir().to_string_lossy().to_string();
+    conn.execute(
+        "INSERT OR IGNORE INTO config (key, value) VALUES ('theme', 'system'), ('folder_colors', '#507dbc'), ('app_dir', ?1)",
+        rusqlite::params![default_app_dir],
+    )?;
+
     Ok(())
 }
+

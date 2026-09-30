@@ -6,13 +6,10 @@ pub fn single_instance_plugin() -> TauriPlugin<Wry> {
             let _ = window.show();
             let _ = window.unminimize();
             let _ = window.set_focus();
-        } else {
-            for (_, window) in app.webview_windows() {
-                let _ = window.show();
-                let _ = window.unminimize();
-                let _ = window.set_focus();
-                break;
-            }
+        } else if let Some((_, window)) = app.webview_windows().into_iter().next() {
+            let _ = window.show();
+            let _ = window.unminimize();
+            let _ = window.set_focus();
         }
     })
 }
