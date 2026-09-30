@@ -47,7 +47,11 @@ class StreamingAudioErrorBoundary extends Component<
   }
 }
 
-export function StreamingPlayer() {
+interface StreamingPlayerProps {
+  position?: "bottom" | "top"
+}
+
+export function StreamingPlayer({ position = "bottom" }: StreamingPlayerProps) {
   const currentTrack = useStreamingPlayerStore((s) => s.currentTrack)
   const stop = useStreamingPlayerStore((s) => s.stop)
 
@@ -55,7 +59,7 @@ export function StreamingPlayer() {
 
   return (
     <TooltipProvider delay={300}>
-      <Player>
+      <Player position={position}>
         <StreamingAudioErrorBoundary
           key={currentTrack.id}
           onError={stop}
@@ -65,7 +69,7 @@ export function StreamingPlayer() {
           </Suspense>
         </StreamingAudioErrorBoundary>
 
-        <StreamingPlayerProgressbar />
+        <StreamingPlayerProgressbar position={position} />
 
         {/* Column 1 (Left): Cover & Track Info side by side */}
         <div className="flex items-center gap-3 min-w-0 overflow-hidden pr-2">
@@ -79,7 +83,7 @@ export function StreamingPlayer() {
         {/* Column 3 (Right): Time & Volume */}
         <div className="flex items-center justify-end gap-3 min-w-0 pl-2">
           <StreamingPlayerTime />
-          <StreamingPlayerVolume />
+          <StreamingPlayerVolume position={position} />
         </div>
       </Player>
     </TooltipProvider>

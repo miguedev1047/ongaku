@@ -29,12 +29,17 @@ import {
   VolumeMute02Icon
 } from "@hugeicons/core-free-icons"
 
-function Player({ className, ...props }: React.ComponentProps<"div">) {
+interface PlayerProps extends React.ComponentProps<"div"> {
+  position?: "bottom" | "top"
+}
+
+function Player({ className, position = "bottom", ...props }: PlayerProps) {
   return (
     <div
       data-slot="player"
       className={cn(
-        "relative w-full h-16 px-4 shrink-0 border-t border-border bg-card/95 backdrop-blur grid grid-cols-[1fr_auto_1fr] items-center gap-2 z-30 select-none",
+        "relative w-full h-16 px-4 shrink-0 bg-card/95 backdrop-blur grid grid-cols-[1fr_auto_1fr] items-center gap-2 z-30 select-none",
+        position === "top" ? "border-b border-border" : "border-t border-border",
         className
       )}
       {...props}
@@ -370,6 +375,7 @@ interface PlayerProgressProps {
   onPointerDown?: () => void
   onPointerUp?: () => void
   className?: string
+  position?: "bottom" | "top"
 }
 
 function PlayerProgress({
@@ -379,13 +385,15 @@ function PlayerProgress({
   onSeek,
   onPointerDown,
   onPointerUp,
-  className
+  className,
+  position = "bottom"
 }: PlayerProgressProps) {
   return (
     <div
       data-slot="player-progress"
       className={cn(
-        "absolute -top-0.75 left-0 right-0 z-30 h-1.5 hover:h-2.5 transition-all group flex items-center",
+        "absolute left-0 right-0 z-30 h-1.5 flex items-center",
+        position === "top" ? "-bottom-0.75" : "-top-0.75",
         className
       )}
     >
@@ -447,9 +455,15 @@ interface PlayerVolumeProps {
   volume: number
   onChange: (val: number) => void
   className?: string
+  position?: "bottom" | "top"
 }
 
-function PlayerVolume({ volume, onChange, className }: PlayerVolumeProps) {
+function PlayerVolume({
+  volume,
+  onChange,
+  className,
+  position = "bottom"
+}: PlayerVolumeProps) {
   const [lastVolume, setLastVolume] = React.useState<number>(
     volume > 0 ? volume : 80
   )
@@ -567,7 +581,7 @@ function PlayerVolume({ volume, onChange, className }: PlayerVolumeProps) {
         </Tooltip>
 
         <PopoverContent
-          side="top"
+          side={position === "top" ? "bottom" : "top"}
           align="center"
           sideOffset={12}
           className="w-10 px-2 h-70 gap-1 flex flex-col items-center justify-between rounded-lg bg-popover/95 backdrop-blur border border-border shadow-lg"

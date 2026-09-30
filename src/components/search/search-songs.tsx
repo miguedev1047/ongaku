@@ -3,47 +3,47 @@ import {
   CommandDialog,
   CommandInput,
   CommandItem,
-  CommandVirtualList
-} from "@/components/ui/command"
-import { Button } from "@/components/ui/button"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { Search01Icon } from "@hugeicons/core-free-icons"
-import { useSuspenseQuery } from "@tanstack/react-query"
-import { Kbd } from "@/components/ui/kbd"
-import { useState } from "react"
-import { useParams } from "@tanstack/react-router"
-import { useHotkey } from "@tanstack/react-hotkeys"
-import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs"
-import { CoverImage } from "@/components/cover-image"
-import { useSongUtils } from "@/hooks/use-song-utils"
-import { useActivePlayerStore } from "@/shared/stores/player"
+  CommandVirtualList,
+} from '@/components/ui/command'
+import { Button } from '@/components/ui/button'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { Search01Icon } from '@hugeicons/core-free-icons'
+import { useSuspenseQuery } from '@tanstack/react-query'
+import { Kbd } from '@/components/ui/kbd'
+import { useState } from 'react'
+import { useParams } from '@tanstack/react-router'
+import { useHotkey } from '@tanstack/react-hotkeys'
+import { playlistSongsQueryOpts } from '@/shared/queries/playlist-songs'
+import { CoverImage } from '@/components/cover-image'
+import { useSongUtils } from '@/hooks/use-song-utils'
+import { useActivePlayerStore } from '@/shared/stores/player'
 
 export function SearchSongs() {
   const [isOpen, setIsOpen] = useState(false)
 
-  const { playlistName } = useParams({ from: "/playlists/$playlistName" })
+  const { playlistName } = useParams({ from: '/playlists/$playlistName' })
   const { data: songs } = useSuspenseQuery(playlistSongsQueryOpts(playlistName))
 
   const { getCoverUrl } = useSongUtils()
 
   const playSong = useActivePlayerStore((state) => state.playSong)
 
-  useHotkey("Control+K", () => setIsOpen(!isOpen))
+  useHotkey('Control+K', () => setIsOpen(!isOpen))
 
   return (
-    <div className="ml-auto flex items-center gap-2">
+    <div className='ml-auto flex items-center gap-2'>
       <Button
         onClick={() => setIsOpen(true)}
-        variant="outline"
-        className="w-52"
-        size="sm"
+        variant='outline'
+        className='w-52'
+        size='sm'
       >
         <HugeiconsIcon
           icon={Search01Icon}
-          className="size-4"
+          className='size-4'
         />
         Search songs...
-        <Kbd className="ml-auto">⌘K</Kbd>
+        <Kbd className='ml-auto'>⌘K</Kbd>
       </Button>
 
       <CommandDialog
@@ -51,10 +51,10 @@ export function SearchSongs() {
         onOpenChange={setIsOpen}
       >
         <Command
-          className="max-w-sm rounded-lg border"
+          className='max-w-sm rounded-lg border'
           shouldFilter={false}
         >
-          <CommandInput placeholder="Type a song..." />
+          <CommandInput placeholder='Type a song...' />
           <CommandVirtualList
             data={songs}
             filter={(song, search) => {
@@ -64,15 +64,15 @@ export function SearchSongs() {
                 Boolean(song.metadata?.artist?.toLowerCase().includes(query))
               )
             }}
-            className="h-[40vh]"
-            heading="Search song"
+            className='h-[40vh]'
+            heading='Search song'
           >
             {(song) => {
               const handleSelectSong = () => {
                 setIsOpen(false)
                 playSong(song, songs, {
-                  type: "playlist",
-                  playlistName: playlistName || song.playlist_name
+                  type: 'playlist',
+                  playlistName: playlistName || song.playlist_name,
                 })
               }
 
@@ -82,16 +82,16 @@ export function SearchSongs() {
                   value={song.id}
                   onSelect={handleSelectSong}
                 >
-                  <figure className="size-8 shrink-0">
+                  <figure className='size-8 shrink-0'>
                     <CoverImage
                       src={getCoverUrl({ song })}
                       alt={song.name}
-                      className="size-full object-cover"
+                      className='size-full object-cover'
                     />
                   </figure>
                   <div>
-                    <h2 className="line-clamp-1 text-sm">{song.name}</h2>
-                    <p className="text-xs text-muted-foreground line-clamp-1">
+                    <h2 className='line-clamp-1 text-sm'>{song.name}</h2>
+                    <p className='text-xs text-muted-foreground line-clamp-1'>
                       {song.metadata.artist}
                     </p>
                   </div>

@@ -15,6 +15,7 @@ import { Kbd } from '@/components/ui/kbd'
 import { useCallback, useState } from 'react'
 import { useNavigate, useRouter } from '@tanstack/react-router'
 import { useHotkey } from '@tanstack/react-hotkeys'
+import { Show } from '@/components/utility/show'
 import type { TPlaylist } from '@/shared/types/playlist.types'
 
 interface SearchPlaylistItemProps {
@@ -54,7 +55,13 @@ function SearchPlaylistItem({ playlist, onSelect }: SearchPlaylistItemProps) {
 
       <CommandShortcut className='flex items-center gap-1'>
         <p className='ml-auto text-[11px] text-muted-foreground font-mono'>
-          {playlist.tracks} {playlist.tracks === 1 ? 'track' : 'tracks'}
+          {playlist.tracks}{' '}
+          <Show
+            when={playlist.tracks === 1}
+            fallback={<>tracks</>}
+          >
+            track
+          </Show>
         </p>
       </CommandShortcut>
     </CommandItem>

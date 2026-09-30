@@ -2,6 +2,7 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import { PaintBoardIcon } from '@hugeicons/core-free-icons'
 import { ThemeSelection } from '@/features/settings/components/theme-selection'
 import { FolderColorOptions } from '@/features/settings/components/folder-color-options'
+import { PlayerPositionOptions } from '@/features/settings/components/player-position-options'
 
 export function AppearanceCard() {
   return (
@@ -19,7 +20,7 @@ export function AppearanceCard() {
             Appearance & Interface
           </h2>
           <p className='text-xs text-muted-foreground'>
-            Customize the look, themes, and folder colors of the app
+            Customize the look, themes, player position, and folder colors of the app
           </p>
         </div>
       </div>
@@ -27,7 +28,10 @@ export function AppearanceCard() {
       {/* 2. Theme Selection */}
       <ThemeSelection />
 
-      {/* 3. Folder Color Selection */}
+      {/* 3. Player Position Selection */}
+      <PlayerPositionOptions />
+
+      {/* 4. Folder Color Selection */}
       <FolderColorOptions />
     </div>
   )

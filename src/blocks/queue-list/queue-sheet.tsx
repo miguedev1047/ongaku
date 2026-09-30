@@ -1,0 +1,94 @@
+import { Button } from '@/components/ui/button'
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetTrigger,
+} from '@/components/ui/sheet'
+import { useLocalPlayerStore } from '@/shared/stores/player'
+import { formatPlaylistDuration } from '@/shared/helpers/total-tracks-hours'
+import { ListMusicIcon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { Show } from '@/components/utility/show'
+import { QueueList } from './queue-list'
+import type { TPlaylistSong } from '@/shared/types/playlist-songs.types'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+
+export function QueueSheet() {
+  const queue = useLocalPlayerStore((state) => state.queue)
+  const currentSong = useLocalPlayerStore((state) => state.currentSong)
+  const currentPlaylist = useLocalPlayerStore((state) => state.currentPlaylist)
+
+  const activeIndex = queue.findIndex((s) => s.id === currentSong?.id)
+  const totalDuration = formatPlaylistDuration(queue as TPlaylistSong[])
+
+  return (
+    <Sheet>
+      <Tooltip>
+        <TooltipTrigger
+          render={
+            <SheetTrigger
+              render={
+                <Button
+                  size='icon'
+                  variant='ghost'
+                  className='size-8 rounded-md text-muted-foreground hover:text-foreground'
+                >
+                  <HugeiconsIcon icon={ListMusicIcon} />
+                </Button>
+              }
+            />
+          }
+        />
+        <TooltipContent side='top'>
+          <p>Queue</p>
+        </TooltipContent>
+      </Tooltip>
+
+      <SheetContent
+        side='right'
+        className='flex flex-col h-full w-full sm:max-w-md p-0 gap-0 bg-background border-l border-border'
+      >
+        {/* Header */}
+        <SheetHeader className='flex flex-col gap-1 px-4 py-3.5 border-b border-border bg-card/40'>
+          <div className='flex items-center justify-between pr-6'>
+            <SheetTitle className='text-sm font-semibold tracking-tight'>
+              Queue
+            </SheetTitle>
+          </div>
+
+          <SheetDescription className='flex items-center gap-1.5 text-xs text-muted-foreground'>
+            <Show when={Boolean(currentPlaylist)}>
+              <span className='font-medium text-foreground truncate max-w-[140px]'>
+                {currentPlaylist}
+              </span>
+              <span>•</span>
+            </Show>
+            <Show
+              when={queue.length > 0}
+              fallback={<span>0 tracks</span>}
+            >
+              <span>
+                <Show
+                  when={activeIndex >= 0}
+                  fallback={<>{queue.length} tracks</>}
+                >
+                  {activeIndex + 1} / {queue.length}
+                </Show>
+              </span>
+              <span>•</span>
+              <span>{totalDuration}</span>
+            </Show>
+          </SheetDescription>
+        </SheetHeader>
+
+        {/* Virtualized Queue List */}
+        <div className='flex-1 min-h-0 flex flex-col overflow-hidden'>
+          <QueueList />
+        </div>
+      </SheetContent>
+    </Sheet>
+  )
+}

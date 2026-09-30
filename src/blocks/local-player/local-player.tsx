@@ -11,8 +11,13 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import { useLocalPlayerStore } from '@/shared/stores/player'
 import { useQuery } from '@tanstack/react-query'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
+import { QueueSheet } from '@/blocks/queue-list'
 
-export function LocalPlayer() {
+interface LocalPlayerProps {
+  position?: 'bottom' | 'top'
+}
+
+export function LocalPlayer({ position = 'bottom' }: LocalPlayerProps) {
   const currentSong = useLocalPlayerStore((state) => state.currentSong)
   const { data: health } = useQuery(systemHealthQueryOpts())
 
@@ -20,12 +25,12 @@ export function LocalPlayer() {
 
   return (
     <TooltipProvider delay={300}>
-      <Player>
+      <Player position={position}>
         <Suspense>
           <LocalPlayerElement />
         </Suspense>
 
-        <LocalPlayerProgressbar />
+        <LocalPlayerProgressbar position={position} />
 
         {/* Column 1 (Left): Cover & Track Info side by side */}
         <div className='flex items-center gap-3 min-w-0 overflow-hidden pr-2'>
@@ -41,7 +46,8 @@ export function LocalPlayer() {
         {/* Column 3 (Right): Time & Volume */}
         <div className='flex items-center justify-end gap-3 min-w-0 pl-2'>
           <LocalPlayerTime />
-          <LocalPlayerVolume />
+          <LocalPlayerVolume position={position} />
+          <QueueSheet />
         </div>
       </Player>
     </TooltipProvider>

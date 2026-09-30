@@ -72,7 +72,7 @@ pub fn init_schema(conn: &Connection) -> Result<()> {
 
     let default_app_dir = crate::helpers::get_app_dir().to_string_lossy().to_string();
     conn.execute(
-        "INSERT OR IGNORE INTO config (key, value) VALUES ('theme', 'system'), ('folder_colors', '#507dbc'), ('app_dir', ?1)",
+        "INSERT OR IGNORE INTO config (key, value) VALUES ('theme', 'system'), ('folder_colors', '#507dbc'), ('app_dir', ?1), ('player_position', 'bottom')",
         rusqlite::params![default_app_dir],
     )?;
 

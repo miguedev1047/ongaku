@@ -1,7 +1,8 @@
 import * as React from "react"
 import { Command as CommandPrimitive, useCommandState } from "cmdk"
 import { cn } from "cn"
-import { VList, type VListHandle } from "virtua"
+import { useVirtualizer } from "@tanstack/react-virtual"
+import { Show } from "@/components/utility/show"
 
 import {
   Dialog,
@@ -112,10 +113,13 @@ interface CommandVirtualListProps<T = unknown>
   heading?: React.ReactNode
   empty?: React.ReactNode
   filter?: (item: T, search: string, index: number) => boolean
-  vlistRef?: React.Ref<VListHandle>
   vlistClassName?: string
-  bufferSize?: number
+  overscan?: number
+  estimateSize?: number
+  /** @deprecated use estimateSize instead */
   itemSize?: number
+  /** @deprecated use overscan instead */
+  bufferSize?: number
 }
 
 function CommandVirtualList<T = unknown>({
@@ -125,14 +129,15 @@ function CommandVirtualList<T = unknown>({
   heading,
   empty,
   filter,
-  vlistRef,
   vlistClassName,
-  bufferSize,
+  overscan = 5,
+  estimateSize = 40,
   itemSize,
+  bufferSize,
   ...props
 }: CommandVirtualListProps<T>) {
   const search = useCommandState((state) => state.search)
-  const innerVListRef = React.useRef<VListHandle>(null)
+  const parentRef = React.useRef<HTMLDivElement>(null)
 
   const items = React.useMemo(() => {
     if (!data) return []
@@ -141,21 +146,20 @@ function CommandVirtualList<T = unknown>({
     return arr.filter((item, index) => filter(item, search.trim(), index))
   }, [data, filter, search])
 
-  React.useEffect(() => {
-    innerVListRef.current?.scrollTo(0)
-  }, [search])
+  const resolvedEstimateSize = itemSize ?? estimateSize
+  const resolvedOverscan = bufferSize ?? overscan
 
-  const handleVListRef = React.useCallback(
-    (node: VListHandle | null) => {
-      innerVListRef.current = node
-      if (typeof vlistRef === "function") {
-        vlistRef(node)
-      } else if (vlistRef && "current" in vlistRef) {
-        ;(vlistRef as React.MutableRefObject<VListHandle | null>).current = node
-      }
-    },
-    [vlistRef]
-  )
+  const rowVirtualizer = useVirtualizer({
+    count: items.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => resolvedEstimateSize,
+    overscan: resolvedOverscan,
+    getItemKey: (index) => (items[index] as { id?: string | number })?.id ?? index,
+  })
+
+  React.useEffect(() => {
+    rowVirtualizer.scrollToOffset(0)
+  }, [search, rowVirtualizer])
 
   const isEmpty = data ? items.length === 0 : React.Children.count(children) === 0
 
@@ -168,56 +172,76 @@ function CommandVirtualList<T = unknown>({
       )}
       {...props}
     >
-      {isEmpty ? (
-        empty ? (
-          typeof empty === "string" ? (
-            <CommandEmpty>{empty}</CommandEmpty>
-          ) : (
-            empty
-          )
-        ) : (
-          <CommandEmpty>No results found.</CommandEmpty>
-        )
-      ) : (
-        <>
-          {heading && (
-            <div className="shrink-0 px-2.5 py-1.5 text-xs font-medium text-muted-foreground">
-              {heading}
+      <Show
+        when={isEmpty}
+        fallback={
+          <div className="flex flex-col size-full overflow-hidden">
+            <Show when={Boolean(heading)}>
+              <div className="shrink-0 px-2.5 py-1.5 text-xs font-medium text-muted-foreground">
+                {heading}
+              </div>
+            </Show>
+            <div
+              ref={parentRef}
+              className={cn(
+                "size-full flex-1 min-h-0 overflow-y-auto no-scrollbar p-1",
+                vlistClassName
+              )}
+            >
+              <div
+                style={{
+                  height: `${rowVirtualizer.getTotalSize()}px`,
+                  width: "100%",
+                  position: "relative",
+                }}
+              >
+                {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+                  const item = items[virtualRow.index]
+                  if (!item && typeof children === "function") return null
+
+                  return (
+                    <div
+                      key={virtualRow.key}
+                      data-index={virtualRow.index}
+                      ref={rowVirtualizer.measureElement}
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: `${virtualRow.size}px`,
+                        transform: `translateY(${virtualRow.start}px)`,
+                      }}
+                    >
+                      <Show
+                        when={typeof children === "function" && Boolean(data)}
+                        fallback={children as React.ReactNode}
+                      >
+                        {(children as (item: T, index: number) => React.ReactElement)(
+                          item,
+                          virtualRow.index
+                        )}
+                      </Show>
+                    </div>
+                  )
+                })}
+              </div>
             </div>
-          )}
-          {typeof children === "function" && data ? (
-            <VList
-              ref={handleVListRef}
-              data={items}
-              bufferSize={bufferSize}
-              itemSize={itemSize}
-              className={cn(
-                "size-full flex-1 min-h-0 no-scrollbar p-1",
-                vlistClassName
-              )}
-            >
-              {(item, index) =>
-                (children as (item: T, index: number) => React.ReactElement)(
-                  item,
-                  index
-                )
-              }
-            </VList>
-          ) : (
-            <VList
-              ref={handleVListRef}
-              bufferSize={bufferSize}
-              itemSize={itemSize}
-              className={cn(
-                "size-full flex-1 min-h-0 no-scrollbar p-1",
-                vlistClassName
-              )}
-            >
-              {children as React.ReactNode}
-            </VList>
-          )}
-        </>
-      )}
+          </div>
+        }
+      >
+        <Show
+          when={Boolean(empty)}
+          fallback={<CommandEmpty>No results found.</CommandEmpty>}
+        >
+          <Show
+            when={typeof empty === "string"}
+            fallback={<>{empty}</>}
+          >
+            <CommandEmpty>{empty as string}</CommandEmpty>
+          </Show>
+        </Show>
+      </Show>
     </CommandPrimitive.List>
   )
 }
@@ -314,5 +338,4 @@ export {
   useCommandState,
 }
 
-export type { CommandVirtualListProps, VListHandle }
-
+export type { CommandVirtualListProps }

@@ -1,7 +1,11 @@
 import { useStreamingPlayerStore } from "@/shared/stores/player"
 import { PlayerProgress } from "@/components/ui/player"
 
-export function StreamingPlayerProgressbar() {
+interface StreamingPlayerProgressbarProps {
+  position?: "bottom" | "top"
+}
+
+export function StreamingPlayerProgressbar({ position = "bottom" }: StreamingPlayerProgressbarProps) {
   const duration = useStreamingPlayerStore((s) => s.duration)
   const progress = useStreamingPlayerStore((s) => s.progress)
   const audioRef = useStreamingPlayerStore((s) => s.audioRef)
@@ -41,6 +45,7 @@ export function StreamingPlayerProgressbar() {
       onSeek={handleSeek}
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
+      position={position}
     />
   )
 }

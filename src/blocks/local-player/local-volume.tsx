@@ -1,7 +1,11 @@
 import { useLocalPlayerStore } from "@/shared/stores/player"
 import { PlayerVolume } from "@/components/ui/player"
 
-export function LocalPlayerVolume() {
+interface LocalPlayerVolumeProps {
+  position?: "bottom" | "top"
+}
+
+export function LocalPlayerVolume({ position = "bottom" }: LocalPlayerVolumeProps) {
   const audioRef = useLocalPlayerStore((state) => state.audioRef)
   const volume = useLocalPlayerStore((state) => state.volume)
   const setVolume = useLocalPlayerStore((state) => state.setVolume)
@@ -18,6 +22,7 @@ export function LocalPlayerVolume() {
     <PlayerVolume
       volume={volume}
       onChange={handleVolumeChange}
+      position={position}
     />
   )
 }

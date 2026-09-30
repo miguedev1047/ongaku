@@ -24,6 +24,7 @@ interface ActivePlayerStore {
   seek: (deltaSeconds: number) => void
   changeVolume: (delta: number) => void
   toggleMute: () => void
+  resetActivePlayer: () => void
 }
 
 export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => ({
@@ -165,5 +166,11 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => ({
       const restore = get().lastNonZeroVolume || 80
       get().changeVolume(restore)
     }
-  }
+  },
+
+  resetActivePlayer: () => {
+    useLocalPlayerStore.getState().resetPlayer()
+    useStreamingPlayerStore.getState().stop()
+    set({ activePlayer: null, activePlaylist: "" })
+  },
 }))

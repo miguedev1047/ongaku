@@ -1,7 +1,11 @@
 import { useStreamingPlayerStore } from "@/shared/stores/player"
 import { PlayerVolume } from "@/components/ui/player"
 
-export function StreamingPlayerVolume() {
+interface StreamingPlayerVolumeProps {
+  position?: "bottom" | "top"
+}
+
+export function StreamingPlayerVolume({ position = "bottom" }: StreamingPlayerVolumeProps) {
   const audioRef = useStreamingPlayerStore((state) => state.audioRef)
   const volume = useStreamingPlayerStore((state) => state.volume)
   const setVolume = useStreamingPlayerStore((state) => state.setVolume)
@@ -18,6 +22,7 @@ export function StreamingPlayerVolume() {
     <PlayerVolume
       volume={volume}
       onChange={handleVolumeChange}
+      position={position}
     />
   )
 }

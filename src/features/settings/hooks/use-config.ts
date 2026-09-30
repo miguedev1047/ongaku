@@ -1,10 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { invoke } from '@tauri-apps/api/core'
 import { systemConfigQueryOpts, type TAppConfig } from '@/shared/queries/config'
-import { playlistsQueryOpts } from '@/shared/queries/playlists'
-import { librarySongsQueryOpts } from '@/shared/queries/library'
-import { useLocalPlayerStore } from '@/shared/stores/player/use-local-player'
-import { useStreamingPlayerStore } from '@/shared/stores/player/use-streaming-player'
+import { useActivePlayerStore } from '@/shared/stores/player/use-active-player'
 import { toast } from 'sonner'
 
 export function useUpdateConfig() {
@@ -49,18 +46,8 @@ export function useChangeAppDir() {
 
   return useMutation({
     mutationFn: async (newParentDir: string) => {
-      // 1. Stop any active playback in local or streaming players before migrating
-      const localState = useLocalPlayerStore.getState()
-      if (localState.playerState === 'playing') {
-        localState.audioRef?.pause()
-        localState.setPlayerState('idle')
-      }
-
-      const streamState = useStreamingPlayerStore.getState()
-      if (streamState.playerState === 'playing') {
-        streamState.audioRef?.pause()
-        streamState.setPlayerState('idle')
-      }
+      // 1. Reset and wipe active player state and audio elements before migrating folder
+      useActivePlayerStore.getState().resetActivePlayer()
 
       // 2. Perform folder migration and path updating on backend
       const updatedConfig = await invoke<TAppConfig>('change_app_dir', {
@@ -69,12 +56,10 @@ export function useChangeAppDir() {
       return updatedConfig
     },
     onSuccess: (updatedConfig) => {
+      // 3. Ensure player is cleanly reset and all React Query cache is refreshed
+      useActivePlayerStore.getState().resetActivePlayer()
       queryClient.setQueryData(systemConfigQueryOpts().queryKey, updatedConfig)
-      queryClient.invalidateQueries({ queryKey: ['system'] })
-      queryClient.invalidateQueries({ queryKey: playlistsQueryOpts().queryKey })
-      queryClient.invalidateQueries({
-        queryKey: librarySongsQueryOpts().queryKey,
-      })
+      queryClient.invalidateQueries()
       toast.success('Storage location changed successfully')
     },
     onError: (err) => {

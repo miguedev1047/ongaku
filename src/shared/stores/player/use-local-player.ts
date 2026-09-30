@@ -35,6 +35,7 @@ export interface LocalPlayerStore {
   setProgress: (progress: number) => void
   setVolume: (volume: number) => void
   setPlayerState: (state: LocalPlayerState) => void
+  resetPlayer: () => void
 }
 
 export const useLocalPlayerStore = create<LocalPlayerStore>((set) => ({
@@ -136,5 +137,20 @@ export const useLocalPlayerStore = create<LocalPlayerStore>((set) => ({
   setPlayerState: (state) => set({ playerState: state }),
   setDuration: (duration) => set({ duration }),
   setProgress: (progress) => set({ progress }),
-  setVolume: (volume) => set({ volume })
+  setVolume: (volume) => set({ volume }),
+  resetPlayer: () =>
+    set((state) => {
+      if (state.audioRef) {
+        state.audioRef.pause()
+        state.audioRef.src = ""
+      }
+      return {
+        currentSong: null,
+        queue: [],
+        progress: 0,
+        duration: 0,
+        playerState: "idle",
+        currentPlaylist: "",
+      }
+    }),
 }))

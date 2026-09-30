@@ -5,6 +5,7 @@ export interface TAppConfig {
   theme: 'light' | 'dark' | 'system'
   folder_colors: string
   app_dir: string
+  player_position: 'bottom' | 'top'
 }
 
 export const systemConfigQueryOpts = () =>

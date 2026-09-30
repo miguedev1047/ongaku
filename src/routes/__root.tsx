@@ -16,6 +16,9 @@ import { AppSidebar } from '@/blocks/app-sidebar'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 
+import { useQuery } from '@tanstack/react-query'
+import { Show } from '@/components/utility/show'
+
 interface RouteContext {
   queryClient: QueryClient
   serverPort?: number
@@ -37,20 +40,37 @@ function RootComponent() {
   usePreventWebviewShortcuts()
   usePlayerShortcuts()
 
+  const { data: config } = useQuery(systemConfigQueryOpts())
+  const isPlayerTop = config?.player_position === 'top'
+
   return (
     <SidebarProvider defaultOpen={false}>
       <div className='h-screen w-screen flex flex-col overflow-hidden select-none'>
         <TanstackDevtool />
+
+        {/* Top Player Position */}
+        <Show when={isPlayerTop}>
+          <Suspense>
+            <PlayerRoot position='top' />
+          </Suspense>
+        </Show>
+
         <div className='flex-1 min-h-0 flex overflow-hidden'>
           <AppSidebar />
           <SidebarInset className='flex-1 min-h-0 min-w-0 overflow-hidden flex flex-col'>
             <Outlet />
           </SidebarInset>
         </div>
+
         <DownloadQueueDialog />
-        <Suspense>
-          <PlayerRoot />
-        </Suspense>
+
+        {/* Bottom Player Position (Default) */}
+        <Show when={!isPlayerTop}>
+          <Suspense>
+            <PlayerRoot position='bottom' />
+          </Suspense>
+        </Show>
+
         <Toaster />
       </div>
     </SidebarProvider>
