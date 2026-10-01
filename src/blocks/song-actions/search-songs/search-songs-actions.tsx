@@ -1,5 +1,5 @@
-import { Suspense } from "react"
-import { Button } from "@/components/ui/button"
+import { Suspense } from 'react'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,45 +10,45 @@ import {
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
-import { Spinner } from "@/components/ui/spinner"
-import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Spinner } from '@/components/ui/spinner'
+import type { TYoutubeSearchResult } from '@/shared/types/youtube.types'
 import {
   MoreHorizontalSquare01Icon,
   Music01Icon,
   PauseIcon,
   PlayIcon,
-  YoutubeIcon
-} from "@hugeicons/core-free-icons"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { PlaylistMenuGroup } from "@/features/youtube-search/components"
-import { CopySongMenuItem } from "@/blocks/song-actions/shared"
-import { useSearchSongActions } from "./hooks"
-import { Show } from "@/components/utility/show"
-import { cn } from "cn"
+  YoutubeIcon,
+} from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { PlaylistMenuGroup } from '@/features/youtube-search/components'
+import { CopySongMenuItem } from '@/blocks/song-actions/shared'
+import { useSearchSongActions } from './hooks'
+import { Show } from '@/components/utility/show'
+import { cn } from 'cn'
 
 export interface SearchSongActionsProps {
   item: TYoutubeSearchResult
   className?: string
-  size?: "default" | "sm" | "icon"
-  variant?: "outline" | "ghost" | "default"
+  size?: 'default' | 'sm' | 'icon'
+  variant?: 'outline' | 'ghost' | 'default'
   showLabel?: boolean
 }
 
 export function SearchSongActions({
   item,
   className,
-  size = "icon",
-  variant = "outline",
-  showLabel = false
+  size = 'icon',
+  variant = 'outline',
+  showLabel = false,
 }: SearchSongActionsProps) {
   const {
     isPlaying,
     isLoading,
     togglePlayback,
     handleOpenYoutube,
-    handleSelectPlaylist
+    handleSelectPlaylist,
   } = useSearchSongActions({ item })
 
   return (
@@ -59,7 +59,7 @@ export function SearchSongActions({
             size={size}
             variant={variant}
             onClick={(e) => e.stopPropagation()}
-            aria-label="Song actions"
+            aria-label='Song actions'
             className={cn(className)}
           >
             <HugeiconsIcon icon={MoreHorizontalSquare01Icon} />
@@ -70,8 +70,8 @@ export function SearchSongActions({
         }
       />
       <DropdownMenuContent
-        align="end"
-        className="w-48"
+        align='end'
+        className='w-48'
         onClick={(e) => e.stopPropagation()}
       >
         <DropdownMenuGroup>
@@ -80,7 +80,7 @@ export function SearchSongActions({
 
           <DropdownMenuItem
             onClick={togglePlayback}
-            className="cursor-pointer"
+            className='cursor-pointer'
             disabled={isLoading}
           >
             <Show
@@ -101,25 +101,27 @@ export function SearchSongActions({
 
           <DropdownMenuItem
             onClick={handleOpenYoutube}
-            className="cursor-pointer"
+            className='cursor-pointer'
           >
             <HugeiconsIcon icon={YoutubeIcon} />
             <span>Open on YouTube</span>
           </DropdownMenuItem>
 
+          <DropdownMenuSeparator />
+
           <DropdownMenuSub>
-            <DropdownMenuSubTrigger className="cursor-pointer">
+            <DropdownMenuSubTrigger className='cursor-pointer'>
               <HugeiconsIcon icon={Music01Icon} />
               <span>Download on</span>
             </DropdownMenuSubTrigger>
-            <DropdownMenuSubContent className="w-48">
+            <DropdownMenuSubContent className='w-48'>
               <Suspense
                 fallback={
                   <DropdownMenuGroup>
                     <DropdownMenuLabel>Playlists</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <div className="p-3 flex items-center justify-center">
-                      <Spinner className="size-4" />
+                    <div className='p-3 flex items-center justify-center'>
+                      <Spinner className='size-4' />
                     </div>
                   </DropdownMenuGroup>
                 }

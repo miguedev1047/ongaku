@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,38 +6,38 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
-import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import type { TPlaylistSong } from '@/shared/types/playlist-songs.types'
 import {
   Delete01Icon,
   FolderIcon,
   FolderTransferIcon,
   MoreHorizontalSquare01Icon,
   PauseIcon,
-  PlayIcon
-} from "@hugeicons/core-free-icons"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { DeleteSong, MoveSong } from "@/features/playlist-songs/components"
-import { CopySongMenuItem } from "@/blocks/song-actions/shared"
-import { useLibrarySongActions } from "./hooks"
-import { Show } from "@/components/utility/show"
-import { cn } from "cn"
+  PlayIcon,
+} from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { DeleteSong, MoveSong } from '@/features/playlist-songs/components'
+import { CopySongMenuItem } from '@/blocks/song-actions/shared'
+import { useLibrarySongActions } from './hooks'
+import { Show } from '@/components/utility/show'
+import { cn } from 'cn'
 
 export interface LibrarySongActionsProps {
   song: TPlaylistSong
-  size?: "default" | "sm" | "icon"
-  variant?: "outline" | "ghost" | "default"
+  size?: 'default' | 'sm' | 'icon'
+  variant?: 'outline' | 'ghost' | 'default'
   className?: string
   showLabel?: boolean
 }
 
 export function LibrarySongActions({
   song,
-  size = "icon",
-  variant = "outline",
+  size = 'icon',
+  variant = 'outline',
   className,
-  showLabel = false
+  showLabel = false,
 }: LibrarySongActionsProps) {
   const {
     isPlaying,
@@ -46,7 +46,7 @@ export function LibrarySongActions({
     isMoveDialogOpen,
     setIsMoveDialogOpen,
     handleTogglePlayback,
-    handleOpenFolder
+    handleOpenFolder,
   } = useLibrarySongActions({ song })
 
   return (
@@ -58,7 +58,7 @@ export function LibrarySongActions({
               size={size}
               variant={variant}
               onClick={(e) => e.stopPropagation()}
-              aria-label="Song actions"
+              aria-label='Song actions'
               className={cn(className)}
             >
               <HugeiconsIcon icon={MoreHorizontalSquare01Icon} />
@@ -68,14 +68,17 @@ export function LibrarySongActions({
             </Button>
           }
         />
-        <DropdownMenuContent className='w-44' onClick={(e) => e.stopPropagation()}>
+        <DropdownMenuContent
+          className='w-44'
+          onClick={(e) => e.stopPropagation()}
+        >
           <DropdownMenuGroup>
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
 
             <DropdownMenuItem
               onClick={handleTogglePlayback}
-              className="cursor-pointer"
+              className='cursor-pointer'
             >
               <Show
                 when={isPlaying}
@@ -95,7 +98,7 @@ export function LibrarySongActions({
 
             <DropdownMenuItem
               onClick={handleOpenFolder}
-              className="cursor-pointer"
+              className='cursor-pointer'
             >
               <HugeiconsIcon icon={FolderIcon} />
               <span>Open folder</span>
@@ -103,16 +106,18 @@ export function LibrarySongActions({
 
             <DropdownMenuItem
               onClick={() => setIsMoveDialogOpen(true)}
-              className="cursor-pointer"
+              className='cursor-pointer'
             >
               <HugeiconsIcon icon={FolderTransferIcon} />
               <span>Move</span>
             </DropdownMenuItem>
 
+            <DropdownMenuSeparator />
+
             <DropdownMenuItem
-              variant="destructive"
+              variant='destructive'
               onClick={() => setIsDeleteDialogOpen(true)}
-              className="cursor-pointer"
+              className='cursor-pointer'
             >
               <HugeiconsIcon icon={Delete01Icon} />
               <span>Delete</span>

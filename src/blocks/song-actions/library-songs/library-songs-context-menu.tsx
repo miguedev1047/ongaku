@@ -1,44 +1,37 @@
-import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+import * as React from 'react'
 import type { TPlaylistSong } from '@/shared/types/playlist-songs.types'
 import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuGroup,
+  ContextMenuItem,
+  ContextMenuLabel,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from '@/components/ui/context-menu'
+import {
+  Copy01Icon,
   Delete01Icon,
   FolderIcon,
   FolderTransferIcon,
-  MoreHorizontalSquare01Icon,
   PauseIcon,
   PlayIcon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { DeleteSong, MoveSong } from '@/features/playlist-songs/components'
-import { CopySongMenuItem } from '@/blocks/song-actions/shared'
-import { usePlaylistSongActions } from './hooks'
+import { useCopySongTitle } from '@/blocks/song-actions/shared/use-copy-song-title'
+import { useLibrarySongActions } from '@/blocks/song-actions/library-songs/hooks'
 import { Show } from '@/components/utility/show'
-import { cn } from 'cn'
 
-export interface PlaylistSongActionsProps {
+export interface LibrarySongContextMenuProps {
   song: TPlaylistSong
-  size?: 'default' | 'sm' | 'icon'
-  variant?: 'outline' | 'ghost' | 'default'
-  className?: string
-  showLabel?: boolean
+  children: React.ReactNode
 }
 
-export function PlaylistSongActions({
+export function LibrarySongContextMenu({
   song,
-  size = 'icon',
-  variant = 'outline',
-  className,
-  showLabel = false,
-}: PlaylistSongActionsProps) {
+  children,
+}: LibrarySongContextMenuProps) {
   const {
     isPlaying,
     isDeleteDialogOpen,
@@ -47,36 +40,20 @@ export function PlaylistSongActions({
     setIsMoveDialogOpen,
     handleTogglePlayback,
     handleOpenFolder,
-  } = usePlaylistSongActions({ song })
+  } = useLibrarySongActions({ song })
+
+  const { copySongTitle } = useCopySongTitle()
 
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger
-          render={
-            <Button
-              size={size}
-              variant={variant}
-              onClick={(e) => e.stopPropagation()}
-              aria-label='Song actions'
-              className={cn(className)}
-            >
-              <HugeiconsIcon icon={MoreHorizontalSquare01Icon} />
-              <Show when={showLabel}>
-                <span>Actions</span>
-              </Show>
-            </Button>
-          }
-        />
-        <DropdownMenuContent
-          className='w-44'
-          onClick={(e) => e.stopPropagation()}
-        >
-          <DropdownMenuGroup>
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
+      <ContextMenu>
+        <ContextMenuTrigger render={children as React.ReactElement} />
+        <ContextMenuContent className='w-48'>
+          <ContextMenuGroup>
+            <ContextMenuLabel>Actions</ContextMenuLabel>
+            <ContextMenuSeparator />
 
-            <DropdownMenuItem
+            <ContextMenuItem
               onClick={handleTogglePlayback}
               className='cursor-pointer'
             >
@@ -92,39 +69,45 @@ export function PlaylistSongActions({
                 <HugeiconsIcon icon={PauseIcon} />
                 <span>Pause</span>
               </Show>
-            </DropdownMenuItem>
+            </ContextMenuItem>
 
-            <CopySongMenuItem title={song.name} />
+            <ContextMenuItem
+              onClick={() => copySongTitle(song.name)}
+              className='cursor-pointer'
+            >
+              <HugeiconsIcon icon={Copy01Icon} />
+              <span>Copy title</span>
+            </ContextMenuItem>
 
-            <DropdownMenuItem
+            <ContextMenuItem
               onClick={handleOpenFolder}
               className='cursor-pointer'
             >
               <HugeiconsIcon icon={FolderIcon} />
               <span>Open folder</span>
-            </DropdownMenuItem>
+            </ContextMenuItem>
 
-            <DropdownMenuItem
+            <ContextMenuItem
               onClick={() => setIsMoveDialogOpen(true)}
               className='cursor-pointer'
             >
               <HugeiconsIcon icon={FolderTransferIcon} />
               <span>Move</span>
-            </DropdownMenuItem>
+            </ContextMenuItem>
 
-            <DropdownMenuSeparator />
+            <ContextMenuSeparator />
 
-            <DropdownMenuItem
+            <ContextMenuItem
               variant='destructive'
               onClick={() => setIsDeleteDialogOpen(true)}
               className='cursor-pointer'
             >
               <HugeiconsIcon icon={Delete01Icon} />
               <span>Delete</span>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
+            </ContextMenuItem>
+          </ContextMenuGroup>
+        </ContextMenuContent>
+      </ContextMenu>
 
       <MoveSong
         song={song}
