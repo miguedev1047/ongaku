@@ -6,6 +6,7 @@ export interface TAppConfig {
   folder_colors: string
   app_dir: string
   player_position: 'bottom' | 'top'
+  toggle_sidebar: string
 }
 
 export const systemConfigQueryOpts = () =>

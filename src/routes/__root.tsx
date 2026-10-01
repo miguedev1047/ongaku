@@ -10,8 +10,8 @@ import { usePreventWebviewShortcuts } from '@/hooks/use-prevent-shortcuts'
 import { usePlayerShortcuts } from '@/hooks/use-player-shortcuts'
 import { DownloadQueueDialog } from '@/features/download-queue/components'
 import { useDownloadQueueListener } from '@/features/download-queue/hooks'
-import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar'
-import { AppSidebar } from '@/blocks/app-sidebar'
+import { SidebarInset } from '@/components/ui/sidebar'
+import { AppSidebar, AppSidebarProvider } from '@/blocks/app-sidebar'
 
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
@@ -44,7 +44,7 @@ function RootComponent() {
   const isPlayerTop = config?.player_position === 'top'
 
   return (
-    <SidebarProvider defaultOpen={false}>
+    <AppSidebarProvider>
       <div className='h-screen w-screen flex flex-col overflow-hidden select-none'>
         <TanstackDevtool />
 
@@ -73,6 +73,6 @@ function RootComponent() {
 
         <Toaster />
       </div>
-    </SidebarProvider>
+    </AppSidebarProvider>
   )
 }

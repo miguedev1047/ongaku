@@ -56,7 +56,7 @@ function RouteComponent() {
         >
           <TabsList
             variant='default'
-            className='grid grid-cols-3 max-w-sm'
+            className='grid grid-cols-3 max-w-md'
           >
             <TabsTrigger value='general'>General</TabsTrigger>
             <TabsTrigger value='appearance'>Appearance</TabsTrigger>

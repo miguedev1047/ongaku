@@ -145,6 +145,9 @@ fn test_config_table_and_queries() {
     let app_dir = get_config(&conn, "app_dir").unwrap();
     assert!(app_dir.is_some());
 
+    let toggle_sidebar = get_config(&conn, "toggle_sidebar").unwrap();
+    assert_eq!(toggle_sidebar, Some("false".to_string()));
+
     let all_configs = get_all_config(&conn).unwrap();
     assert_eq!(all_configs.get("theme").map(String::as_str), Some("system"));
     assert_eq!(
@@ -152,6 +155,10 @@ fn test_config_table_and_queries() {
         Some("#507dbc")
     );
     assert!(all_configs.contains_key("app_dir"));
+    assert_eq!(
+        all_configs.get("toggle_sidebar").map(String::as_str),
+        Some("false")
+    );
 
     // Update config
     set_config(&conn, "theme", "dark").unwrap();
