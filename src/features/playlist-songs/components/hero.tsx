@@ -1,4 +1,4 @@
-import { FolderIcon, PauseIcon, PlayIcon } from '@hugeicons/core-free-icons'
+import { PauseIcon, PlayIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { cn } from 'cn'
 import { Button } from '@/components/ui/button'
@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/tooltip'
 import { usePlaylistHero } from '@/features/playlist-songs/hooks/use-playlist-hero'
 import { DotmSquare18 } from '@/components/ui/dotm-square-18'
+import { PlaylistActions } from '@/blocks/song-actions/playlists'
 
 export function PlaylistSongHero() {
   const {
@@ -28,7 +29,6 @@ export function PlaylistSongHero() {
     hasShowCover,
     isPlaylistPlaying,
     playTooltipText,
-    handleOpenFolder,
     handlePlayPlaylist,
   } = usePlaylistHero()
 
@@ -142,29 +142,7 @@ export function PlaylistSongHero() {
             'flex flex-row sm:flex-col justify-between sm:justify-between items-center sm:items-end w-full sm:w-auto shrink-0 sm:self-stretch gap-3 pt-2 sm:pt-0 border-t border-border/20 sm:border-t-0',
           )}
         >
-          <Tooltip>
-            <TooltipTrigger
-              render={
-                <Button
-                  variant='outline'
-                  size='sm'
-                  onClick={handleOpenFolder}
-                  className={cn(
-                    'gap-1.5 text-xs bg-background/60 hover:bg-background/90 backdrop-blur-xs cursor-pointer',
-                  )}
-                >
-                  <HugeiconsIcon
-                    icon={FolderIcon}
-                    className={cn('size-3.5')}
-                  />
-                  <span>Open folder</span>
-                </Button>
-              }
-            />
-            <TooltipContent side='top'>
-              <p>Open playlist folder in file explorer</p>
-            </TooltipContent>
-          </Tooltip>
+          <PlaylistActions />
 
           <Tooltip>
             <TooltipTrigger

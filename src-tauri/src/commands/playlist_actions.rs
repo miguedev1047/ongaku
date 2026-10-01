@@ -147,6 +147,7 @@ pub fn rename_playlist(
             &new_path,
             &new_id,
         );
+        let _ = crate::db::sync::sync_library(&mut conn);
     }
 
     Ok(PlaylistActionResponse {

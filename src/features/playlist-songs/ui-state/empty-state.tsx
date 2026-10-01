@@ -1,19 +1,31 @@
 import {
   Empty,
+  EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
-  EmptyTitle
+  EmptyTitle,
 } from "@/components/ui/empty"
 import { MusicNote01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
+import { useParams } from "@tanstack/react-router"
+import { ImportSongsButton } from "@/features/playlist-songs/components/import-songs-button"
 import { cn } from "cn"
+
+import { Show } from "@/components/utility/show"
 
 export interface PlaylistSongsEmptyStateProps {
   className?: string
+  playlistName?: string
 }
 
-export function PlaylistSongsEmptyState({ className }: PlaylistSongsEmptyStateProps) {
+export function PlaylistSongsEmptyState({
+  className,
+  playlistName: propPlaylistName,
+}: PlaylistSongsEmptyStateProps) {
+  const params = useParams({ strict: false }) as { playlistName?: string }
+  const playlistName = propPlaylistName || params.playlistName || ""
+
   return (
     <div
       className={cn(
@@ -28,9 +40,19 @@ export function PlaylistSongsEmptyState({ className }: PlaylistSongsEmptyStatePr
           </EmptyMedia>
           <EmptyTitle>No songs in this playlist</EmptyTitle>
           <EmptyDescription>
-            Search YouTube and download songs to add them here
+            Import local audio files or search YouTube to add songs here
           </EmptyDescription>
         </EmptyHeader>
+        <Show when={Boolean(playlistName)}>
+          <EmptyContent>
+            <ImportSongsButton
+              playlistName={playlistName}
+              showText
+              variant="outline"
+              className="mt-2"
+            />
+          </EmptyContent>
+        </Show>
       </Empty>
     </div>
   )

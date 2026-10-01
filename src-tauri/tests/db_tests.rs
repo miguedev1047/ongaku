@@ -113,6 +113,25 @@ fn test_db_queries_and_crud() {
         rusqlite::params!["Jazz", "jazz", "C:/Music/Jazz", 1000],
     )
     .unwrap();
+    conn.execute(
+        "INSERT INTO songs (path, id, playlist_name, file_name, title, artist, album, duration, file_size, mtime, created_at)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)",
+        rusqlite::params![
+            "C:/Music/Jazz/Miles.mp3",
+            "m1",
+            "Jazz",
+            "Miles.mp3",
+            "Miles",
+            None::<String>,
+            None::<String>,
+            Some(300.0),
+            1000,
+            1000,
+            1000
+        ],
+    )
+    .unwrap();
+
     rename_playlist_in_db(
         &mut conn,
         "Jazz",
@@ -124,10 +143,24 @@ fn test_db_queries_and_crud() {
     let playlists = get_playlists(&conn).unwrap();
     assert!(playlists.iter().any(|p| p.name == "Smooth Jazz"));
 
+    let smooth_jazz_songs = get_playlist_songs(&conn, "Smooth Jazz").unwrap();
+    assert_eq!(smooth_jazz_songs.len(), 1);
+    assert_eq!(smooth_jazz_songs[0].playlist_name, "Smooth Jazz");
+    assert_eq!(
+        smooth_jazz_songs[0].path,
+        std::path::Path::new("C:/Music/Smooth Jazz")
+            .join("Miles.mp3")
+            .to_string_lossy()
+    );
+
+    let old_jazz_songs = get_playlist_songs(&conn, "Jazz").unwrap();
+    assert_eq!(old_jazz_songs.len(), 0);
+
     // Test delete_playlist_in_db
     delete_playlist_in_db(&conn, "Smooth Jazz").unwrap();
     let playlists_after = get_playlists(&conn).unwrap();
     assert!(!playlists_after.iter().any(|p| p.name == "Smooth Jazz"));
+    assert_eq!(get_playlist_songs(&conn, "Smooth Jazz").unwrap().len(), 0);
 }
 
 #[test]

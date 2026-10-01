@@ -113,12 +113,25 @@ pub fn rename_playlist_in_db(
         params![new_id, new_name, new_path, old_name],
     )?;
 
-    tx.execute(
-        "UPDATE songs
-         SET playlist_name = ?1
-         WHERE playlist_name = ?2",
-        params![new_name, old_name],
-    )?;
+    let mut stmt = tx.prepare("SELECT path, file_name FROM songs WHERE playlist_name = ?1")?;
+    let songs: Vec<(String, String)> = stmt
+        .query_map(params![old_name], |row| {
+            Ok((row.get(0)?, row.get(1)?))
+        })?
+        .filter_map(|r| r.ok())
+        .collect();
+    drop(stmt);
+
+    let new_base_dir = std::path::Path::new(new_path);
+    for (old_song_path, file_name) in songs {
+        let updated_song_path = new_base_dir.join(&file_name).to_string_lossy().to_string();
+        tx.execute(
+            "UPDATE songs
+             SET path = ?1, playlist_name = ?2
+             WHERE path = ?3",
+            params![updated_song_path, new_name, old_song_path],
+        )?;
+    }
 
     tx.commit()?;
     Ok(())

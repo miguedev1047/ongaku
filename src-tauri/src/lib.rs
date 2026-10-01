@@ -10,8 +10,9 @@ use crate::{
         batch_delete_songs, batch_move_songs, cancel_download, change_app_dir, check_binaries,
         delete_playlist, delete_song, download_binaries, download_song, get_app_config,
         get_binaries_info, get_playlist_songs, get_playlists, get_server_port, get_system_health,
-        get_youtube_stream_url, library, move_song, new_playlist, open_folder, rename_playlist,
-        search_youtube, select_directory, set_app_config, sync_library, DownloadManagerState,
+        get_youtube_stream_url, import_songs_by_paths, import_songs_to_playlist, library,
+        move_song, new_playlist, open_folder, rename_playlist, search_youtube, select_directory,
+        set_app_config, sync_library, DownloadManagerState,
     },
     helpers::{setup_app, single_instance_plugin},
 };
@@ -53,7 +54,9 @@ pub fn run() {
             get_app_config,
             set_app_config,
             select_directory,
-            change_app_dir
+            change_app_dir,
+            import_songs_to_playlist,
+            import_songs_by_paths
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
