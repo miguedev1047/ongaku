@@ -1,8 +1,16 @@
-import { Button } from "@/components/ui/button"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { RefreshIcon } from "@hugeicons/core-free-icons"
-import { Spinner } from "@/components/ui/spinner"
-import { Show } from "@/components/utility/show"
+import { Button } from '@/components/ui/button'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { RefreshIcon } from '@hugeicons/core-free-icons'
+import { Spinner } from '@/components/ui/spinner'
+import { Show } from '@/components/utility/show'
+import { SidebarTrigger } from '@/components/ui/sidebar'
+import { Separator } from '@/components/ui/separator'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbPage,
+} from '@/components/ui/breadcrumb'
 
 interface SettingsHeaderProps {
   isLoading: boolean
@@ -11,34 +19,41 @@ interface SettingsHeaderProps {
 
 export function SettingsHeader({ isLoading, onRefresh }: SettingsHeaderProps) {
   return (
-    <header className="flex items-center justify-between px-4 lg:px-6 py-4 border-b border-border/40 shrink-0">
-      <div>
-        <h1 className="text-lg font-semibold tracking-tight text-foreground">
-          Settings & System Status
-        </h1>
-        <p className="text-xs text-muted-foreground mt-0.5">
-          Monitor application health, streaming services, system directories, and preferences
-        </p>
-      </div>
+    <header className='flex h-12 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear'>
+      <div className='flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6'>
+        <SidebarTrigger className='-ml-1 max-md:block hidden' />
+        <Separator
+          orientation='vertical'
+          className='mx-2 data-[orientation=vertical]:h-4 max-md:block hidden my-auto'
+        />
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbPage>Settings</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
 
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={onRefresh}
-        disabled={isLoading}
-        className="h-8 gap-2 text-xs"
-      >
-        <Show
-          when={!isLoading}
-          fallback={<Spinner className="size-3.5" />}
-        >
-          <HugeiconsIcon
-            icon={RefreshIcon}
-            className="size-3.5"
-          />
-        </Show>
-        <span>Refresh Status</span>
-      </Button>
+        <div className='flex items-center gap-1 ml-auto'>
+          <Button
+            variant='outline'
+            size='sm'
+            onClick={onRefresh}
+            disabled={isLoading}
+          >
+            <Show
+              when={!isLoading}
+              fallback={<Spinner className='size-3.5' />}
+            >
+              <HugeiconsIcon
+                icon={RefreshIcon}
+                className='size-3.5'
+              />
+            </Show>
+            <span>Refresh Status</span>
+          </Button>
+        </div>
+      </div>
     </header>
   )
 }
