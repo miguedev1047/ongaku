@@ -9,46 +9,30 @@ pub fn init_schema(conn: &Connection) -> Result<()> {
         "#,
     )?;
 
-    // Check if songs table exists and whether path is the primary key:
-    let table_exists: bool = conn
+    // Check if the new relational schema already exists (via playlist_songs table)
+    let has_relational_schema: bool = conn
         .query_row(
-            "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='songs'",
+            "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='playlist_songs'",
             [],
             |row| row.get(0),
         )
         .map(|count: i64| count > 0)
         .unwrap_or(false);
 
-    if table_exists {
-        // Inspect table info to see if id is primary key instead of path
-        let is_id_pk: bool = conn
-            .query_row(
-                "SELECT pk FROM pragma_table_info('songs') WHERE name = 'id'",
-                [],
-                |row| row.get(0),
-            )
-            .map(|pk: i64| pk == 1)
-            .unwrap_or(false);
-
-        if is_id_pk {
-            // Drop old tables so they are recreated cleanly with path as primary key
-            conn.execute_batch("DROP TABLE IF EXISTS songs; DROP TABLE IF EXISTS playlists;")?;
-        }
+    if !has_relational_schema {
+        // Breaking migration for v0.1.17: reset legacy tables to new DB-First relational architecture
+        conn.execute_batch(
+            "DROP TABLE IF EXISTS playlist_songs;
+             DROP TABLE IF EXISTS songs;
+             DROP TABLE IF EXISTS playlists;",
+        )?;
     }
 
     conn.execute_batch(
         r#"
-        CREATE TABLE IF NOT EXISTS playlists (
-            name TEXT PRIMARY KEY,
-            id TEXT NOT NULL,
-            path TEXT NOT NULL,
-            created_at INTEGER NOT NULL
-        );
-
         CREATE TABLE IF NOT EXISTS songs (
-            path TEXT PRIMARY KEY,
-            id TEXT NOT NULL,
-            playlist_name TEXT NOT NULL,
+            id TEXT PRIMARY KEY,
+            path TEXT NOT NULL UNIQUE,
             file_name TEXT NOT NULL,
             title TEXT NOT NULL,
             artist TEXT,
@@ -59,13 +43,30 @@ pub fn init_schema(conn: &Connection) -> Result<()> {
             created_at INTEGER NOT NULL
         );
 
+        CREATE TABLE IF NOT EXISTS playlists (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL UNIQUE,
+            position INTEGER NOT NULL DEFAULT 0,
+            created_at INTEGER NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS playlist_songs (
+            playlist_id INTEGER NOT NULL REFERENCES playlists(id) ON DELETE CASCADE,
+            song_id TEXT NOT NULL REFERENCES songs(id) ON DELETE CASCADE,
+            position INTEGER NOT NULL,
+            added_at INTEGER NOT NULL,
+            PRIMARY KEY (playlist_id, song_id)
+        );
+
         CREATE TABLE IF NOT EXISTS config (
             key TEXT PRIMARY KEY,
             value TEXT NOT NULL
         );
 
-        CREATE INDEX IF NOT EXISTS idx_songs_playlist_name ON songs(playlist_name);
-        CREATE INDEX IF NOT EXISTS idx_songs_id ON songs(id);
+        CREATE INDEX IF NOT EXISTS idx_playlist_songs_playlist_id ON playlist_songs(playlist_id);
+        CREATE INDEX IF NOT EXISTS idx_playlist_songs_song_id ON playlist_songs(song_id);
+        CREATE INDEX IF NOT EXISTS idx_playlist_songs_position ON playlist_songs(playlist_id, position);
+        CREATE INDEX IF NOT EXISTS idx_playlists_position ON playlists(position);
         CREATE INDEX IF NOT EXISTS idx_songs_title ON songs(title COLLATE NOCASE);
         "#,
     )?;
@@ -78,4 +79,3 @@ pub fn init_schema(conn: &Connection) -> Result<()> {
 
     Ok(())
 }
-

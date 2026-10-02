@@ -8,7 +8,7 @@ use serde::Deserialize;
 use tower::ServiceExt;
 use tower_http::services::ServeFile;
 
-use crate::helpers::{get_playlist_dir, resolve_inside, ResolveError};
+use crate::helpers::{get_library_dir, resolve_inside, ResolveError};
 
 #[derive(Debug, Deserialize)]
 pub struct SongStreamApi {
@@ -19,7 +19,7 @@ pub async fn get_song_stream(
     Query(params): Query<SongStreamApi>,
     req: Request<Body>,
 ) -> Result<impl IntoResponse, StatusCode> {
-    let song_path = resolve_inside(&get_playlist_dir(), &params.path).map_err(|err| match err {
+    let song_path = resolve_inside(&get_library_dir(), &params.path).map_err(|err| match err {
         ResolveError::NotFound => StatusCode::NOT_FOUND,
         ResolveError::OutsideRoot => StatusCode::FORBIDDEN,
     })?;

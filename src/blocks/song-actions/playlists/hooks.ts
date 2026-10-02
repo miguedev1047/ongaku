@@ -1,9 +1,7 @@
 import { useState, useCallback } from 'react'
 import { useParams } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { toast } from 'sonner'
 import { playlistsQueryOpts } from '@/shared/queries/playlists'
-import { openFolder } from '@/shared/helpers/open-folder'
 import { useImportSongs } from '@/features/playlist-songs/hooks'
 
 export interface UsePlaylistActionsProps {
@@ -25,20 +23,6 @@ export function usePlaylistActions({
     playlistName,
   })
 
-  const handleOpenFolder = useCallback(async () => {
-    if (!playlist?.path) {
-      toast.error('Playlist folder not found')
-      return
-    }
-
-    try {
-      await openFolder(playlist.path)
-      toast.info(`Opened folder for "${playlist.name}"`)
-    } catch {
-      toast.error('Error opening playlist folder')
-    }
-  }, [playlist?.path, playlist?.name])
-
   const handleImportSongs = useCallback(async () => {
     if (!playlistName) return
     await importSongs()
@@ -50,7 +34,6 @@ export function usePlaylistActions({
     isImporting,
     isDeleteOpen,
     setIsDeleteOpen,
-    handleOpenFolder,
     handleImportSongs,
   }
 }

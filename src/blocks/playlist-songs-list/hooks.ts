@@ -38,7 +38,10 @@ interface BatchActionResponse {
         id: song.id || undefined
       }))
 
-      const res = await invoke<BatchActionResponse>("batch_delete_songs", { items })
+      const res = await invoke<BatchActionResponse>("batch_delete_songs", {
+        items,
+        playlistName: currentPlaylistName || undefined,
+      })
 
       for (const song of selectedSongs) {
         useLocalPlayerStore.getState().removeFromQueue(song.id)
@@ -50,14 +53,16 @@ interface BatchActionResponse {
       }
 
       if (res.success_count > 0) {
+        const actionLabel = currentPlaylistName ? "removed from playlist" : "deleted successfully"
         toast.success(
           res.success_count === 1
-            ? "1 song deleted successfully"
-            : `${res.success_count} songs deleted successfully`
+            ? `1 song ${actionLabel}`
+            : `${res.success_count} songs ${actionLabel}`
         )
       }
       if (res.failed_count > 0) {
-        toast.error(`Failed to delete ${res.failed_count} song(s)`)
+        const actionFail = currentPlaylistName ? "remove" : "delete"
+        toast.error(`Failed to ${actionFail} ${res.failed_count} song(s)`)
       }
 
       if (currentPlaylistName) {

@@ -4,13 +4,11 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
   Delete01Icon,
-  FolderIcon,
   ImportIcon,
   MoreHorizontalSquare01Icon,
 } from '@hugeicons/core-free-icons'
@@ -19,6 +17,7 @@ import { cn } from 'cn'
 import { Show } from '@/components/utility/show'
 import { DeletePlaylist } from '@/features/playlists/components'
 import { usePlaylistActions } from '@/blocks/song-actions/playlists/hooks'
+import { DROPDOWN_ACTIONS_MENU_WIDTH } from '@/constants/styles'
 
 export interface PlaylistActionsProps {
   playlistName?: string
@@ -28,7 +27,7 @@ export interface PlaylistActionsProps {
   showLabel?: boolean
 }
 
-export function PlaylistActions({
+export function PlaylistHeroActions({
   playlistName,
   size = 'icon',
   variant = 'outline',
@@ -40,7 +39,6 @@ export function PlaylistActions({
     isImporting,
     isDeleteOpen,
     setIsDeleteOpen,
-    handleOpenFolder,
     handleImportSongs,
   } = usePlaylistActions({ playlistName })
 
@@ -65,28 +63,17 @@ export function PlaylistActions({
           }
         />
         <DropdownMenuContent
-          className={cn('w-48')}
           align='end'
+          className={cn(DROPDOWN_ACTIONS_MENU_WIDTH)}
           onClick={(e) => e.stopPropagation()}
         >
           <DropdownMenuGroup>
-            <DropdownMenuLabel>Playlist actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-
             <DropdownMenuItem
               onClick={handleImportSongs}
               className={cn('cursor-pointer')}
             >
               <HugeiconsIcon icon={ImportIcon} />
               <span>Import songs</span>
-            </DropdownMenuItem>
-
-            <DropdownMenuItem
-              onClick={handleOpenFolder}
-              className={cn('cursor-pointer')}
-            >
-              <HugeiconsIcon icon={FolderIcon} />
-              <span>Open folder</span>
             </DropdownMenuItem>
 
             <Show when={playlist}>

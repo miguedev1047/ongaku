@@ -7,7 +7,7 @@ use tokio::sync::Mutex;
 use crate::commands::PlaylistSong;
 use crate::helpers::{
     created_time, download_song_from_url, extract_song_id, extract_song_metadata,
-    extract_song_name, get_playlist_dir, get_staging_dir,
+    extract_song_name, get_staging_dir,
 };
 
 #[derive(Default, Clone)]
@@ -66,11 +66,49 @@ pub async fn download_song(
     db: State<'_, crate::db::DbPool>,
     app: tauri::AppHandle,
 ) -> Result<PlaylistSong, String> {
-    let target_dir = get_playlist_dir().join(&playlist_name);
+    let target_dir = crate::helpers::get_library_dir();
 
     if !target_dir.exists() {
         fs::create_dir_all(&target_dir)
-            .map_err(|err| format!("Failed to create playlist directory: {}", err))?;
+            .map_err(|err| format!("Failed to create library directory: {}", err))?;
+    }
+
+    // Check if song already exists in library
+    if let Ok(conn) = db.get() {
+        let existing_song: Option<(String, String, Option<f64>, Option<String>, Option<String>, i64)> = conn
+            .query_row(
+                "SELECT title, path, duration, artist, album, created_at FROM songs WHERE id = ?1",
+                rusqlite::params![&id],
+                |row| {
+                    Ok((
+                        row.get(0)?,
+                        row.get(1)?,
+                        row.get(2)?,
+                        row.get(3)?,
+                        row.get(4)?,
+                        row.get(5)?,
+                    ))
+                },
+            )
+            .ok();
+
+        if let Some((title, path, duration, artist, album, created_at)) = existing_song {
+            if !playlist_name.trim().is_empty() {
+                let _ = crate::db::queries::add_song_to_playlist(&conn, &playlist_name, &id);
+            }
+            return Ok(PlaylistSong {
+                name: title,
+                id,
+                playlist_name,
+                path,
+                created: created_at as u64,
+                metadata: crate::helpers::SongMetadata {
+                    duration,
+                    artist,
+                    album,
+                },
+            });
+        }
     }
 
     let state_clone = state.inner().clone();
@@ -100,14 +138,15 @@ pub async fn download_song(
         .map(|f| f.to_string_lossy().to_string())
         .ok_or_else(|| "Invalid downloaded song filename".to_string())?;
 
-    let song_id = file_name.clone();
+    let song_id = extract_song_id(&file_name);
+    let resolved_id = if song_id.is_empty() { id.clone() } else { song_id };
     let metadata = extract_song_metadata(&file_path);
     let created = created_time(file_path.metadata());
 
     let song = PlaylistSong {
         name: extract_song_name(&file_name),
-        id: extract_song_id(&song_id),
-        playlist_name,
+        id: resolved_id.clone(),
+        playlist_name: playlist_name.clone(),
         path: file_path.to_string_lossy().to_string(),
         created,
         metadata,
@@ -124,11 +163,10 @@ pub async fn download_song(
 
     if let Ok(conn) = db.get() {
         let _ = conn.execute(
-            "INSERT INTO songs (path, id, playlist_name, file_name, title, artist, album, duration, file_size, mtime, created_at)
-             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)
-             ON CONFLICT(path) DO UPDATE SET
-                 id = excluded.id,
-                 playlist_name = excluded.playlist_name,
+            "INSERT INTO songs (id, path, file_name, title, artist, album, duration, file_size, mtime, created_at)
+             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)
+             ON CONFLICT(id) DO UPDATE SET
+                 path = excluded.path,
                  file_name = excluded.file_name,
                  title = excluded.title,
                  artist = excluded.artist,
@@ -137,9 +175,8 @@ pub async fn download_song(
                  file_size = excluded.file_size,
                  mtime = excluded.mtime",
             rusqlite::params![
-                song.path,
                 song.id,
-                song.playlist_name,
+                song.path,
                 file_name,
                 song.name,
                 song.metadata.artist,
@@ -150,6 +187,10 @@ pub async fn download_song(
                 song.created as i64,
             ],
         );
+
+        if !playlist_name.trim().is_empty() {
+            let _ = crate::db::queries::add_song_to_playlist(&conn, &playlist_name, &song.id);
+        }
     }
 
     Ok(song)

@@ -11,7 +11,7 @@ use tower::ServiceExt;
 use tower_http::services::ServeFile;
 
 use crate::helpers::{
-    encode_webp, extract_cover, get_cache_pictures_dir, get_playlist_dir, resolve_inside,
+    encode_webp, extract_cover, get_cache_pictures_dir, get_library_dir, resolve_inside,
     resolve_song_id, ResolveError,
 };
 
@@ -24,7 +24,7 @@ pub struct SongCoverApi {
 }
 
 fn resolve_song_path(params: &SongCoverApi) -> Result<std::path::PathBuf, StatusCode> {
-    resolve_inside(&get_playlist_dir(), &params.path).map_err(|err| match err {
+    resolve_inside(&get_library_dir(), &params.path).map_err(|err| match err {
         ResolveError::NotFound => StatusCode::NOT_FOUND,
         ResolveError::OutsideRoot => StatusCode::FORBIDDEN,
     })

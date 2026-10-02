@@ -9,10 +9,15 @@ import type { TSongAction } from "@/shared/types/song-actions"
 
 interface UseDeleteSongProps {
   song: TPlaylistSong
+  context?: 'playlist' | 'library'
   onSuccess?: () => void
 }
 
-export function useDeleteSong({ song, onSuccess }: UseDeleteSongProps) {
+export function useDeleteSong({
+  song,
+  context = 'playlist',
+  onSuccess,
+}: UseDeleteSongProps) {
   const queryClient = useQueryClient()
   const currentSong = useLocalPlayerStore((state) => state.currentSong)
   const setCurrentSong = useLocalPlayerStore((state) => state.setCurrentSong)
@@ -21,13 +26,18 @@ export function useDeleteSong({ song, onSuccess }: UseDeleteSongProps) {
 
   const mutation = useMutation({
     mutationFn: async () => {
-      return await invoke<TSongAction>("delete_song", {
-        path: song.path,
-        id: song.id
+      if (context === 'library') {
+        return await invoke<TSongAction>('delete_song_from_library', {
+          songId: song.id,
+        })
+      }
+      return await invoke<TSongAction>('remove_song_from_playlist', {
+        playlistName: song.playlist_name,
+        songId: song.id,
       })
     },
     onSuccess: (data) => {
-      if (data.code === "ERROR") {
+      if (data.code === 'ERROR') {
         toast.error(data.message)
         return
       }
@@ -36,35 +46,43 @@ export function useDeleteSong({ song, onSuccess }: UseDeleteSongProps) {
 
       useLocalPlayerStore.getState().removeFromQueue(song.id)
 
-      // If the currently playing song is deleted, reset the player
+      // If the currently playing song is deleted or removed, reset the player
       if (currentSong?.id === song.id) {
         if (audioRef) {
           audioRef.pause()
         }
         setCurrentSong(null)
-        setPlayerState("idle")
+        setPlayerState('idle')
       }
 
-      // Invalidate playlist songs query
-      queryClient.invalidateQueries({
-        queryKey: playlistSongsQueryOpts(song.playlist_name).queryKey
-      })
+      // Invalidate playlist songs query if removing from a playlist or deleting
+      if (song.playlist_name) {
+        queryClient.invalidateQueries({
+          queryKey: playlistSongsQueryOpts(song.playlist_name).queryKey,
+        })
+      }
 
       // Invalidate playlists query (updates song count in playlists list)
       queryClient.invalidateQueries({
-        queryKey: playlistsQueryOpts().queryKey
+        queryKey: playlistsQueryOpts().queryKey,
       })
 
       // Invalidate library songs query
-      queryClient.invalidateQueries({
-        queryKey: ["library-songs"]
-      })
+      if (context === 'library') {
+        queryClient.invalidateQueries({
+          queryKey: ['library-songs'],
+        })
+      }
 
       onSuccess?.()
     },
     onError: () => {
-      toast.error("An error occurred while deleting the song")
-    }
+      toast.error(
+        context === 'library'
+          ? 'An error occurred while deleting the song'
+          : 'An error occurred while removing the song from the playlist'
+      )
+    },
   })
 
   const handleDeleteSong = () => {
@@ -73,6 +91,6 @@ export function useDeleteSong({ song, onSuccess }: UseDeleteSongProps) {
 
   return {
     handleDeleteSong,
-    isPending: mutation.isPending
+    isPending: mutation.isPending,
   }
 }

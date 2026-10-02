@@ -60,11 +60,11 @@ pub fn get_system_health(
 
     let directories = vec![
         DirectoryHealth {
-            id: "playlists".to_string(),
-            name: "Playlists".to_string(),
-            path: app_paths.playlist_dir.to_string_lossy().to_string(),
-            exists: app_paths.playlist_dir.exists(),
-            writable: check_dir_writable(&app_paths.playlist_dir),
+            id: "library".to_string(),
+            name: "Library".to_string(),
+            path: app_paths.library_dir.to_string_lossy().to_string(),
+            exists: app_paths.library_dir.exists(),
+            writable: check_dir_writable(&app_paths.library_dir),
         },
         DirectoryHealth {
             id: "database".to_string(),
@@ -107,7 +107,7 @@ pub fn get_system_health(
         ytdlp_installed: ytdlp_path.is_file(),
         ffmpeg_installed: ffmpeg_path.is_file(),
         bin_dir: app_paths.bin_dir.to_string_lossy().to_string(),
-        music_dir: app_paths.playlist_dir.to_string_lossy().to_string(),
+        music_dir: app_paths.library_dir.to_string_lossy().to_string(),
         db_path: db_path.to_string_lossy().to_string(),
         db_exists: db_path.is_file(),
         directories,

@@ -7,7 +7,7 @@ use std::sync::{OnceLock, RwLock};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppPaths {
     pub app_dir: PathBuf,
-    pub playlist_dir: PathBuf,
+    pub library_dir: PathBuf,
     pub cache_dir: PathBuf,
     pub cache_pictures_dir: PathBuf,
     pub bin_dir: PathBuf,
@@ -70,8 +70,12 @@ pub fn get_db_path() -> PathBuf {
     get_db_dir().join("ongaku.db")
 }
 
+pub fn get_library_dir() -> PathBuf {
+    get_app_dir().join("library")
+}
+
 pub fn get_playlist_dir() -> PathBuf {
-    get_app_dir().join("playlists")
+    get_library_dir()
 }
 
 pub fn get_cache_dir() -> PathBuf {
@@ -101,7 +105,7 @@ pub fn get_paths_config_path() -> PathBuf {
 pub fn get_app_paths() -> AppPaths {
     AppPaths {
         app_dir: get_app_dir(),
-        playlist_dir: get_playlist_dir(),
+        library_dir: get_library_dir(),
         cache_dir: get_cache_dir(),
         cache_pictures_dir: get_cache_pictures_dir(),
         bin_dir: get_bin_dir(),

@@ -25,6 +25,8 @@ import { PlaylistContextMenuGroup } from '@/features/youtube-search/components'
 import { useCopySongTitle } from '@/blocks/song-actions/shared/use-copy-song-title'
 import { useSearchSongActions } from '@/blocks/song-actions/search-songs/hooks'
 import { Show } from '@/components/utility/show'
+import { cn } from 'cn'
+import { CONTEXT_ACTIONS_MENU_WIDTH } from '@/constants/styles'
 
 export interface SearchSongContextMenuProps {
   item: TYoutubeSearchResult
@@ -48,11 +50,8 @@ export function SearchSongContextMenu({
   return (
     <ContextMenu>
       <ContextMenuTrigger render={children as React.ReactElement} />
-      <ContextMenuContent className='w-48'>
+      <ContextMenuContent className={cn(CONTEXT_ACTIONS_MENU_WIDTH)}>
         <ContextMenuGroup>
-          <ContextMenuLabel>Actions</ContextMenuLabel>
-          <ContextMenuSeparator />
-
           <ContextMenuItem
             onClick={togglePlayback}
             className='cursor-pointer'

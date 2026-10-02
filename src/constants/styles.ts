@@ -1,0 +1,2 @@
+export const CONTEXT_ACTIONS_MENU_WIDTH = 'w-56'
+export const DROPDOWN_ACTIONS_MENU_WIDTH = 'w-56'

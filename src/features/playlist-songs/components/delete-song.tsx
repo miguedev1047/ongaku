@@ -17,13 +17,22 @@ interface DeleteSongProps {
   song: TPlaylistSong
   open: boolean
   onOpenChange: (open: boolean) => void
+  context?: 'playlist' | 'library'
 }
 
-export function DeleteSong({ song, open, onOpenChange }: DeleteSongProps) {
+export function DeleteSong({
+  song,
+  open,
+  onOpenChange,
+  context = 'playlist',
+}: DeleteSongProps) {
   const { handleDeleteSong, isPending } = useDeleteSong({
     song,
-    onSuccess: () => onOpenChange(false)
+    context,
+    onSuccess: () => onOpenChange(false),
   })
+
+  const isLibrary = context === 'library'
 
   return (
     <Dialog
@@ -32,10 +41,22 @@ export function DeleteSong({ song, open, onOpenChange }: DeleteSongProps) {
     >
       <DialogContent onClick={(e) => e.stopPropagation()}>
         <DialogHeader>
-          <DialogTitle>Delete song "{song.name}"</DialogTitle>
+          <DialogTitle>
+            <Show
+              when={isLibrary}
+              fallback={`Remove song "${song.name}"`}
+            >
+              Delete song "{song.name}"
+            </Show>
+          </DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete this song? This action cannot be
-            undone and will remove the file from your computer.
+            <Show
+              when={isLibrary}
+              fallback="Are you sure you want to remove this song from the playlist? The file will remain in your library."
+            >
+              Are you sure you want to delete this song? This action cannot be
+              undone and will permanently remove the audio file from your library.
+            </Show>
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -48,7 +69,12 @@ export function DeleteSong({ song, open, onOpenChange }: DeleteSongProps) {
             <Show when={isPending}>
               <Spinner />
             </Show>
-            Delete
+            <Show
+              when={isLibrary}
+              fallback="Remove"
+            >
+              Delete
+            </Show>
           </Button>
         </DialogFooter>
       </DialogContent>

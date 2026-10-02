@@ -3,7 +3,7 @@ use std::path::Path;
 use tauri::State;
 
 use crate::db::DbPool;
-use crate::helpers::{get_app_dir, get_playlist_dir, move_app_directory};
+use crate::helpers::{get_app_dir, move_app_directory};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppConfig {
@@ -79,33 +79,25 @@ pub fn change_app_dir(db: State<'_, DbPool>, new_parent_dir: String) -> Result<A
     // Checkpoint SQLite WAL before moving
     let _ = conn.execute_batch("PRAGMA wal_checkpoint(TRUNCATE);");
 
-    let old_playlist_dir = get_playlist_dir().to_string_lossy().to_string();
+    let old_library_dir = crate::helpers::get_library_dir().to_string_lossy().to_string();
 
     let new_app_dir = move_app_directory(target_parent)?;
     let new_app_dir_str = new_app_dir.to_string_lossy().to_string();
-    let new_playlist_dir = get_playlist_dir().to_string_lossy().to_string();
+    let new_library_dir = crate::helpers::get_library_dir().to_string_lossy().to_string();
 
     // 1. Update app_dir in config table
     crate::db::queries::set_config(&conn, "app_dir", &new_app_dir_str)
         .map_err(|err| format!("Failed to update app_dir in database: {}", err))?;
 
-    // 2. Atomically update existing playlist and song paths if root playlist dir changed
-    if old_playlist_dir != new_playlist_dir {
+    // 2. Atomically update existing song paths if root library dir changed
+    if old_library_dir != new_library_dir {
         let tx = conn.transaction().map_err(|e| e.to_string())?;
-
-        tx.execute(
-            "UPDATE playlists 
-             SET path = ?1 || SUBSTR(path, LENGTH(?2) + 1) 
-             WHERE path LIKE ?2 || '%'",
-            rusqlite::params![new_playlist_dir, old_playlist_dir],
-        )
-        .map_err(|err| format!("Failed to update playlist paths in database: {}", err))?;
 
         tx.execute(
             "UPDATE songs 
              SET path = ?1 || SUBSTR(path, LENGTH(?2) + 1) 
              WHERE path LIKE ?2 || '%'",
-            rusqlite::params![new_playlist_dir, old_playlist_dir],
+            rusqlite::params![new_library_dir, old_library_dir],
         )
         .map_err(|err| format!("Failed to update song paths in database: {}", err))?;
 

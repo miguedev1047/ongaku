@@ -8,11 +8,11 @@ mod server;
 use crate::{
     commands::{
         batch_delete_songs, batch_move_songs, cancel_download, change_app_dir, check_binaries,
-        delete_playlist, delete_song, download_binaries, download_song, get_app_config,
-        get_binaries_info, get_playlist_songs, get_playlists, get_server_port, get_system_health,
-        get_youtube_stream_url, import_songs_by_paths, import_songs_to_playlist, library,
-        move_song, new_playlist, open_folder, rename_playlist, search_youtube, select_directory,
-        set_app_config, sync_library, DownloadManagerState,
+        delete_playlist, delete_song, delete_song_from_library, download_binaries, download_song,
+        get_app_config, get_binaries_info, get_playlist_songs, get_playlists, get_server_port,
+        get_system_health, get_youtube_stream_url, import_songs_by_paths, import_songs_to_playlist,
+        library, move_song, new_playlist, open_folder, remove_song_from_playlist, rename_playlist,
+        search_youtube, select_directory, set_app_config, sync_library, DownloadManagerState,
     },
     helpers::{setup_app, single_instance_plugin},
 };
@@ -39,6 +39,8 @@ pub fn run() {
             rename_playlist,
             delete_playlist,
             delete_song,
+            delete_song_from_library,
+            remove_song_from_playlist,
             move_song,
             batch_delete_songs,
             batch_move_songs,

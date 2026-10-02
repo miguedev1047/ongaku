@@ -1,69 +1,83 @@
+use std::fs;
 use tauri_app_lib::db::queries::{
-    delete_playlist_in_db, delete_song_by_path, get_all_config, get_all_songs, get_config,
-    get_playlist_songs, get_playlists, move_song_in_db, rename_playlist_in_db, set_config,
+    add_song_to_playlist, create_playlist_in_db, delete_playlist_in_db,
+    delete_song_from_library, get_all_config, get_all_songs, get_config, get_playlist_songs,
+    get_playlists, move_song_between_playlists, remove_song_from_playlist, rename_playlist_in_db,
+    set_config,
 };
 use tauri_app_lib::db::schema::init_schema;
 use tauri_app_lib::db::sync::sync_library;
-use tauri_app_lib::helpers::get_playlist_dir;
+use tauri_app_lib::helpers::get_cache_pictures_dir;
 
-#[test]
-fn test_sync_real_playlists_and_delta() {
-    let playlist_dir = get_playlist_dir();
-    if !playlist_dir.exists() {
-        println!("Playlist dir does not exist on this machine, skipping real test.");
-        return;
-    }
+static TEST_LOCK: std::sync::Mutex<()> = std::sync::Mutex::new(());
 
-    let mut conn = rusqlite::Connection::open_in_memory().unwrap();
+fn setup_in_memory_db() -> rusqlite::Connection {
+    let conn = rusqlite::Connection::open_in_memory().unwrap();
+    conn.execute_batch(
+        "PRAGMA foreign_keys = ON;
+         PRAGMA journal_mode = WAL;
+         PRAGMA synchronous = NORMAL;",
+    )
+    .unwrap();
     init_schema(&conn).unwrap();
-
-    // 1. Initial Sync: Should parse all existing tracks
-    let stats1 = sync_library(&mut conn).unwrap();
-    println!("Initial sync: {:?}", stats1);
-    assert!(stats1.added_or_updated > 0);
-
-    let playlists = get_playlists(&conn).unwrap();
-    assert!(!playlists.is_empty());
-    println!("Loaded {} playlists", playlists.len());
-
-    let all_songs = get_all_songs(&conn).unwrap();
-    assert!(!all_songs.is_empty());
-    assert!(all_songs.len() <= stats1.added_or_updated);
-    println!(
-        "Loaded {} unique library songs (out of {} files)",
-        all_songs.len(),
-        stats1.added_or_updated
-    );
-
-    // 2. Immediate Delta Sync: No files modified, should parse 0 files!
-    let stats2 = sync_library(&mut conn).unwrap();
-    println!("Second delta sync: {:?}", stats2);
-    assert_eq!(stats2.added_or_updated, 0);
-    assert_eq!(stats2.deleted_songs, 0);
-    assert!(stats2.elapsed_ms < 50); // Delta compare takes < 50ms!
+    conn
 }
 
 #[test]
-fn test_db_queries_and_crud() {
-    let mut conn = rusqlite::Connection::open_in_memory().unwrap();
-    init_schema(&conn).unwrap();
+fn test_sync_real_library_and_delta() {
+    let _guard = TEST_LOCK.lock().unwrap();
+    let nanos = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_nanos();
+    let temp_app = std::env::temp_dir().join(format!("ongaku_sync_test_{}", nanos));
+    let temp_lib = temp_app.join("library");
+    fs::create_dir_all(&temp_lib).unwrap();
+    let _ = tauri_app_lib::helpers::set_app_dir(temp_app.clone());
 
-    // Insert dummy playlist
-    conn.execute(
-        "INSERT INTO playlists (name, id, path, created_at) VALUES (?1, ?2, ?3, ?4)",
-        rusqlite::params!["Rock", "rock", "C:/Music/Rock", 1000],
-    )
-    .unwrap();
+    let song1 = temp_lib.join("Track A [id_a].mp3");
+    let song2 = temp_lib.join("Track B [id_b].ogg");
+    fs::write(&song1, b"mp3 content").unwrap();
+    fs::write(&song2, b"ogg content").unwrap();
 
-    // Insert dummy song
+    let mut conn = setup_in_memory_db();
+
+    // 1. Initial Sync
+    let stats1 = sync_library(&mut conn).unwrap();
+    assert_eq!(stats1.added_or_updated, 2);
+
+    let all_songs = get_all_songs(&conn).unwrap();
+    assert_eq!(all_songs.len(), 2);
+
+    // 2. Immediate Delta Sync: No files modified
+    let stats2 = sync_library(&mut conn).unwrap();
+    assert_eq!(stats2.added_or_updated, 0);
+    assert_eq!(stats2.deleted_songs, 0);
+
+    let _ = fs::remove_dir_all(&temp_app);
+    if let Some(config_base) = dirs::config_dir() {
+        let _ = fs::remove_file(config_base.join("ongaku").join("location.txt"));
+    }
+}
+
+#[test]
+fn test_relational_schema_and_crud() {
+    let mut conn = setup_in_memory_db();
+
+    // 1. Create playlists
+    let rock_id = create_playlist_in_db(&conn, "Rock").unwrap();
+    let pop_id = create_playlist_in_db(&conn, "Pop").unwrap();
+    assert!(rock_id > 0);
+    assert!(pop_id > 0);
+
+    // 2. Insert song into library
     conn.execute(
-        "INSERT INTO songs (path, id, playlist_name, file_name, title, artist, album, duration, file_size, mtime, created_at)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)",
+        "INSERT INTO songs (id, path, file_name, title, artist, album, duration, file_size, mtime, created_at)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
         rusqlite::params![
-            "C:/Music/Rock/Song1.mp3",
             "song-1",
-            "Rock",
-            "Song1.mp3",
+            "/music/library/Song1 [song-1].mp3",
+            "Song1 [song-1].mp3",
             "Song One",
             Some("Artist A"),
             Some("Album A"),
@@ -75,98 +89,157 @@ fn test_db_queries_and_crud() {
     )
     .unwrap();
 
-    // Test get_all_songs
-    let songs = get_all_songs(&conn).unwrap();
-    assert_eq!(songs.len(), 1);
-    assert_eq!(songs[0].name, "Song One");
-    assert_eq!(songs[0].metadata.artist, Some("Artist A".into()));
+    // 3. Add song to Rock and to Pop
+    assert!(add_song_to_playlist(&conn, "Rock", "song-1").unwrap());
+    assert!(add_song_to_playlist(&conn, "Pop", "song-1").unwrap());
 
-    // Test get_playlist_songs
+    // Adding same song to Rock again should be ignored
+    assert!(!add_song_to_playlist(&conn, "Rock", "song-1").unwrap());
+
+    // 4. Verify queries
     let rock_songs = get_playlist_songs(&conn, "Rock").unwrap();
     assert_eq!(rock_songs.len(), 1);
-
-    // Test move_song_in_db
-    move_song_in_db(
-        &conn,
-        "C:/Music/Rock/Song1.mp3",
-        "C:/Music/Pop/Song1.mp3",
-        "Pop",
-        3000,
-    )
-    .unwrap();
-
-    let old_rock = get_playlist_songs(&conn, "Rock").unwrap();
-    assert_eq!(old_rock.len(), 0);
+    assert_eq!(rock_songs[0].name, "Song One");
+    assert_eq!(rock_songs[0].id, "song-1");
 
     let pop_songs = get_playlist_songs(&conn, "Pop").unwrap();
     assert_eq!(pop_songs.len(), 1);
-    assert_eq!(pop_songs[0].path, "C:/Music/Pop/Song1.mp3");
 
-    // Test delete_song_by_path
-    let deleted = delete_song_by_path(&conn, "C:/Music/Pop/Song1.mp3").unwrap();
-    assert_eq!(deleted, 1);
+    let all_songs = get_all_songs(&conn).unwrap();
+    assert_eq!(all_songs.len(), 1);
+
+    // 5. Test move_song_between_playlists
+    create_playlist_in_db(&conn, "Jazz").unwrap();
+    let already_in_jazz =
+        move_song_between_playlists(&mut conn, "Rock", "Jazz", "song-1").unwrap();
+    assert!(!already_in_jazz);
+
+    assert_eq!(get_playlist_songs(&conn, "Rock").unwrap().len(), 0);
+    assert_eq!(get_playlist_songs(&conn, "Jazz").unwrap().len(), 1);
+
+    // 6. Test remove_song_from_playlist
+    let removed = remove_song_from_playlist(&conn, "Jazz", "song-1").unwrap();
+    assert_eq!(removed, 1);
+    assert_eq!(get_playlist_songs(&conn, "Jazz").unwrap().len(), 0);
+    // Song is still in Pop and Library!
+    assert_eq!(get_playlist_songs(&conn, "Pop").unwrap().len(), 1);
+    assert_eq!(get_all_songs(&conn).unwrap().len(), 1);
+
+    // 7. Test delete_song_from_library
+    let deleted_path = delete_song_from_library(&conn, "song-1").unwrap();
+    assert_eq!(deleted_path, Some("/music/library/Song1 [song-1].mp3".into()));
+    assert_eq!(get_playlist_songs(&conn, "Pop").unwrap().len(), 0);
     assert_eq!(get_all_songs(&conn).unwrap().len(), 0);
+}
 
-    // Test rename_playlist_in_db
+#[test]
+fn test_rename_playlist_pure_sql() {
+    let conn = setup_in_memory_db();
+
+    create_playlist_in_db(&conn, "Jazz").unwrap();
     conn.execute(
-        "INSERT INTO playlists (name, id, path, created_at) VALUES (?1, ?2, ?3, ?4)",
-        rusqlite::params!["Jazz", "jazz", "C:/Music/Jazz", 1000],
-    )
-    .unwrap();
-    conn.execute(
-        "INSERT INTO songs (path, id, playlist_name, file_name, title, artist, album, duration, file_size, mtime, created_at)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)",
+        "INSERT INTO songs (id, path, file_name, title, artist, album, duration, file_size, mtime, created_at)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
         rusqlite::params![
-            "C:/Music/Jazz/Miles.mp3",
-            "m1",
-            "Jazz",
-            "Miles.mp3",
-            "Miles",
+            "miles-1",
+            "/music/library/So What [miles-1].mp3",
+            "So What [miles-1].mp3",
+            "So What",
+            Some("Miles Davis"),
             None::<String>,
-            None::<String>,
-            Some(300.0),
-            1000,
+            Some(560.0),
+            12000000,
             1000,
             1000
         ],
     )
     .unwrap();
+    add_song_to_playlist(&conn, "Jazz", "miles-1").unwrap();
 
-    rename_playlist_in_db(
-        &mut conn,
-        "Jazz",
-        "Smooth Jazz",
-        "C:/Music/Smooth Jazz",
-        "smooth-jazz",
-    )
-    .unwrap();
+    // Pure SQL rename
+    rename_playlist_in_db(&conn, "Jazz", "Smooth Jazz").unwrap();
+
     let playlists = get_playlists(&conn).unwrap();
     assert!(playlists.iter().any(|p| p.name == "Smooth Jazz"));
+    assert!(!playlists.iter().any(|p| p.name == "Jazz"));
 
     let smooth_jazz_songs = get_playlist_songs(&conn, "Smooth Jazz").unwrap();
     assert_eq!(smooth_jazz_songs.len(), 1);
-    assert_eq!(smooth_jazz_songs[0].playlist_name, "Smooth Jazz");
-    assert_eq!(
-        smooth_jazz_songs[0].path,
-        std::path::Path::new("C:/Music/Smooth Jazz")
-            .join("Miles.mp3")
-            .to_string_lossy()
-    );
+    assert_eq!(smooth_jazz_songs[0].id, "miles-1");
+    // Path remained totally unchanged!
+    assert_eq!(smooth_jazz_songs[0].path, "/music/library/So What [miles-1].mp3");
 
-    let old_jazz_songs = get_playlist_songs(&conn, "Jazz").unwrap();
-    assert_eq!(old_jazz_songs.len(), 0);
+    assert_eq!(get_playlist_songs(&conn, "Jazz").unwrap().len(), 0);
+}
 
-    // Test delete_playlist_in_db
-    delete_playlist_in_db(&conn, "Smooth Jazz").unwrap();
-    let playlists_after = get_playlists(&conn).unwrap();
-    assert!(!playlists_after.iter().any(|p| p.name == "Smooth Jazz"));
-    assert_eq!(get_playlist_songs(&conn, "Smooth Jazz").unwrap().len(), 0);
+#[test]
+fn test_shared_song_cover_and_entry_survives_playlist_deletion() {
+    let _guard = TEST_LOCK.lock().unwrap();
+    let conn = setup_in_memory_db();
+
+    // 1. Insert song into songs
+    conn.execute(
+        "INSERT INTO songs (id, path, file_name, title, artist, album, duration, file_size, mtime, created_at)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
+        rusqlite::params![
+            "rick-astley-123",
+            "/music/library/Never Gonna Give You Up [rick-astley-123].mp3",
+            "Never Gonna Give You Up [rick-astley-123].mp3",
+            "Never Gonna Give You Up",
+            Some("Rick Astley"),
+            Some("Whenever You Need Somebody"),
+            213.0,
+            5000000,
+            2000,
+            1000
+        ],
+    )
+    .unwrap();
+
+    // 2. Create Playlist A and Playlist B
+    create_playlist_in_db(&conn, "Playlist A").unwrap();
+    create_playlist_in_db(&conn, "Playlist B").unwrap();
+
+    // 3. Associate song to both playlists
+    add_song_to_playlist(&conn, "Playlist A", "rick-astley-123").unwrap();
+    add_song_to_playlist(&conn, "Playlist B", "rick-astley-123").unwrap();
+
+    // 4. Create dummy cover file in cache/pictures/
+    let cover_dir = get_cache_pictures_dir();
+    let _ = fs::create_dir_all(&cover_dir);
+    let cover_file = cover_dir.join("rick-astley-123.webp");
+    fs::write(&cover_file, b"FAKE_WEBP_IMAGE_DATA").unwrap();
+    assert!(cover_file.exists());
+
+    // 5. Delete Playlist A
+    delete_playlist_in_db(&conn, "Playlist A").unwrap();
+
+    // 6. Assertions:
+    // - Playlist A is deleted
+    let playlists = get_playlists(&conn).unwrap();
+    assert!(!playlists.iter().any(|p| p.name == "Playlist A"));
+    assert!(playlists.iter().any(|p| p.name == "Playlist B"));
+
+    // - Playlist B still has the song!
+    let b_songs = get_playlist_songs(&conn, "Playlist B").unwrap();
+    assert_eq!(b_songs.len(), 1);
+    assert_eq!(b_songs[0].id, "rick-astley-123");
+
+    // - General library still has the song!
+    let all_songs = get_all_songs(&conn).unwrap();
+    assert_eq!(all_songs.len(), 1);
+    assert_eq!(all_songs[0].id, "rick-astley-123");
+
+    // - Cover file in cache STILL exists intact!
+    assert!(cover_file.exists(), "Cover file MUST NOT be deleted when a playlist is deleted");
+
+    // 7. Cleanup
+    let _ = fs::remove_file(&cover_file);
 }
 
 #[test]
 fn test_config_table_and_queries() {
-    let conn = rusqlite::Connection::open_in_memory().unwrap();
-    init_schema(&conn).unwrap();
+    let conn = setup_in_memory_db();
 
     // Default seeded rows
     let theme = get_config(&conn, "theme").unwrap();
@@ -202,72 +275,4 @@ fn test_config_table_and_queries() {
     set_config(&conn, "volume", "0.8").unwrap();
     let volume = get_config(&conn, "volume").unwrap();
     assert_eq!(volume, Some("0.8".to_string()));
-}
-
-#[test]
-fn test_get_all_songs_deduplicates_by_id() {
-    let conn = rusqlite::Connection::open_in_memory().unwrap();
-    init_schema(&conn).unwrap();
-
-    // Insert two playlists
-    conn.execute(
-        "INSERT INTO playlists (name, id, path, created_at) VALUES ('Rock', 'rock', 'C:/Music/Rock', 1000)",
-        [],
-    ).unwrap();
-    conn.execute(
-        "INSERT INTO playlists (name, id, path, created_at) VALUES ('Favorites', 'favorites', 'C:/Music/Favorites', 2000)",
-        [],
-    ).unwrap();
-
-    // Insert same song (same song ID) in two different playlists with different paths
-    conn.execute(
-        "INSERT INTO songs (path, id, playlist_name, file_name, title, artist, album, duration, file_size, mtime, created_at)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)",
-        rusqlite::params![
-            "C:/Music/Rock/Never Gonna Give You Up [dQw4w9WgXcQ].mp3",
-            "dQw4w9WgXcQ",
-            "Rock",
-            "Never Gonna Give You Up [dQw4w9WgXcQ].mp3",
-            "Never Gonna Give You Up",
-            Some("Rick Astley"),
-            Some("Whenever You Need Somebody"),
-            213.0,
-            5000000,
-            2000,
-            1000
-        ],
-    ).unwrap();
-
-    conn.execute(
-        "INSERT INTO songs (path, id, playlist_name, file_name, title, artist, album, duration, file_size, mtime, created_at)
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)",
-        rusqlite::params![
-            "C:/Music/Favorites/Never Gonna Give You Up [dQw4w9WgXcQ].mp3",
-            "dQw4w9WgXcQ",
-            "Favorites",
-            "Never Gonna Give You Up [dQw4w9WgXcQ].mp3",
-            "Never Gonna Give You Up",
-            Some("Rick Astley"),
-            Some("Whenever You Need Somebody"),
-            213.0,
-            5000000,
-            2500,
-            1500
-        ],
-    ).unwrap();
-
-    // Each playlist should still have its own song entry
-    let rock_songs = get_playlist_songs(&conn, "Rock").unwrap();
-    assert_eq!(rock_songs.len(), 1);
-    assert_eq!(rock_songs[0].id, "dQw4w9WgXcQ");
-
-    let fav_songs = get_playlist_songs(&conn, "Favorites").unwrap();
-    assert_eq!(fav_songs.len(), 1);
-    assert_eq!(fav_songs[0].id, "dQw4w9WgXcQ");
-
-    // get_all_songs (Library) MUST deduplicate by song ID and return only 1 song
-    let library_songs = get_all_songs(&conn).unwrap();
-    assert_eq!(library_songs.len(), 1);
-    assert_eq!(library_songs[0].id, "dQw4w9WgXcQ");
-    assert_eq!(library_songs[0].name, "Never Gonna Give You Up");
 }

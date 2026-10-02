@@ -2,12 +2,12 @@ use std::fs::create_dir_all;
 
 use crate::helpers::{
     ensure_paths_config, get_bin_dir, get_cache_dir, get_config_dir, get_db_dir,
-    get_playlist_dir, get_staging_dir,
+    get_library_dir, get_staging_dir,
 };
 
 pub fn ensure_dirs() -> Result<(), Box<dyn std::error::Error>> {
     let paths = [
-        ("playlists", get_playlist_dir()),
+        ("library", get_library_dir()),
         ("cache", get_cache_dir()),
         ("bin", get_bin_dir()),
         ("config", get_config_dir()),

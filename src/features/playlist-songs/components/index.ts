@@ -5,5 +5,6 @@ export * from "@/features/playlist-songs/components/delete-song";
 export * from "@/features/playlist-songs/components/move-song";
 export * from "@/features/playlist-songs/components/header";
 export * from "@/features/playlist-songs/components/hero";
+export * from "@/features/playlist-songs/components/hero-cover";
 export * from "@/features/playlist-songs/components/reload-list";
 export * from "@/features/playlist-songs/components/import-songs-button";

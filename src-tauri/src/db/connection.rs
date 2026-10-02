@@ -8,7 +8,13 @@ use crate::db::sync;
 pub type DbPool = Pool<SqliteConnectionManager>;
 
 pub fn init_db(db_path: &Path) -> Result<DbPool, Box<dyn std::error::Error>> {
-    let manager = SqliteConnectionManager::file(db_path);
+    let manager = SqliteConnectionManager::file(db_path).with_init(|conn| {
+        conn.execute_batch(
+            "PRAGMA foreign_keys = ON;
+             PRAGMA journal_mode = WAL;
+             PRAGMA synchronous = NORMAL;",
+        )
+    });
     let pool = Pool::builder()
         .max_size(8)
         .build(manager)

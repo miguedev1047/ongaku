@@ -1,27 +1,28 @@
-import * as React from "react"
-import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
+import * as React from 'react'
+import type { TPlaylistSong } from '@/shared/types/playlist-songs.types'
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuGroup,
   ContextMenuItem,
-  ContextMenuLabel,
   ContextMenuSeparator,
-  ContextMenuTrigger
-} from "@/components/ui/context-menu"
+  ContextMenuTrigger,
+} from '@/components/ui/context-menu'
 import {
   Copy01Icon,
   Delete01Icon,
   FolderIcon,
   FolderTransferIcon,
   PauseIcon,
-  PlayIcon
-} from "@hugeicons/core-free-icons"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { DeleteSong, MoveSong } from "@/features/playlist-songs/components"
-import { useCopySongTitle } from "@/blocks/song-actions/shared/use-copy-song-title"
-import { usePlaylistSongActions } from "@/blocks/song-actions/playlist-songs/hooks"
-import { Show } from "@/components/utility/show"
+  PlayIcon,
+} from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { DeleteSong, MoveSong } from '@/features/playlist-songs/components'
+import { useCopySongTitle } from '@/blocks/song-actions/shared/use-copy-song-title'
+import { usePlaylistSongActions } from '@/blocks/song-actions/playlist-songs/hooks'
+import { Show } from '@/components/utility/show'
+import { cn } from 'cn'
+import { CONTEXT_ACTIONS_MENU_WIDTH } from '@/constants/styles'
 
 export interface PlaylistSongContextMenuProps {
   song: TPlaylistSong
@@ -30,7 +31,7 @@ export interface PlaylistSongContextMenuProps {
 
 export function PlaylistSongContextMenu({
   song,
-  children
+  children,
 }: PlaylistSongContextMenuProps) {
   const {
     isPlaying,
@@ -39,7 +40,7 @@ export function PlaylistSongContextMenu({
     isMoveDialogOpen,
     setIsMoveDialogOpen,
     handleTogglePlayback,
-    handleOpenFolder
+    handleOpenFolder,
   } = usePlaylistSongActions({ song })
 
   const { copySongTitle } = useCopySongTitle()
@@ -48,14 +49,11 @@ export function PlaylistSongContextMenu({
     <>
       <ContextMenu>
         <ContextMenuTrigger render={children as React.ReactElement} />
-        <ContextMenuContent className="w-48">
+        <ContextMenuContent className={cn(CONTEXT_ACTIONS_MENU_WIDTH)}>
           <ContextMenuGroup>
-            <ContextMenuLabel>Actions</ContextMenuLabel>
-            <ContextMenuSeparator />
-
             <ContextMenuItem
               onClick={handleTogglePlayback}
-              className="cursor-pointer"
+              className='cursor-pointer'
             >
               <Show
                 when={isPlaying}
@@ -73,7 +71,7 @@ export function PlaylistSongContextMenu({
 
             <ContextMenuItem
               onClick={() => copySongTitle(song.name)}
-              className="cursor-pointer"
+              className='cursor-pointer'
             >
               <HugeiconsIcon icon={Copy01Icon} />
               <span>Copy title</span>
@@ -81,7 +79,7 @@ export function PlaylistSongContextMenu({
 
             <ContextMenuItem
               onClick={handleOpenFolder}
-              className="cursor-pointer"
+              className='cursor-pointer'
             >
               <HugeiconsIcon icon={FolderIcon} />
               <span>Open folder</span>
@@ -89,7 +87,7 @@ export function PlaylistSongContextMenu({
 
             <ContextMenuItem
               onClick={() => setIsMoveDialogOpen(true)}
-              className="cursor-pointer"
+              className='cursor-pointer'
             >
               <HugeiconsIcon icon={FolderTransferIcon} />
               <span>Move</span>
@@ -98,12 +96,12 @@ export function PlaylistSongContextMenu({
             <ContextMenuSeparator />
 
             <ContextMenuItem
-              variant="destructive"
+              variant='destructive'
               onClick={() => setIsDeleteDialogOpen(true)}
-              className="cursor-pointer"
+              className='cursor-pointer'
             >
               <HugeiconsIcon icon={Delete01Icon} />
-              <span>Delete</span>
+              <span>Remove from playlist</span>
             </ContextMenuItem>
           </ContextMenuGroup>
         </ContextMenuContent>

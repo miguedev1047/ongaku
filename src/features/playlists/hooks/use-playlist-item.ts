@@ -1,7 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
 import { useNavigate, useRouter } from "@tanstack/react-router";
-import { openFolder } from "@/shared/helpers/open-folder";
-import { toast } from "sonner";
 import { useSongUtils } from "@/hooks/use-song-utils";
 import type { TPlaylist } from "@/shared/types/playlist.types";
 
@@ -30,15 +28,6 @@ export function usePlaylistItem({ playlist }: UsePlaylistItemProps) {
     });
   }, [navigate, playlist.name]);
 
-  const handleOpenFolder = useCallback(async () => {
-    try {
-      await openFolder(playlist.path);
-      toast.info(`Opened folder for "${playlist.name}"`);
-    } catch {
-      toast.error("Error opening playlist folder");
-    }
-  }, [playlist.path, playlist.name]);
-
   const previewCovers = useMemo(() => {
     return (playlist.previewTracks || []).slice(0, 3).map((song) => ({
       id: song.id,
@@ -54,7 +43,6 @@ export function usePlaylistItem({ playlist }: UsePlaylistItemProps) {
     setIsDeleteOpen,
     handlePreload,
     handleNavigate,
-    handleOpenFolder,
     previewCovers,
   };
 }

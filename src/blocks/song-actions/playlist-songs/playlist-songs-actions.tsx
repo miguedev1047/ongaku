@@ -23,6 +23,7 @@ import { CopySongMenuItem } from '@/blocks/song-actions/shared'
 import { usePlaylistSongActions } from './hooks'
 import { Show } from '@/components/utility/show'
 import { cn } from 'cn'
+import { DROPDOWN_ACTIONS_MENU_WIDTH } from '@/constants/styles'
 
 export interface PlaylistSongActionsProps {
   song: TPlaylistSong
@@ -69,7 +70,8 @@ export function PlaylistSongActions({
           }
         />
         <DropdownMenuContent
-          className='w-44'
+          align='end'
+          className={cn(DROPDOWN_ACTIONS_MENU_WIDTH)}
           onClick={(e) => e.stopPropagation()}
         >
           <DropdownMenuGroup>
@@ -120,7 +122,7 @@ export function PlaylistSongActions({
               className='cursor-pointer'
             >
               <HugeiconsIcon icon={Delete01Icon} />
-              <span>Delete</span>
+              <span>Remove from playlist</span>
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>

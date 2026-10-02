@@ -4,7 +4,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
@@ -23,6 +22,7 @@ import { CopySongMenuItem } from '@/blocks/song-actions/shared'
 import { useLibrarySongActions } from './hooks'
 import { Show } from '@/components/utility/show'
 import { cn } from 'cn'
+import { DROPDOWN_ACTIONS_MENU_WIDTH } from '@/constants/styles'
 
 export interface LibrarySongActionsProps {
   song: TPlaylistSong
@@ -69,13 +69,11 @@ export function LibrarySongActions({
           }
         />
         <DropdownMenuContent
-          className='w-44'
+          align='end'
+          className={cn(DROPDOWN_ACTIONS_MENU_WIDTH)}
           onClick={(e) => e.stopPropagation()}
         >
           <DropdownMenuGroup>
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-
             <DropdownMenuItem
               onClick={handleTogglePlayback}
               className='cursor-pointer'
@@ -136,6 +134,7 @@ export function LibrarySongActions({
         song={song}
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
+        context='library'
       />
     </>
   )

@@ -5,15 +5,14 @@ use crate::helpers::SongMetadata;
 
 pub fn get_playlists(conn: &Connection) -> Result<Vec<Playlist>> {
     let mut stmt = conn.prepare(
-        "SELECT id, name, path, created_at
+        "SELECT id, name, position, created_at
          FROM playlists
-         ORDER BY created_at ASC, name COLLATE NOCASE ASC",
+         ORDER BY position ASC, created_at ASC, name COLLATE NOCASE ASC",
     )?;
 
     struct PlaylistRow {
-        id: String,
+        id: i64,
         name: String,
-        path: String,
         created: i64,
     }
 
@@ -22,7 +21,6 @@ pub fn get_playlists(conn: &Connection) -> Result<Vec<Playlist>> {
             Ok(PlaylistRow {
                 id: row.get(0)?,
                 name: row.get(1)?,
-                path: row.get(2)?,
                 created: row.get(3)?,
             })
         })?
@@ -31,22 +29,24 @@ pub fn get_playlists(conn: &Connection) -> Result<Vec<Playlist>> {
 
     let mut playlists = Vec::with_capacity(rows.len());
 
-    let mut count_stmt = conn.prepare("SELECT COUNT(*) FROM songs WHERE playlist_name = ?1")?;
+    let mut count_stmt =
+        conn.prepare("SELECT COUNT(*) FROM playlist_songs WHERE playlist_id = ?1")?;
     let mut preview_stmt = conn.prepare(
-        "SELECT title, id, playlist_name, path, created_at, duration, artist, album
-         FROM songs
-         WHERE playlist_name = ?1
-         ORDER BY created_at ASC
+        "SELECT s.title, s.id, ?2 as playlist_name, s.path, s.created_at, s.duration, s.artist, s.album
+         FROM songs s
+         JOIN playlist_songs ps ON ps.song_id = s.id
+         WHERE ps.playlist_id = ?1
+         ORDER BY ps.position ASC, s.created_at ASC
          LIMIT 3",
     )?;
 
     for pl in rows {
         let tracks: usize = count_stmt
-            .query_row(params![&pl.name], |row| row.get(0))
+            .query_row(params![pl.id], |row| row.get(0))
             .unwrap_or(0);
 
         let preview_songs: Vec<PlaylistSong> = preview_stmt
-            .query_map(params![&pl.name], |row| {
+            .query_map(params![pl.id, &pl.name], |row| {
                 let title: String = row.get(0)?;
                 let id: String = row.get(1)?;
                 let playlist_name: String = row.get(2)?;
@@ -73,9 +73,9 @@ pub fn get_playlists(conn: &Connection) -> Result<Vec<Playlist>> {
             .collect();
 
         playlists.push(Playlist {
-            id: pl.id,
+            id: pl.id.to_string(),
             name: pl.name,
-            path: pl.path,
+            path: "".into(),
             created: pl.created as u64,
             tracks,
             preview_tracks: preview_songs,
@@ -85,11 +85,37 @@ pub fn get_playlists(conn: &Connection) -> Result<Vec<Playlist>> {
     Ok(playlists)
 }
 
-pub fn delete_playlist_in_db(conn: &Connection, playlist_name: &str) -> Result<()> {
+pub fn create_playlist_in_db(conn: &Connection, name: &str) -> Result<i64> {
+    let now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map(|d| d.as_secs() as i64)
+        .unwrap_or(0);
+
+    let next_pos: i64 = conn
+        .query_row(
+            "SELECT COALESCE(MAX(position), 0) + 1 FROM playlists",
+            [],
+            |row| row.get(0),
+        )
+        .unwrap_or(1);
+
     conn.execute(
-        "DELETE FROM songs WHERE playlist_name = ?1",
-        params![playlist_name],
+        "INSERT INTO playlists (name, position, created_at) VALUES (?1, ?2, ?3)",
+        params![name, next_pos, now],
     )?;
+
+    Ok(conn.last_insert_rowid())
+}
+
+pub fn rename_playlist_in_db(conn: &Connection, old_name: &str, new_name: &str) -> Result<()> {
+    conn.execute(
+        "UPDATE playlists SET name = ?1 WHERE name = ?2",
+        params![new_name, old_name],
+    )?;
+    Ok(())
+}
+
+pub fn delete_playlist_in_db(conn: &Connection, playlist_name: &str) -> Result<()> {
     conn.execute(
         "DELETE FROM playlists WHERE name = ?1",
         params![playlist_name],
@@ -97,42 +123,14 @@ pub fn delete_playlist_in_db(conn: &Connection, playlist_name: &str) -> Result<(
     Ok(())
 }
 
-pub fn rename_playlist_in_db(
-    conn: &mut Connection,
-    old_name: &str,
-    new_name: &str,
-    new_path: &str,
-    new_id: &str,
-) -> Result<()> {
+pub fn reorder_playlists(conn: &mut Connection, playlist_names: &[String]) -> Result<()> {
     let tx = conn.transaction()?;
-
-    tx.execute(
-        "UPDATE playlists
-         SET id = ?1, name = ?2, path = ?3
-         WHERE name = ?4",
-        params![new_id, new_name, new_path, old_name],
-    )?;
-
-    let mut stmt = tx.prepare("SELECT path, file_name FROM songs WHERE playlist_name = ?1")?;
-    let songs: Vec<(String, String)> = stmt
-        .query_map(params![old_name], |row| {
-            Ok((row.get(0)?, row.get(1)?))
-        })?
-        .filter_map(|r| r.ok())
-        .collect();
-    drop(stmt);
-
-    let new_base_dir = std::path::Path::new(new_path);
-    for (old_song_path, file_name) in songs {
-        let updated_song_path = new_base_dir.join(&file_name).to_string_lossy().to_string();
+    for (index, name) in playlist_names.iter().enumerate() {
         tx.execute(
-            "UPDATE songs
-             SET path = ?1, playlist_name = ?2
-             WHERE path = ?3",
-            params![updated_song_path, new_name, old_song_path],
+            "UPDATE playlists SET position = ?1 WHERE name = ?2",
+            params![index as i64 + 1, name],
         )?;
     }
-
     tx.commit()?;
     Ok(())
 }

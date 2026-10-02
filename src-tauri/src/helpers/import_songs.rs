@@ -5,7 +5,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::db::DbPool;
 use crate::helpers::{
-    extract_song_name, get_playlist_dir, is_audio_file, resolve_song_id, validate_name,
+    extract_song_id, extract_song_name, get_library_dir, is_audio_file, resolve_song_id,
+    validate_name,
 };
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -73,7 +74,17 @@ pub fn generate_imported_filename(source_path: &Path, target_dir: &Path) -> Resu
                     .unwrap_or(0)
             });
 
-        format!("{} [{}].{}", title_to_use, mtime, extension)
+        let hash = {
+            use std::collections::hash_map::DefaultHasher;
+            use std::hash::{Hash, Hasher};
+            let mut hasher = DefaultHasher::new();
+            source_path.to_string_lossy().hash(&mut hasher);
+            let size = fs::metadata(source_path).map(|m| m.len()).unwrap_or(0);
+            size.hash(&mut hasher);
+            hasher.finish()
+        };
+
+        format!("{} [{}_{:04x}].{}", title_to_use, mtime, (hash & 0xffff), extension)
     };
 
     // Collision check in target directory: if file already exists with same name, disambiguate
@@ -104,20 +115,36 @@ pub fn copy_and_import_songs(
     file_paths: &[PathBuf],
 ) -> Result<ImportSongsResult, String> {
     let clean_playlist_name = validate_name(playlist_name)?;
+    let target_library_dir = get_library_dir();
 
-    let root_playlist_dir = get_playlist_dir();
-    let target_playlist_dir = root_playlist_dir.join(&clean_playlist_name);
-
-    if !target_playlist_dir.exists() {
-        fs::create_dir_all(&target_playlist_dir)
-            .map_err(|err| format!("Failed to create playlist folder: {}", err))?;
+    if !target_library_dir.exists() {
+        fs::create_dir_all(&target_library_dir)
+            .map_err(|err| format!("Failed to create library folder: {}", err))?;
     }
 
+    let mut conn = db
+        .get()
+        .map_err(|err| format!("Failed to acquire DB connection: {}", err))?;
+
+    // Ensure playlist exists in DB
+    let playlist_id: i64 = match conn.query_row(
+        "SELECT id FROM playlists WHERE name = ?1",
+        rusqlite::params![clean_playlist_name],
+        |row| row.get(0),
+    ) {
+        Ok(id) => id,
+        Err(_) => crate::db::queries::create_playlist_in_db(&conn, &clean_playlist_name)
+            .map_err(|err| format!("Could not ensure playlist exists: {}", err))?,
+    };
+
     let mut result = ImportSongsResult::default();
+    let mut imported_song_ids = Vec::new();
 
     for src_path in file_paths {
         if !src_path.exists() || !src_path.is_file() {
-            result.failed_items.push(format!("File does not exist: {:?}", src_path));
+            result
+                .failed_items
+                .push(format!("File does not exist: {:?}", src_path));
             result.skipped_count += 1;
             continue;
         }
@@ -127,7 +154,7 @@ pub fn copy_and_import_songs(
             continue;
         }
 
-        let target_filename = match generate_imported_filename(src_path, &target_playlist_dir) {
+        let target_filename = match generate_imported_filename(src_path, &target_library_dir) {
             Ok(name) => name,
             Err(err) => {
                 result.failed_items.push(err);
@@ -136,10 +163,42 @@ pub fn copy_and_import_songs(
             }
         };
 
-        let dest_path = target_playlist_dir.join(&target_filename);
+        let dest_path = target_library_dir.join(&target_filename);
+        let song_id = extract_song_id(&target_filename);
+
+        // Check if this song_id already exists in songs table
+        let already_in_db: bool = conn
+            .query_row(
+                "SELECT count(*) FROM songs WHERE id = ?1",
+                rusqlite::params![song_id],
+                |row| row.get::<_, i64>(0),
+            )
+            .map(|c| c > 0)
+            .unwrap_or(false);
+
+        if already_in_db {
+            // Check if already in this playlist
+            let already_in_pl: bool = conn
+                .query_row(
+                    "SELECT count(*) FROM playlist_songs WHERE playlist_id = ?1 AND song_id = ?2",
+                    rusqlite::params![playlist_id, song_id],
+                    |row| row.get::<_, i64>(0),
+                )
+                .map(|c| c > 0)
+                .unwrap_or(false);
+
+            if already_in_pl {
+                result.skipped_count += 1;
+            } else {
+                imported_song_ids.push(song_id);
+                result.imported_count += 1;
+            }
+            continue;
+        }
 
         match fs::copy(src_path, &dest_path) {
             Ok(_) => {
+                imported_song_ids.push(song_id);
                 result.imported_count += 1;
             }
             Err(err) => {
@@ -152,8 +211,33 @@ pub fn copy_and_import_songs(
     }
 
     if result.imported_count > 0 {
-        if let Ok(mut conn) = db.get() {
-            let _ = crate::db::sync::sync_library(&mut conn);
+        // 1. Sync library to parse new files into `songs`
+        let _ = crate::db::sync::sync_library(&mut conn);
+
+        // 2. Associate with playlist in a single atomic transaction
+        let now = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .map(|d| d.as_secs() as i64)
+            .unwrap_or(0);
+
+        if let Ok(tx) = conn.transaction() {
+            let mut next_pos: i64 = tx
+                .query_row(
+                    "SELECT COALESCE(MAX(position), 0) FROM playlist_songs WHERE playlist_id = ?1",
+                    rusqlite::params![playlist_id],
+                    |row| row.get(0),
+                )
+                .unwrap_or(0);
+
+            for id in imported_song_ids {
+                next_pos += 1;
+                let _ = tx.execute(
+                    "INSERT OR IGNORE INTO playlist_songs (playlist_id, song_id, position, added_at)
+                     VALUES (?1, ?2, ?3, ?4)",
+                    rusqlite::params![playlist_id, id, next_pos, now],
+                );
+            }
+            let _ = tx.commit();
         }
     }
 

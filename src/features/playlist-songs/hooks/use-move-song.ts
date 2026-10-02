@@ -23,7 +23,9 @@ export function useMoveSong({ song, onSuccess }: UseMoveSongProps) {
     mutationFn: async (targetPlaylist: string) => {
       return await invoke<TSongAction>("move_song", {
         path: song.path,
-        targetPlaylist
+        id: song.id,
+        sourcePlaylist: song.playlist_name,
+        targetPlaylist,
       })
     },
     onSuccess: (data, targetPlaylist) => {

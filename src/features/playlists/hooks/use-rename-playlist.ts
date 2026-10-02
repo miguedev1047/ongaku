@@ -49,15 +49,10 @@ export function useRenamePlaylist({
       toast.success(data.message)
       const trimmedNewName = variables.new_name.trim()
 
-      // Reset playback state if the playlist being renamed is loaded or active in player
-      const { playbackContext, currentSong } = useLocalPlayerStore.getState()
-      const isThisPlaylistActive =
-        (playbackContext.type === 'playlist' &&
-          playbackContext.playlistName === playlist.name) ||
-        currentSong?.playlist_name === playlist.name
-
-      if (isThisPlaylistActive) {
-        useActivePlayerStore.getState().resetActivePlayer()
+      // Seamlessly update active playlist name in player if it is currently playing
+      if (useActivePlayerStore.getState().activePlaylist === playlist.name) {
+        useActivePlayerStore.getState().setActivePlaylist(trimmedNewName)
+        useLocalPlayerStore.getState().setCurrentPlaylist(trimmedNewName)
       }
 
       // Invalidate all related caches

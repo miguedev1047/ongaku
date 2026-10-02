@@ -3,7 +3,7 @@ use std::sync::Mutex;
 use tauri_app_lib::db::{init_and_sync_db, queries::get_all_config};
 use tauri_app_lib::helpers::{
     ensure_dirs, get_app_paths, get_bin_dir, get_cache_dir, get_config_dir, get_db_dir,
-    get_db_path, get_paths_config_path, get_playlist_dir, get_staging_dir, set_app_dir,
+    get_db_path, get_library_dir, get_paths_config_path, get_staging_dir, set_app_dir,
     AppPaths,
 };
 
@@ -24,19 +24,12 @@ fn test_ensure_dirs_creates_all_required_directories() {
     assert!(res.is_ok(), "ensure_dirs should succeed: {:?}", res.err());
 
     // Assert that all required directories are created
-    assert!(get_playlist_dir().exists(), "playlists dir must exist");
+    assert!(get_library_dir().exists(), "library dir must exist");
     assert!(get_cache_dir().exists(), "cache dir must exist");
     assert!(get_bin_dir().exists(), "bin dir must exist");
     assert!(get_config_dir().exists(), "config dir must exist");
     assert!(get_db_dir().exists(), "db dir must exist");
     assert!(get_staging_dir().exists(), "staging dir must exist");
-
-    // Verify Default playlist is NOT automatically created
-    let default_playlist_dir = get_playlist_dir().join("Default");
-    assert!(
-        !default_playlist_dir.exists(),
-        "Default playlist dir should NOT be created automatically"
-    );
 
     // Verify paths.json configuration file is written and parseable
     let config_path = get_paths_config_path();
@@ -48,7 +41,7 @@ fn test_ensure_dirs_creates_all_required_directories() {
 
     let paths = get_app_paths();
     assert_eq!(paths.app_dir, app_dir);
-    assert_eq!(paths.playlist_dir, app_dir.join("playlists"));
+    assert_eq!(paths.library_dir, app_dir.join("library"));
 
     // Cleanup test temp dir
     let _ = fs::remove_dir_all(&temp_root);

@@ -121,10 +121,10 @@ fn test_copy_and_import_songs_flow() {
     assert_eq!(result.skipped_count, 1);
     assert_eq!(result.failed_items.len(), 0);
 
-    let playlist_dir = app_temp.join("playlists").join("Favorites");
-    assert!(playlist_dir.exists());
+    let library_dir = app_temp.join("library");
+    assert!(library_dir.exists());
 
-    let entries: Vec<_> = fs::read_dir(&playlist_dir)
+    let entries: Vec<_> = fs::read_dir(&library_dir)
         .unwrap()
         .map(|e| e.unwrap().file_name().to_string_lossy().to_string())
         .collect();
@@ -133,6 +133,13 @@ fn test_copy_and_import_songs_flow() {
     assert!(entries.iter().any(|e| e.starts_with("Track One [") && e.ends_with("].mp3")));
     assert!(entries.iter().any(|e| e.starts_with("Track Two [") && e.ends_with("].ogg")));
 
+    let conn = pool.get().unwrap();
+    let pl_songs = tauri_app_lib::db::queries::get_playlist_songs(&conn, "Favorites").unwrap();
+    assert_eq!(pl_songs.len(), 2);
+
     let _ = fs::remove_dir_all(&app_temp);
     let _ = fs::remove_dir_all(&src_temp);
+    if let Some(config_base) = dirs::config_dir() {
+        let _ = fs::remove_file(config_base.join("ongaku").join("location.txt"));
+    }
 }

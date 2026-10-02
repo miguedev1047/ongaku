@@ -1,13 +1,8 @@
 use serde::{Deserialize, Serialize};
-use std::fs::{create_dir_all, remove_dir_all, rename};
-use std::time::{SystemTime, UNIX_EPOCH};
 use tauri::State;
 
 use crate::db::DbPool;
-use crate::helpers::{
-    extract_song_id, get_cache_pictures_dir, get_playlist_dir, is_audio_file, resolve_inside,
-    validate_name,
-};
+use crate::helpers::validate_name;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct PlaylistActionResponse {
@@ -30,36 +25,27 @@ pub fn new_playlist(
         }
     };
 
-    let playlist_dir = get_playlist_dir();
-    let output_dir = playlist_dir.join(&safe_name);
+    let conn = db
+        .get()
+        .map_err(|err| format!("Failed to acquire DB connection: {}", err))?;
 
-    if output_dir.exists() {
-        return Ok(PlaylistActionResponse {
-            code: "ERROR".into(),
-            message: "A playlist with this name already exists".into(),
-        });
+    match crate::db::queries::create_playlist_in_db(&conn, &safe_name) {
+        Ok(_) => Ok(PlaylistActionResponse {
+            code: "SUCCESS".into(),
+            message: "Playlist created successfully".into(),
+        }),
+        Err(err) => {
+            let msg = err.to_string();
+            if msg.contains("UNIQUE constraint failed") {
+                Ok(PlaylistActionResponse {
+                    code: "ERROR".into(),
+                    message: "A playlist with this name already exists".into(),
+                })
+            } else {
+                Err(format!("Database error creating playlist: {}", err))
+            }
+        }
     }
-
-    create_dir_all(&output_dir).map_err(|err| format!("Failed to create the playlist: {}", err))?;
-
-    if let Ok(conn) = db.get() {
-        let new_id = safe_name.to_lowercase().replace(' ', "-");
-        let new_path = output_dir.to_string_lossy().to_string();
-        let created_at = SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .map(|d| d.as_millis() as i64)
-            .unwrap_or(0);
-        let _ = conn.execute(
-            "INSERT INTO playlists (id, name, path, created_at) VALUES (?1, ?2, ?3, ?4)
-             ON CONFLICT(name) DO UPDATE SET id = excluded.id, path = excluded.path",
-            rusqlite::params![new_id, safe_name, new_path, created_at],
-        );
-    }
-
-    Ok(PlaylistActionResponse {
-        code: "SUCCESS".into(),
-        message: "Playlist created successfully".into(),
-    })
 }
 
 #[tauri::command]
@@ -95,65 +81,27 @@ pub fn rename_playlist(
         });
     }
 
-    let playlist_dir = get_playlist_dir();
-    let output_old_dir = playlist_dir.join(&safe_old_name);
-    let output_new_dir = playlist_dir.join(&safe_new_name);
+    let conn = db
+        .get()
+        .map_err(|err| format!("Failed to acquire DB connection: {}", err))?;
 
-    if !output_old_dir.exists() || !output_old_dir.is_dir() {
-        return Ok(PlaylistActionResponse {
-            code: "ERROR".into(),
-            message: "The playlist to rename does not exist".into(),
-        });
-    }
-
-    let is_case_only_change = safe_old_name.to_lowercase() == safe_new_name.to_lowercase();
-
-    if !is_case_only_change && output_new_dir.exists() {
-        return Ok(PlaylistActionResponse {
-            code: "ERROR".into(),
-            message: "A playlist with the new name already exists".into(),
-        });
-    }
-
-    if is_case_only_change {
-        let timestamp = SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .map(|d| d.as_millis())
-            .unwrap_or(0);
-        let temp_dir = playlist_dir.join(format!(".temp_rename_{}_{}", safe_old_name, timestamp));
-
-        rename(&output_old_dir, &temp_dir)
-            .map_err(|err| format!("An error occurred while preparing playlist rename: {}", err))?;
-
-        if let Err(err) = rename(&temp_dir, &output_new_dir) {
-            let _ = rename(&temp_dir, &output_old_dir);
-            return Err(format!(
-                "An error occurred while renaming the playlist: {}",
-                err
-            ));
+    match crate::db::queries::rename_playlist_in_db(&conn, &safe_old_name, &safe_new_name) {
+        Ok(_) => Ok(PlaylistActionResponse {
+            code: "SUCCESS".into(),
+            message: "Playlist renamed successfully".into(),
+        }),
+        Err(err) => {
+            let msg = err.to_string();
+            if msg.contains("UNIQUE constraint failed") {
+                Ok(PlaylistActionResponse {
+                    code: "ERROR".into(),
+                    message: "A playlist with the new name already exists".into(),
+                })
+            } else {
+                Err(format!("Database error renaming playlist: {}", err))
+            }
         }
-    } else {
-        rename(&output_old_dir, &output_new_dir)
-            .map_err(|err| format!("An error occurred while renaming the playlist: {}", err))?;
     }
-
-    if let Ok(mut conn) = db.get() {
-        let new_id = safe_new_name.to_lowercase().replace(' ', "-");
-        let new_path = output_new_dir.to_string_lossy().to_string();
-        let _ = crate::db::queries::rename_playlist_in_db(
-            &mut conn,
-            &safe_old_name,
-            &safe_new_name,
-            &new_path,
-            &new_id,
-        );
-        let _ = crate::db::sync::sync_library(&mut conn);
-    }
-
-    Ok(PlaylistActionResponse {
-        code: "SUCCESS".into(),
-        message: "Playlist renamed successfully".into(),
-    })
 }
 
 #[tauri::command]
@@ -171,48 +119,12 @@ pub fn delete_playlist(
         }
     };
 
-    let playlist_dir = get_playlist_dir();
-    let output_dir = playlist_dir.join(&safe_name);
+    let conn = db
+        .get()
+        .map_err(|err| format!("Failed to acquire DB connection: {}", err))?;
 
-    if output_dir == playlist_dir {
-        return Ok(PlaylistActionResponse {
-            code: "ERROR".into(),
-            message: "Cannot delete the root playlists directory".into(),
-        });
-    }
-
-    if !output_dir.exists() || !output_dir.is_dir() {
-        return Ok(PlaylistActionResponse {
-            code: "ERROR".into(),
-            message: "The playlist does not exist".into(),
-        });
-    }
-
-    let cache_pictures_dir = get_cache_pictures_dir();
-    if let Ok(entries) = std::fs::read_dir(&output_dir) {
-        for entry in entries.flatten() {
-            let entry_path = entry.path();
-            if entry_path.is_file() && is_audio_file(&entry_path) {
-                if let Some(file_name) = entry_path.file_name().and_then(|n| n.to_str()) {
-                    let song_id = extract_song_id(file_name);
-                    if let Ok(cover_path) =
-                        resolve_inside(&cache_pictures_dir, &format!("{}.webp", song_id))
-                    {
-                        if cover_path.exists() && cover_path.is_file() {
-                            let _ = std::fs::remove_file(cover_path);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    remove_dir_all(&output_dir)
-        .map_err(|err| format!("An error occurred while deleting the playlist: {}", err))?;
-
-    if let Ok(conn) = db.get() {
-        let _ = crate::db::queries::delete_playlist_in_db(&conn, &safe_name);
-    }
+    crate::db::queries::delete_playlist_in_db(&conn, &safe_name)
+        .map_err(|err| format!("Database error deleting playlist: {}", err))?;
 
     Ok(PlaylistActionResponse {
         code: "SUCCESS".into(),

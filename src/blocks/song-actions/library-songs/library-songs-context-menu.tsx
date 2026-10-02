@@ -5,7 +5,6 @@ import {
   ContextMenuContent,
   ContextMenuGroup,
   ContextMenuItem,
-  ContextMenuLabel,
   ContextMenuSeparator,
   ContextMenuTrigger,
 } from '@/components/ui/context-menu'
@@ -22,6 +21,8 @@ import { DeleteSong, MoveSong } from '@/features/playlist-songs/components'
 import { useCopySongTitle } from '@/blocks/song-actions/shared/use-copy-song-title'
 import { useLibrarySongActions } from '@/blocks/song-actions/library-songs/hooks'
 import { Show } from '@/components/utility/show'
+import { cn } from 'cn'
+import { CONTEXT_ACTIONS_MENU_WIDTH } from '@/constants/styles'
 
 export interface LibrarySongContextMenuProps {
   song: TPlaylistSong
@@ -48,11 +49,8 @@ export function LibrarySongContextMenu({
     <>
       <ContextMenu>
         <ContextMenuTrigger render={children as React.ReactElement} />
-        <ContextMenuContent className='w-48'>
+        <ContextMenuContent className={cn(CONTEXT_ACTIONS_MENU_WIDTH)}>
           <ContextMenuGroup>
-            <ContextMenuLabel>Actions</ContextMenuLabel>
-            <ContextMenuSeparator />
-
             <ContextMenuItem
               onClick={handleTogglePlayback}
               className='cursor-pointer'
@@ -119,6 +117,7 @@ export function LibrarySongContextMenu({
         song={song}
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
+        context='library'
       />
     </>
   )

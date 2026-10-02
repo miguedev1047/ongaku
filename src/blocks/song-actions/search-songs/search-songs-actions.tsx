@@ -27,6 +27,7 @@ import { CopySongMenuItem } from '@/blocks/song-actions/shared'
 import { useSearchSongActions } from './hooks'
 import { Show } from '@/components/utility/show'
 import { cn } from 'cn'
+import { DROPDOWN_ACTIONS_MENU_WIDTH } from '@/constants/styles'
 
 export interface SearchSongActionsProps {
   item: TYoutubeSearchResult
@@ -71,13 +72,10 @@ export function SearchSongActions({
       />
       <DropdownMenuContent
         align='end'
-        className='w-48'
+        className={cn(DROPDOWN_ACTIONS_MENU_WIDTH)}
         onClick={(e) => e.stopPropagation()}
       >
         <DropdownMenuGroup>
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-
           <DropdownMenuItem
             onClick={togglePlayback}
             className='cursor-pointer'
