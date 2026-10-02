@@ -1,11 +1,12 @@
 use std::path::PathBuf;
-use tauri::State;
+use tauri::{AppHandle, State};
 
 use crate::db::DbPool;
-use crate::helpers::{copy_and_import_songs, ImportSongsResult};
+use crate::helpers::{copy_and_import_songs_with_app, ImportSongsResult};
 
 #[tauri::command]
 pub async fn import_songs_to_playlist(
+    app: AppHandle,
     db: State<'_, DbPool>,
     playlist_name: String,
 ) -> Result<ImportSongsResult, String> {
@@ -24,15 +25,17 @@ pub async fn import_songs_to_playlist(
         .map(|handle| handle.path().to_path_buf())
         .collect();
 
-    copy_and_import_songs(&db, &playlist_name, &file_paths)
+    copy_and_import_songs_with_app(Some(&app), &db, &playlist_name, &file_paths)
 }
 
 #[tauri::command]
 pub fn import_songs_by_paths(
+    app: AppHandle,
     db: State<'_, DbPool>,
     playlist_name: String,
     paths: Vec<String>,
 ) -> Result<ImportSongsResult, String> {
     let file_paths: Vec<PathBuf> = paths.into_iter().map(PathBuf::from).collect();
-    copy_and_import_songs(&db, &playlist_name, &file_paths)
+    copy_and_import_songs_with_app(Some(&app), &db, &playlist_name, &file_paths)
 }
+

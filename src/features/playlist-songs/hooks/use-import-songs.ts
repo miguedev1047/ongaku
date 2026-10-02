@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { invoke } from '@tauri-apps/api/core'
+import { listen } from '@tauri-apps/api/event'
 import { toast } from 'sonner'
 import { playlistSongsQueryOpts } from '@/shared/queries/playlist-songs'
 import { playlistsQueryOpts } from '@/shared/queries/playlists'
@@ -8,6 +9,14 @@ export interface ImportSongsResult {
   imported_count: number
   skipped_count: number
   failed_items: string[]
+}
+
+export interface ImportProgressPayload {
+  playlist_name: string
+  current: number
+  total: number
+  imported_count: number
+  skipped_count: number
 }
 
 interface UseImportSongsProps {
@@ -20,11 +29,34 @@ export function useImportSongs({ playlistName, onSuccess }: UseImportSongsProps)
 
   const mutation = useMutation({
     mutationFn: async () => {
-      return await invoke<ImportSongsResult>('import_songs_to_playlist', {
-        playlistName,
+      let toastId: string | number | undefined
+
+      const unlisten = await listen<ImportProgressPayload>('import-progress', (event) => {
+        if (event.payload.playlist_name === playlistName && event.payload.total > 100) {
+          const { current, total, imported_count } = event.payload
+          const msg = `Importing songs: ${current}/${total} (${imported_count} added)...`
+          if (!toastId) {
+            toastId = toast.loading(msg)
+          } else {
+            toast.loading(msg, { id: toastId })
+          }
+        }
       })
+
+      try {
+        const result = await invoke<ImportSongsResult>('import_songs_to_playlist', {
+          playlistName,
+        })
+        return { result, toastId }
+      } finally {
+        unlisten()
+      }
     },
-    onSuccess: (data) => {
+    onSuccess: ({ result: data, toastId }) => {
+      if (toastId) {
+        toast.dismiss(toastId)
+      }
+
       if (data.imported_count > 0) {
         toast.success(
           data.imported_count === 1

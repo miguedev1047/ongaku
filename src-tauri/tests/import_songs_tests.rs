@@ -9,6 +9,7 @@ use tauri_app_lib::helpers::{
 };
 
 static COUNTER: AtomicUsize = AtomicUsize::new(1);
+static TEST_LOCK: std::sync::Mutex<()> = std::sync::Mutex::new(());
 
 fn unique_temp_dir() -> std::path::PathBuf {
     let nanos = SystemTime::now()
@@ -93,6 +94,7 @@ fn test_generate_imported_filename_handles_collision() {
 
 #[test]
 fn test_copy_and_import_songs_flow() {
+    let _guard = TEST_LOCK.lock().unwrap();
     let app_temp = unique_temp_dir();
     set_app_dir(app_temp.clone()).unwrap();
 
@@ -143,3 +145,77 @@ fn test_copy_and_import_songs_flow() {
         let _ = fs::remove_file(config_base.join("ongaku").join("location.txt"));
     }
 }
+
+#[test]
+fn test_chunked_import_boundary_preserves_order_and_positions() {
+    let _guard = TEST_LOCK.lock().unwrap();
+    let app_temp = unique_temp_dir();
+    set_app_dir(app_temp.clone()).unwrap();
+
+    let db_dir = app_temp.join("db");
+    fs::create_dir_all(&db_dir).unwrap();
+    let db_path = db_dir.join("ongaku.db");
+    let pool = init_db(&db_path).unwrap();
+
+    let src_temp = unique_temp_dir();
+    let total_items = 250;
+    let mut file_paths = Vec::with_capacity(total_items);
+
+    for i in 0..total_items {
+        let path = src_temp.join(format!("Import Track {:04}.mp3", i));
+        let mut f = File::create(&path).unwrap();
+        f.write_all(format!("mock-audio-{}", i).as_bytes()).unwrap();
+        file_paths.push(path);
+    }
+
+    // First import: import 250 files across 3 chunks (100 + 100 + 50)
+    let result = copy_and_import_songs(&pool, "Massive Playlist", &file_paths).unwrap();
+
+    assert_eq!(result.imported_count, total_items);
+    assert_eq!(result.skipped_count, 0);
+    assert_eq!(result.failed_items.len(), 0);
+
+    let conn = pool.get().unwrap();
+    let pl_songs = tauri_app_lib::db::queries::get_playlist_songs(&conn, "Massive Playlist").unwrap();
+    assert_eq!(pl_songs.len(), total_items);
+
+    // Verify positions in playlist_songs are strictly contiguous and strictly ascending (1..=250)
+    let mut stmt = conn
+        .prepare(
+            "SELECT ps.position, s.title
+             FROM playlist_songs ps
+             JOIN playlists p ON p.id = ps.playlist_id
+             JOIN songs s ON s.id = ps.song_id
+             WHERE p.name = 'Massive Playlist'
+             ORDER BY ps.position ASC",
+        )
+        .unwrap();
+
+    let rows: Vec<(i64, String)> = stmt
+        .query_map([], |row| Ok((row.get(0)?, row.get(1)?)))
+        .unwrap()
+        .map(|r| r.unwrap())
+        .collect();
+
+    assert_eq!(rows.len(), total_items);
+    for (idx, (pos, title)) in rows.iter().enumerate() {
+        let expected_pos = (idx + 1) as i64;
+        assert_eq!(*pos, expected_pos, "Position at index {} should be {}", idx, expected_pos);
+        assert_eq!(*title, format!("Import Track {:04}", idx));
+    }
+
+    // Second import into another playlist with same files: should link without copying files again
+    let result2 = copy_and_import_songs(&pool, "Second Playlist", &file_paths).unwrap();
+    assert_eq!(result2.imported_count, total_items);
+    assert_eq!(result2.skipped_count, 0);
+
+    let pl2_songs = tauri_app_lib::db::queries::get_playlist_songs(&conn, "Second Playlist").unwrap();
+    assert_eq!(pl2_songs.len(), total_items);
+
+    let _ = fs::remove_dir_all(&app_temp);
+    let _ = fs::remove_dir_all(&src_temp);
+    if let Some(config_base) = dirs::config_dir() {
+        let _ = fs::remove_file(config_base.join("ongaku").join("location.txt"));
+    }
+}
+

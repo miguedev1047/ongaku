@@ -1,7 +1,7 @@
+use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
-use serde::{Deserialize, Serialize};
 
 use crate::db::DbPool;
 use crate::helpers::{
@@ -84,7 +84,13 @@ pub fn generate_imported_filename(source_path: &Path, target_dir: &Path) -> Resu
             hasher.finish()
         };
 
-        format!("{} [{}_{:04x}].{}", title_to_use, mtime, (hash & 0xffff), extension)
+        format!(
+            "{} [{}_{:04x}].{}",
+            title_to_use,
+            mtime,
+            (hash & 0xffff),
+            extension
+        )
     };
 
     // Collision check in target directory: if file already exists with same name, disambiguate
@@ -109,11 +115,33 @@ pub fn generate_imported_filename(source_path: &Path, target_dir: &Path) -> Resu
     Ok(final_filename)
 }
 
+pub const IMPORT_CHUNK_SIZE: usize = 100;
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ImportProgressPayload {
+    pub playlist_name: String,
+    pub current: usize,
+    pub total: usize,
+    pub imported_count: usize,
+    pub skipped_count: usize,
+}
+
 pub fn copy_and_import_songs(
     db: &DbPool,
     playlist_name: &str,
     file_paths: &[PathBuf],
 ) -> Result<ImportSongsResult, String> {
+    copy_and_import_songs_with_app(None, db, playlist_name, file_paths)
+}
+
+pub fn copy_and_import_songs_with_app(
+    app: Option<&tauri::AppHandle>,
+    db: &DbPool,
+    playlist_name: &str,
+    file_paths: &[PathBuf],
+) -> Result<ImportSongsResult, String> {
+    use tauri::Emitter;
+
     let clean_playlist_name = validate_name(playlist_name)?;
     let target_library_dir = get_library_dir();
 
@@ -137,107 +165,136 @@ pub fn copy_and_import_songs(
             .map_err(|err| format!("Could not ensure playlist exists: {}", err))?,
     };
 
+    let total_files = file_paths.len();
     let mut result = ImportSongsResult::default();
-    let mut imported_song_ids = Vec::new();
 
-    for src_path in file_paths {
-        if !src_path.exists() || !src_path.is_file() {
-            result
-                .failed_items
-                .push(format!("File does not exist: {:?}", src_path));
-            result.skipped_count += 1;
-            continue;
-        }
+    if total_files == 0 {
+        return Ok(result);
+    }
 
-        if !is_audio_file(src_path) {
-            result.skipped_count += 1;
-            continue;
-        }
+    // Read initial position counter for this playlist
+    let mut current_position: i64 = conn
+        .query_row(
+            "SELECT COALESCE(MAX(position), 0) FROM playlist_songs WHERE playlist_id = ?1",
+            rusqlite::params![playlist_id],
+            |row| row.get(0),
+        )
+        .unwrap_or(0);
 
-        let target_filename = match generate_imported_filename(src_path, &target_library_dir) {
-            Ok(name) => name,
-            Err(err) => {
-                result.failed_items.push(err);
+    // Process files in bounded chunks of IMPORT_CHUNK_SIZE (100 items)
+    for (chunk_idx, chunk) in file_paths.chunks(IMPORT_CHUNK_SIZE).enumerate() {
+        let mut chunk_imported_ids = Vec::new();
+        let mut chunk_new_files_copied = false;
+
+        for src_path in chunk {
+            if !src_path.exists() || !src_path.is_file() {
+                result
+                    .failed_items
+                    .push(format!("File does not exist: {:?}", src_path));
                 result.skipped_count += 1;
                 continue;
             }
-        };
 
-        let dest_path = target_library_dir.join(&target_filename);
-        let song_id = extract_song_id(&target_filename);
+            if !is_audio_file(src_path) {
+                result.skipped_count += 1;
+                continue;
+            }
 
-        // Check if this song_id already exists in songs table
-        let already_in_db: bool = conn
-            .query_row(
-                "SELECT count(*) FROM songs WHERE id = ?1",
-                rusqlite::params![song_id],
-                |row| row.get::<_, i64>(0),
-            )
-            .map(|c| c > 0)
-            .unwrap_or(false);
+            let target_filename = match generate_imported_filename(src_path, &target_library_dir) {
+                Ok(name) => name,
+                Err(err) => {
+                    result.failed_items.push(err);
+                    result.skipped_count += 1;
+                    continue;
+                }
+            };
 
-        if already_in_db {
-            // Check if already in this playlist
-            let already_in_pl: bool = conn
+            let dest_path = target_library_dir.join(&target_filename);
+            let song_id = extract_song_id(&target_filename);
+
+            // Check if this song_id already exists in songs table
+            let already_in_db: bool = conn
                 .query_row(
-                    "SELECT count(*) FROM playlist_songs WHERE playlist_id = ?1 AND song_id = ?2",
-                    rusqlite::params![playlist_id, song_id],
+                    "SELECT count(*) FROM songs WHERE id = ?1",
+                    rusqlite::params![song_id],
                     |row| row.get::<_, i64>(0),
                 )
                 .map(|c| c > 0)
                 .unwrap_or(false);
 
-            if already_in_pl {
-                result.skipped_count += 1;
-            } else {
-                imported_song_ids.push(song_id);
-                result.imported_count += 1;
+            if already_in_db {
+                // Check if already in this playlist
+                let already_in_pl: bool = conn
+                    .query_row(
+                        "SELECT count(*) FROM playlist_songs WHERE playlist_id = ?1 AND song_id = ?2",
+                        rusqlite::params![playlist_id, song_id],
+                        |row| row.get::<_, i64>(0),
+                    )
+                    .map(|c| c > 0)
+                    .unwrap_or(false);
+
+                if already_in_pl {
+                    result.skipped_count += 1;
+                } else {
+                    chunk_imported_ids.push(song_id);
+                    result.imported_count += 1;
+                }
+                continue;
             }
-            continue;
+
+            match fs::copy(src_path, &dest_path) {
+                Ok(_) => {
+                    chunk_imported_ids.push(song_id);
+                    result.imported_count += 1;
+                    chunk_new_files_copied = true;
+                }
+                Err(err) => {
+                    result.failed_items.push(format!(
+                        "Failed to copy {:?} to {:?}: {}",
+                        src_path, dest_path, err
+                    ));
+                }
+            }
         }
 
-        match fs::copy(src_path, &dest_path) {
-            Ok(_) => {
-                imported_song_ids.push(song_id);
-                result.imported_count += 1;
-            }
-            Err(err) => {
-                result.failed_items.push(format!(
-                    "Failed to copy {:?} to {:?}: {}",
-                    src_path, dest_path, err
-                ));
-            }
+        // 1. Ingest newly copied audio files into songs table via Rayon delta sync
+        if chunk_new_files_copied {
+            let _ = crate::db::sync::sync_library(&mut conn);
         }
-    }
 
-    if result.imported_count > 0 {
-        // 1. Sync library to parse new files into `songs`
-        let _ = crate::db::sync::sync_library(&mut conn);
-
-        // 2. Associate with playlist in a single atomic transaction
-        let now = SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .map(|d| d.as_secs() as i64)
-            .unwrap_or(0);
-
-        if let Ok(tx) = conn.transaction() {
-            let mut next_pos: i64 = tx
-                .query_row(
-                    "SELECT COALESCE(MAX(position), 0) FROM playlist_songs WHERE playlist_id = ?1",
-                    rusqlite::params![playlist_id],
-                    |row| row.get(0),
-                )
+        // 2. Associate chunk songs with the target playlist in a bounded transaction
+        if !chunk_imported_ids.is_empty() {
+            let now = SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .map(|d| d.as_secs() as i64)
                 .unwrap_or(0);
 
-            for id in imported_song_ids {
-                next_pos += 1;
-                let _ = tx.execute(
-                    "INSERT OR IGNORE INTO playlist_songs (playlist_id, song_id, position, added_at)
-                     VALUES (?1, ?2, ?3, ?4)",
-                    rusqlite::params![playlist_id, id, next_pos, now],
-                );
+            if let Ok(tx) = conn.transaction() {
+                for id in chunk_imported_ids {
+                    current_position += 1;
+                    let _ = tx.execute(
+                        "INSERT OR IGNORE INTO playlist_songs (playlist_id, song_id, position, added_at)
+                         VALUES (?1, ?2, ?3, ?4)",
+                        rusqlite::params![playlist_id, id, current_position, now],
+                    );
+                }
+                let _ = tx.commit();
             }
-            let _ = tx.commit();
+        }
+
+        // 3. Emit progress event to UI if AppHandle is available
+        if let Some(app_handle) = app {
+            let current = ((chunk_idx + 1) * IMPORT_CHUNK_SIZE).min(total_files);
+            let _ = app_handle.emit(
+                "import-progress",
+                ImportProgressPayload {
+                    playlist_name: clean_playlist_name.clone(),
+                    current,
+                    total: total_files,
+                    imported_count: result.imported_count,
+                    skipped_count: result.skipped_count,
+                },
+            );
         }
     }
 
