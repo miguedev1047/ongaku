@@ -19,11 +19,11 @@
 ## 📸 Capturas de Pantalla
 
 <div align="center">
-  <img src="src/assets/demo/demo-app-1.png" alt="Biblioteca Local Ongaku" width="100%" />
+  <img src="public/images/app-img-1.png" alt="Ongaku Local Library" width="100%" />
   <br/><br/>
-  <img src="src/assets/demo/demo-app-2.png" alt="Búsqueda en YouTube Ongaku" width="100%" />
+  <img src="public/images/app-img-2.png" alt="Ongaku YouTube Search" width="100%" />
   <br/><br/>
-  <img src="src/assets/demo/demo-app-3.png" alt="Reproductor y Cola Ongaku" width="100%" />
+  <img src="public/images/app-img-3.png" alt="Ongaku Player & Queue" width="100%" />
 </div>
 
 ---
