@@ -12,30 +12,47 @@ import { Show } from '@/components/utility/show'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import { updatesQueryOpts } from '@/shared/queries/updates'
+import { DotmSquare10 } from '@/components/loaders/dotm-square-10'
+import { cn } from 'cn'
 
 export function AppUpdatesCard() {
   const { data: health } = useSuspenseQuery(systemHealthQueryOpts())
   const { data: update } = useSuspenseQuery(updatesQueryOpts())
-  const { progress, isPending, handleInstallUpdate } = useUpdater()
+  const {
+    status,
+    progress,
+    isPending,
+    handleInstallUpdate,
+    simulateUpdateDemo,
+    reset,
+  } = useUpdater()
 
   const currentVersion = health.appVersion
   const hasUpdate = Boolean(update?.version)
 
   return (
-    <div className='p-4 rounded-md border border-border/50 bg-card/60 backdrop-blur-sm space-y-3'>
-      <div className='flex items-center justify-between'>
-        <div className='flex items-center gap-2.5'>
-          <div className='size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary'>
+    <div
+      className={cn(
+        'p-4 rounded-md border border-border/50 bg-card/60 backdrop-blur-sm space-y-3',
+      )}
+    >
+      <div className={cn('flex items-center justify-between')}>
+        <div className={cn('flex items-center gap-2.5')}>
+          <div
+            className={cn(
+              'size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary',
+            )}
+          >
             <HugeiconsIcon
               icon={SparklesIcon}
-              className='size-4'
+              className={cn('size-4')}
             />
           </div>
           <div>
-            <h2 className='text-sm font-semibold text-foreground'>
+            <h2 className={cn('text-sm font-semibold text-foreground')}>
               Application & Releases
             </h2>
-            <p className='text-xs text-muted-foreground'>
+            <p className={cn('text-xs text-muted-foreground')}>
               Installed runtime version and automatic updater channel
             </p>
           </div>
@@ -46,11 +63,13 @@ export function AppUpdatesCard() {
           fallback={
             <Badge
               variant='secondary'
-              className='text-[10px] gap-1 bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
+              className={cn(
+                'text-[10px] gap-1 bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
+              )}
             >
               <HugeiconsIcon
                 icon={CheckmarkCircle02Icon}
-                className='size-3'
+                className={cn('size-3')}
               />
               Up to date
             </Badge>
@@ -58,46 +77,52 @@ export function AppUpdatesCard() {
         >
           <Badge
             variant='default'
-            className='text-[10px] gap-1 bg-primary text-primary-foreground font-semibold'
+            className={cn(
+              'text-[10px] gap-1 bg-primary text-primary-foreground font-semibold',
+            )}
           >
             Update Available
           </Badge>
         </Show>
       </div>
 
-      <div className='flex flex-col sm:flex-row items-stretch sm:items-center justify-between p-3 rounded-md bg-muted/30 border border-border/30 gap-3'>
+      <div
+        className={cn(
+          'flex flex-col sm:flex-row items-stretch sm:items-center justify-between p-3 rounded-md bg-muted/30 border border-border/30 gap-3',
+        )}
+      >
         <div>
-          <div className='flex items-center gap-2'>
-            <span className='text-xs text-muted-foreground'>
+          <div className={cn('flex items-center gap-2')}>
+            <span className={cn('text-xs text-muted-foreground')}>
               Current Version:
             </span>
-            <span className='font-mono text-xs font-bold text-foreground'>
+            <span className={cn('font-mono text-xs font-bold text-foreground')}>
               v{currentVersion}
             </span>
           </div>
 
           <Show when={hasUpdate && Boolean(update?.version)}>
-            <p className='text-xs text-primary font-medium mt-1'>
+            <p className={cn('text-xs text-primary font-medium mt-1')}>
               New version v{update?.version} is ready to install!
             </p>
           </Show>
         </div>
 
         <Show when={hasUpdate}>
-          <div className='flex items-center gap-2'>
+          <div className={cn('flex items-center gap-2')}>
             <Button
               size='sm'
               onClick={handleInstallUpdate}
               disabled={isPending}
-              className='h-8 text-xs gap-1.5'
+              className={cn('h-8 text-xs gap-1.5')}
             >
               <Show
                 when={!isPending}
-                fallback={<Spinner className='size-3.5' />}
+                fallback={<Spinner className={cn('size-3.5')} />}
               >
                 <HugeiconsIcon
                   icon={DownloadIcon}
-                  className='size-3.5'
+                  className={cn('size-3.5')}
                 />
               </Show>
               <span>
@@ -107,7 +132,14 @@ export function AppUpdatesCard() {
                 >
                   <Show
                     when={progress.percentage > 0}
-                    fallback='Updating...'
+                    fallback={
+                      <Show
+                        when={status === 'installing'}
+                        fallback='Updating...'
+                      >
+                        Installing...
+                      </Show>
+                    }
                   >
                     Updating {progress.percentage}%
                   </Show>
@@ -118,17 +150,106 @@ export function AppUpdatesCard() {
         </Show>
       </div>
 
-      <Show when={isPending && progress.total > 0}>
-        <div className='space-y-1 pt-1'>
-          <div className='flex justify-between text-[10px] text-muted-foreground'>
-            <span>Download Progress</span>
-            <span>{progress.percentage}%</span>
-          </div>
-          <div className='h-1.5 w-full bg-muted rounded-sm overflow-hidden'>
-            <div
-              className='h-full bg-primary transition-all duration-200'
-              style={{ width: `${progress.percentage}%` }}
+      <Show when={isPending}>
+        <div
+          className={cn(
+            'flex items-center gap-3 p-3 rounded-md bg-primary/5 border border-primary/20 animate-in fade-in slide-in-from-bottom-1 duration-200',
+          )}
+        >
+          <div
+            className={cn(
+              'shrink-0 flex items-center justify-center size-8 rounded-md bg-primary/10 text-primary',
+            )}
+          >
+            <DotmSquare10
+              size={18}
+              dotSize={2.5}
+              speed={1.5}
             />
+          </div>
+          <div className={cn('min-w-0 flex-1 space-y-1.5')}>
+            <div className={cn('flex items-center justify-between text-xs')}>
+              <span className={cn('font-semibold text-foreground')}>
+                <Show
+                  when={status === 'installing'}
+                  fallback='Downloading application update...'
+                >
+                  Installing application update...
+                </Show>
+              </span>
+              <Show when={progress.percentage > 0}>
+                <span
+                  className={cn('font-mono text-[11px] text-primary font-bold')}
+                >
+                  {progress.percentage}%
+                </span>
+              </Show>
+            </div>
+            <Show when={progress.total > 0}>
+              <div
+                className={cn(
+                  'h-1.5 w-full bg-primary/15 rounded-sm overflow-hidden',
+                )}
+              >
+                <div
+                  className={cn(
+                    'h-full bg-primary transition-all duration-200',
+                  )}
+                  style={{ width: `${progress.percentage}%` }}
+                />
+              </div>
+            </Show>
+          </div>
+        </div>
+      </Show>
+
+      <Show when={import.meta.env.DEV}>
+        <div
+          className={cn(
+            'pt-2 border-t border-border/30 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 text-xs',
+          )}
+        >
+          <div
+            className={cn('flex items-center gap-1.5 text-muted-foreground')}
+          >
+            <Badge
+              variant='outline'
+              className={cn(
+                'text-[9px] font-mono px-1 py-0 h-4 border-amber-500/40 text-amber-500 bg-amber-500/5',
+              )}
+            >
+              DEV
+            </Badge>
+            <span className={cn('text-[11px]')}>
+              Test update animation & route persistence
+            </span>
+          </div>
+          <div className={cn('flex items-center gap-1.5')}>
+            <Button
+              size='sm'
+              variant='outline'
+              disabled={isPending}
+              onClick={simulateUpdateDemo}
+              className={cn('h-7 text-[11px] px-2.5 gap-1.5')}
+            >
+              <HugeiconsIcon
+                icon={SparklesIcon}
+                className={cn('size-3 text-amber-500')}
+              />
+              <span>Simulate Update</span>
+            </Button>
+            <Show when={isPending || status !== 'idle'}>
+              <Button
+                size='sm'
+                variant='ghost'
+                onClick={reset}
+                className={cn(
+                  'h-7 text-[11px] px-2 text-muted-foreground hover:text-foreground',
+                )}
+              >
+                Reset
+              </Button>
+            </Show>
           </div>
         </div>
       </Show>

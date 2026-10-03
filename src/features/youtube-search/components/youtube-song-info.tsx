@@ -19,10 +19,9 @@ import {
 } from '@/components/ui/empty'
 import { formatDuration } from '@/shared/helpers/format-duration'
 import { Show } from '@/components/utility/show'
-import { YoutubeSongActions } from './actions'
+import { YoutubeSongActions } from '@/features/youtube-search/components'
 import { cn } from 'cn'
-import { DotmSquare1 } from '@/components/ui/dotm-square-1'
-import { DotmSquare18 } from '@/components/ui/dotm-square-18'
+import { DotmSquare1, DotmSquare18 } from '@/components/loaders'
 
 interface YoutubeSongInfoProps {
   className?: string

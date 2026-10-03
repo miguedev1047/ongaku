@@ -16,7 +16,7 @@ pub struct ImportSongsResult {
     pub failed_items: Vec<String>,
 }
 
-pub fn generate_imported_filename(source_path: &Path, target_dir: &Path) -> Result<String, String> {
+pub fn generate_imported_filename(source_path: &Path, _target_dir: &Path) -> Result<String, String> {
     if !source_path.exists() || !source_path.is_file() {
         return Err(format!("Source file does not exist: {:?}", source_path));
     }
@@ -85,34 +85,15 @@ pub fn generate_imported_filename(source_path: &Path, target_dir: &Path) -> Resu
         };
 
         format!(
-            "{} [{}_{:04x}].{}",
+            "{} [{}_{:x}].{}",
             title_to_use,
             mtime,
-            (hash & 0xffff),
+            hash,
             extension
         )
     };
 
-    // Collision check in target directory: if file already exists with same name, disambiguate
-    let mut final_filename = base_filename.clone();
-    let mut counter = 1;
-
-    while target_dir.join(&final_filename).exists() {
-        if let Some(start) = base_filename.rfind('[') {
-            if let Some(end) = base_filename[start..].find(']') {
-                let id = &base_filename[start + 1..start + end];
-                let prefix = &base_filename[..start];
-                let suffix = &base_filename[start + end + 1..];
-                final_filename = format!("{}[{}_{}]{}", prefix, id, counter, suffix);
-                counter += 1;
-                continue;
-            }
-        }
-        final_filename = format!("{}_{}.{}", file_stem, counter, extension);
-        counter += 1;
-    }
-
-    Ok(final_filename)
+    Ok(base_filename)
 }
 
 pub const IMPORT_CHUNK_SIZE: usize = 100;
@@ -222,7 +203,9 @@ pub fn copy_and_import_songs_with_app(
                 .map(|c| c > 0)
                 .unwrap_or(false);
 
-            if already_in_db {
+            let file_exists_on_disk = dest_path.exists();
+
+            if already_in_db || file_exists_on_disk {
                 // Check if already in this playlist
                 let already_in_pl: bool = conn
                     .query_row(
@@ -238,6 +221,9 @@ pub fn copy_and_import_songs_with_app(
                 } else {
                     chunk_imported_ids.push(song_id);
                     result.imported_count += 1;
+                    if !already_in_db {
+                        chunk_new_files_copied = true;
+                    }
                 }
                 continue;
             }

@@ -3,13 +3,8 @@ import {
   binariesInfoQueryOpts,
   type TBinariesInfo,
 } from '@/shared/queries/binaries'
-import {
-  useMutation,
-  useQueryClient,
-  useSuspenseQuery,
-} from '@tanstack/react-query'
-import { invoke } from '@tauri-apps/api/core'
-import { toast } from 'sonner'
+import { useBinariesStore } from '@/shared/stores/actions'
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 
 export type { TBinariesInfo }
 
@@ -22,28 +17,20 @@ export function useBinaries() {
   )
 
   const queryClient = useQueryClient()
+  const status = useBinariesStore((state) => state.status)
+  const install = useBinariesStore((state) => state.installBinaries)
 
-  const mutation = useMutation({
-    mutationFn: async () => {
-      return await invoke('download_binaries')
-    },
-    onSuccess: () => {
-      toast.success('Tools installed successfully (yt-dlp & ffmpeg)')
-      queryClient.invalidateQueries({ queryKey: ['system'] })
-    },
-    onError: () => {
-      toast.error('An error occurred while downloading tools')
-    },
-  })
+  const isPending = status === 'installing'
 
   const installBinaries = () => {
-    mutation.mutate()
+    void install(queryClient)
   }
 
   return {
     isBinariesInstalled,
     binariesInfo,
-    isPending: mutation.isPending,
+    status,
+    isPending,
     installBinaries,
   }
 }

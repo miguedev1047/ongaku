@@ -16,6 +16,9 @@ import {
   PopoverContent,
   PopoverTrigger
 } from "@/components/ui/popover"
+import { Show } from "@/components/utility/show"
+import { DotmSquare10 } from "@/components/loaders/dotm-square-10"
+import { cn } from "cn"
 
 interface StatusProps {
   isPending: boolean
@@ -23,99 +26,113 @@ interface StatusProps {
 }
 
 function BinaryStatusIcon({ isPending, isInstalled }: StatusProps) {
-  if (isPending) {
-    return <Spinner className="size-4 shrink-0" />
-  }
-
-  if (!isInstalled) {
-    return (
-      <HugeiconsIcon
-        icon={Download01Icon}
-        className="size-4 shrink-0 text-amber-500 animate-pulse"
-      />
-    )
-  }
-
   return (
-    <HugeiconsIcon
-      icon={FolderIcon}
-      className="size-4 shrink-0 text-muted-foreground"
-    />
+    <Show
+      when={!isPending}
+      fallback={
+        <div className={cn("size-4 shrink-0 flex items-center justify-center text-primary")}>
+          <DotmSquare10 size={14} dotSize={2} speed={1.5} />
+        </div>
+      }
+    >
+      <Show
+        when={isInstalled}
+        fallback={
+          <HugeiconsIcon
+            icon={Download01Icon}
+            className={cn("size-4 shrink-0 text-amber-500 animate-pulse")}
+          />
+        }
+      >
+        <HugeiconsIcon
+          icon={FolderIcon}
+          className={cn("size-4 shrink-0 text-muted-foreground")}
+        />
+      </Show>
+    </Show>
   )
 }
 
 function BinaryMenuBadge({ isPending, isInstalled }: StatusProps) {
-  if (isPending) {
-    return (
-      <SidebarMenuBadge className="text-[10px]">
-        <Spinner className="size-3" />
-      </SidebarMenuBadge>
-    )
-  }
-
-  if (!isInstalled) {
-    return (
-      <SidebarMenuBadge className="bg-amber-500/10 text-amber-500 font-medium text-[10px]">
-        Missing
-      </SidebarMenuBadge>
-    )
-  }
-
-  return null
+  return (
+    <Show
+      when={!isPending}
+      fallback={
+        <SidebarMenuBadge className={cn("text-[10px]")}>
+          <Spinner className={cn("size-3")} />
+        </SidebarMenuBadge>
+      }
+    >
+      <Show when={!isInstalled}>
+        <SidebarMenuBadge
+          className={cn(
+            "bg-amber-500/10 text-amber-500 font-medium text-[10px]"
+          )}
+        >
+          Missing
+        </SidebarMenuBadge>
+      </Show>
+    </Show>
+  )
 }
 
 function BinaryOverallBadge({ isPending, isInstalled }: StatusProps) {
-  if (isPending) {
-    return (
-      <Badge
-        variant="outline"
-        className="text-[10px] h-5 gap-1"
-      >
-        <Spinner className="size-2.5" /> Installing
-      </Badge>
-    )
-  }
-
-  if (isInstalled) {
-    return (
-      <Badge
-        variant="secondary"
-        className="text-[10px] h-5 bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
-      >
-        Installed
-      </Badge>
-    )
-  }
-
   return (
-    <Badge
-      variant="destructive"
-      className="text-[10px] h-5"
+    <Show
+      when={!isPending}
+      fallback={
+        <Badge
+          variant="outline"
+          className={cn("text-[10px] h-5 gap-1")}
+        >
+          <Spinner className={cn("size-2.5")} /> Installing
+        </Badge>
+      }
     >
-      Missing
-    </Badge>
+      <Show
+        when={isInstalled}
+        fallback={
+          <Badge
+            variant="destructive"
+            className={cn("text-[10px] h-5")}
+          >
+            Missing
+          </Badge>
+        }
+      >
+        <Badge
+          variant="secondary"
+          className={cn(
+            "text-[10px] h-5 bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+          )}
+        >
+          Installed
+        </Badge>
+      </Show>
+    </Show>
   )
 }
 
 function BinaryItemBadge({ isReady }: { isReady: boolean }) {
-  if (isReady) {
-    return (
+  return (
+    <Show
+      when={isReady}
+      fallback={
+        <Badge
+          variant="outline"
+          className={cn("text-[10px] h-5 text-amber-500 border-amber-500/30")}
+        >
+          Missing
+        </Badge>
+      }
+    >
       <Badge
         variant="outline"
-        className="text-[10px] h-5 text-emerald-500 border-emerald-500/30"
+        className={cn("text-[10px] h-5 text-emerald-500 border-emerald-500/30")}
       >
         Ready
       </Badge>
-    )
-  }
-
-  return (
-    <Badge
-      variant="outline"
-      className="text-[10px] h-5 text-amber-500 border-amber-500/30"
-    >
-      Missing
-    </Badge>
+    </Show>
   )
 }
 
@@ -128,36 +145,35 @@ function BinaryActionSection({
   isInstalled,
   onInstall
 }: BinaryActionSectionProps) {
-  if (isPending) {
-    return (
-      <Button
-        disabled
-        size="sm"
-        className="w-full text-xs gap-1.5"
-      >
-        <Spinner className="size-3.5" />
-        <span className="truncate">Installing tools...</span>
-      </Button>
-    )
-  }
-
-  if (!isInstalled) {
-    return (
-      <Button
-        onClick={onInstall}
-        size="sm"
-        className="w-full text-xs gap-1.5"
-      >
-        <HugeiconsIcon
-          icon={Download01Icon}
-          className="size-3.5"
-        />
-        <span className="truncate">Install Tools</span>
-      </Button>
-    )
-  }
-
-  return null
+  return (
+    <Show
+      when={!isPending}
+      fallback={
+        <Button
+          disabled
+          size="sm"
+          className={cn("w-full text-xs gap-1.5")}
+        >
+          <Spinner className={cn("size-3.5")} />
+          <span className={cn("truncate")}>Installing tools...</span>
+        </Button>
+      }
+    >
+      <Show when={!isInstalled}>
+        <Button
+          onClick={onInstall}
+          size="sm"
+          className={cn("w-full text-xs gap-1.5")}
+        >
+          <HugeiconsIcon
+            icon={Download01Icon}
+            className={cn("size-3.5")}
+          />
+          <span className={cn("truncate")}>Install Tools</span>
+        </Button>
+      </Show>
+    </Show>
+  )
 }
 
 export function CheckBinaries() {
@@ -189,7 +205,12 @@ export function CheckBinaries() {
                 isInstalled={isBinariesInstalled}
               />
               <span>
-                {isBinariesInstalled ? "Tools & Binaries" : "Install Tools"}
+                <Show
+                  when={isBinariesInstalled}
+                  fallback="Install Tools"
+                >
+                  Tools & Binaries
+                </Show>
               </span>
               <BinaryMenuBadge
                 isPending={isPending}
@@ -200,22 +221,32 @@ export function CheckBinaries() {
         />
         <PopoverContent
           sideOffset={8}
-          className="w-100 p-3.5 space-y-3 bg-popover/95 backdrop-blur border border-border shadow-lg rounded-md"
+          className={cn(
+            "w-100 p-3.5 space-y-3 bg-popover/95 backdrop-blur border border-border shadow-lg rounded-md"
+          )}
         >
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-border/40 pb-2.5">
-            <div className="flex items-center gap-2">
-              <div className="size-7 rounded-md bg-muted flex items-center justify-center">
+          <div
+            className={cn(
+              "flex items-center justify-between border-b border-border/40 pb-2.5"
+            )}
+          >
+            <div className={cn("flex items-center gap-2")}>
+              <div
+                className={cn(
+                  "size-7 rounded-md bg-muted flex items-center justify-center"
+                )}
+              >
                 <HugeiconsIcon
                   icon={FolderIcon}
-                  className="size-4 text-foreground"
+                  className={cn("size-4 text-foreground")}
                 />
               </div>
               <div>
-                <h4 className="text-xs font-semibold text-foreground">
+                <h4 className={cn("text-xs font-semibold text-foreground")}>
                   Auxiliary Binaries
                 </h4>
-                <p className="text-[11px] text-muted-foreground">
+                <p className={cn("text-[11px] text-muted-foreground")}>
                   Dependencies for YouTube & audio
                 </p>
               </div>
@@ -227,13 +258,19 @@ export function CheckBinaries() {
           </div>
 
           {/* Tool Items list */}
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between text-xs p-2 rounded-md bg-muted/30 border border-border/30">
-              <div className="flex flex-col">
-                <span className="font-mono font-medium text-foreground">
+          <div className={cn("space-y-1.5")}>
+            <div
+              className={cn(
+                "flex items-center justify-between text-xs p-2 rounded-md bg-muted/30 border border-border/30"
+              )}
+            >
+              <div className={cn("flex flex-col")}>
+                <span
+                  className={cn("font-mono font-medium text-foreground")}
+                >
                   yt-dlp
                 </span>
-                <span className="text-[10px] text-muted-foreground">
+                <span className={cn("text-[10px] text-muted-foreground")}>
                   Stream extraction & metadata
                 </span>
               </div>
@@ -242,12 +279,18 @@ export function CheckBinaries() {
               />
             </div>
 
-            <div className="flex items-center justify-between text-xs p-2 rounded-md bg-muted/30 border border-border/30">
-              <div className="flex flex-col">
-                <span className="font-mono font-medium text-foreground">
+            <div
+              className={cn(
+                "flex items-center justify-between text-xs p-2 rounded-md bg-muted/30 border border-border/30"
+              )}
+            >
+              <div className={cn("flex flex-col")}>
+                <span
+                  className={cn("font-mono font-medium text-foreground")}
+                >
                   ffmpeg
                 </span>
-                <span className="text-[10px] text-muted-foreground">
+                <span className={cn("text-[10px] text-muted-foreground")}>
                   Audio transcoding & ID3 tagging
                 </span>
               </div>
@@ -258,25 +301,33 @@ export function CheckBinaries() {
           </div>
 
           {/* Folder Path & Open Button */}
-          <div className="space-y-1">
-            <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+          <div className={cn("space-y-1")}>
+            <div
+              className={cn(
+                "flex items-center justify-between text-[11px] text-muted-foreground"
+              )}
+            >
               <span>Binaries location:</span>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleOpenFolder}
-                className="h-6 px-1.5 text-[11px] gap-1 text-primary hover:text-primary rounded-md"
+                className={cn(
+                  "h-6 px-1.5 text-[11px] gap-1 text-primary hover:text-primary rounded-md"
+                )}
               >
                 <HugeiconsIcon
                   icon={FolderIcon}
-                  className="size-3"
+                  className={cn("size-3")}
                 />
                 Open folder
               </Button>
             </div>
             <div
               onClick={handleOpenFolder}
-              className="font-mono text-[10px] text-muted-foreground bg-muted/40 border border-border/40 rounded-md px-2 py-1 truncate cursor-pointer hover:border-border hover:text-foreground transition-colors"
+              className={cn(
+                "font-mono text-[10px] text-muted-foreground bg-muted/40 border border-border/40 rounded-md px-2 py-1 truncate cursor-pointer hover:border-border hover:text-foreground transition-colors"
+              )}
               title={binariesInfo?.bin_dir}
             >
               {binariesInfo?.bin_dir || "Loading..."}
