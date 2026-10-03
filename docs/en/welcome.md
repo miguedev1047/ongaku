@@ -12,6 +12,9 @@ Welcome to the official documentation for **Ongaku** (`音楽`), a lightweight, 
 - [Features Overview](#-key-features)  
   *Discover everything you can do: instant YouTube search, smart downloads, batch local song import, and offline playlist management.*
 
+- [Project Roadmap](#️-project-roadmap)  
+  *Upcoming planned features: i18n multi-language support, custom theme builder, and custom wallpapers.*
+
 - [Performance & Technical Architecture](benchmarks.md)  
   *For developers and technical readers: internal architecture, speed benchmarks, database design, and multithreaded processing.*
 
@@ -22,24 +25,34 @@ Welcome to the official documentation for **Ongaku** (`音楽`), a lightweight, 
 
 ## ✨ Key Features
 
-- **🔍 Instant YouTube Search & Streaming**: Search for any song or artist directly within the app and stream music instantly without ads or browser tabs.
-- **📥 Smart Downloads with Artwork & Metadata**:
+- **Instant YouTube Search & Streaming**: Search for any song or artist directly within the app and stream music instantly without ads or browser tabs.
+- **Smart Downloads with Artwork & Metadata**:
   - Automatically convert tracks to high-quality `.mp3`.
   - Songs are saved with clean filenames, embedded album artwork, and complete tags (artist, title, album).
   - Automatic URL sanitization: removes playlist queues and radio mix parameters to download exactly what you wanted.
-- **📁 Safe Batch Song Import**:
+- **Safe Batch Song Import**:
   - Bring your existing local music into playlists or your library in one click.
   - Safe internal storage: Ongaku copies files to its internal storage so tracks never break even if you clean your Downloads folder.
   - Protected chunking pipeline: processes audio in bounded batches so your computer stays smooth and responsive, even when adding thousands of songs.
-- **🎶 Minimalist & Comfortable Player**:
+- **Minimalist & Comfortable Player**:
   - Full-width interactive progress bar, smooth volume control, and intuitive controls.
   - Keyboard shortcuts for play/pause, next/previous, and volume adjustments.
   - Full support for hardware keyboard media keys and OS control center integration.
-- **📂 Offline Library & Custom Playlists**: Create, rename, and manage playlists, keeping your favorite music accessible offline at any time.
-- **🔄 Smart Updates & System Integration**:
+- **Offline Library & Custom Playlists**: Create, rename, and manage playlists, keeping your favorite music accessible offline at any time.
+- **Smart Updates & System Integration**:
   - Detects your package format automatically.
   - Provides in-app update notifications and direct links to release notes.
   - Respects Flatpak environments by delegating updates to your system software center.
+
+---
+
+## 🗺️ Project Roadmap
+
+The following features and improvements are planned for upcoming releases:
+
+- **Internationalization (i18n)**: Full multi-language support (English, Spanish, and more) with an interactive language selector in Settings.
+- **More Themes & Custom Theme Maker**: New aesthetic color palettes and an interactive tool to design, customize, and export your own themes.
+- **Custom App Wallpapers & Backgrounds**: Option to set custom background images or enable dynamic ambient blur effects sampled from the currently playing album art.
 
 ---
 

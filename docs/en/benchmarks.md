@@ -49,7 +49,7 @@ graph TD
 
 ### B. Local Axum Server & Media Streaming
 - **Internal HTTP Server**: Binds Axum to `localhost` on a dynamic OS-assigned port to isolate local traffic.
-- **`206 Partial Content` Support**: Enables the webview audio player to request arbitrary byte ranges for instant seeking and scrubber scrubbing without loading entire files into memory.
+- **206 Partial Content Support**: Enables the webview audio player to request arbitrary byte ranges for instant seeking and scrubber scrubbing without loading entire files into memory.
 - **On-Demand Cover Processing**: Extract album artwork and downscale via `Lanczos3` with WebP compression on the fly, keeping image cache compact (~16MB).
 
 ### C. SQLite Database in WAL Mode
@@ -57,11 +57,11 @@ graph TD
 - **Write-Ahead Logging (WAL)**: Allows concurrent reads without blocking database writes.
 - **Indexed Queries**: Fast queries by song ID and positional sorting with dedicated database indexes.
 
-### D. Ingestion Pipeline & Chunked Shield (`Lofty` + `Rayon`)
+### D. Ingestion Pipeline & Chunked Shield (Lofty + Rayon)
 - **Multithreaded Parsing**: `Rayon` balances metadata extraction (ID3v2, Vorbis, FLAC, MP4) across all available CPU cores.
 - **Bounded Chunk Processing**: Mass file imports are processed in batches of 100 (`IMPORT_CHUNK_SIZE`), executing safe internal file copies, delta synchronization, and bounded SQLite transactions while emitting live progress events (`import-progress`).
 
-### E. Smart Download Queue (`yt-dlp` + `ffmpeg`)
+### E. Smart Download Queue (yt-dlp + ffmpeg)
 - **Worker Pool**: Queue manager with concurrency limits to prevent CPU throttling and YouTube rate limits (HTTP 429).
 - **URL Sanitizer**: Strips extraneous query parameters, playlist queues, and radio mixes to ensure accurate single-track downloads.
 - **Atomic Cancellation**: Kills the active subprocess and cleans temporary staging files immediately.
@@ -76,7 +76,7 @@ graph TD
 
 **Reference Hardware**: AMD Ryzen 5 5600G (6 Cores / 12 Threads @ 3.9 GHz Base / 4.4 GHz Boost, 16 MB L3 Cache).
 
-### 🚀 A. Lofty Multithreaded Scalability with Rayon
+### A. Lofty Multithreaded Scalability with Rayon
 Measures isolated metadata parsing (title, artist, album) across **500 real audio files with FLAC/Vorbis tags**:
 
 | Thread Configuration | Execution Mode | Total Time (500 tracks) | Latency per File | Throughput | Speedup |
@@ -87,7 +87,7 @@ Measures isolated metadata parsing (title, artist, album) across **500 real audi
 
 ---
 
-### 📂 B. Filesystem, Metadata & Cover Processing
+### B. Filesystem, Metadata & Cover Processing
 
 | Operation / Phase | Sample / Volume | Average Latency | Throughput | Technical Details |
 | :--- | :--- | :--- | :--- | :--- |
@@ -98,7 +98,7 @@ Measures isolated metadata parsing (title, artist, album) across **500 real audi
 
 ---
 
-### ⚡ C. SQLite Database (WAL Mode)
+### C. SQLite Database (WAL Mode)
 
 | Query / Operation | Data Volume | Average Latency | Throughput | Details |
 | :--- | :--- | :--- | :--- | :--- |

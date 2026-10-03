@@ -49,7 +49,7 @@ graph TD
 
 ### B. Servidor Local Axum & Streaming
 - **Servidor HTTP Interno**: Instancia Axum en `localhost` con asignación dinámica de puerto para aislar el tráfico.
-- **Soporte `206 Partial Content`**: Permite al reproductor webview solicitar fragmentos de audio por rangos de bytes (*byte-ranges*), habilitando rebobinado y avance instantáneo sin cargar el archivo completo en memoria.
+- **Soporte 206 Partial Content**: Permite al reproductor webview solicitar fragmentos de audio por rangos de bytes (*byte-ranges*), habilitando rebobinado y avance instantáneo sin cargar el archivo completo en memoria.
 - **Procesamiento de Portadas On-Demand**: Extracción y reescalado de carátulas mediante algoritmo `Lanczos3` y compresión WebP al vuelo, optimizando el consumo de memoria caché a ~16MB.
 
 ### C. Base de Datos SQLite en Modo WAL
@@ -57,11 +57,11 @@ graph TD
 - **Modo WAL (Write-Ahead Logging)**: Permite lecturas simultáneas concurrentes sin bloquear las operaciones de escritura.
 - **Consultas Indexadas**: Búsquedas por ID y ordenaciones por posición con índices dedicados.
 
-### D. Pipeline de Ingesta & Blindaje en Chunks (`Lofty` + `Rayon`)
+### D. Pipeline de Ingesta & Blindaje en Chunks (Lofty + Rayon)
 - **Procesamiento Multihilo**: `Rayon` distribuye la carga de extracción de metadatos (ID3v2, Vorbis, FLAC, MP4) entre todos los núcleos disponibles de la CPU.
 - **Importación Acotada (Bounded Chunks)**: La importación masiva de archivos se divide en lotes de 100 (`IMPORT_CHUNK_SIZE`), realizando copias seguras al directorio interno, sincronización delta y transacciones SQLite acotadas con emisión de eventos de progreso en tiempo real (`import-progress`).
 
-### E. Cola Inteligente de Descargas (`yt-dlp` + `ffmpeg`)
+### E. Cola Inteligente de Descargas (yt-dlp + ffmpeg)
 - **Pool Concurrente**: Administrador de tareas con control de concurrencia para evitar saturación de CPU y bloqueos por tasa de peticiones (HTTP 429).
 - **Sanitización de URLs**: Filtra automáticamente listas de reproducción y radios en vivo para descargar exactamente la pista solicitada.
 - **Cancelación Atómica**: Finalización inmediata del subproceso con eliminación de residuos en la carpeta temporal de *staging*.
@@ -76,7 +76,7 @@ graph TD
 
 **Hardware de referencia**: AMD Ryzen 5 5600G (6 Núcleos / 12 Hilos @ 3.9 GHz Base / 4.4 GHz Boost, 16 MB L3 Cache).
 
-### 🚀 A. Escalabilidad Multihilo de Lofty con Rayon
+### A. Escalabilidad Multihilo de Lofty con Rayon
 Mide el tiempo de parseo aislado de metadatos (título, artista, álbum) sobre **500 archivos de audio reales con tags FLAC/Vorbis**:
 
 | Configuración de Hilos | Tipo de Ejecución | Tiempo Total (500 pistas) | Latencia por Archivo | Throughput | Aceleración (Speedup) |
@@ -87,7 +87,7 @@ Mide el tiempo de parseo aislado de metadatos (título, artista, álbum) sobre *
 
 ---
 
-### 📂 B. Filesystem, Metadatos y Procesamiento de Portadas
+### B. Filesystem, Metadatos y Procesamiento de Portadas
 
 | Operación / Fase | Muestra / Volumen | Latencia Promedio | Throughput | Notas Técnicas |
 | :--- | :--- | :--- | :--- | :--- |
@@ -98,7 +98,7 @@ Mide el tiempo de parseo aislado de metadatos (título, artista, álbum) sobre *
 
 ---
 
-### ⚡ C. Base de Datos SQLite (Modo WAL)
+### C. Base de Datos SQLite (Modo WAL)
 
 | Consulta / Operación | Volumen de Datos | Latencia Promedio | Throughput | Comportamiento |
 | :--- | :--- | :--- | :--- | :--- |
