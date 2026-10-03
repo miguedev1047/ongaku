@@ -6,17 +6,14 @@ import {
   DownloadIcon,
   CheckmarkCircle02Icon,
   SparklesIcon,
-  PackageIcon,
   ArrowUpRight01Icon,
 } from '@hugeicons/core-free-icons'
 import { useUpdater } from '@/hooks/use-updater'
-import { usePackageType } from '@/hooks/use-package-type'
 import { Show } from '@/components/utility/show'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import { updatesQueryOpts } from '@/shared/queries/updates'
 import { openReleaseNotes } from '@/shared/helpers/open-release-notes'
-import { useUpdateStore } from '@/shared/stores/actions'
 import { DotmSquare10 } from '@/components/loaders/dotm-square-10'
 import { cn } from 'cn'
 
@@ -59,7 +56,6 @@ function ReleaseNotesLink({ version, label, className }: ReleaseNotesLinkProps) 
 export function AppUpdatesCard() {
   const { data: health } = useSuspenseQuery(systemHealthQueryOpts())
   const { data: update } = useSuspenseQuery(updatesQueryOpts())
-  const { isFlatpak, isSimulated, supportsInAppUpdates } = usePackageType()
   const {
     status,
     progress,
@@ -68,13 +64,9 @@ export function AppUpdatesCard() {
     simulateUpdateDemo,
     reset,
   } = useUpdater()
-  const toggleSimulateFlatpak = useUpdateStore(
-    (state) => state.toggleSimulateFlatpak,
-  )
 
   const currentVersion = health.appVersion
   const hasUpdate = Boolean(update?.version)
-  const canInstall = hasUpdate && supportsInAppUpdates
 
   return (
     <div
@@ -105,48 +97,30 @@ export function AppUpdatesCard() {
         </div>
 
         <Show
-          when={!isFlatpak}
+          when={hasUpdate}
           fallback={
             <Badge
               variant='secondary'
               className={cn(
-                'text-[10px] gap-1 bg-sky-500/10 text-sky-500 border-sky-500/20',
+                'text-[10px] gap-1 bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
               )}
             >
               <HugeiconsIcon
-                icon={PackageIcon}
+                icon={CheckmarkCircle02Icon}
                 className={cn('size-3')}
               />
-              Flatpak
+              Up to date
             </Badge>
           }
         >
-          <Show
-            when={hasUpdate}
-            fallback={
-              <Badge
-                variant='secondary'
-                className={cn(
-                  'text-[10px] gap-1 bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
-                )}
-              >
-                <HugeiconsIcon
-                  icon={CheckmarkCircle02Icon}
-                  className={cn('size-3')}
-                />
-                Up to date
-              </Badge>
-            }
+          <Badge
+            variant='default'
+            className={cn(
+              'text-[10px] gap-1 bg-primary text-primary-foreground font-semibold',
+            )}
           >
-            <Badge
-              variant='default'
-              className={cn(
-                'text-[10px] gap-1 bg-primary text-primary-foreground font-semibold',
-              )}
-            >
-              Update Available
-            </Badge>
-          </Show>
+            Update Available
+          </Badge>
         </Show>
       </div>
 
@@ -166,7 +140,7 @@ export function AppUpdatesCard() {
           </div>
 
           <Show
-            when={canInstall}
+            when={hasUpdate}
             fallback={
               <ReleaseNotesLink
                 version={currentVersion}
@@ -184,7 +158,7 @@ export function AppUpdatesCard() {
           </Show>
         </div>
 
-        <Show when={canInstall}>
+        <Show when={hasUpdate}>
           <div className={cn('flex items-center gap-2')}>
             <Button
               size='sm'
@@ -226,36 +200,7 @@ export function AppUpdatesCard() {
         </Show>
       </div>
 
-      <Show when={isFlatpak}>
-        <div
-          className={cn(
-            'flex items-start gap-3 p-3 rounded-md bg-sky-500/5 border border-sky-500/20 animate-in fade-in duration-200',
-          )}
-        >
-          <div
-            className={cn(
-              'shrink-0 flex items-center justify-center size-8 rounded-md bg-sky-500/10 text-sky-500',
-            )}
-          >
-            <HugeiconsIcon
-              icon={PackageIcon}
-              className={cn('size-4')}
-            />
-          </div>
-          <div className={cn('min-w-0 flex-1 space-y-0.5')}>
-            <p className={cn('text-xs font-semibold text-foreground')}>
-              Updates are managed by Flatpak
-            </p>
-            <p className={cn('text-[11px] text-muted-foreground')}>
-              This build runs inside a Flatpak sandbox. New versions are
-              delivered through Flathub and installed by your software center
-              or with <span className={cn('font-mono')}>flatpak update</span>.
-            </p>
-          </div>
-        </div>
-      </Show>
-
-      <Show when={isPending && supportsInAppUpdates}>
+      <Show when={isPending}>
         <div
           className={cn(
             'flex items-center gap-3 p-3 rounded-md bg-primary/5 border border-primary/20 animate-in fade-in slide-in-from-bottom-1 duration-200',
@@ -326,35 +271,14 @@ export function AppUpdatesCard() {
               DEV
             </Badge>
             <span className={cn('text-[11px]')}>
-              Detected: <span className={cn('font-mono')}>{health.packageType}</span>
+              Package: <span className={cn('font-mono')}>{health.packageType}</span>
             </span>
           </div>
           <div className={cn('flex items-center gap-1.5')}>
             <Button
               size='sm'
               variant='outline'
-              onClick={toggleSimulateFlatpak}
               disabled={isPending}
-              className={cn(
-                'h-7 text-[11px] px-2.5 gap-1.5',
-                isSimulated && 'border-sky-500/40 text-sky-500 bg-sky-500/5',
-              )}
-            >
-              <HugeiconsIcon
-                icon={PackageIcon}
-                className={cn('size-3')}
-              />
-              <Show
-                when={isSimulated}
-                fallback='Simulate Flatpak'
-              >
-                Exit Flatpak mode
-              </Show>
-            </Button>
-            <Button
-              size='sm'
-              variant='outline'
-              disabled={isPending || isFlatpak}
               onClick={simulateUpdateDemo}
               className={cn('h-7 text-[11px] px-2.5 gap-1.5')}
             >

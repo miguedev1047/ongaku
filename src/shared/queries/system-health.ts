@@ -10,7 +10,6 @@ export interface TDirectoryHealth {
 }
 
 export type TPackageType =
-  | 'flatpak'
   | 'appimage'
   | 'deb'
   | 'exe'
@@ -30,7 +29,6 @@ export interface TSystemHealthInfo {
   dbExists: boolean
   directories: TDirectoryHealth[]
   packageType: TPackageType
-  isFlatpak: boolean
 }
 
 export const systemHealthQueryOpts = () =>

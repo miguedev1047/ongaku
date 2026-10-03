@@ -9,8 +9,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "tauri": "tauri",
-    "flatpak:sources": "bash scripts/generate-flatpak-sources.sh"
+    "tauri": "tauri"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",

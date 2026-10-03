@@ -35,12 +35,11 @@ pub struct SystemHealthInfo {
     pub db_exists: bool,
     pub directories: Vec<DirectoryHealth>,
     pub package_type: String,
-    pub is_flatpak: bool,
 }
 
 /// Detects how the running app was packaged/distributed.
 ///
-/// Returns one of: `flatpak`, `appimage`, `deb`, `exe`, `dmg`, `unknown`.
+/// Returns one of: `appimage`, `deb`, `exe`, `dmg`, `unknown`.
 pub fn detect_package_type() -> String {
     #[cfg(target_os = "windows")]
     {
@@ -52,9 +51,7 @@ pub fn detect_package_type() -> String {
     }
     #[cfg(target_os = "linux")]
     {
-        if Path::new("/.flatpak-info").exists() || std::env::var_os("FLATPAK_ID").is_some() {
-            "flatpak".to_string()
-        } else if std::env::var_os("APPIMAGE").is_some() || std::env::var_os("APPDIR").is_some() {
+        if std::env::var_os("APPIMAGE").is_some() || std::env::var_os("APPDIR").is_some() {
             "appimage".to_string()
         } else {
             "deb".to_string()
@@ -129,7 +126,6 @@ pub fn get_system_health(
     let port = server_port.0;
     let server_healthy = port > 0;
     let package_type = detect_package_type();
-    let is_flatpak = package_type == "flatpak";
 
     Ok(SystemHealthInfo {
         server_healthy,
@@ -144,6 +140,5 @@ pub fn get_system_health(
         db_exists: db_path.is_file(),
         directories,
         package_type,
-        is_flatpak,
     })
 }

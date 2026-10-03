@@ -23,7 +23,6 @@ graph TD
         SQL[SQLite / rusqlite - Modo WAL]
         META[Motor Lofty + Rayon Multihilo]
         POOL[Downloader Pool - yt-dlp + ffmpeg]
-        PKG[Detector de Paquete / Sandbox]
     end
 
     UI --> TQ
@@ -34,7 +33,6 @@ graph TD
     CMD --> SQL
     CMD --> META
     CMD --> POOL
-    CMD --> PKG
 ```
 
 ---
@@ -65,10 +63,6 @@ graph TD
 - **Pool Concurrente**: Administrador de tareas con control de concurrencia para evitar saturación de CPU y bloqueos por tasa de peticiones (HTTP 429).
 - **Sanitización de URLs**: Filtra automáticamente listas de reproducción y radios en vivo para descargar exactamente la pista solicitada.
 - **Cancelación Atómica**: Finalización inmediata del subproceso con eliminación de residuos en la carpeta temporal de *staging*.
-
-### F. Detección de Distribución y Sandboxing
-- **Detección en Runtime**: Identifica si la app corre bajo Flatpak (`/.flatpak-info` / `FLATPAK_ID`), AppImage (`APPIMAGE`/`APPDIR`), Deb, Windows EXE o macOS DMG.
-- **Comportamiento Adaptativo**: En entornos Flatpak desactiva el actualizador in-app para respetar el sistema de archivos de solo lectura y delegar el ciclo de vida a Flathub.
 
 ---
 

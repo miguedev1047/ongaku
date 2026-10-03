@@ -7,7 +7,7 @@ Welcome to the official documentation for **Ongaku** (`音楽`), a lightweight, 
 ## 🧭 Documentation Index
 
 - [Platform Compatibility & Requirements](compatibility.md)  
-  *Clear installation guides for Windows, macOS, and Linux (Flatpak, AppImage, Deb), including tips for SmartScreen and Gatekeeper warnings.*
+  *Clear installation guides for Windows, macOS, and Linux (AppImage, Deb), including tips for SmartScreen and Gatekeeper warnings.*
 
 - [Features Overview](#-key-features)  
   *Discover everything you can do: instant YouTube search, smart downloads, batch local song import, and offline playlist management.*
@@ -39,10 +39,9 @@ Welcome to the official documentation for **Ongaku** (`音楽`), a lightweight, 
   - Keyboard shortcuts for play/pause, next/previous, and volume adjustments.
   - Full support for hardware keyboard media keys and OS control center integration.
 - **Offline Library & Custom Playlists**: Create, rename, and manage playlists, keeping your favorite music accessible offline at any time.
-- **Smart Updates & System Integration**:
-  - Detects your package format automatically.
-  - Provides in-app update notifications and direct links to release notes.
-  - Respects Flatpak environments by delegating updates to your system software center.
+- **Automatic Updates & Release Notes**:
+  - Built-in updater channel that checks for new releases seamlessly.
+  - Direct link from settings to open GitHub release notes and explore changelogs.
 
 ---
 

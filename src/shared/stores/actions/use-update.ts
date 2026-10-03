@@ -19,13 +19,10 @@ interface UpdateProgress {
 interface UpdateStoreProps {
   status: UpdateStatus
   progress: UpdateProgress
-  /** DEV only: preview the Flatpak variant of the updater UI */
-  simulateFlatpak: boolean
   setStatus: (status: UpdateStatus) => void
   setProgress: (downloaded: number, total: number) => void
   startInstallUpdate: (update: Update) => Promise<void>
   simulateUpdateDemo: () => Promise<void>
-  toggleSimulateFlatpak: () => void
   reset: () => void
 }
 
@@ -38,12 +35,8 @@ export const useUpdateStore = create<UpdateStoreProps>((set, get) => ({
     total: 0,
     percentage: 0
   },
-  simulateFlatpak: false,
 
   setStatus: (status) => set({ status }),
-
-  toggleSimulateFlatpak: () =>
-    set((state) => ({ simulateFlatpak: !state.simulateFlatpak })),
 
   setProgress: (downloaded, total) => {
     const percentage =

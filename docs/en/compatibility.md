@@ -9,7 +9,6 @@ This document outlines platform support, available distribution packages, and ho
 | Platform | Architecture | Release Package | Status | Update Channel |
 | :--- | :--- | :--- | :---: | :--- |
 | **Windows** | x86_64 | `.exe` (NSIS Installer) | Tested | In-app auto updater |
-| **Linux (Flatpak)** | x86_64 / aarch64 | Flatpak / Flathub | Recommended | System Software Center (`flatpak update`) |
 | **Linux (AppImage)** | x86_64 | `.AppImage` standalone | Available | In-app updater or direct download |
 | **Linux (Debian/Ubuntu)** | x86_64 | `.deb` | Available | APT package manager or direct download |
 | **macOS** | Apple Silicon / Intel | `.dmg` | Available | In-app updater or direct download |
@@ -36,15 +35,7 @@ As an independent open-source application without an enterprise commercial code-
 
 Choose the packaging format that best fits your workflow:
 
-### 1. Flatpak (Recommended)
-Runs in an isolated, secure sandbox with all required multimedia dependencies bundled automatically.
-- **Updates**: Seamlessly handled by your desktop software center (GNOME Software, KDE Discover) or CLI:
-  ```bash
-  flatpak update
-  ```
-- **Detection**: Ongaku automatically detects the Flatpak runtime and hides in-app binary installers to prevent permission conflicts with read-only sandbox directories.
-
-### 2. AppImage (Portable)
+### 1. AppImage (Portable)
 No installation required. Grant execution permissions and run:
 ```bash
 chmod +x ongaku_*_amd64.AppImage
@@ -52,7 +43,7 @@ chmod +x ongaku_*_amd64.AppImage
 ```
 *(On Ubuntu 22.04+, install `libfuse2` if needed: `sudo apt install libfuse2`)*.
 
-### 3. Debian / Ubuntu Package (`.deb`)
+### 2. Debian / Ubuntu Package (`.deb`)
 ```bash
 sudo dpkg -i ongaku_*_amd64.deb
 ```

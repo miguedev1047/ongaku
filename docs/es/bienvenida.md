@@ -7,7 +7,7 @@ Bienvenido a la documentación oficial de **Ongaku** (`音楽`), un reproductor 
 ## 🧭 Índice de la Documentación
 
 - [Compatibilidad de Plataformas y Requisitos](compatibilidad.md)  
-  *Guía sencilla de instalación para Windows, macOS y Linux (Flatpak, AppImage, Deb), solución a mensajes de SmartScreen y Gatekeeper.*
+  *Guía sencilla de instalación para Windows, macOS y Linux (AppImage, Deb), solución a mensajes de SmartScreen y Gatekeeper.*
 
 - [Características Principales](#-características-principales)  
   *Descubre todo lo que puedes hacer: búsqueda en YouTube, descargas inteligentes, importación de música por lotes y gestión de playlists.*
@@ -39,10 +39,9 @@ Bienvenido a la documentación oficial de **Ongaku** (`音楽`), un reproductor 
   - Atajos de teclado para pausar, cambiar de canción o ajustar volumen rápidamente.
   - Integración con las teclas multimedia de tu teclado y el centro de control de tu sistema operativo.
 - **Playlists y Biblioteca Offline**: Crea tus propias listas de reproducción, organízalas a tu gusto y escucha tu música favorita en cualquier momento sin conexión a internet.
-- **Actualizaciones y Adaptación a tu Sistema**:
-  - Detección automática de tu sistema y formato de instalación.
-  - Si usas la versión instalable, te avisará cuando haya nuevas versiones y te permitirá ver las notas de parche con las novedades.
-  - Si usas Flatpak en Linux, se integra de forma limpia respetando el gestor de software de tu sistema.
+- **Actualizaciones Automáticas y Notas de Parche**:
+  - Comprobación automática de nuevas versiones con canal de actualización integrado.
+  - Enlace directo desde los ajustes para consultar las notas de lanzamiento en GitHub y ver las novedades.
 
 ---
 

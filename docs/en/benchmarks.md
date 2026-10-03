@@ -23,7 +23,6 @@ graph TD
         SQL[SQLite / rusqlite - WAL Mode]
         META[Lofty + Rayon Multithreaded Engine]
         POOL[Downloader Pool - yt-dlp + ffmpeg]
-        PKG[Package / Sandbox Detector]
     end
 
     UI --> TQ
@@ -34,7 +33,6 @@ graph TD
     CMD --> SQL
     CMD --> META
     CMD --> POOL
-    CMD --> PKG
 ```
 
 ---
@@ -65,10 +63,6 @@ graph TD
 - **Worker Pool**: Queue manager with concurrency limits to prevent CPU throttling and YouTube rate limits (HTTP 429).
 - **URL Sanitizer**: Strips extraneous query parameters, playlist queues, and radio mixes to ensure accurate single-track downloads.
 - **Atomic Cancellation**: Kills the active subprocess and cleans temporary staging files immediately.
-
-### F. Distribution & Sandbox Detection
-- **Runtime Environment Inspector**: Identifies whether the application is running inside Flatpak (`/.flatpak-info` / `FLATPAK_ID`), AppImage (`APPIMAGE`/`APPDIR`), Deb, Windows EXE, or macOS DMG.
-- **Adaptive UI**: Automatically disables in-app updater controls inside Flatpak sandboxes, respecting read-only filesystems and delegating updates to Flathub.
 
 ---
 

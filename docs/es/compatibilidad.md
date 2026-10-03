@@ -9,7 +9,6 @@ Este documento describe la compatibilidad, los paquetes de instalación disponib
 | Plataforma | Arquitectura | Paquete de Lanzamiento | Estado | Cómo se Actualiza |
 | :--- | :--- | :--- | :---: | :--- |
 | **Windows** | x86_64 | `.exe` (Instalador estándar) | Probado | Actualizador integrado en la app |
-| **Linux (Flatpak)** | x86_64 / aarch64 | Flatpak / Flathub | Recomendado | Gestor de software del sistema (`flatpak update`) |
 | **Linux (AppImage)** | x86_64 | `.AppImage` portable | Disponible | Actualizador integrado o descarga directa |
 | **Linux (Debian/Ubuntu)** | x86_64 | `.deb` | Disponible | Gestor de paquetes `apt` o descarga directa |
 | **macOS** | Apple Silicon / Intel | `.dmg` | Disponible | Actualizador integrado o descarga directa |
@@ -36,15 +35,7 @@ Al ser un proyecto de código abierto independiente sin certificado comercial co
 
 En Linux dispones de varias opciones según tu preferencia:
 
-### 1. Flatpak (Recomendado)
-Flatpak ejecuta la aplicación en un entorno seguro y aislado, gestionando todas las dependencias multimedia automáticamente.
-- **Actualizaciones**: Las actualizaciones se realizan a través de tu tienda de software (GNOME Software, Discover) o con el comando:
-  ```bash
-  flatpak update
-  ```
-- **Integración**: Ongaku detecta automáticamente que está corriendo en Flatpak y delega las actualizaciones al sistema para evitar conflictos de permisos.
-
-### 2. AppImage (Portable)
+### 1. AppImage (Portable)
 No requiere instalación. Solo necesitas darle permisos de ejecución:
 ```bash
 chmod +x ongaku_*_amd64.AppImage
@@ -52,7 +43,7 @@ chmod +x ongaku_*_amd64.AppImage
 ```
 *(En distribuciones como Ubuntu 22.04+ puede requerir `libfuse2`: `sudo apt install libfuse2`)*.
 
-### 3. Paquete Debian / Ubuntu (`.deb`)
+### 2. Paquete Debian / Ubuntu (`.deb`)
 ```bash
 sudo dpkg -i ongaku_*_amd64.deb
 ```
