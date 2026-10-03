@@ -1,65 +1,56 @@
 # 🎵 Welcome to Ongaku Documentation
 
-Welcome to the official documentation for **Ongaku** (`音楽`), a lightweight, minimal, and blazing-fast desktop music player and YouTube downloader built with **Tauri v2**, **Rust**, and **React 19**.
+Welcome to the official documentation for **Ongaku** (`音楽`), a lightweight, clean, elegant, and ultra-fast desktop music player and YouTube downloader for your local audio and YouTube tracks.
 
 ---
 
 ## 🧭 Documentation Index
 
 - [Platform Compatibility & Requirements](compatibility.md)  
-  *Detailed installation guidelines, Windows SmartScreen notes, macOS Gatekeeper bypass instructions, and required Linux multimedia dependencies (`webkit2gtk`, `gstreamer`, and `rust`).*
+  *Clear installation guides for Windows, macOS, and Linux (Flatpak, AppImage, Deb), including tips for SmartScreen and Gatekeeper warnings.*
 
 - [Features Overview](#-key-features)  
-  *In-depth look at YouTube search, smart download queue, player design, and offline library management.*
+  *Discover everything you can do: instant YouTube search, smart downloads, batch local song import, and offline playlist management.*
 
-- [Architecture & Key Components](#️-core-architecture)  
-  *How Ongaku achieves high performance through an Axum local server, virtualized tables, and concurrent download workers.*
+- [Performance & Technical Architecture](benchmarks.md)  
+  *For developers and technical readers: internal architecture, speed benchmarks, database design, and multithreaded processing.*
 
-- [Getting Started & Development Guide](#-development-setup)  
-  *How to clone, run, and build Ongaku locally.*
+- [Quick Start & Development Guide](#-quick-start-guide)  
+  *How to install dependencies, run the application in development mode, and build release packages.*
 
 ---
 
 ## ✨ Key Features
 
-- **YouTube Search & Direct Streaming**: Search tracks directly inside the application and stream music instantly without needing an external browser.
-- **yt-dlp Integration & Smart Download Queue**: 
-  - Concurrent worker pool with rate-limit protection to prevent YouTube HTTP 429 throttling and CPU spikes.
-  - Automatic conversion to `.mp3` with embedded album artwork and full ID3 metadata.
-  - URL sanitization that automatically strips radio mixes, extraneous query parameters, and playlist queues.
-- **Minimalist Audio Player**:
-  - Clean 3-column symmetric layout with edge-to-edge top scrubber line.
-  - Smooth continuous volume control (0–100%) throttled at 60 FPS via `requestAnimationFrame` for maximum responsiveness without re-render overhead.
-  - Keyboard shortcuts documented visually with interactive tooltip badges.
-- **Local Offline Library**: Organize songs into playlists mapped directly to physical file system folders. Full support for atomic batch operations (batch move, batch delete, batch download).
-- **Ultra-Fast Virtualized Lists**: Powered by TanStack Table v9 and virtualized rendering for smooth 60+ FPS scrolling across massive libraries.
-- **Optimized Rust Backend**: Built-in HTTP server with Lanczos3 image downscaling and WebP compression, keeping image caching compact (~16MB).
+- **🔍 Instant YouTube Search & Streaming**: Search for any song or artist directly within the app and stream music instantly without ads or browser tabs.
+- **📥 Smart Downloads with Artwork & Metadata**:
+  - Automatically convert tracks to high-quality `.mp3`.
+  - Songs are saved with clean filenames, embedded album artwork, and complete tags (artist, title, album).
+  - Automatic URL sanitization: removes playlist queues and radio mix parameters to download exactly what you wanted.
+- **📁 Safe Batch Song Import**:
+  - Bring your existing local music into playlists or your library in one click.
+  - Safe internal storage: Ongaku copies files to its internal storage so tracks never break even if you clean your Downloads folder.
+  - Protected chunking pipeline: processes audio in bounded batches so your computer stays smooth and responsive, even when adding thousands of songs.
+- **🎶 Minimalist & Comfortable Player**:
+  - Full-width interactive progress bar, smooth volume control, and intuitive controls.
+  - Keyboard shortcuts for play/pause, next/previous, and volume adjustments.
+  - Full support for hardware keyboard media keys and OS control center integration.
+- **📂 Offline Library & Custom Playlists**: Create, rename, and manage playlists, keeping your favorite music accessible offline at any time.
+- **🔄 Smart Updates & System Integration**:
+  - Detects your package format automatically.
+  - Provides in-app update notifications and direct links to release notes.
+  - Respects Flatpak environments by delegating updates to your system software center.
 
 ---
 
-## ⚙️ Core Architecture
+## 🚀 Quick Start Guide
 
-Ongaku is designed with performance and minimal resource usage in mind:
-
-1. **Native Rust Backend**:
-   - **Integrated Axum Server**: Operates an internal HTTP server on `localhost` with a dynamically assigned port to serve local audio files with HTTP range requests (`206 Partial Content`) and stream WebP-compressed album art on the fly.
-   - **Binary Automation**: Verifies and manages `yt-dlp` and `ffmpeg` binaries automatically.
-   - **Process Control & Canceling**: Downloads can be aborted immediately with clean temporary staging cleanup.
-
-2. **Modern Virtualized Frontend**:
-   - **React 19 & Tailwind CSS v4**: Minimalist, responsive user interface.
-   - **TanStack Virtual & TanStack Table v9**: Enables 60+ FPS smooth scrolling through large music libraries without slowing down the DOM.
-   - **Split-Player Design**: Dedicated handlers for local playback (`LocalPlayer`) and instant YouTube streaming (`StreamingPlayer`).
-   - **MediaSession API Integration**: Supports hardware keyboard media keys, headphone controls, and native OS notifications.
-
----
-
-## 🚀 Development Setup
+To run Ongaku locally or contribute to the project:
 
 ### Prerequisites
-- [Bun](https://bun.sh/) (Recommended package manager) or Node.js / pnpm
-- [Rust](https://www.rust-lang.org/) (Stable toolchain via `rustup`)
-- C++ Build Tools (e.g. Visual Studio C++ Build Tools on Windows, or build-essential on Linux)
+- [Bun](https://bun.sh/) (Recommended package manager)
+- [Rust](https://www.rust-lang.org/) (Installed via `rustup`)
+- C++ build tools (Visual Studio Build Tools on Windows or `build-essential` on Linux)
 
 ### Commands
 
@@ -68,20 +59,18 @@ Ongaku is designed with performance and minimal resource usage in mind:
 git clone https://github.com/miguedev1047/ongaku.git
 cd ongaku
 
-# 2. Install frontend dependencies
+# 2. Install dependencies
 bun install
 
 # 3. Launch in development mode
 bun run tauri dev
 
-# 4. Build production binaries
+# 4. Build release packages
 bun run tauri build
 ```
 
-Production bundles and executables will be output to `src-tauri/target/release/bundle/`.
-
 ---
 
-## 🌐 Language Navigation
+## 🌐 Language Navigation & Links
 - [Español (Bienvenida y Guía)](../es/bienvenida.md)
-- [Back to Main README](../../README.md)
+- [Back to Main GitHub Repository](https://github.com/miguedev1047/ongaku)

@@ -1,4 +1,4 @@
-use tauri_app_lib::commands::{DirectoryHealth, SystemHealthInfo};
+use tauri_app_lib::commands::{detect_package_type, DirectoryHealth, SystemHealthInfo};
 
 #[test]
 fn test_system_health_info_serialization() {
@@ -29,6 +29,8 @@ fn test_system_health_info_serialization() {
                 writable: true,
             },
         ],
+        package_type: "flatpak".to_string(),
+        is_flatpak: true,
     };
 
     let json = serde_json::to_string(&info).expect("Failed to serialize SystemHealthInfo");
@@ -37,4 +39,16 @@ fn test_system_health_info_serialization() {
     assert!(json.contains("\"appVersion\":\"0.1.14\""));
     assert!(json.contains("\"directories\":["));
     assert!(json.contains("\"writable\":true"));
+    assert!(json.contains("\"packageType\":\"flatpak\""));
+    assert!(json.contains("\"isFlatpak\":true"));
+}
+
+#[test]
+fn test_detect_package_type_returns_known_value() {
+    let kind = detect_package_type();
+    assert!(
+        ["flatpak", "appimage", "deb", "exe", "dmg", "unknown"].contains(&kind.as_str()),
+        "Unexpected package type: {}",
+        kind
+    );
 }

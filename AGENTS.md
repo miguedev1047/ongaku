@@ -67,3 +67,8 @@
 4. **ensureQuery Deprecado**:
 
 - En nuevas versiones esa api ".ensureQuery" para precargar datos esta deprecada y solo se usa ".query" en su lugar
+
+## ⚙️ Runtime
+
+1. **Bun por defecto**
+   - Usar otro package manager esta prohibido en este proyecto. Siempre acude a `bun` o `bunx`

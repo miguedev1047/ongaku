@@ -19,11 +19,11 @@
 ## 📸 Preview
 
 <div align="center">
-  <img src="src/assets/demo/demo-app-1.png" alt="Ongaku Local Library" width="100%" />
+  <img src="public/images/app-img-1.png" alt="Ongaku Local Library" width="100%" />
   <br/><br/>
-  <img src="src/assets/demo/demo-app-2.png" alt="Ongaku YouTube Search" width="100%" />
+  <img src="public/images/app-img-2.png" alt="Ongaku YouTube Search" width="100%" />
   <br/><br/>
-  <img src="src/assets/demo/demo-app-3.png" alt="Ongaku Player & Queue" width="100%" />
+  <img src="public/images/app-img-3.png" alt="Ongaku Player & Queue" width="100%" />
 </div>
 
 ---
@@ -42,5 +42,5 @@ Get the latest installer or executable for your platform directly from [GitHub R
 
 For detailed setup, troubleshooting, complete features, and developer guides:
 
-- [Platform Compatibility & Requirements](docs/en/compatibility.md) *(Windows SmartScreen, macOS Gatekeeper approval, Linux multimedia dependencies)*
-- [Complete Documentation & Architecture](docs/en/welcome.md) *(Key features, tech stack, and development setup)*
+- [Platform Compatibility & Requirements](docs/en/compatibility.md) _(Windows SmartScreen, macOS Gatekeeper approval, Linux multimedia dependencies)_
+- [Complete Documentation & Architecture](docs/en/welcome.md) _(Key features, tech stack, and development setup)_

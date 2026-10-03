@@ -7,14 +7,16 @@ import { Button } from "@/components/ui/button"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { DownloadIcon } from "@hugeicons/core-free-icons"
 import { useUpdater } from "@/hooks/use-updater"
+import { usePackageType } from "@/hooks/use-package-type"
 import { Show } from "@/components/utility/show"
 import { DotmSquare10 } from "@/components/loaders/dotm-square-10"
 import { cn } from "cn"
 
 export function UpdaterButton() {
   const { update, progress, isPending, handleInstallUpdate } = useUpdater()
+  const { supportsInAppUpdates } = usePackageType()
 
-  if (!update) return null
+  if (!supportsInAppUpdates || !update) return null
 
   return (
     <Tooltip>

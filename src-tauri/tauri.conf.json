@@ -43,6 +43,11 @@
         "files": {
           "apprun-hooks/wayland-compat.sh": "appimage/apprun-wayland-compat.sh"
         }
+      },
+      "deb": {
+        "files": {
+          "/usr/share/metainfo/io.github.miguedev1047.ongaku.metainfo.xml": "../flatpak/io.github.miguedev1047.ongaku.metainfo.xml"
+        }
       }
     }
   },

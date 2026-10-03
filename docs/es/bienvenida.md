@@ -1,65 +1,56 @@
 # 🎵 Bienvenido a la Documentación de Ongaku
 
-Bienvenido a la documentación oficial de **Ongaku** (`音楽`), un reproductor de música de escritorio y descargador de YouTube ligero, minimalista y ultra rápido desarrollado con **Tauri v2**, **Rust** y **React 19**.
+Bienvenido a la documentación oficial de **Ongaku** (`音楽`), un reproductor de música de escritorio y descargador ligero, limpio, elegante y ultra rápido para tu música local y de YouTube.
 
 ---
 
 ## 🧭 Índice de la Documentación
 
 - [Compatibilidad de Plataformas y Requisitos](compatibilidad.md)  
-  *Instrucciones detalladas de instalación, nota sobre Windows SmartScreen, aprobación de seguridad en macOS (Gatekeeper) y dependencias multimedia necesarias en Linux (`webkit2gtk`, `gstreamer` y `rust`).*
+  *Guía sencilla de instalación para Windows, macOS y Linux (Flatpak, AppImage, Deb), solución a mensajes de SmartScreen y Gatekeeper.*
 
 - [Características Principales](#-características-principales)  
-  *Detalle sobre búsqueda en YouTube, cola inteligente de descargas, reproductor y gestión offline de biblioteca.*
+  *Descubre todo lo que puedes hacer: búsqueda en YouTube, descargas inteligentes, importación de música por lotes y gestión de playlists.*
 
-- [Arquitectura y Componentes Clave](#️-arquitectura-principal)  
-  *Cómo logra Ongaku su rendimiento utilizando un servidor Axum en Rust, tablas virtualizadas y un pool concurrente de descargas.*
+- [Arquitectura y Rendimiento Técnico](rendimiento.md)  
+  *Para desarrolladores o curiosos técnicos: cómo funciona Ongaku por dentro, benchmarks de velocidad, base de datos y procesamiento multihilo.*
 
-- [Guía de Inicio y Entorno de Desarrollo](#-entorno-de-desarrollo)  
-  *Cómo clonar, ejecutar en modo desarrollo y compilar Ongaku para producción.*
+- [Guía de Inicio Rápido](#-guía-de-inicio-rápido)  
+  *Cómo instalar dependencias, probar la app en modo desarrollo y compilarla en tu equipo.*
 
 ---
 
 ## ✨ Características Principales
 
-- **Búsqueda en YouTube y Streaming Directo**: Busca pistas directamente dentro de la aplicación y reproduce música en streaming al instante sin necesidad de abrir un navegador web.
-- **Integración con yt-dlp y Cola de Descargas Inteligente**:
-  - Pool concurrente de descargas con control de límites para evitar bloqueos HTTP 429 de YouTube y picos de CPU.
-  - Conversión automática a `.mp3` con carátulas incrustadas y etiquetas ID3 completas.
-  - Sanitizador de URLs que limpia automáticamente mixes, colas de radio y parámetros sobrantes.
-- **Reproductor de Audio Minimalista**:
-  - Diseño simétrico en 3 columnas con barra de progreso (*scrubber*) superior de ancho completo.
-  - Control de volumen continuo (0–100%) con aceleración a 60 FPS mediante `requestAnimationFrame` para máxima respuesta sin sobrecargar el renderizado.
-  - Atajos de teclado documentados visualmente con badges en tooltips interactivos.
-- **Biblioteca Local y Offline**: Organiza canciones en playlists vinculadas directamente a las carpetas de tu sistema de archivos. Soporte para operaciones por lote (mover, eliminar y descargar en lote).
-- **Listas Virtualizadas de Alto Rendimiento**: Desarrollado con TanStack Table v9 y renderizado virtualizado para un desplazamiento fluido a 60+ FPS en librerías masivas.
-- **Backend Optimizado en Rust**: Servidor local integrado con redimensionado de imágenes por `Lanczos3` y compresión WebP, manteniendo la caché de imágenes en apenas ~16MB.
+- **🔍 Búsqueda y Reproducción Inmediata de YouTube**: Busca cualquier canción o artista directamente desde la app y empieza a escucharla al instante en streaming, sin anuncios y sin necesidad de abrir un navegador web.
+- **📥 Descargas Inteligentes con Portada y Etiquetas**:
+  - Descarga tus temas favoritos convertidos automáticamente a `.mp3` en alta calidad.
+  - Las canciones se guardan con sus nombres limpios, carátula incrustada y datos completos (artista, título, álbum).
+  - Limpieza automática de enlaces de YouTube: elimina listas de reproducción o colas sobrantes para descargar solo la pista que quieres.
+- **📁 Importación Segura de tu Música Local**:
+  - ¿Tienes música en tu PC? Puedes importarla a tu biblioteca o a playlists específicas con un solo clic.
+  - Copia de seguridad automática: Ongaku guarda tus canciones en su carpeta interna para que sigan sonando aunque borres el archivo original de tus descargas.
+  - Procesamiento blindado por lotes que no congela tu equipo ni satura la memoria, incluso si importas miles de canciones de golpe.
+- **🎶 Reproductor Minimalista y Cómodo**:
+  - Barra de progreso interactiva, control de volumen suave y controles intuitivos.
+  - Atajos de teclado para pausar, cambiar de canción o ajustar volumen rápidamente.
+  - Integración con las teclas multimedia de tu teclado y el centro de control de tu sistema operativo.
+- **📂 Playlists y Biblioteca Offline**: Crea tus propias listas de reproducción, organízalas a tu gusto y escucha tu música favorita en cualquier momento sin conexión a internet.
+- **🔄 Actualizaciones y Adaptación a tu Sistema**:
+  - Detección automática de tu sistema y formato de instalación.
+  - Si usas la versión instalable, te avisará cuando haya nuevas versiones y te permitirá ver las notas de parche con las novedades.
+  - Si usas Flatpak en Linux, se integra de forma limpia respetando el gestor de software de tu sistema.
 
 ---
 
-## ⚙️ Arquitectura Principal
+## 🚀 Guía de Inicio Rápido
 
-Ongaku ha sido concebido priorizando el rendimiento y el consumo mínimo de recursos:
-
-1. **Backend Nativo en Rust**:
-   - **Servidor Axum Local**: Dispone de un servidor HTTP interno en `localhost` con puerto dinámico para servir archivos de audio con soporte para rangos de bytes (`206 Partial Content`) y carátulas optimizadas a WebP al vuelo.
-   - **Gestión Automática de Binarios**: Descarga, comprueba y gestiona `yt-dlp` y `ffmpeg` de manera transparente.
-   - **Control y Cancelación de Procesos**: Las descargas pueden cancelarse de forma instantánea matando el subproceso del sistema y eliminando archivos temporales de *staging*.
-
-2. **Frontend Moderno y Virtualizado**:
-   - **React 19 y Tailwind CSS v4**: Interfaz limpia, ágil y visualmente equilibrada.
-   - **TanStack Virtual y TanStack Table v9**: Desplazamiento fluido a 60+ FPS sin degradación de memoria incluso en bibliotecas con miles de canciones.
-   - **Arquitectura de Doble Reproductor**: Módulos independientes para reproducción local (`LocalPlayer`) y streaming remoto desde YouTube (`StreamingPlayer`).
-   - **Integración con MediaSession API**: Soporte nativo para teclas multimedia del teclado, auriculares y centro de control del sistema operativo.
-
----
-
-## 🚀 Entorno de Desarrollo
+Si quieres ejecutar el proyecto tú mismo o colaborar en el desarrollo:
 
 ### Requisitos Previos
-- [Bun](https://bun.sh/) (Gestor de paquetes recomendado) o Node.js / pnpm
-- [Rust](https://www.rust-lang.org/) (Última versión estable mediante `rustup`)
-- Herramientas de compilación C++ (Visual Studio Build Tools en Windows, o gcc/clang en Linux)
+- [Bun](https://bun.sh/) (Gestor de paquetes recomendado)
+- [Rust](https://www.rust-lang.org/) (Instalado mediante `rustup`)
+- Herramientas de compilación de C++ (Visual Studio Build Tools en Windows o `build-essential` en Linux)
 
 ### Comandos de Ejecución
 
@@ -68,20 +59,18 @@ Ongaku ha sido concebido priorizando el rendimiento y el consumo mínimo de recu
 git clone https://github.com/miguedev1047/ongaku.git
 cd ongaku
 
-# 2. Instalar dependencias del frontend
+# 2. Instalar dependencias
 bun install
 
 # 3. Iniciar la aplicación en modo desarrollo
 bun run tauri dev
 
-# 4. Compilar binarios de producción
+# 4. Compilar instaladores para producción
 bun run tauri build
 ```
 
-Los binarios e instaladores generados se ubicarán en `src-tauri/target/release/bundle/`.
-
 ---
 
-## 🌐 Idiomas y Navegación
+## 🌐 Idiomas y Enlaces
 - [English (Welcome & Documentation)](../en/welcome.md)
-- [Volver al README Principal](../../README.es.md)
+- [Volver al Repositorio Principal en GitHub](https://github.com/miguedev1047/ongaku)

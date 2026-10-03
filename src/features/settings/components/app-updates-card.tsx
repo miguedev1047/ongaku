@@ -6,18 +6,60 @@ import {
   DownloadIcon,
   CheckmarkCircle02Icon,
   SparklesIcon,
+  PackageIcon,
+  ArrowUpRight01Icon,
 } from '@hugeicons/core-free-icons'
 import { useUpdater } from '@/hooks/use-updater'
+import { usePackageType } from '@/hooks/use-package-type'
 import { Show } from '@/components/utility/show'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import { updatesQueryOpts } from '@/shared/queries/updates'
+import { openReleaseNotes } from '@/shared/helpers/open-release-notes'
+import { useUpdateStore } from '@/shared/stores/actions'
 import { DotmSquare10 } from '@/components/loaders/dotm-square-10'
 import { cn } from 'cn'
+
+interface ReleaseNotesLinkProps {
+  version?: string
+  label: string
+  className?: string
+}
+
+function ReleaseNotesLink({ version, label, className }: ReleaseNotesLinkProps) {
+  const handleOpen = () => {
+    void openReleaseNotes(version)
+  }
+
+  return (
+    <p
+      role='link'
+      tabIndex={0}
+      onClick={handleOpen}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          handleOpen()
+        }
+      }}
+      className={cn(
+        'inline-flex items-center gap-1 text-[11px] text-muted-foreground cursor-pointer hover:underline hover:text-foreground underline-offset-2 transition-colors focus-visible:outline-none focus-visible:underline focus-visible:text-foreground',
+        className,
+      )}
+    >
+      <span>{label}</span>
+      <HugeiconsIcon
+        icon={ArrowUpRight01Icon}
+        className={cn('size-3')}
+      />
+    </p>
+  )
+}
 
 export function AppUpdatesCard() {
   const { data: health } = useSuspenseQuery(systemHealthQueryOpts())
   const { data: update } = useSuspenseQuery(updatesQueryOpts())
+  const { isFlatpak, isSimulated, supportsInAppUpdates } = usePackageType()
   const {
     status,
     progress,
@@ -26,9 +68,13 @@ export function AppUpdatesCard() {
     simulateUpdateDemo,
     reset,
   } = useUpdater()
+  const toggleSimulateFlatpak = useUpdateStore(
+    (state) => state.toggleSimulateFlatpak,
+  )
 
   const currentVersion = health.appVersion
   const hasUpdate = Boolean(update?.version)
+  const canInstall = hasUpdate && supportsInAppUpdates
 
   return (
     <div
@@ -59,30 +105,48 @@ export function AppUpdatesCard() {
         </div>
 
         <Show
-          when={hasUpdate}
+          when={!isFlatpak}
           fallback={
             <Badge
               variant='secondary'
               className={cn(
-                'text-[10px] gap-1 bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
+                'text-[10px] gap-1 bg-sky-500/10 text-sky-500 border-sky-500/20',
               )}
             >
               <HugeiconsIcon
-                icon={CheckmarkCircle02Icon}
+                icon={PackageIcon}
                 className={cn('size-3')}
               />
-              Up to date
+              Flatpak
             </Badge>
           }
         >
-          <Badge
-            variant='default'
-            className={cn(
-              'text-[10px] gap-1 bg-primary text-primary-foreground font-semibold',
-            )}
+          <Show
+            when={hasUpdate}
+            fallback={
+              <Badge
+                variant='secondary'
+                className={cn(
+                  'text-[10px] gap-1 bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
+                )}
+              >
+                <HugeiconsIcon
+                  icon={CheckmarkCircle02Icon}
+                  className={cn('size-3')}
+                />
+                Up to date
+              </Badge>
+            }
           >
-            Update Available
-          </Badge>
+            <Badge
+              variant='default'
+              className={cn(
+                'text-[10px] gap-1 bg-primary text-primary-foreground font-semibold',
+              )}
+            >
+              Update Available
+            </Badge>
+          </Show>
         </Show>
       </div>
 
@@ -91,7 +155,7 @@ export function AppUpdatesCard() {
           'flex flex-col sm:flex-row items-stretch sm:items-center justify-between p-3 rounded-md bg-muted/30 border border-border/30 gap-3',
         )}
       >
-        <div>
+        <div className={cn('space-y-1')}>
           <div className={cn('flex items-center gap-2')}>
             <span className={cn('text-xs text-muted-foreground')}>
               Current Version:
@@ -101,14 +165,26 @@ export function AppUpdatesCard() {
             </span>
           </div>
 
-          <Show when={hasUpdate && Boolean(update?.version)}>
-            <p className={cn('text-xs text-primary font-medium mt-1')}>
+          <Show
+            when={canInstall}
+            fallback={
+              <ReleaseNotesLink
+                version={currentVersion}
+                label={`What's new in v${currentVersion}`}
+              />
+            }
+          >
+            <p className={cn('text-xs text-primary font-medium')}>
               New version v{update?.version} is ready to install!
             </p>
+            <ReleaseNotesLink
+              version={update?.version}
+              label={`View v${update?.version} release notes`}
+            />
           </Show>
         </div>
 
-        <Show when={hasUpdate}>
+        <Show when={canInstall}>
           <div className={cn('flex items-center gap-2')}>
             <Button
               size='sm'
@@ -150,7 +226,36 @@ export function AppUpdatesCard() {
         </Show>
       </div>
 
-      <Show when={isPending}>
+      <Show when={isFlatpak}>
+        <div
+          className={cn(
+            'flex items-start gap-3 p-3 rounded-md bg-sky-500/5 border border-sky-500/20 animate-in fade-in duration-200',
+          )}
+        >
+          <div
+            className={cn(
+              'shrink-0 flex items-center justify-center size-8 rounded-md bg-sky-500/10 text-sky-500',
+            )}
+          >
+            <HugeiconsIcon
+              icon={PackageIcon}
+              className={cn('size-4')}
+            />
+          </div>
+          <div className={cn('min-w-0 flex-1 space-y-0.5')}>
+            <p className={cn('text-xs font-semibold text-foreground')}>
+              Updates are managed by Flatpak
+            </p>
+            <p className={cn('text-[11px] text-muted-foreground')}>
+              This build runs inside a Flatpak sandbox. New versions are
+              delivered through Flathub and installed by your software center
+              or with <span className={cn('font-mono')}>flatpak update</span>.
+            </p>
+          </div>
+        </div>
+      </Show>
+
+      <Show when={isPending && supportsInAppUpdates}>
         <div
           className={cn(
             'flex items-center gap-3 p-3 rounded-md bg-primary/5 border border-primary/20 animate-in fade-in slide-in-from-bottom-1 duration-200',
@@ -192,13 +297,15 @@ export function AppUpdatesCard() {
                 )}
               >
                 <div
-                  className={cn(
-                    'h-full bg-primary transition-all duration-200',
-                  )}
+                  className={cn('h-full bg-primary transition-all duration-200')}
                   style={{ width: `${progress.percentage}%` }}
                 />
               </div>
             </Show>
+            <ReleaseNotesLink
+              version={update?.version}
+              label="Read what's changing while you wait"
+            />
           </div>
         </div>
       </Show>
@@ -209,9 +316,7 @@ export function AppUpdatesCard() {
             'pt-2 border-t border-border/30 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 text-xs',
           )}
         >
-          <div
-            className={cn('flex items-center gap-1.5 text-muted-foreground')}
-          >
+          <div className={cn('flex items-center gap-1.5 text-muted-foreground')}>
             <Badge
               variant='outline'
               className={cn(
@@ -221,14 +326,35 @@ export function AppUpdatesCard() {
               DEV
             </Badge>
             <span className={cn('text-[11px]')}>
-              Test update animation & route persistence
+              Detected: <span className={cn('font-mono')}>{health.packageType}</span>
             </span>
           </div>
           <div className={cn('flex items-center gap-1.5')}>
             <Button
               size='sm'
               variant='outline'
+              onClick={toggleSimulateFlatpak}
               disabled={isPending}
+              className={cn(
+                'h-7 text-[11px] px-2.5 gap-1.5',
+                isSimulated && 'border-sky-500/40 text-sky-500 bg-sky-500/5',
+              )}
+            >
+              <HugeiconsIcon
+                icon={PackageIcon}
+                className={cn('size-3')}
+              />
+              <Show
+                when={isSimulated}
+                fallback='Simulate Flatpak'
+              >
+                Exit Flatpak mode
+              </Show>
+            </Button>
+            <Button
+              size='sm'
+              variant='outline'
+              disabled={isPending || isFlatpak}
               onClick={simulateUpdateDemo}
               className={cn('h-7 text-[11px] px-2.5 gap-1.5')}
             >
@@ -238,7 +364,7 @@ export function AppUpdatesCard() {
               />
               <span>Simulate Update</span>
             </Button>
-            <Show when={isPending || status !== 'idle'}>
+            <Show when={status !== 'idle'}>
               <Button
                 size='sm'
                 variant='ghost'

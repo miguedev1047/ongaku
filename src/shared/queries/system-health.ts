@@ -9,6 +9,14 @@ export interface TDirectoryHealth {
   writable: boolean
 }
 
+export type TPackageType =
+  | 'flatpak'
+  | 'appimage'
+  | 'deb'
+  | 'exe'
+  | 'dmg'
+  | 'unknown'
+
 export interface TSystemHealthInfo {
   serverHealthy: boolean
   serverPort: number
@@ -21,6 +29,8 @@ export interface TSystemHealthInfo {
   dbPath: string
   dbExists: boolean
   directories: TDirectoryHealth[]
+  packageType: TPackageType
+  isFlatpak: boolean
 }
 
 export const systemHealthQueryOpts = () =>

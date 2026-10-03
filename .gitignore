@@ -32,3 +32,7 @@ src-tauri/gen/
 
 # Bun lockfile (optional: commit if you want reproducible installs)
 # bun.lock
+
+# Internal guides & tools
+.guides/
+.flatpak/
