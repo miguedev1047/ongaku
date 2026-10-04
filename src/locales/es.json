@@ -247,8 +247,8 @@
     "card": {
       "songs_count": "{{count}} canción",
       "songs_count_plural": "{{count}} canciones",
-      "tracks_count": "{{count}} pista",
-      "tracks_count_plural": "{{count}} pistas",
+      "tracks_count": "{{count}} canción",
+      "tracks_count_plural": "{{count}} canciones",
       "empty": "Lista vacía"
     },
     "empty": {
