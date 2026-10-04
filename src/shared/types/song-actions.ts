@@ -1,4 +1,4 @@
 export type TSongAction = {
-  code: "SUCCESS" | "ERROR" | "SAME_FILE" | "ALREADY_EXISTS"
+  code: "SUCCESS" | "ERROR" | "SAME_FILE" | "ALREADY_EXISTS" | "LOCKED"
   message: string
 }

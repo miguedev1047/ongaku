@@ -21,8 +21,10 @@ import { Show } from '@/components/utility/show'
 import { type TDirectoryHealth } from '@/shared/queries/system-health'
 import { Spinner } from '@/components/ui/spinner'
 import { useDirectoriesStatus } from '@/features/settings/hooks'
+import { useTranslation } from 'react-i18next'
 
 export function DirectoriesStatusCard() {
+  const { t } = useTranslation()
   const {
     config,
     directories,
@@ -47,11 +49,10 @@ export function DirectoriesStatusCard() {
           </div>
           <div>
             <h2 className='text-sm font-semibold text-foreground'>
-              System Directories & Storage
+              {t('settings.tabs.system.directories_status.title')}
             </h2>
             <p className='text-xs text-muted-foreground'>
-              File system integrity, storage locations, and read/write
-              permissions
+              {t('settings.tabs.system.directories_status.description')}
             </p>
           </div>
         </div>
@@ -63,13 +64,13 @@ export function DirectoriesStatusCard() {
           <div className='min-w-0 flex-1'>
             <div className='flex items-center gap-2'>
               <span className='text-xs font-semibold text-foreground'>
-                Base Storage Location
+                {t('settings.tabs.system.directories_status.base_storage')}
               </span>
               <Badge
                 variant='outline'
                 className='text-[9px] h-4 px-1.5 text-primary border-primary/30'
               >
-                Active Root
+                {t('settings.tabs.system.directories_status.active_root')}
               </Badge>
             </div>
             <p
@@ -93,7 +94,7 @@ export function DirectoriesStatusCard() {
                 icon={FolderEditIcon}
                 className='size-3.5'
               />
-              <span>Change Location</span>
+              <span>{t('settings.tabs.system.directories_status.change_location')}</span>
             </Button>
             <Button
               variant='ghost'
@@ -105,7 +106,7 @@ export function DirectoriesStatusCard() {
                 icon={FolderIcon}
                 className='size-3.5'
               />
-              <span>Open</span>
+              <span>{t('settings.tabs.system.directories_status.open')}</span>
             </Button>
           </div>
         </div>
@@ -114,7 +115,7 @@ export function DirectoriesStatusCard() {
       {/* Internal Subdirectories */}
       <div className='space-y-2'>
         <span className='text-[11px] font-medium text-muted-foreground uppercase tracking-wider'>
-          Managed Directories
+          {t('settings.tabs.system.directories_status.managed_directories')}
         </span>
         <div className='space-y-2'>
           {directories.map((dir: TDirectoryHealth) => (
@@ -135,7 +136,7 @@ export function DirectoriesStatusCard() {
                         variant='destructive'
                         className='text-[9px] h-4 px-1.5'
                       >
-                        Missing
+                        {t('settings.tabs.system.directories_status.status.missing')}
                       </Badge>
                     }
                   >
@@ -143,7 +144,7 @@ export function DirectoriesStatusCard() {
                       variant='outline'
                       className='text-[9px] h-4 px-1.5 text-emerald-500 border-emerald-500/30'
                     >
-                      Exists
+                      {t('settings.tabs.system.directories_status.status.exists')}
                     </Badge>
                   </Show>
 
@@ -154,7 +155,7 @@ export function DirectoriesStatusCard() {
                         variant='destructive'
                         className='text-[9px] h-4 px-1.5'
                       >
-                        Read-Only
+                        {t('settings.tabs.system.directories_status.status.readonly')}
                       </Badge>
                     }
                   >
@@ -162,7 +163,7 @@ export function DirectoriesStatusCard() {
                       variant='outline'
                       className='text-[9px] h-4 px-1.5 text-muted-foreground border-border/40'
                     >
-                      Writable
+                      {t('settings.tabs.system.directories_status.status.writable')}
                     </Badge>
                   </Show>
                 </div>
@@ -186,7 +187,7 @@ export function DirectoriesStatusCard() {
                   icon={FolderIcon}
                   className='size-3.5'
                 />
-                <span>Open</span>
+                <span>{t('settings.tabs.system.directories_status.open')}</span>
               </Button>
             </div>
           ))}
@@ -201,10 +202,11 @@ export function DirectoriesStatusCard() {
           icon={AlertCircleIcon}
           className='size-4'
         />
-        <AlertTitle className='text-xs font-semibold'>Notice</AlertTitle>
+        <AlertTitle className='text-xs font-semibold'>
+          {t('settings.tabs.system.directories_status.notice.title')}
+        </AlertTitle>
         <AlertDescription className='text-[11px]'>
-          Manual modifications to these directories may cause unexpected
-          behavior or app errors.
+          {t('settings.tabs.system.directories_status.notice.description')}
         </AlertDescription>
       </Alert>
 
@@ -215,10 +217,11 @@ export function DirectoriesStatusCard() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Change Storage Location</AlertDialogTitle>
+            <AlertDialogTitle>
+              {t('settings.tabs.system.directories_status.confirm_dialog.title')}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              Ongaku will move your music library, playlists, cache, and
-              database to the selected directory:
+              {t('settings.tabs.system.directories_status.confirm_dialog.description')}
             </AlertDialogDescription>
           </AlertDialogHeader>
 
@@ -227,13 +230,12 @@ export function DirectoriesStatusCard() {
           </div>
 
           <p className='text-xs text-muted-foreground'>
-            Any active audio playback will be stopped immediately, and data will
-            be migrated to the new location.
+            {t('settings.tabs.system.directories_status.confirm_dialog.warning')}
           </p>
 
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isChangingDir}>
-              Cancel
+              {t('settings.tabs.system.directories_status.confirm_dialog.cancel')}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirmMove}
@@ -243,7 +245,7 @@ export function DirectoriesStatusCard() {
               <Show when={isChangingDir}>
                 <Spinner className='size-3.5' />
               </Show>
-              <span>Change Location</span>
+              <span>{t('settings.tabs.system.directories_status.confirm_dialog.confirm')}</span>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

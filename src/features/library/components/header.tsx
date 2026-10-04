@@ -10,8 +10,11 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Suspense } from "react"
 import { SearchLibrary } from "@/components/search"
 import { LibraryReloadList } from "@/features/library/components"
+import { useTranslation } from "react-i18next"
 
 export function LibraryHeader() {
+  const { t } = useTranslation()
+
   return (
     <header className="flex h-12 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear">
       <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
@@ -23,7 +26,7 @@ export function LibraryHeader() {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbPage>Your Library</BreadcrumbPage>
+              <BreadcrumbPage>{t("library.your_library")}</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>

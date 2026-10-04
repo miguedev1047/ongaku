@@ -10,6 +10,7 @@ import { StreamingPlayerVolume } from "./streaming-volume"
 import { Player } from "@/components/ui/player"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { toast } from "sonner"
+import i18n from "@/lib/i18n"
 
 interface ErrorBoundaryProps {
   children: ReactNode
@@ -35,7 +36,7 @@ class StreamingAudioErrorBoundary extends Component<
 
   componentDidCatch(error: unknown) {
     console.error("StreamingAudio error:", error)
-    toast.error("Failed to load streaming audio.")
+    toast.error(i18n.t("toasts.songs.stream_load_error"))
     this.props.onError()
   }
 

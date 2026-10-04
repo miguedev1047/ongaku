@@ -7,6 +7,7 @@ export interface TAppConfig {
   app_dir: string
   player_position: 'bottom' | 'top'
   toggle_sidebar: string
+  lang: string
 }
 
 export const systemConfigQueryOpts = () =>

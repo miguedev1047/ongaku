@@ -3,8 +3,11 @@ import { PaintBoardIcon } from '@hugeicons/core-free-icons'
 import { ThemeSelection } from '@/features/settings/components/theme-selection'
 import { FolderColorOptions } from '@/features/settings/components/folder-color-options'
 import { PlayerPositionOptions } from '@/features/settings/components/player-position-options'
+import { useTranslation } from 'react-i18next'
 
 export function AppearanceCard() {
+  const { t } = useTranslation()
+
   return (
     <div className='p-4 rounded-md border border-border/50 bg-card/60 backdrop-blur-sm space-y-6'>
       {/* 1. Header */}
@@ -17,10 +20,10 @@ export function AppearanceCard() {
         </div>
         <div>
           <h2 className='text-sm font-semibold text-foreground'>
-            Appearance & Interface
+            {t('settings.tabs.appearance.appearance_and_interface.title')}
           </h2>
           <p className='text-xs text-muted-foreground'>
-            Customize the look, themes, player position, and folder colors of the app
+            {t('settings.tabs.appearance.appearance_and_interface.description')}
           </p>
         </div>
       </div>

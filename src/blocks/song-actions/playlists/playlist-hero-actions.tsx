@@ -27,6 +27,8 @@ export interface PlaylistActionsProps {
   showLabel?: boolean
 }
 
+import { useTranslation } from 'react-i18next'
+
 export function PlaylistHeroActions({
   playlistName,
   size = 'icon',
@@ -34,6 +36,7 @@ export function PlaylistHeroActions({
   className,
   showLabel = false,
 }: PlaylistActionsProps) {
+  const { t } = useTranslation()
   const {
     playlist,
     isImporting,
@@ -52,12 +55,12 @@ export function PlaylistHeroActions({
               variant={variant}
               onClick={(e) => e.stopPropagation()}
               disabled={isImporting}
-              aria-label='Playlist actions'
+              aria-label={t('common.actions')}
               className={cn('cursor-pointer', className)}
             >
               <HugeiconsIcon icon={MoreHorizontalSquare01Icon} />
               <Show when={showLabel}>
-                <span>Actions</span>
+                <span>{t('common.actions')}</span>
               </Show>
             </Button>
           }
@@ -73,7 +76,7 @@ export function PlaylistHeroActions({
               className={cn('cursor-pointer')}
             >
               <HugeiconsIcon icon={ImportIcon} />
-              <span>Import songs</span>
+              <span>{t('playlists.actions.import_songs')}</span>
             </DropdownMenuItem>
 
             <Show when={playlist}>
@@ -85,7 +88,7 @@ export function PlaylistHeroActions({
                 className={cn('cursor-pointer')}
               >
                 <HugeiconsIcon icon={Delete01Icon} />
-                <span>Delete</span>
+                <span>{t('playlists.actions.delete')}</span>
               </DropdownMenuItem>
             </Show>
           </DropdownMenuGroup>

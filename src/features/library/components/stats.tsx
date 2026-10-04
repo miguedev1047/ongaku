@@ -7,8 +7,10 @@ import {
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { librarySongsQueryOpts } from "@/shared/queries/library"
 import { playlistsQueryOpts } from "@/shared/queries/playlists"
+import { useTranslation } from "react-i18next"
 
 export function LibraryStats() {
+  const { t } = useTranslation()
   const { data: songs = [] } = useSuspenseQuery(librarySongsQueryOpts())
   const { data: playlists = [] } = useSuspenseQuery(playlistsQueryOpts())
 
@@ -16,7 +18,7 @@ export function LibraryStats() {
     <div className="grid md:grid-cols-2 gap-4">
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Tracks</CardDescription>
+          <CardDescription>{t("library.stats.tracks")}</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
             {songs.length}
           </CardTitle>
@@ -24,7 +26,7 @@ export function LibraryStats() {
       </Card>
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Playlists</CardDescription>
+          <CardDescription>{t("library.stats.playlists")}</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
             {playlists.length}
           </CardTitle>

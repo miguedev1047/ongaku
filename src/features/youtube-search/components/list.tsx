@@ -11,8 +11,10 @@ import {
 } from "@/components/ui/empty"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { ListIcon } from "@hugeicons/core-free-icons"
+import { useTranslation } from "react-i18next"
 
 export function SearchYoutubeList() {
+  const { t } = useTranslation()
   const { q } = useSearch({ from: "/search-youtube/" })
 
   const { data: results = [] } = useSuspenseQuery(youtubeSearchQueryOpts(q))
@@ -25,8 +27,8 @@ export function SearchYoutubeList() {
             <EmptyMedia variant="icon">
               <HugeiconsIcon icon={ListIcon} />
             </EmptyMedia>
-            <EmptyTitle>No results</EmptyTitle>
-            <EmptyDescription>There are no songs results</EmptyDescription>
+            <EmptyTitle>{t("youtube_search.no_results")}</EmptyTitle>
+            <EmptyDescription>{t("youtube_search.no_results_desc")}</EmptyDescription>
           </EmptyHeader>
         </Empty>
       </div>

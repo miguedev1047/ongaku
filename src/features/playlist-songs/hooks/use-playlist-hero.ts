@@ -11,7 +11,10 @@ import {
   useLocalPlayerStore,
 } from '@/shared/stores/player'
 
+import { useTranslation } from 'react-i18next'
+
 export function usePlaylistHero() {
+  const { t } = useTranslation()
   const [imgColor, setImgColor] = useState<FinalColor | null>(null)
   const { getCoverUrl } = useSongUtils()
   const { playlistName } = useParams({ from: '/playlists/$playlistName' })
@@ -47,10 +50,10 @@ export function usePlaylistHero() {
 
   const playTooltipText =
     tracksCount === 0
-      ? 'Playlist is empty'
+      ? t('playlists.card.empty')
       : isPlaylistPlaying
-        ? 'Pause playlist'
-        : 'Play playlist'
+        ? t('player.pause')
+        : t('playlists.actions.play')
 
   useEffect(() => {
     if (!coverUrl) {

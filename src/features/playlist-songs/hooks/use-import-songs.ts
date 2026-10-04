@@ -19,12 +19,15 @@ export interface ImportProgressPayload {
   skipped_count: number
 }
 
+import { useTranslation } from 'react-i18next'
+
 interface UseImportSongsProps {
   playlistName: string
   onSuccess?: (result: ImportSongsResult) => void
 }
 
 export function useImportSongs({ playlistName, onSuccess }: UseImportSongsProps) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
 
   const mutation = useMutation({
@@ -34,7 +37,11 @@ export function useImportSongs({ playlistName, onSuccess }: UseImportSongsProps)
       const unlisten = await listen<ImportProgressPayload>('import-progress', (event) => {
         if (event.payload.playlist_name === playlistName && event.payload.total > 100) {
           const { current, total, imported_count } = event.payload
-          const msg = `Importing songs: ${current}/${total} (${imported_count} added)...`
+          const msg = t('toasts.songs.importing_progress', {
+            current,
+            total,
+            imported: imported_count,
+          })
           if (!toastId) {
             toastId = toast.loading(msg)
           } else {
@@ -60,8 +67,8 @@ export function useImportSongs({ playlistName, onSuccess }: UseImportSongsProps)
       if (data.imported_count > 0) {
         toast.success(
           data.imported_count === 1
-            ? 'Imported 1 song successfully'
-            : `Imported ${data.imported_count} songs successfully`,
+            ? t('toasts.songs.imported_success', { count: data.imported_count })
+            : t('toasts.songs.imported_success_plural', { count: data.imported_count }),
         )
 
         // Invalidate playlist songs query
@@ -87,12 +94,12 @@ export function useImportSongs({ playlistName, onSuccess }: UseImportSongsProps)
       }
 
       if (data.failed_items.length > 0) {
-        toast.error(data.failed_items[0] || 'Failed to import songs')
+        toast.error(data.failed_items[0] || t('toasts.songs.import_error'))
       }
     },
     onError: (error) => {
       toast.error(
-        typeof error === 'string' ? error : 'An error occurred while importing songs',
+        typeof error === 'string' ? error : t('toasts.songs.import_error'),
       )
     },
   })

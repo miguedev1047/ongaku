@@ -7,7 +7,10 @@ import { useLocalPlayerStore } from "@/shared/stores/player"
 import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs"
 import { playlistsQueryOpts } from "@/shared/queries/playlists"
 
+import { useTranslation } from "react-i18next"
+
 export function usePlaylistBatchActions(currentPlaylistName?: string) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [isMoveOpen, setIsMoveOpen] = useState(false)
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
@@ -53,16 +56,22 @@ interface BatchActionResponse {
       }
 
       if (res.success_count > 0) {
-        const actionLabel = currentPlaylistName ? "removed from playlist" : "deleted successfully"
-        toast.success(
-          res.success_count === 1
-            ? `1 song ${actionLabel}`
-            : `${res.success_count} songs ${actionLabel}`
-        )
+        if (currentPlaylistName) {
+          toast.success(
+            res.success_count === 1
+              ? t('toasts.songs.batch_deleted', { count: res.success_count })
+              : t('toasts.songs.batch_deleted_plural', { count: res.success_count })
+          )
+        } else {
+          toast.success(
+            res.success_count === 1
+              ? t('toasts.songs.batch_deleted_library', { count: res.success_count })
+              : t('toasts.songs.batch_deleted_library_plural', { count: res.success_count })
+          )
+        }
       }
       if (res.failed_count > 0) {
-        const actionFail = currentPlaylistName ? "remove" : "delete"
-        toast.error(`Failed to ${actionFail} ${res.failed_count} song(s)`)
+        toast.error(t('toasts.songs.batch_delete_error', { count: res.failed_count }))
       }
 
       if (currentPlaylistName) {
@@ -80,7 +89,7 @@ interface BatchActionResponse {
       clearSelection()
       setIsDeleteOpen(false)
     } catch (err) {
-      toast.error(typeof err === "string" ? err : "Failed to execute batch deletion")
+      toast.error(typeof err === "string" ? err : t('toasts.songs.batch_delete_error', { count: selectedSongs.length }))
     } finally {
       setIsProcessing(false)
     }
@@ -95,7 +104,7 @@ interface BatchActionResponse {
       const paths = candidateSongs.map((song) => song.path)
 
       if (paths.length === 0) {
-        toast.info(`Selected songs are already in "${targetPlaylist}"`)
+        toast.info(t('toasts.songs.already_in_target', { target: targetPlaylist }))
         setIsMoveOpen(false)
         return
       }
@@ -117,12 +126,12 @@ interface BatchActionResponse {
       if (res.success_count > 0) {
         toast.success(
           res.success_count === 1
-            ? `1 song moved to "${targetPlaylist}"`
-            : `${res.success_count} songs moved to "${targetPlaylist}"`
+            ? t('toasts.songs.batch_moved', { count: res.success_count, target: targetPlaylist })
+            : t('toasts.songs.batch_moved_plural', { count: res.success_count, target: targetPlaylist })
         )
       }
       if (res.failed_count > 0) {
-        toast.error(`Failed to move ${res.failed_count} song(s)`)
+        toast.error(t('toasts.songs.batch_move_error', { count: res.failed_count }))
       }
 
       if (currentPlaylistName) {

@@ -11,6 +11,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
 } from '@/components/ui/breadcrumb'
+import { useTranslation } from 'react-i18next'
 
 interface SettingsHeaderProps {
   isLoading: boolean
@@ -18,6 +19,8 @@ interface SettingsHeaderProps {
 }
 
 export function SettingsHeader({ isLoading, onRefresh }: SettingsHeaderProps) {
+  const { t } = useTranslation()
+
   return (
     <header className='flex h-12 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear'>
       <div className='flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6'>
@@ -29,7 +32,7 @@ export function SettingsHeader({ isLoading, onRefresh }: SettingsHeaderProps) {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbPage>Settings</BreadcrumbPage>
+              <BreadcrumbPage>{t('settings.title')}</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
@@ -50,7 +53,7 @@ export function SettingsHeader({ isLoading, onRefresh }: SettingsHeaderProps) {
                 className='size-3.5'
               />
             </Show>
-            <span>Refresh Status</span>
+            <span>{t('settings.refresh_status')}</span>
           </Button>
         </div>
       </div>

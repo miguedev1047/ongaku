@@ -19,6 +19,7 @@ import { Show } from '@/components/utility/show'
 import { useQuery } from '@tanstack/react-query'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 
 interface LibrarySongTableRowProps {
   row: Row<LibraryTableFeatures, TPlaylistSong>
@@ -27,6 +28,7 @@ interface LibrarySongTableRowProps {
 export const LibrarySongTableRow = memo(function LibrarySongTableRow({
   row,
 }: LibrarySongTableRowProps) {
+  const { t } = useTranslation()
   const song = row.original
   const { getCoverUrl } = useSongUtils()
   const { data: health } = useQuery(systemHealthQueryOpts())
@@ -40,7 +42,7 @@ export const LibrarySongTableRow = memo(function LibrarySongTableRow({
     if (isItemAction(e)) return
 
     if (health && !health.serverHealthy) {
-      toast.error('Media server is offline. Cannot play local tracks.')
+      toast.error(t('toasts.songs.media_offline'))
       return
     }
 
@@ -50,8 +52,8 @@ export const LibrarySongTableRow = memo(function LibrarySongTableRow({
   }
 
   const coverUrl = getCoverUrl({ song })
-  const artistName = song.metadata.artist || 'Unknown Artist'
-  const albumName = song.metadata.album || 'Unknown Album'
+  const artistName = song.metadata.artist || t('common.unknown_artist')
+  const albumName = song.metadata.album || t('common.unknown_album')
 
   return (
     <LibrarySongContextMenu song={song}>
@@ -86,7 +88,7 @@ export const LibrarySongTableRow = memo(function LibrarySongTableRow({
                       className='hidden group-hover:flex'
                       checked={false}
                       onCheckedChange={() => row.toggleSelected()}
-                      aria-label={`Select ${song.name}`}
+                      aria-label={t('playlists.batch.select_song', { name: song.name })}
                     />
                   </div>
                 }
@@ -94,7 +96,7 @@ export const LibrarySongTableRow = memo(function LibrarySongTableRow({
                 <Checkbox
                   checked={isSelected}
                   onCheckedChange={() => row.toggleSelected()}
-                  aria-label={`Select ${song.name}`}
+                  aria-label={t('playlists.batch.select_song', { name: song.name })}
                 />
               </Show>
             )}

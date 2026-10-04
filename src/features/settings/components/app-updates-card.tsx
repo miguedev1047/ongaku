@@ -15,6 +15,7 @@ import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import { updatesQueryOpts } from '@/shared/queries/updates'
 import { openReleaseNotes } from '@/shared/helpers/open-release-notes'
 import { DotmSquare10 } from '@/components/loaders/dotm-square-10'
+import { useTranslation } from 'react-i18next'
 import { cn } from 'cn'
 
 interface ReleaseNotesLinkProps {
@@ -54,6 +55,7 @@ function ReleaseNotesLink({ version, label, className }: ReleaseNotesLinkProps) 
 }
 
 export function AppUpdatesCard() {
+  const { t } = useTranslation()
   const { data: health } = useSuspenseQuery(systemHealthQueryOpts())
   const { data: update } = useSuspenseQuery(updatesQueryOpts())
   const {
@@ -88,10 +90,10 @@ export function AppUpdatesCard() {
           </div>
           <div>
             <h2 className={cn('text-sm font-semibold text-foreground')}>
-              Application & Releases
+              {t('settings.tabs.general.app_and_releases.title')}
             </h2>
             <p className={cn('text-xs text-muted-foreground')}>
-              Installed runtime version and automatic updater channel
+              {t('settings.tabs.general.app_and_releases.description')}
             </p>
           </div>
         </div>
@@ -109,7 +111,7 @@ export function AppUpdatesCard() {
                 icon={CheckmarkCircle02Icon}
                 className={cn('size-3')}
               />
-              Up to date
+              {t('settings.tabs.general.app_and_releases.status.updated')}
             </Badge>
           }
         >
@@ -119,7 +121,7 @@ export function AppUpdatesCard() {
               'text-[10px] gap-1 bg-primary text-primary-foreground font-semibold',
             )}
           >
-            Update Available
+            {t('settings.tabs.general.app_and_releases.status.available')}
           </Badge>
         </Show>
       </div>
@@ -132,7 +134,7 @@ export function AppUpdatesCard() {
         <div className={cn('space-y-1')}>
           <div className={cn('flex items-center gap-2')}>
             <span className={cn('text-xs text-muted-foreground')}>
-              Current Version:
+              {t('settings.tabs.general.app_and_releases.version.title')}:
             </span>
             <span className={cn('font-mono text-xs font-bold text-foreground')}>
               v{currentVersion}
@@ -144,16 +146,22 @@ export function AppUpdatesCard() {
             fallback={
               <ReleaseNotesLink
                 version={currentVersion}
-                label={`What's new in v${currentVersion}`}
+                label={t('settings.tabs.general.app_and_releases.version.link', {
+                  version: `v${currentVersion}`,
+                })}
               />
             }
           >
             <p className={cn('text-xs text-primary font-medium')}>
-              New version v{update?.version} is ready to install!
+              {t('settings.tabs.general.app_and_releases.version.ready_to_install', {
+                version: `v${update?.version}`,
+              })}
             </p>
             <ReleaseNotesLink
               version={update?.version}
-              label={`View v${update?.version} release notes`}
+              label={t('settings.tabs.general.app_and_releases.version.link', {
+                version: `v${update?.version}`,
+              })}
             />
           </Show>
         </div>
@@ -178,20 +186,30 @@ export function AppUpdatesCard() {
               <span>
                 <Show
                   when={isPending}
-                  fallback={`Install v${update?.version}`}
+                  fallback={t(
+                    'settings.tabs.general.app_and_releases.actions.install_version',
+                    { version: `v${update?.version}` },
+                  )}
                 >
                   <Show
                     when={progress.percentage > 0}
                     fallback={
                       <Show
                         when={status === 'installing'}
-                        fallback='Updating...'
+                        fallback={t(
+                          'settings.tabs.general.app_and_releases.actions.updating',
+                        )}
                       >
-                        Installing...
+                        {t(
+                          'settings.tabs.general.app_and_releases.actions.installing',
+                        )}
                       </Show>
                     }
                   >
-                    Updating {progress.percentage}%
+                    {t(
+                      'settings.tabs.general.app_and_releases.actions.updating_percentage',
+                      { percent: progress.percentage },
+                    )}
                   </Show>
                 </Show>
               </span>
@@ -222,9 +240,13 @@ export function AppUpdatesCard() {
               <span className={cn('font-semibold text-foreground')}>
                 <Show
                   when={status === 'installing'}
-                  fallback='Downloading application update...'
+                  fallback={t(
+                    'settings.tabs.general.app_and_releases.actions.downloading_app',
+                  )}
                 >
-                  Installing application update...
+                  {t(
+                    'settings.tabs.general.app_and_releases.actions.installing_app',
+                  )}
                 </Show>
               </span>
               <Show when={progress.percentage > 0}>
@@ -249,7 +271,9 @@ export function AppUpdatesCard() {
             </Show>
             <ReleaseNotesLink
               version={update?.version}
-              label="Read what's changing while you wait"
+              label={t(
+                'settings.tabs.general.app_and_releases.actions.read_changes',
+              )}
             />
           </div>
         </div>
@@ -271,7 +295,8 @@ export function AppUpdatesCard() {
               DEV
             </Badge>
             <span className={cn('text-[11px]')}>
-              Package: <span className={cn('font-mono')}>{health.packageType}</span>
+              {t('settings.tabs.general.app_and_releases.actions.package')}{' '}
+              <span className={cn('font-mono')}>{health.packageType}</span>
             </span>
           </div>
           <div className={cn('flex items-center gap-1.5')}>
@@ -286,7 +311,11 @@ export function AppUpdatesCard() {
                 icon={SparklesIcon}
                 className={cn('size-3 text-amber-500')}
               />
-              <span>Simulate Update</span>
+              <span>
+                {t(
+                  'settings.tabs.general.app_and_releases.actions.simulate_update',
+                )}
+              </span>
             </Button>
             <Show when={status !== 'idle'}>
               <Button
@@ -297,7 +326,7 @@ export function AppUpdatesCard() {
                   'h-7 text-[11px] px-2 text-muted-foreground hover:text-foreground',
                 )}
               >
-                Reset
+                {t('settings.tabs.general.app_and_releases.actions.reset')}
               </Button>
             </Show>
           </div>

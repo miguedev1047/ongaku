@@ -15,8 +15,10 @@ import { Show } from '@/components/utility/show'
 import { QueueList } from './queue-list'
 import type { TPlaylistSong } from '@/shared/types/playlist-songs.types'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { useTranslation } from 'react-i18next'
 
 export function QueueSheet() {
+  const { t } = useTranslation()
   const queue = useLocalPlayerStore((state) => state.queue)
   const currentSong = useLocalPlayerStore((state) => state.currentSong)
   const currentPlaylist = useLocalPlayerStore((state) => state.currentPlaylist)
@@ -43,7 +45,7 @@ export function QueueSheet() {
           }
         />
         <TooltipContent side='top'>
-          <p>Queue</p>
+          <p>{t('player.queue_title')}</p>
         </TooltipContent>
       </Tooltip>
 
@@ -55,7 +57,7 @@ export function QueueSheet() {
         <SheetHeader className='flex flex-col gap-1 px-4 py-3.5 border-b border-border bg-card/40'>
           <div className='flex items-center justify-between pr-6'>
             <SheetTitle className='text-sm font-semibold tracking-tight'>
-              Queue
+              {t('player.queue_title')}
             </SheetTitle>
           </div>
 
@@ -68,12 +70,12 @@ export function QueueSheet() {
             </Show>
             <Show
               when={queue.length > 0}
-              fallback={<span>0 tracks</span>}
+              fallback={<span>{t('player.tracks_count_plural', { count: 0 })}</span>}
             >
               <span>
                 <Show
                   when={activeIndex >= 0}
-                  fallback={<>{queue.length} tracks</>}
+                  fallback={<>{t('player.tracks_count_plural', { count: queue.length })}</>}
                 >
                   {activeIndex + 1} / {queue.length}
                 </Show>

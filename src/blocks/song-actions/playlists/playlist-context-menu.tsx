@@ -19,6 +19,8 @@ import {
 import { cn } from 'cn'
 import { CONTEXT_ACTIONS_MENU_WIDTH } from '@/constants/styles'
 
+import { useTranslation } from 'react-i18next'
+
 interface PlaylistContextMenuProps {
   playlist: TPlaylist
   children: React.ReactNode
@@ -27,6 +29,7 @@ export function PlaylistActionsContextMenu({
   playlist,
   children,
 }: PlaylistContextMenuProps) {
+  const { t } = useTranslation()
   const {
     isRenameOpen,
     setIsRenameOpen,
@@ -43,18 +46,18 @@ export function PlaylistActionsContextMenu({
           <ContextMenuGroup>
             <ContextMenuItem onClick={handleNavigate}>
               <HugeiconsIcon icon={Music01Icon} />
-              <span>Open</span>
+              <span>{t('playlists.actions.open')}</span>
             </ContextMenuItem>
             <ContextMenuItem onClick={() => setIsRenameOpen(true)}>
               <HugeiconsIcon icon={PencilEdit01Icon} />
-              <span>Rename</span>
+              <span>{t('playlists.actions.rename')}</span>
             </ContextMenuItem>
             <ContextMenuItem
               variant='destructive'
               onClick={() => setIsDeleteOpen(true)}
             >
               <HugeiconsIcon icon={DeleteIcon} />
-              <span>Delete</span>
+              <span>{t('playlists.actions.delete')}</span>
             </ContextMenuItem>
           </ContextMenuGroup>
         </ContextMenuContent>

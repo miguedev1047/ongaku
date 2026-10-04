@@ -11,6 +11,7 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { Button } from "@/components/ui/button"
 import { Show } from "@/components/utility/show"
 import { cn } from "cn"
+import { useTranslation } from "react-i18next"
 
 export interface LibraryErrorStateProps {
   error?: unknown
@@ -23,12 +24,14 @@ export function LibraryErrorState({
   reset,
   className
 }: LibraryErrorStateProps) {
+  const { t } = useTranslation()
+
   const errorMessage =
     error instanceof Error
       ? error.message
       : typeof error === "string"
         ? error
-        : "Failed to load library tracks."
+        : t("library.error.failed")
 
   return (
     <div
@@ -45,7 +48,7 @@ export function LibraryErrorState({
               className="size-6 text-destructive"
             />
           </EmptyMedia>
-          <EmptyTitle>Error loading library</EmptyTitle>
+          <EmptyTitle>{t("library.error.title")}</EmptyTitle>
           <EmptyDescription className="max-w-md">
             {errorMessage}
           </EmptyDescription>
@@ -62,7 +65,7 @@ export function LibraryErrorState({
                 icon={RefreshIcon}
                 className="size-3.5"
               />
-              <span>Try again</span>
+              <span>{t("common.retry")}</span>
             </Button>
           </EmptyContent>
         </Show>

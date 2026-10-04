@@ -1,4 +1,5 @@
 import * as React from "react"
+import { useTranslation } from "react-i18next"
 import { cn } from "cn"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
@@ -150,7 +151,8 @@ function PlayerPlayButton({
   className,
   ...props
 }: PlayerPlayButtonProps) {
-  const label = tooltip ?? (isPlaying ? "Pause" : "Play")
+  const { t } = useTranslation()
+  const label = tooltip ?? (isPlaying ? t("player.pause") : t("player.play"))
   return (
     <Tooltip>
       <TooltipTrigger
@@ -192,11 +194,13 @@ interface PlayerPreviousButtonProps extends Omit<
 }
 
 function PlayerPreviousButton({
-  tooltip = "Previous track",
+  tooltip,
   shortcut,
   className,
   ...props
 }: PlayerPreviousButtonProps) {
+  const { t } = useTranslation()
+  const label = tooltip ?? t("player.previous_track")
   return (
     <Tooltip>
       <TooltipTrigger
@@ -209,7 +213,7 @@ function PlayerPreviousButton({
               "size-8 rounded-md text-muted-foreground hover:text-foreground",
               className
             )}
-            aria-label={tooltip}
+            aria-label={label}
             {...props}
           >
             <HugeiconsIcon
@@ -220,7 +224,7 @@ function PlayerPreviousButton({
         }
       />
       <TooltipContent>
-        <span>{tooltip}</span>
+        <span>{label}</span>
         {shortcut !== undefined ? shortcut : <Kbd>P</Kbd>}
       </TooltipContent>
     </Tooltip>
@@ -236,11 +240,13 @@ interface PlayerNextButtonProps extends Omit<
 }
 
 function PlayerNextButton({
-  tooltip = "Next track",
+  tooltip,
   shortcut,
   className,
   ...props
 }: PlayerNextButtonProps) {
+  const { t } = useTranslation()
+  const label = tooltip ?? t("player.next_track")
   return (
     <Tooltip>
       <TooltipTrigger
@@ -253,7 +259,7 @@ function PlayerNextButton({
               "size-8 rounded-md text-muted-foreground hover:text-foreground",
               className
             )}
-            aria-label={tooltip}
+            aria-label={label}
             {...props}
           >
             <HugeiconsIcon
@@ -264,7 +270,7 @@ function PlayerNextButton({
         }
       />
       <TooltipContent>
-        <span>{tooltip}</span>
+        <span>{label}</span>
         {shortcut !== undefined ? shortcut : <Kbd>N</Kbd>}
       </TooltipContent>
     </Tooltip>
@@ -287,7 +293,8 @@ function PlayerShuffleButton({
   className,
   ...props
 }: PlayerShuffleButtonProps) {
-  const label = tooltip ?? (isShuffle ? "Disable shuffle" : "Enable shuffle")
+  const { t } = useTranslation()
+  const label = tooltip ?? (isShuffle ? t("player.shuffle_disable") : t("player.shuffle"))
   return (
     <Tooltip>
       <TooltipTrigger
@@ -335,7 +342,8 @@ function PlayerLoopButton({
   className,
   ...props
 }: PlayerLoopButtonProps) {
-  const label = tooltip ?? (isLoop ? "Disable loop" : "Enable loop")
+  const { t } = useTranslation()
+  const label = tooltip ?? (isLoop ? t("player.repeat_disable") : t("player.repeat"))
   return (
     <Tooltip>
       <TooltipTrigger
@@ -388,6 +396,7 @@ function PlayerProgress({
   className,
   position = "bottom"
 }: PlayerProgressProps) {
+  const { t } = useTranslation()
   return (
     <div
       data-slot="player-progress"
@@ -415,7 +424,7 @@ function PlayerProgress({
           }
         />
         <TooltipContent>
-          <span>Seek</span>
+          <span>{t("player.seek")}</span>
           <KbdGroup>
             <Kbd>←</Kbd>
             <Kbd>→</Kbd>
@@ -464,6 +473,7 @@ function PlayerVolume({
   className,
   position = "bottom"
 }: PlayerVolumeProps) {
+  const { t } = useTranslation()
   const [lastVolume, setLastVolume] = React.useState<number>(
     volume > 0 ? volume : 80
   )
@@ -558,7 +568,7 @@ function PlayerVolume({
                   <Button
                     size="icon"
                     variant="ghost"
-                    aria-label="Volume settings"
+                    aria-label={t("player.volume_settings")}
                     className="size-8 rounded-md text-muted-foreground hover:text-foreground"
                   >
                     <HugeiconsIcon
@@ -571,7 +581,7 @@ function PlayerVolume({
             }
           />
           <TooltipContent>
-            <span>Volume</span>
+            <span>{t("player.volume")}</span>
             <KbdGroup>
               <Kbd>M</Kbd>
               <Kbd>↑</Kbd>
@@ -608,7 +618,7 @@ function PlayerVolume({
             variant="ghost"
             className="size-7 rounded-md text-muted-foreground hover:text-foreground shrink-0"
             onClick={handleToggleMute}
-            aria-label={displayVolume === 0 ? "Unmute" : "Mute"}
+            aria-label={displayVolume === 0 ? t("player.unmute") : t("player.mute")}
           >
             <HugeiconsIcon
               icon={volumeIcon}

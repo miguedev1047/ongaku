@@ -4,8 +4,10 @@ import { CloudServerIcon, CheckmarkCircle02Icon, AlertCircleIcon } from "@hugeic
 import { Show } from "@/components/utility/show"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { systemHealthQueryOpts } from "@/shared/queries/system-health"
+import { useTranslation } from "react-i18next"
 
 export function ServerHealthCard() {
+  const { t } = useTranslation()
   const { data: health } = useSuspenseQuery(systemHealthQueryOpts())
 
   const isHealthy = health.serverHealthy && health.serverPort > 0
@@ -25,10 +27,10 @@ export function ServerHealthCard() {
           </div>
           <div>
             <h2 className="text-sm font-semibold text-foreground">
-              Internal Streaming Server
+              {t('settings.tabs.system.server_health.title')}
             </h2>
             <p className="text-xs text-muted-foreground">
-              Local HTTP service delivering high-fidelity audio and cover art
+              {t('settings.tabs.system.server_health.description')}
             </p>
           </div>
         </div>
@@ -44,7 +46,7 @@ export function ServerHealthCard() {
                 icon={AlertCircleIcon}
                 className="size-3"
               />
-              Offline
+              {t('settings.tabs.system.server_health.status.offline')}
             </Badge>
           }
         >
@@ -56,7 +58,7 @@ export function ServerHealthCard() {
               icon={CheckmarkCircle02Icon}
               className="size-3"
             />
-            Healthy
+            {t('settings.tabs.system.server_health.status.online')}
           </Badge>
         </Show>
       </div>
@@ -64,7 +66,7 @@ export function ServerHealthCard() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 text-xs">
         <div className="p-2.5 rounded-md bg-muted/40 border border-border/30">
           <span className="text-[10px] text-muted-foreground block uppercase tracking-wider font-semibold">
-            Binding Host
+            {t('settings.tabs.system.server_health.binding_host')}
           </span>
           <span className="font-mono font-medium text-foreground mt-0.5 block">
             {host}
@@ -73,7 +75,7 @@ export function ServerHealthCard() {
 
         <div className="p-2.5 rounded-md bg-muted/40 border border-border/30">
           <span className="text-[10px] text-muted-foreground block uppercase tracking-wider font-semibold">
-            Allocated Port
+            {t('settings.tabs.system.server_health.allocated_port')}
           </span>
           <span className="font-mono font-medium text-foreground mt-0.5 block">
             {port}
@@ -82,7 +84,7 @@ export function ServerHealthCard() {
 
         <div className="p-2.5 rounded-md bg-muted/40 border border-border/30">
           <span className="text-[10px] text-muted-foreground block uppercase tracking-wider font-semibold">
-            Base Endpoint
+            {t('settings.tabs.system.server_health.base_endpoint')}
           </span>
           <span className="font-mono font-medium text-foreground mt-0.5 block truncate" title={url}>
             {url}

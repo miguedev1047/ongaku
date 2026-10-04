@@ -10,6 +10,7 @@ import { FolderIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { binariesCheckQueryOpts } from "@/shared/queries/binaries"
 import { Show } from "@/components/utility/show"
+import { useTranslation } from "react-i18next"
 
 interface PlaylistMenuGroupProps {
   onSelectPlaylist: (playlistName: string) => void
@@ -20,6 +21,7 @@ export function PlaylistMenuGroup({
   onSelectPlaylist,
   disabled
 }: PlaylistMenuGroupProps) {
+  const { t } = useTranslation()
   const { data: playlists = [] } = useSuspenseQuery(playlistsQueryOpts())
   const { data: isBinariesInstalled } = useSuspenseQuery(
     binariesCheckQueryOpts()
@@ -29,7 +31,7 @@ export function PlaylistMenuGroup({
 
   return (
     <DropdownMenuGroup>
-      <DropdownMenuLabel>Playlists</DropdownMenuLabel>
+      <DropdownMenuLabel>{t('sidebar.playlists')}</DropdownMenuLabel>
       <DropdownMenuSeparator />
 
       <Show
@@ -39,7 +41,7 @@ export function PlaylistMenuGroup({
             disabled
             className="text-xs text-muted-foreground"
           >
-            No playlists found
+            {t('playlists.empty.title')}
           </DropdownMenuItem>
         }
       >

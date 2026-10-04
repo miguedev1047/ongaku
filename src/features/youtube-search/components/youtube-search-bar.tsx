@@ -22,12 +22,14 @@ import { Kbd } from '@/components/ui/kbd'
 import { Show } from '@/components/utility/show'
 import { useYoutubeSearchStore } from '@/shared/stores/actions'
 import { cn } from 'cn'
+import { useTranslation } from 'react-i18next'
 
 interface YoutubeSearchBarProps {
   initialQuery?: string
 }
 
 export function YoutubeSearchBar({ initialQuery = '' }: YoutubeSearchBarProps) {
+  const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const [queryInput, setQueryInput] = useState(initialQuery)
   const navigate = useNavigate()
@@ -107,7 +109,7 @@ export function YoutubeSearchBar({ initialQuery = '' }: YoutubeSearchBarProps) {
           when={hasDisplayQuery}
           fallback={
             <span className='text-muted-foreground truncate'>
-              Search YouTube...
+              {t('youtube_search.search_bar_placeholder')}
             </span>
           }
         >
@@ -129,7 +131,7 @@ export function YoutubeSearchBar({ initialQuery = '' }: YoutubeSearchBarProps) {
           <CommandInput
             value={queryInput}
             onValueChange={setQueryInput}
-            placeholder='Search songs or artists on YouTube...'
+            placeholder={t('youtube_search.placeholder')}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && hasTypedQuery) {
                 e.preventDefault()
@@ -140,7 +142,7 @@ export function YoutubeSearchBar({ initialQuery = '' }: YoutubeSearchBarProps) {
 
           <CommandList className='max-h-80 overflow-y-auto no-scrollbar p-1'>
             <Show when={hasTypedQuery}>
-              <CommandGroup heading='Search Action'>
+              <CommandGroup heading={t('youtube_search.search_action')}>
                 <CommandItem
                   value={queryInput}
                   onSelect={() => handleSearch(queryInput)}
@@ -151,14 +153,14 @@ export function YoutubeSearchBar({ initialQuery = '' }: YoutubeSearchBarProps) {
                     className='size-3.5 text-primary shrink-0'
                   />
                   <span className='truncate'>
-                    Search for &ldquo;{queryInput}&rdquo; on YouTube
+                    {t('youtube_search.search_for', { query: queryInput })}
                   </span>
                 </CommandItem>
               </CommandGroup>
             </Show>
 
             <Show when={hasHistory}>
-              <CommandGroup heading='Recent Searches'>
+              <CommandGroup heading={t('youtube_search.recent_searches')}>
                 {filteredHistory.map((item) => (
                   <CommandItem
                     key={item}
@@ -194,7 +196,7 @@ export function YoutubeSearchBar({ initialQuery = '' }: YoutubeSearchBarProps) {
 
             <Show when={!hasTypedQuery && !hasHistory}>
               <CommandEmpty>
-                No recent searches. Type to search YouTube.
+                {t('youtube_search.no_recent_searches')}
               </CommandEmpty>
             </Show>
 
@@ -212,7 +214,7 @@ export function YoutubeSearchBar({ initialQuery = '' }: YoutubeSearchBarProps) {
                     icon={Delete02Icon}
                     className='size-3'
                   />
-                  <span>Clear history</span>
+                  <span>{t('youtube_search.clear_history')}</span>
                 </Button>
               </div>
             </Show>

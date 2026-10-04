@@ -2,6 +2,7 @@ import { create } from "zustand"
 import { relaunch } from "@tauri-apps/plugin-process"
 import { toast } from "sonner"
 import type { Update } from "@tauri-apps/plugin-updater"
+import i18n from "@/lib/i18n"
 
 export type UpdateStatus =
   | "idle"
@@ -55,7 +56,7 @@ export const useUpdateStore = create<UpdateStoreProps>((set, get) => ({
       progress: { downloaded: 0, total: 0, percentage: 0 }
     })
 
-    toast.loading("Downloading update. Please wait...", {
+    toast.loading(i18n.t("toasts.updater.downloading"), {
       id: "updater-toast"
     })
 
@@ -82,7 +83,7 @@ export const useUpdateStore = create<UpdateStoreProps>((set, get) => ({
       })
 
       set({ status: "done" })
-      toast.success("Update installed successfully! Restarting app...", {
+      toast.success(i18n.t("toasts.updater.installed_success"), {
         id: "updater-toast"
       })
       setTimeout(async () => await relaunch(), RESTARTING_DELAY)
@@ -91,7 +92,7 @@ export const useUpdateStore = create<UpdateStoreProps>((set, get) => ({
         status: "error",
         progress: { downloaded: 0, total: 0, percentage: 0 }
       })
-      toast.error("Failed to update the app. Please try again.", {
+      toast.error(i18n.t("toasts.updater.update_error"), {
         id: "updater-toast"
       })
       console.error(err)

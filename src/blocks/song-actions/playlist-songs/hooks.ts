@@ -9,12 +9,14 @@ import { toast } from 'sonner'
 import { useQuery } from '@tanstack/react-query'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import type { TPlaylistSong } from '@/shared/types/playlist-songs.types'
+import { useTranslation } from 'react-i18next'
 
 export interface UsePlaylistSongActionsProps {
   song: TPlaylistSong
 }
 
 export function usePlaylistSongActions({ song }: UsePlaylistSongActionsProps) {
+  const { t } = useTranslation()
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false)
   const { data: health } = useQuery(systemHealthQueryOpts())
@@ -30,7 +32,7 @@ export function usePlaylistSongActions({ song }: UsePlaylistSongActionsProps) {
 
   const handleTogglePlayback = () => {
     if (health && !health.serverHealthy) {
-      toast.error('Media server is offline. Cannot play local tracks.')
+      toast.error(t('toasts.songs.media_offline'))
       return
     }
 
@@ -41,7 +43,7 @@ export function usePlaylistSongActions({ song }: UsePlaylistSongActionsProps) {
       } else {
         setPlayerState('playing')
         audioRef?.play().catch(() => {
-          toast.error('An error occurred while playing the song')
+          toast.error(t('toasts.songs.playback_error'))
         })
       }
       return
@@ -57,9 +59,9 @@ export function usePlaylistSongActions({ song }: UsePlaylistSongActionsProps) {
     try {
       const songPath = getPlaylistPath(song.path)
       await openFolder(songPath)
-      toast.info(`Opened folder for "${song.playlist_name}"`)
+      toast.info(t('toasts.songs.opened_folder', { name: song.playlist_name }))
     } catch {
-      toast.error('Error opening playlist folder')
+      toast.error(t('toasts.songs.open_folder_error'))
     }
   }
 

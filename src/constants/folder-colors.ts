@@ -1,18 +1,82 @@
 export const FOLDER_COLOR_PRESETS = [
-  { id: 'blue', label: 'Classic Blue', color: '#507dbc' },
-  { id: 'emerald', label: 'Emerald', color: '#10b981' },
-  { id: 'indigo', label: 'Indigo', color: '#6366f1' },
-  { id: 'rose', label: 'Rose', color: '#f43f5e' },
-  { id: 'red', label: 'Red', color: '#B14242' },
-  { id: 'amber', label: 'Amber', color: '#f59e0b' },
-  { id: 'slate', label: 'Slate', color: '#64748b' },
-  { id: 'violet', label: 'Electric Violet', color: '#8b5cf6' },
-  { id: 'purple', label: 'Deep Purple', color: '#a855f7' },
-  { id: 'fuchsia', label: 'Fuchsia', color: '#d946ef' },
-  { id: 'teal', label: 'Teal', color: '#14b8a6' },
-  { id: 'cyan', label: 'Cyan', color: '#06b6d4' },
-  { id: 'sky', label: 'Sky', color: '#0ea5e9' },
-  { id: 'lime', label: 'Lime', color: '#84cc16' },
-  { id: 'orange', label: 'Sunset Orange', color: '#f97316' },
-  { id: 'zinc', label: 'Neutral Zinc', color: '#71717a' },
+  {
+    id: 'blue',
+    color: '#507dbc',
+    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.classic_blue',
+  },
+  {
+    id: 'emerald',
+    color: '#10b981',
+    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.emerald',
+  },
+  {
+    id: 'indigo',
+    color: '#6366f1',
+    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.indigo',
+  },
+  {
+    id: 'rose',
+    color: '#f43f5e',
+    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.rose',
+  },
+  {
+    id: 'red',
+    color: '#B14242',
+    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.red',
+  },
+  {
+    id: 'amber',
+    color: '#f59e0b',
+    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.amber',
+  },
+  {
+    id: 'slate',
+    color: '#64748b',
+    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.slate',
+  },
+  {
+    id: 'violet',
+    color: '#8b5cf6',
+    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.electric_violet',
+  },
+  {
+    id: 'purple',
+    color: '#a855f7',
+    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.deep_purple',
+  },
+  {
+    id: 'fuchsia',
+    color: '#d946ef',
+    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.fuchsia',
+  },
+  {
+    id: 'teal',
+    color: '#14b8a6',
+    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.teal',
+  },
+  {
+    id: 'cyan',
+    color: '#06b6d4',
+    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.cyan',
+  },
+  {
+    id: 'sky',
+    color: '#0ea5e9',
+    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.sky',
+  },
+  {
+    id: 'lime',
+    color: '#84cc16',
+    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.lime',
+  },
+  {
+    id: 'orange',
+    color: '#f97316',
+    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.sunset_orange',
+  },
+  {
+    id: 'zinc',
+    color: '#71717a',
+    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.neutral_zinc',
+  },
 ] as const

@@ -32,6 +32,8 @@ interface MoveSongProps {
   onOpenChange: (open: boolean) => void
 }
 
+import { useTranslation } from "react-i18next"
+
 function MovePlaylistSelect({
   currentPlaylist,
   value,
@@ -41,6 +43,7 @@ function MovePlaylistSelect({
   value: string
   onValueChange: (value: string | null) => void
 }) {
+  const { t } = useTranslation()
   const { data: playlists = [] } = useSuspenseQuery(playlistsQueryOpts())
 
   const otherPlaylists = playlists.filter((p) => p.name !== currentPlaylist)
@@ -53,14 +56,16 @@ function MovePlaylistSelect({
         onValueChange={onValueChange}
       >
         <SelectTrigger className="w-full">
-          <SelectValue placeholder="Select target playlist" />
+          <SelectValue placeholder={t('playlists.dialogs.move_song.select_placeholder')} />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectLabel>Playlists</SelectLabel>
+            <SelectLabel>{t('playlists.header.title')}</SelectLabel>
             {playlists.map((playlist) => {
               const isCurrent = playlist.name === currentPlaylist
-              const label = isCurrent ? `${playlist.name} (Current)` : playlist.name
+              const label = isCurrent
+                ? t('playlists.batch.current_playlist_suffix', { name: playlist.name })
+                : playlist.name
               return (
                 <SelectItem
                   key={playlist.name}
@@ -77,8 +82,7 @@ function MovePlaylistSelect({
 
       <Show when={hasNoOtherPlaylists}>
         <p className="text-xs text-muted-foreground">
-          No other playlists available. Create another playlist first to move
-          this song.
+          {t('playlists.dialogs.move_song.no_other_playlists')}
         </p>
       </Show>
     </div>
@@ -86,6 +90,7 @@ function MovePlaylistSelect({
 }
 
 export function MoveSong({ song, open, onOpenChange }: MoveSongProps) {
+  const { t } = useTranslation()
   const [targetPlaylist, setTargetPlaylist] = useState<string>("")
 
   const { handleMoveSong, isPending } = useMoveSong({
@@ -116,9 +121,9 @@ export function MoveSong({ song, open, onOpenChange }: MoveSongProps) {
     >
       <DialogContent onClick={(e) => e.stopPropagation()}>
         <DialogHeader>
-          <DialogTitle>Move song "{song.name}"</DialogTitle>
+          <DialogTitle>{t('playlists.dialogs.move_song.title', { name: song.name })}</DialogTitle>
           <DialogDescription>
-            Choose the target playlist to move this song into.
+            {t('playlists.dialogs.move_song.description')}
           </DialogDescription>
         </DialogHeader>
 
@@ -131,7 +136,7 @@ export function MoveSong({ song, open, onOpenChange }: MoveSongProps) {
         </Suspense>
 
         <DialogFooter>
-          <DialogClose render={<Button variant="outline">Cancel</Button>} />
+          <DialogClose render={<Button variant="outline">{t('common.cancel')}</Button>} />
           <Button
             disabled={isPending || !isValidTarget}
             onClick={handleSubmit}
@@ -139,7 +144,7 @@ export function MoveSong({ song, open, onOpenChange }: MoveSongProps) {
             <Show when={isPending}>
               <Spinner />
             </Show>
-            Move
+            {t('playlists.dialogs.move_song.submit')}
           </Button>
         </DialogFooter>
       </DialogContent>

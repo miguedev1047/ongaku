@@ -37,6 +37,8 @@ export interface SearchSongActionsProps {
   showLabel?: boolean
 }
 
+import { useTranslation } from 'react-i18next'
+
 export function SearchSongActions({
   item,
   className,
@@ -44,6 +46,7 @@ export function SearchSongActions({
   variant = 'outline',
   showLabel = false,
 }: SearchSongActionsProps) {
+  const { t } = useTranslation()
   const {
     isPlaying,
     isLoading,
@@ -60,12 +63,12 @@ export function SearchSongActions({
             size={size}
             variant={variant}
             onClick={(e) => e.stopPropagation()}
-            aria-label='Song actions'
+            aria-label={t('common.actions')}
             className={cn(className)}
           >
             <HugeiconsIcon icon={MoreHorizontalSquare01Icon} />
             <Show when={showLabel}>
-              <span>Actions</span>
+              <span>{t('common.actions')}</span>
             </Show>
           </Button>
         }
@@ -86,12 +89,12 @@ export function SearchSongActions({
               fallback={
                 <>
                   <HugeiconsIcon icon={PlayIcon} />
-                  <span>Play</span>
+                  <span>{t('player.play')}</span>
                 </>
               }
             >
               <HugeiconsIcon icon={PauseIcon} />
-              <span>Pause</span>
+              <span>{t('player.pause')}</span>
             </Show>
           </DropdownMenuItem>
 
@@ -102,7 +105,7 @@ export function SearchSongActions({
             className='cursor-pointer'
           >
             <HugeiconsIcon icon={YoutubeIcon} />
-            <span>Open on YouTube</span>
+            <span>{t('youtube_search.actions.open_youtube')}</span>
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
@@ -110,13 +113,13 @@ export function SearchSongActions({
           <DropdownMenuSub>
             <DropdownMenuSubTrigger className='cursor-pointer'>
               <HugeiconsIcon icon={Music01Icon} />
-              <span>Download on</span>
+              <span>{t('youtube_search.actions.download_on')}</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent className='w-48'>
               <Suspense
                 fallback={
                   <DropdownMenuGroup>
-                    <DropdownMenuLabel>Playlists</DropdownMenuLabel>
+                    <DropdownMenuLabel>{t('playlists.header.title')}</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <div className='p-3 flex items-center justify-center'>
                       <Spinner className='size-4' />

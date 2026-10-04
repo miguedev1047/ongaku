@@ -3,12 +3,14 @@ import { useDownloadQueueStore } from "@/shared/stores/actions"
 import { openUrl } from "@tauri-apps/plugin-opener"
 import { toast } from "sonner"
 import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
+import { useTranslation } from "react-i18next"
 
 interface UseSearchSongActionsProps {
   item: TYoutubeSearchResult
 }
 
 export function useSearchSongActions({ item }: UseSearchSongActionsProps) {
+  const { t } = useTranslation()
   const { isPlaying, isLoading, togglePlayback } = useYoutubePlayback(item)
   const enqueue = useDownloadQueueStore((state) => state.enqueue)
 
@@ -16,7 +18,7 @@ export function useSearchSongActions({ item }: UseSearchSongActionsProps) {
     try {
       await openUrl(item.url)
     } catch {
-      toast.error("Could not open web browser for YouTube")
+      toast.error(t("toasts.songs.open_browser_error"))
     }
   }
 

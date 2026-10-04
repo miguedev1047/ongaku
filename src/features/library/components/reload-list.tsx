@@ -13,7 +13,10 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { invoke } from "@tauri-apps/api/core"
 
+import { useTranslation } from "react-i18next"
+
 export function LibraryReloadList() {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { isPending, isRefetching, refetch } = useQuery(librarySongsQueryOpts())
   const isLoading = isPending || isRefetching
@@ -49,7 +52,7 @@ export function LibraryReloadList() {
         }
       />
       <TooltipContent>
-        <p>Refresh library</p>
+        <p>{t("library.refresh_library")}</p>
       </TooltipContent>
     </Tooltip>
   )

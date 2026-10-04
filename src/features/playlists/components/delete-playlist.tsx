@@ -13,6 +13,8 @@ import type { TPlaylist } from "@/shared/types/playlist.types"
 import { useDeletePlaylist } from "@/features/playlists/hooks"
 import { Show } from "@/components/utility/show"
 
+import { useTranslation } from "react-i18next"
+
 interface DeletePlaylistProps {
   playlist: TPlaylist
   open: boolean
@@ -24,6 +26,7 @@ export function DeletePlaylist({
   open,
   onOpenChange
 }: DeletePlaylistProps) {
+  const { t } = useTranslation()
   const { handleDeletePlaylist, isPending } = useDeletePlaylist({
     playlist,
     onSuccess: () => onOpenChange(false)
@@ -36,14 +39,13 @@ export function DeletePlaylist({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete playlist "{playlist.name}"</DialogTitle>
+          <DialogTitle>{t('playlists.dialogs.delete.title')}</DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete this playlist? This action cannot be
-            undone.
+            {t('playlists.dialogs.delete.description', { name: playlist.name })}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <DialogClose render={<Button variant="outline">Cancel</Button>} />
+          <DialogClose render={<Button variant="outline">{t('common.cancel')}</Button>} />
           <Button
             disabled={isPending}
             onClick={handleDeletePlaylist}
@@ -52,7 +54,7 @@ export function DeletePlaylist({
             <Show when={isPending}>
               <Spinner />
             </Show>
-            Delete
+            {t('playlists.dialogs.delete.submit')}
           </Button>
         </DialogFooter>
       </DialogContent>

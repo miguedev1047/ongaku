@@ -6,14 +6,20 @@ import { playlistsQueryOpts } from '@/shared/queries/playlists'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import { createFileRoute } from '@tanstack/react-router'
 import { Suspense } from 'react'
+import { useTranslation } from 'react-i18next'
+
+function PlaylistsPending() {
+  const { t } = useTranslation()
+  return (
+    <RoutePendingState
+      title={t('routes.playlists.pending_title')}
+      message={t('routes.playlists.pending_message')}
+    />
+  )
+}
 
 export const Route = createFileRoute('/playlists/')({
-  pendingComponent: () => (
-    <RoutePendingState
-      title='Loading playlists'
-      message='Fetching your music collections'
-    />
-  ),
+  pendingComponent: PlaylistsPending,
   errorComponent: RouteErrorState,
   loader: async ({ context }) => {
     context.queryClient.query(playlistsQueryOpts())

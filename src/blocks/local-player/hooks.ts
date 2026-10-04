@@ -4,8 +4,10 @@ import { toast } from "sonner"
 import { getAdjacentSong } from "@/shared/helpers/get-adjacent-song"
 import { getRandomSong } from "@/shared/helpers/get-random-song"
 import { useLocalPlayerStore } from "@/shared/stores/player"
+import { useTranslation } from "react-i18next"
 
 export function usePlayerProgressbar() {
+  const { t } = useTranslation()
   const audioRef = useLocalPlayerStore((state) => state.audioRef)
   const progress = useLocalPlayerStore((state) => state.progress)
   const duration = useLocalPlayerStore((state) => state.duration)
@@ -37,7 +39,7 @@ export function usePlayerProgressbar() {
     setPlayerState("playing")
     audioRef.play().catch((err: unknown) => {
       if (err instanceof Error && err.name === "AbortError") return
-      toast.error("There was an error playing the song.")
+      toast.error(t("toasts.songs.playback_error"))
     })
   }
 
@@ -136,6 +138,7 @@ export function usePlayerLoop() {
 }
 
 export function usePlayerToggle() {
+  const { t } = useTranslation()
   const audioRef = useLocalPlayerStore((state) => state.audioRef)
   const playerState = useLocalPlayerStore((state) => state.playerState)
 
@@ -158,7 +161,7 @@ export function usePlayerToggle() {
       setPlayerState("playing")
       audioRef.play().catch((err: unknown) => {
         if (err instanceof Error && err.name === "AbortError") return
-        toast.error("An error occurred while playing the song")
+        toast.error(t("toasts.songs.playback_error"))
       })
       return
     }

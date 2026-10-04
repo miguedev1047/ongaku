@@ -12,6 +12,8 @@ import {
   Folder01Icon
 } from "@hugeicons/core-free-icons"
 import { cn } from "cn"
+import { useTranslation } from "react-i18next"
+import { Show } from "@/components/utility/show"
 
 interface PlaylistBatchBarProps {
   currentPlaylistName?: string
@@ -20,6 +22,7 @@ interface PlaylistBatchBarProps {
 export function PlaylistBatchBar({
   currentPlaylistName
 }: PlaylistBatchBarProps) {
+  const { t } = useTranslation()
   const activePlayer = useActivePlayerStore((s) => s.activePlayer)
   const clearSelection = usePlaylistBatchStore((s) => s.clear)
 
@@ -50,7 +53,12 @@ export function PlaylistBatchBar({
       >
         <div className="flex items-center gap-2">
           <span className="text-xs font-semibold text-foreground">
-            {selectedCount} {selectedCount === 1 ? "song" : "songs"} selected
+            <Show
+              when={selectedCount === 1}
+              fallback={t("playlists.batch.selected_plural", { count: selectedCount })}
+            >
+              {t("playlists.batch.selected", { count: selectedCount })}
+            </Show>
           </span>
 
           <Button
@@ -58,7 +66,7 @@ export function PlaylistBatchBar({
             variant="ghost"
             className="size-6 text-muted-foreground hover:text-foreground"
             onClick={clearSelection}
-            title="Deselect all"
+            title={t("playlists.batch.deselect_all")}
           >
             <HugeiconsIcon
               icon={Cancel01Icon}
@@ -80,7 +88,7 @@ export function PlaylistBatchBar({
               icon={Folder01Icon}
               className="size-3.5"
             />
-            <span>Move to...</span>
+            <span>{t("playlists.batch.move_to")}</span>
           </Button>
 
           <Button
@@ -93,7 +101,7 @@ export function PlaylistBatchBar({
               icon={Delete01Icon}
               className="size-3.5"
             />
-            <span>Delete</span>
+            <span>{t("common.delete")}</span>
           </Button>
         </div>
       </div>

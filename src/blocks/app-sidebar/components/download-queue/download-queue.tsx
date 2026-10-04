@@ -4,6 +4,7 @@ import { useDownloadQueue } from "@/features/download-queue/hooks"
 import { Download01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { cn } from "cn"
+import { useTranslation } from "react-i18next"
 
 interface QueueBadgeProps {
   pendingCount: number
@@ -31,6 +32,7 @@ export function QueueBadge({ pendingCount, completedCount }: QueueBadgeProps) {
 }
 
 export function SidebarDownloadQueue() {
+  const { t } = useTranslation()
   const {
     hasTasks,
     isDownloading,
@@ -41,12 +43,16 @@ export function SidebarDownloadQueue() {
   } = useDownloadQueue()
 
   const tooltipText = isDownloading
-    ? `Downloading (${pendingCount} active)`
+    ? t("download_queue.tooltip_downloading", { count: pendingCount })
     : hasTasks
-      ? `Downloads (${completedTasks.length} finished)`
-      : "Downloads"
+      ? t("download_queue.tooltip_finished", {
+          count: completedTasks.length
+        })
+      : t("download_queue.downloads")
 
-  const label = isDownloading ? "Downloading..." : "Downloads"
+  const label = isDownloading
+    ? t("youtube_search.downloading")
+    : t("download_queue.downloads")
 
   return (
     <SidebarMenuItem>

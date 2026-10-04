@@ -14,6 +14,8 @@ import {
   useLibraryBatchActions,
   useLibraryList
 } from "@/blocks/library-songs-list/hooks"
+import { useTranslation } from "react-i18next"
+import { Show } from "@/components/utility/show"
 
 interface LibrarySongsListProps {
   data: TPlaylistSong[]
@@ -21,6 +23,7 @@ interface LibrarySongsListProps {
 
 export function LibrarySongsList({ data }: LibrarySongsListProps) {
   "use no memo"
+  const { t } = useTranslation()
 
   const {
     rowSelection,
@@ -52,7 +55,7 @@ export function LibrarySongsList({ data }: LibrarySongsListProps) {
                   <Checkbox
                     checked={isAllSelected}
                     onCheckedChange={() => table.toggleAllRowsSelected()}
-                    aria-label="Select all songs"
+                    aria-label={t("common.select_all_songs")}
                   />
                 )}
               </Subscribe>
@@ -60,30 +63,35 @@ export function LibrarySongsList({ data }: LibrarySongsListProps) {
 
             {/* 2. Cover spacer (36px) */}
             <TableHead className="size-9 shrink-0 justify-center p-0">
-              Cover
+              {t("library.columns.cover")}
             </TableHead>
 
             {/* 3. Title column header (flex-1 min-w-0) */}
             <TableHead className="flex-1 min-w-0 flex items-center gap-2 p-0">
-              <span>Title</span>
+              <span>{t("library.columns.title")}</span>
               <span className="text-[11px] font-mono text-muted-foreground/70">
-                ({data.length} {data.length === 1 ? "track" : "tracks"})
+                <Show
+                  when={data.length === 1}
+                  fallback={`(${t("playlists.card.tracks_count_plural", { count: data.length })})`}
+                >
+                  {`(${t("playlists.card.tracks_count", { count: data.length })})`}
+                </Show>
               </span>
             </TableHead>
 
             {/* 4. Artist column header (w-40) */}
             <TableHead className="w-40 shrink-0 p-0 hidden sm:flex items-center">
-              Artist
+              {t("library.columns.artist")}
             </TableHead>
 
             {/* 5. Album column header (w-40) */}
             <TableHead className="w-40 shrink-0 p-0 hidden md:flex items-center">
-              Album
+              {t("library.columns.album")}
             </TableHead>
 
             {/* 6. Duration column header (64px) */}
             <TableHead className="w-16 shrink-0 justify-end p-0 text-right">
-              Time
+              {t("library.columns.duration")}
             </TableHead>
 
             {/* 7. Actions spacer (36px) */}

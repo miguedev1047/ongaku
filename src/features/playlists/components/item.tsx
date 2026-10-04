@@ -12,6 +12,8 @@ import { usePlaylistItem } from '@/features/playlists/hooks'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import type { TPlaylist } from '@/shared/types/playlist.types'
 import { PlaylistActionsContextMenu } from '@/blocks/song-actions/playlists'
+import { Show } from '@/components/utility/show'
+import { useTranslation } from 'react-i18next'
 
 interface PlaylistItemProps {
   playlist: TPlaylist
@@ -19,6 +21,7 @@ interface PlaylistItemProps {
 
 export const PlaylistItem = memo(
   function PlaylistItem({ playlist }: PlaylistItemProps) {
+    const { t } = useTranslation()
     const { data: config } = useQuery(systemConfigQueryOpts())
     const folderColor = config?.folder_colors ?? '#507dbc'
 
@@ -69,8 +72,12 @@ export const PlaylistItem = memo(
                     {playlist.name}
                   </Link>
                   <span className='text-xs text-muted-foreground mt-0.5'>
-                    {playlist.tracks}{' '}
-                    {playlist.tracks === 1 ? 'track' : 'tracks'}
+                    <Show
+                      when={playlist.tracks === 1}
+                      fallback={t('playlists.card.tracks_count_plural', { count: playlist.tracks })}
+                    >
+                      {t('playlists.card.tracks_count', { count: playlist.tracks })}
+                    </Show>
                   </span>
                 </div>
               }

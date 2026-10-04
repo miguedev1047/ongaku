@@ -4,12 +4,14 @@ import { toast } from "sonner"
 import { youtubeStreamQueryOpts } from "@/shared/queries/youtube-stream"
 import { useStreamingPlayerStore } from "@/shared/stores/player"
 import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
+import { useTranslation } from "react-i18next"
 
 interface StreamingAudioProps {
   track: TYoutubeSearchResult
 }
 
 export function StreamingAudio({ track }: StreamingAudioProps) {
+  const { t } = useTranslation()
   const { data: streamUrl } = useSuspenseQuery(youtubeStreamQueryOpts(track.id))
 
   const setAudioRef = useStreamingPlayerStore((s) => s.setAudioRef)
@@ -46,9 +48,7 @@ export function StreamingAudio({ track }: StreamingAudioProps) {
 
   const handleError = (e: React.SyntheticEvent<HTMLAudioElement>) => {
     console.error("Failed to stream audio:", e.currentTarget.error)
-    toast.error(
-      "Failed to stream audio from YouTube. The link might have expired."
-    )
+    toast.error(t("toasts.songs.stream_expired"))
     setPlayerState("idle")
   }
 

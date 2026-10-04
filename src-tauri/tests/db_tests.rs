@@ -254,6 +254,9 @@ fn test_config_table_and_queries() {
     let toggle_sidebar = get_config(&conn, "toggle_sidebar").unwrap();
     assert_eq!(toggle_sidebar, Some("false".to_string()));
 
+    let lang = get_config(&conn, "lang").unwrap();
+    assert_eq!(lang, Some("en".to_string()));
+
     let all_configs = get_all_config(&conn).unwrap();
     assert_eq!(all_configs.get("theme").map(String::as_str), Some("system"));
     assert_eq!(
@@ -265,11 +268,16 @@ fn test_config_table_and_queries() {
         all_configs.get("toggle_sidebar").map(String::as_str),
         Some("false")
     );
+    assert_eq!(all_configs.get("lang").map(String::as_str), Some("en"));
 
     // Update config
     set_config(&conn, "theme", "dark").unwrap();
     let theme_updated = get_config(&conn, "theme").unwrap();
     assert_eq!(theme_updated, Some("dark".to_string()));
+
+    set_config(&conn, "lang", "es").unwrap();
+    let lang_updated = get_config(&conn, "lang").unwrap();
+    assert_eq!(lang_updated, Some("es".to_string()));
 
     // Insert new config key
     set_config(&conn, "volume", "0.8").unwrap();

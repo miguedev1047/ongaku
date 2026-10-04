@@ -12,14 +12,20 @@ import {
   RoutePendingState,
   RouteErrorState,
 } from "@/components/route-ui-state";
+import { useTranslation } from "react-i18next";
+
+function PlaylistSongPending() {
+  const { t } = useTranslation();
+  return (
+    <RoutePendingState
+      title={t("routes.playlists.pending_song_title")}
+      message={t("routes.playlists.pending_song_message")}
+    />
+  );
+}
 
 export const Route = createFileRoute("/playlists/$playlistName")({
-  pendingComponent: () => (
-    <RoutePendingState
-      title="Loading playlist"
-      message="Fetching playlist tracks"
-    />
-  ),
+  pendingComponent: PlaylistSongPending,
   errorComponent: RouteErrorState,
   loader: async ({ context, params }) => {
     context.queryClient.query(playlistSongsQueryOpts(params.playlistName));

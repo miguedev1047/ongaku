@@ -1,0 +1,540 @@
+{
+  "common": {
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "rename": "Renombrar",
+    "close": "Cerrar",
+    "open": "Abrir",
+    "loading": "Cargando...",
+    "error": "Error",
+    "search": "Buscar",
+    "alpha": "Alfa",
+    "refresh": "Actualizar",
+    "actions": "Acciones",
+    "retry": "Reintentar",
+    "confirm": "Confirmar",
+    "remove": "Quitar",
+    "unknown_artist": "Artista desconocido",
+    "unknown_album": "Álbum desconocido",
+    "select_all_songs": "Seleccionar todas las canciones",
+    "please_wait": "Por favor espera un momento",
+    "error_loading_songs": "Error al cargar canciones"
+  },
+  "sidebar": {
+    "library": "Biblioteca",
+    "playlists": "Listas de reproducción",
+    "search": "Búsqueda en YouTube",
+    "settings": "Ajustes",
+    "navigation": {
+      "label": "Navegación",
+      "routes": {
+        "library": "Biblioteca",
+        "playlists": "Listas de reproducción",
+        "search": "Búsqueda en YouTube",
+        "settings": "Ajustes"
+      }
+    }
+  },
+  "routes": {
+    "library": {
+      "pending_title": "Cargando biblioteca",
+      "pending_message": "Obteniendo tus pistas y estadísticas"
+    },
+    "playlists": {
+      "pending_title": "Cargando listas de reproducción",
+      "pending_message": "Obteniendo tus colecciones de música",
+      "pending_song_title": "Cargando lista de reproducción",
+      "pending_song_message": "Obteniendo pistas de la lista"
+    },
+    "search": {
+      "pending_title": "Cargando búsqueda de YouTube",
+      "pending_message": "Preparando el servicio de búsqueda"
+    },
+    "settings": {
+      "pending_title": "Cargando ajustes",
+      "pending_message": "Obteniendo diagnósticos del sistema y estado de salud"
+    },
+    "error": {
+      "title": "Error al cargar la página",
+      "message": "Ocurrió un error inesperado al cargar esta ruta.",
+      "go_playlists": "Ir a listas de reproducción"
+    },
+    "app_error": {
+      "title": "Algo salió mal",
+      "description": "La aplicación encontró un error inesperado.",
+      "message": "Ocurrió un error inesperado en la aplicación.",
+      "reload_app": "Recargar Aplicación"
+    }
+  },
+  "settings": {
+    "title": "Ajustes",
+    "subtitle": "Administra la configuración de la aplicación y el diagnóstico del sistema",
+    "refresh_status": "Actualizar Estado",
+    "tab_general": "General",
+    "tab_appearance": "Apariencia",
+    "status_badge_issue": "Problema",
+    "status_tooltip_issues": "Ajustes • {{count}} problema del sistema detectado",
+    "status_tooltip_issues_plural": "Ajustes • {{count}} problemas del sistema detectados",
+    "status_tooltip_update": "Ajustes • Actualización disponible: v{{version}}",
+    "status_tooltip_idle": "Ajustes y estado del sistema",
+    "language_title": "Idioma",
+    "language_desc": "Selecciona el idioma de visualización de la aplicación",
+    "language_en": "English",
+    "language_es": "Español",
+    "tabs": {
+      "general": {
+        "title": "General",
+        "app_and_releases": {
+          "title": "Aplicación y Versiones",
+          "description": "Versión del entorno instalada y canal de actualización automática",
+          "status": {
+            "checking": "Buscando actualizaciones...",
+            "updated": "Al día",
+            "available": "Actualización disponible",
+            "downloading": "Descargando actualización",
+            "installing": "Instalando actualización",
+            "download_complete": "Descarga completada",
+            "error": "Error al buscar actualizaciones"
+          },
+          "version": {
+            "title": "Versión Actual",
+            "link": "Novedades en: {{version}}",
+            "ready_to_install": "¡La nueva versión {{version}} está lista para instalar!"
+          },
+          "actions": {
+            "install_version": "Instalar {{version}}",
+            "updating": "Actualizando...",
+            "installing": "Instalando...",
+            "updating_percentage": "Actualizando {{percent}}%",
+            "downloading_app": "Descargando actualización de la aplicación...",
+            "installing_app": "Instalando actualización de la aplicación...",
+            "read_changes": "Lee las novedades mientras esperas",
+            "package": "Paquete:",
+            "simulate_update": "Simular Actualización",
+            "reset": "Reiniciar"
+          },
+          "buttons": {
+            "check": "Buscar Actualizaciones",
+            "download": "Descargar Actualización",
+            "restart": "Reiniciar e Instalar",
+            "view_release_notes": "Ver Notas de la Versión"
+          },
+          "dev_simulation": {
+            "title": "Simulación de Desarrollo",
+            "toggle": "Simular Estado de Actualización"
+          }
+        }
+      },
+      "appearance": {
+        "title": "Apariencia",
+        "appearance_and_interface": {
+          "title": "Apariencia e Interfaz",
+          "description": "Personaliza el aspecto, temas, posición del reproductor y colores de carpetas",
+          "interface_theme": {
+            "title": "Tema de la Interfaz",
+            "light": "Claro",
+            "dark": "Oscuro",
+            "system": "Sistema"
+          },
+          "player_position": {
+            "title": "Posición del Reproductor",
+            "bottom": "Abajo (Predeterminado)",
+            "top": "Arriba"
+          },
+          "folder_color": {
+            "title": "Color de Carpetas de Listas",
+            "description": "Elige un tema de color para las tarjetas de carpetas de reproducción",
+            "colors": {
+              "classic_blue": "Azul Clásico",
+              "emerald": "Esmeralda",
+              "indigo": "Índigo",
+              "rose": "Rosa",
+              "red": "Rojo",
+              "amber": "Ámbar",
+              "slate": "Pizarra",
+              "electric_violet": "Violeta Eléctrico",
+              "deep_purple": "Púrpura Profundo",
+              "fuchsia": "Fucsia",
+              "teal": "Verde Azulado",
+              "cyan": "Cian",
+              "sky": "Cielo",
+              "lime": "Lima",
+              "sunset_orange": "Naranja Atardecer",
+              "neutral_zinc": "Zinc Neutral"
+            },
+            "custom_hex": "HEX Personalizado:"
+          }
+        }
+      },
+      "system": {
+        "title": "Sistema",
+        "server_health": {
+          "title": "Servidor de Streaming Local",
+          "description": "Estado del servidor integrado y puerto de ejecución",
+          "port": "Puerto",
+          "binding_host": "Host de Enlace",
+          "allocated_port": "Puerto Asignado",
+          "base_endpoint": "Punto de Enlace Base",
+          "status": {
+            "online": "En línea",
+            "offline": "Desconectado"
+          }
+        },
+        "binaries_status": {
+          "title": "Binarios del Sistema",
+          "description": "Herramientas auxiliares para descargas y procesamiento de audio",
+          "open_folder": "Abrir Carpeta de Binarios",
+          "tools": {
+            "ytdlp": "yt-dlp",
+            "ffmpeg": "ffmpeg"
+          },
+          "ytdlp_desc": "Extracción de metadatos y streaming",
+          "ffmpeg_desc": "Decodificación de audio e inyección de metadatos",
+          "reinstall": "Reinstalar Herramientas",
+          "install": "Instalar Herramientas",
+          "installing_title": "Instalando Herramientas y Binarios",
+          "installing_desc": "Descargando y configurando yt-dlp y ffmpeg...",
+          "status": {
+            "installed": "Listo",
+            "missing": "Falta"
+          },
+          "install_all": "Instalar Herramientas Faltantes",
+          "installing": "Instalando..."
+        },
+        "directories_status": {
+          "title": "Almacenamiento y Directorios",
+          "description": "Gestiona la ubicación de la biblioteca musical, caché y descargas",
+          "base_storage": "Ubicación de Almacenamiento Base",
+          "active_root": "Raíz Activa",
+          "managed_directories": "Directorios Administrados",
+          "change_location": "Cambiar Ubicación",
+          "open": "Abrir",
+          "status": {
+            "exists": "Existe",
+            "missing": "Falta",
+            "writable": "Escritura",
+            "readonly": "Solo lectura"
+          },
+          "notice": {
+            "title": "Aviso",
+            "description": "Las modificaciones manuales a estos directorios pueden causar comportamientos inesperados o errores en la aplicación."
+          },
+          "confirm_dialog": {
+            "title": "Cambiar Ubicación de Almacenamiento",
+            "description": "Ongaku moverá tu biblioteca musical, listas de reproducción, caché y base de datos al directorio seleccionado:",
+            "warning": "Cualquier reproducción de audio activa se detendrá inmediatamente y los datos se migrarán a la nueva ubicación.",
+            "cancel": "Cancelar",
+            "confirm": "Cambiar Ubicación"
+          }
+        }
+      }
+    }
+  },
+  "playlists": {
+    "header": {
+      "title": "Listas de reproducción",
+      "count": "{{count}} lista",
+      "count_plural": "{{count}} listas",
+      "new_button": "Nueva Lista"
+    },
+    "search_placeholder": "Buscar listas de reproducción...",
+    "search_command_placeholder": "Escribe una lista...",
+    "search_command_heading": "Buscar listas de reproducción",
+    "search_songs_placeholder": "Buscar canciones...",
+    "search_songs_command_placeholder": "Escribe una canción...",
+    "search_songs_command_heading": "Buscar canciones",
+    "card": {
+      "songs_count": "{{count}} canción",
+      "songs_count_plural": "{{count}} canciones",
+      "tracks_count": "{{count}} pista",
+      "tracks_count_plural": "{{count}} pistas",
+      "empty": "Lista vacía"
+    },
+    "empty": {
+      "title": "Aún no hay listas de reproducción",
+      "description": "Crea tu primera lista para organizar tus canciones favoritas."
+    },
+    "songs_empty": {
+      "title": "No hay canciones en esta lista",
+      "description": "Importa archivos locales o busca en YouTube para agregar canciones"
+    },
+    "error": {
+      "title": "Error al cargar listas de reproducción",
+      "failed": "Error al cargar listas de reproducción."
+    },
+    "songs_error": {
+      "title": "Error al cargar canciones de la lista",
+      "failed": "Error al cargar canciones de la lista."
+    },
+    "dialogs": {
+      "new": {
+        "title": "Crear Nueva Lista",
+        "description": "Asigna un nombre a tu lista para empezar a organizar tu música.",
+        "placeholder": "ej. Música para Relajarse",
+        "field_label": "Nombre de la Lista",
+        "field_description": "Escribe el nombre de la lista para crearla",
+        "submit": "Crear Lista"
+      },
+      "rename": {
+        "title": "Renombrar Lista",
+        "description": "Ingresa un nuevo nombre para esta lista de reproducción.",
+        "placeholder": "Nombre de la lista",
+        "field_label": "Nombre de la Lista",
+        "field_description": "Elige un nuevo nombre para tu lista",
+        "submit": "Renombrar Lista"
+      },
+      "delete": {
+        "title": "Eliminar Lista",
+        "description": "¿Estás seguro de que deseas eliminar \"{{name}}\"? Las canciones en tu biblioteca principal no se borrarán.",
+        "warning": "¿Estás seguro de que deseas eliminar esta lista? Esta acción no se puede deshacer.",
+        "submit": "Eliminar Lista"
+      },
+      "delete_song": {
+        "title_library": "Eliminar canción \"{{name}}\"",
+        "title_playlist": "Quitar canción \"{{name}}\"",
+        "desc_library": "¿Estás seguro de que deseas eliminar esta canción? Esta acción no se puede deshacer y borrará permanentemente el archivo de audio de tu biblioteca.",
+        "desc_playlist": "¿Estás seguro de que deseas quitar esta canción de la lista? El archivo permanecerá en tu biblioteca.",
+        "action_library": "Eliminar",
+        "action_playlist": "Quitar"
+      },
+      "move_song": {
+        "title": "Mover canción \"{{name}}\"",
+        "description": "Elige la lista de reproducción de destino a la que mover esta canción.",
+        "select_placeholder": "Seleccionar lista de destino",
+        "no_other_playlists": "No hay otras listas disponibles. Crea otra lista primero para mover esta canción.",
+        "submit": "Mover"
+      }
+    },
+    "batch": {
+      "selected": "{{count}} canción seleccionada",
+      "selected_plural": "{{count}} canciones seleccionadas",
+      "select_song": "Seleccionar {{name}}",
+      "deselect_all": "Deseleccionar todo",
+      "move_to": "Mover a...",
+      "move_dialog_title": "Mover {{count}} canción",
+      "move_dialog_title_plural": "Mover {{count}} canciones",
+      "move_dialog_desc": "Elige la lista de reproducción de destino a la que mover esta canción.",
+      "move_dialog_desc_plural": "Elige la lista de reproducción de destino a la que mover estas canciones.",
+      "select_target_placeholder": "Seleccionar lista de destino",
+      "no_other_playlists": "No hay otras listas disponibles. Crea otra lista primero para mover canciones.",
+      "current_playlist_suffix": "{{name}} (Actual)",
+      "delete_dialog_title": "Eliminar {{count}} canción",
+      "delete_dialog_title_plural": "Eliminar {{count}} canciones",
+      "delete_dialog_desc": "¿Estás seguro de que deseas eliminar esta canción? Esta acción no se puede deshacer y borrará permanentemente los archivos de tu equipo.",
+      "delete_dialog_desc_plural": "¿Estás seguro de que deseas eliminar estas canciones? Esta acción no se puede deshacer y borrará permanentemente los archivos de tu equipo."
+    },
+    "actions": {
+      "open": "Abrir",
+      "play": "Reproducir Lista",
+      "rename": "Renombrar",
+      "delete": "Eliminar",
+      "open_folder": "Abrir Carpeta",
+      "move_to": "Mover a Lista",
+      "remove_from_playlist": "Quitar de la Lista",
+      "copy_title": "Copiar Título",
+      "import_songs": "Importar canciones",
+      "import_songs_tooltip": "Importar archivos de audio del equipo (.mp3, .m4a, .ogg, .flac)"
+    }
+  },
+  "library": {
+    "header": {
+      "title": "Biblioteca Musical",
+      "count": "{{count}} canción",
+      "count_plural": "{{count}} canciones",
+      "search_placeholder": "Buscar canciones en la biblioteca..."
+    },
+    "your_library": "Tu biblioteca",
+    "refresh_library": "Actualizar biblioteca",
+    "search_command_placeholder": "Escribe una canción, artista o álbum...",
+    "search_command_heading": "Buscar canciones de la biblioteca",
+    "stats": {
+      "tracks": "Canciones",
+      "playlists": "Listas"
+    },
+    "columns": {
+      "cover": "Port.",
+      "title": "Título",
+      "artist": "Artista",
+      "album": "Álbum",
+      "duration": "Duración",
+      "actions": "Acciones"
+    },
+    "empty": {
+      "title": "Tu biblioteca está vacía",
+      "description": "Importa música local o busca en YouTube para descargar temas a tu biblioteca."
+    },
+    "error": {
+      "title": "Error al cargar la biblioteca",
+      "failed": "Error al cargar pistas de la biblioteca."
+    }
+  },
+  "youtube_search": {
+    "placeholder": "Buscar canciones o pegar URL de YouTube...",
+    "search_button": "Buscar",
+    "download_button": "Descargar",
+    "downloading": "Descargando...",
+    "download_to": "Descargar en...",
+    "search_bar_placeholder": "Buscar en YouTube...",
+    "search_action": "Acción de Búsqueda",
+    "search_for": "Buscar \"{{query}}\" en YouTube",
+    "recent_searches": "Búsquedas Recientes",
+    "no_recent_searches": "Sin búsquedas recientes. Escribe para buscar en YouTube.",
+    "clear_history": "Borrar historial",
+    "no_results": "Sin resultados",
+    "no_results_desc": "No se encontraron canciones",
+    "error_generic": "Ocurrió un error inesperado al buscar canciones.",
+    "fetching_metadata": "Obteniendo canciones y metadatos de audio",
+    "empty": {
+      "title": "Buscar música en YouTube",
+      "description": "Escribe el título de una canción, artista o álbum para descubrir y reproducir música."
+    },
+    "loading": "Buscando temas...",
+    "results_count": "{{count}} resultado encontrado",
+    "results_count_plural": "{{count}} resultados encontrados",
+    "active_track": {
+      "no_active_track": "Sin pista activa",
+      "no_active_track_desc": "Selecciona cualquier canción de la búsqueda para ver detalles y escuchar.",
+      "stream": "Transmitir",
+      "playing": "Reproduciendo",
+      "loading_stream": "Cargando audio",
+      "fetching_audio": "Obteniendo fuente de audio de YouTube...",
+      "now_streaming": "Transmitiendo",
+      "live_active": "Reproducción de audio en directo activa"
+    },
+    "tools_missing": {
+      "title": "Herramientas Necesarias",
+      "description": "La búsqueda en YouTube y la reproducción de audio requieren binarios auxiliares (yt-dlp y ffmpeg). Este contenido no puede mostrarse hasta que estén instalados.",
+      "install_button": "Instalar Herramientas",
+      "installing": "Instalando herramientas..."
+    },
+    "actions": {
+      "open_youtube": "Abrir en YouTube",
+      "download_on": "Descargar en"
+    }
+  },
+  "download_queue": {
+    "title": "Cola de Descargas",
+    "downloads": "Descargas",
+    "download_failed": "Descarga fallida",
+    "empty": "No hay descargas activas en la cola.",
+    "clear_completed": "Limpiar Completadas",
+    "dialog_desc": "Descargas activas, en cola y completadas",
+    "cancel_download": "Cancelar descarga",
+    "remove_from_queue": "Quitar de la cola",
+    "tooltip_downloading": "Descargando ({{count}} activas)",
+    "tooltip_finished": "Descargas ({{count}} terminadas)",
+    "active_count": "{{count}} activa",
+    "queued_count": "{{count}} en cola",
+    "completed_count": "{{count}} completada",
+    "failed_count": "{{count}} fallida",
+    "saved_to": "Guardada en {{playlist}}",
+    "starting_download": "Iniciando descarga...",
+    "status": {
+      "queued": "En cola",
+      "downloading": "Descargando",
+      "converting": "Convirtiendo Audio",
+      "completed": "Completado",
+      "error": "Falló"
+    }
+  },
+  "player": {
+    "queue_title": "Cola de Reproducción",
+    "now_playing": "Reproduciendo Ahora",
+    "empty_queue": "La cola está vacía",
+    "empty_queue_desc": "Reproduce una pista de tu biblioteca o listas para comenzar a llenar la cola.",
+    "tracks_count": "{{count}} pista",
+    "tracks_count_plural": "{{count}} pistas",
+    "shuffle": "Aleatorio",
+    "shuffle_disable": "Desactivar aleatorio",
+    "repeat": "Repetir",
+    "repeat_disable": "Desactivar repetición",
+    "previous": "Anterior",
+    "previous_track": "Pista anterior",
+    "next": "Siguiente",
+    "next_track": "Siguiente pista",
+    "play": "Reproducir",
+    "pause": "Pausar",
+    "mute": "Silenciar",
+    "unmute": "Reactivar Sonido",
+    "volume": "Volumen",
+    "volume_settings": "Ajustes de volumen",
+    "seek": "Buscar posición",
+    "rewind_10s": "Retroceder 10s",
+    "forward_10s": "Adelantar 10s"
+  },
+  "toasts": {
+    "config": {
+      "update_error": "Error al actualizar la configuración",
+      "storage_changed": "Ubicación de almacenamiento cambiada con éxito",
+      "storage_change_error": "No se pudo cambiar la ubicación de almacenamiento",
+      "open_folder_error": "No se pudo abrir la carpeta: {{path}}",
+      "select_dir_error": "No se pudo seleccionar el directorio"
+    },
+    "playlists": {
+      "created_success": "Lista de reproducción creada con éxito",
+      "already_exists": "Ya existe una lista de reproducción con este nombre",
+      "invalid_name": "Nombre de lista no válido",
+      "renamed_success": "Lista de reproducción renombrada con éxito",
+      "name_unchanged": "El nombre de la lista no ha cambiado",
+      "deleted_success": "Lista de reproducción eliminada con éxito",
+      "delete_error": "Ocurrió un error al eliminar la lista de reproducción",
+      "rename_error": "Ocurrió un error al renombrar la lista de reproducción",
+      "create_error": "Ocurrió un error al crear la lista de reproducción"
+    },
+    "songs": {
+      "moved_success": "Canción movida con éxito",
+      "same_playlist": "La canción ya está en esta lista de reproducción",
+      "already_in_playlist": "Ya existe una canción con este título en la lista de destino",
+      "file_locked": "El archivo de audio está en uso. Detén la reproducción e intenta de nuevo.",
+      "move_error": "Ocurrió un error al mover la canción",
+      "deleted_success": "Canción eliminada con éxito",
+      "delete_error": "No se pudo eliminar la canción",
+      "copied_title": "Título de la canción copiado al portapapeles",
+      "copy_error": "No se pudo copiar el título de la canción al portapapeles",
+      "playback_error": "Ocurrió un error al reproducir la canción",
+      "media_offline": "El servidor de medios está desconectado. No se pueden reproducir pistas locales.",
+      "opened_folder": "Carpeta abierta para \"{{name}}\"",
+      "open_folder_error": "Error al abrir la carpeta de la lista",
+      "importing_progress": "Importando canciones: {{current}}/{{total}} ({{imported}} añadidas)...",
+      "imported_success": "Se importó 1 canción con éxito",
+      "imported_success_plural": "Se importaron {{count}} canciones con éxito",
+      "import_error": "Ocurrió un error al importar canciones",
+      "batch_deleted": "{{count}} canción quitada de la lista",
+      "batch_deleted_plural": "{{count}} canciones quitadas de la lista",
+      "batch_deleted_library": "{{count}} canción eliminada con éxito",
+      "batch_deleted_library_plural": "{{count}} canciones eliminadas con éxito",
+      "batch_delete_error": "No se pudieron eliminar {{count}} canción(es)",
+      "batch_moved": "{{count}} canción movida a \"{{target}}\"",
+      "batch_moved_plural": "{{count}} canciones movidas a \"{{target}}\"",
+      "batch_move_error": "No se pudieron mover {{count}} canción(es)",
+      "already_in_target": "Las canciones seleccionadas ya están en \"{{target}}\"",
+      "stream_load_error": "No se pudo cargar el streaming de audio.",
+      "playback_stopped_multiple": "Reproducción detenida. No se pudieron cargar varias pistas.",
+      "cannot_play_song": "No se puede reproducir \"{{name}}\"",
+      "open_browser_error": "No se pudo abrir el navegador para YouTube",
+      "stream_expired": "No se pudo reproducir el audio de YouTube. Es posible que el enlace haya caducado."
+    },
+    "tools": {
+      "installed_success": "Herramientas instaladas con éxito (yt-dlp y ffmpeg)",
+      "install_error": "Ocurrió un error al descargar las herramientas",
+      "open_folder_error": "No se pudo abrir la carpeta de binarios"
+    },
+    "downloads": {
+      "added_single_for_playlist": "\"{{title}}\" añadida a la cola de descargas para \"{{playlist}}\"",
+      "added_for_playlist": "Se añadió {{count}} canción a la cola de descargas para \"{{playlist}}\"",
+      "added_for_playlist_plural": "Se añadieron {{count}} canciones a la cola de descargas para \"{{playlist}}\"",
+      "added_to_queue": "Se añadió {{count}} canción a la cola de descargas",
+      "added_to_queue_plural": "Se añadieron {{count}} canciones a la cola de descargas",
+      "saved_success": "\"{{title}}\" guardada en {{playlist}}",
+      "download_failed": "Error en la descarga"
+    },
+    "updater": {
+      "checking": "Buscando actualizaciones...",
+      "downloading": "Descargando actualización. Por favor espera...",
+      "installed_success": "¡Actualización instalada con éxito! Reiniciando aplicación...",
+      "update_error": "Error al actualizar la aplicación. Inténtalo de nuevo.",
+      "notes_error": "No se pudieron abrir las notas de la versión en el navegador"
+    }
+  }
+}

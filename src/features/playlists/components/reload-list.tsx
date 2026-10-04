@@ -12,7 +12,10 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { useQuery } from "@tanstack/react-query"
 import { invoke } from "@tauri-apps/api/core"
 
+import { useTranslation } from "react-i18next"
+
 export function PlaylistsReloadList() {
+  const { t } = useTranslation()
   const { isPending, isRefetching, refetch } = useQuery(playlistsQueryOpts())
   const isLoading = isPending || isRefetching
 
@@ -44,7 +47,7 @@ export function PlaylistsReloadList() {
         }
       />
       <TooltipContent>
-        <p>Refresh playlists</p>
+        <p>{t('common.refresh')}</p>
       </TooltipContent>
     </Tooltip>
   )

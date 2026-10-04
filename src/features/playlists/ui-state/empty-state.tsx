@@ -12,11 +12,14 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import { CreatePlaylistDialog } from '@/features/playlists/components/new-playlist'
 import { cn } from 'cn'
 
+import { useTranslation } from 'react-i18next'
+
 export interface PlaylistsEmptyStateProps {
   className?: string
 }
 
 export function PlaylistsEmptyState({ className }: PlaylistsEmptyStateProps) {
+  const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
 
   return (
@@ -31,9 +34,9 @@ export function PlaylistsEmptyState({ className }: PlaylistsEmptyStateProps) {
           <EmptyMedia variant='icon'>
             <HugeiconsIcon icon={FolderIcon} />
           </EmptyMedia>
-          <EmptyTitle>No playlists found</EmptyTitle>
+          <EmptyTitle>{t('playlists.empty.title')}</EmptyTitle>
           <EmptyDescription>
-            Create a new playlist to organize your music library
+            {t('playlists.empty.description')}
           </EmptyDescription>
         </EmptyHeader>
 
@@ -46,7 +49,7 @@ export function PlaylistsEmptyState({ className }: PlaylistsEmptyStateProps) {
               icon={PlusIcon}
               className='size-4'
             />
-            <span>Create playlist</span>
+            <span>{t('playlists.header.new_button')}</span>
           </Button>
         </div>
       </Empty>

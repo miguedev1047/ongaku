@@ -12,14 +12,20 @@ import { RouteSection } from "@/components/ui/route-section"
 import { RoutePendingState, RouteErrorState } from "@/components/route-ui-state"
 import { createFileRoute } from "@tanstack/react-router"
 import { librarySongsQueryOpts } from "@/shared/queries/library"
+import { useTranslation } from "react-i18next"
+
+function LibraryPending() {
+  const { t } = useTranslation()
+  return (
+    <RoutePendingState
+      title={t("routes.library.pending_title")}
+      message={t("routes.library.pending_message")}
+    />
+  )
+}
 
 export const Route = createFileRoute("/library/")({
-  pendingComponent: () => (
-    <RoutePendingState
-      title="Loading library"
-      message="Fetching your tracks and statistics"
-    />
-  ),
+  pendingComponent: LibraryPending,
   errorComponent: RouteErrorState,
   loader: ({ context }) => {
     context.queryClient.query(librarySongsQueryOpts())

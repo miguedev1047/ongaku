@@ -6,8 +6,10 @@ import {
   PlayerNextButton
 } from "@/components/ui/player"
 import { Kbd } from "@/components/ui/kbd"
+import { useTranslation } from "react-i18next"
 
 export function StreamingControls() {
+  const { t } = useTranslation()
   const isLoading = useStreamingPlayerStore((s) => s.playerState === "loading")
   const isPlaying = useStreamingPlayerStore((s) => s.playerState == "playing")
   const progress = useStreamingPlayerStore((s) => s.progress)
@@ -26,7 +28,7 @@ export function StreamingControls() {
   return (
     <PlayerControls>
       <PlayerPreviousButton
-        tooltip="Rewind 10s"
+        tooltip={t("player.rewind_10s")}
         shortcut={<Kbd>←</Kbd>}
         onClick={handlePrevious}
         disabled={isLoading}
@@ -37,7 +39,7 @@ export function StreamingControls() {
         onClick={togglePlay}
       />
       <PlayerNextButton
-        tooltip="Forward 10s"
+        tooltip={t("player.forward_10s")}
         shortcut={<Kbd>→</Kbd>}
         onClick={handleNext}
         disabled={isLoading}

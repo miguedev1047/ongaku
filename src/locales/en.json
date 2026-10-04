@@ -1,0 +1,540 @@
+{
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "rename": "Rename",
+    "close": "Close",
+    "open": "Open",
+    "loading": "Loading...",
+    "error": "Error",
+    "search": "Search",
+    "alpha": "Alpha",
+    "refresh": "Refresh",
+    "actions": "Actions",
+    "retry": "Retry",
+    "confirm": "Confirm",
+    "remove": "Remove",
+    "unknown_artist": "Unknown Artist",
+    "unknown_album": "Unknown Album",
+    "select_all_songs": "Select all songs",
+    "please_wait": "Please wait a moment",
+    "error_loading_songs": "Error loading songs"
+  },
+  "sidebar": {
+    "library": "Library",
+    "playlists": "Playlists",
+    "search": "YouTube Search",
+    "settings": "Settings",
+    "navigation": {
+      "label": "Navigation",
+      "routes": {
+        "library": "Library",
+        "playlists": "Playlists",
+        "search": "YouTube Search",
+        "settings": "Settings"
+      }
+    }
+  },
+  "routes": {
+    "library": {
+      "pending_title": "Loading library",
+      "pending_message": "Fetching your tracks and statistics"
+    },
+    "playlists": {
+      "pending_title": "Loading playlists",
+      "pending_message": "Fetching your music collections",
+      "pending_song_title": "Loading playlist",
+      "pending_song_message": "Fetching playlist tracks"
+    },
+    "search": {
+      "pending_title": "Loading YouTube Search",
+      "pending_message": "Preparing search service"
+    },
+    "settings": {
+      "pending_title": "Loading settings",
+      "pending_message": "Fetching system diagnostics and health status"
+    },
+    "error": {
+      "title": "Failed to load page",
+      "message": "An unexpected error occurred while loading this route.",
+      "go_playlists": "Go to Playlists"
+    },
+    "app_error": {
+      "title": "Something went wrong",
+      "description": "The application encountered an unexpected error.",
+      "message": "An unexpected error occurred in the application.",
+      "reload_app": "Reload App"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage application configuration and system diagnostics",
+    "refresh_status": "Refresh Status",
+    "tab_general": "General",
+    "tab_appearance": "Appearance",
+    "status_badge_issue": "Issue",
+    "status_tooltip_issues": "Settings • {{count}} system issue detected",
+    "status_tooltip_issues_plural": "Settings • {{count}} system issues detected",
+    "status_tooltip_update": "Settings • Update available: v{{version}}",
+    "status_tooltip_idle": "Settings & System Status",
+    "language_title": "Language",
+    "language_desc": "Select the display language for the application",
+    "language_en": "English",
+    "language_es": "Español",
+    "tabs": {
+      "general": {
+        "title": "General",
+        "app_and_releases": {
+          "title": "Application & Releases",
+          "description": "Installed runtime version and automatic updater channel",
+          "status": {
+            "checking": "Checking for updates...",
+            "updated": "Up to date",
+            "available": "Update Available",
+            "downloading": "Downloading Update",
+            "installing": "Installing Update",
+            "download_complete": "Download Complete",
+            "error": "Update Check Failed"
+          },
+          "version": {
+            "title": "Current Version",
+            "link": "What's new in: {{version}}",
+            "ready_to_install": "New version {{version}} is ready to install!"
+          },
+          "actions": {
+            "install_version": "Install {{version}}",
+            "updating": "Updating...",
+            "installing": "Installing...",
+            "updating_percentage": "Updating {{percent}}%",
+            "downloading_app": "Downloading application update...",
+            "installing_app": "Installing application update...",
+            "read_changes": "Read what's changing while you wait",
+            "package": "Package:",
+            "simulate_update": "Simulate Update",
+            "reset": "Reset"
+          },
+          "buttons": {
+            "check": "Check for Updates",
+            "download": "Download Update",
+            "restart": "Restart & Install",
+            "view_release_notes": "View Release Notes"
+          },
+          "dev_simulation": {
+            "title": "Development Simulation",
+            "toggle": "Simulate Update State"
+          }
+        }
+      },
+      "appearance": {
+        "title": "Appearance",
+        "appearance_and_interface": {
+          "title": "Appearance & Interface",
+          "description": "Customize the look, themes, player position, and folder colors of the app",
+          "interface_theme": {
+            "title": "Interface Theme",
+            "light": "Light",
+            "dark": "Dark",
+            "system": "System"
+          },
+          "player_position": {
+            "title": "Player Position",
+            "bottom": "Bottom (Default)",
+            "top": "Top"
+          },
+          "folder_color": {
+            "title": "Playlist Folder Color",
+            "description": "Choose a color theme for playlist folder cards across the app",
+            "colors": {
+              "classic_blue": "Classic Blue",
+              "emerald": "Emerald",
+              "indigo": "Indigo",
+              "rose": "Rose",
+              "red": "Red",
+              "amber": "Amber",
+              "slate": "Slate",
+              "electric_violet": "Electric Violet",
+              "deep_purple": "Deep Purple",
+              "fuchsia": "Fuchsia",
+              "teal": "Teal",
+              "cyan": "Cyan",
+              "sky": "Sky",
+              "lime": "Lime",
+              "sunset_orange": "Sunset Orange",
+              "neutral_zinc": "Neutral Zinc"
+            },
+            "custom_hex": "Custom HEX:"
+          }
+        }
+      },
+      "system": {
+        "title": "System",
+        "server_health": {
+          "title": "Local Streaming Server",
+          "description": "Embedded media streaming server status and runtime port",
+          "port": "Port",
+          "binding_host": "Binding Host",
+          "allocated_port": "Allocated Port",
+          "base_endpoint": "Base Endpoint",
+          "status": {
+            "online": "Online",
+            "offline": "Offline"
+          }
+        },
+        "binaries_status": {
+          "title": "System Binaries",
+          "description": "Helper tools for downloading and audio processing",
+          "open_folder": "Open Binaries Folder",
+          "tools": {
+            "ytdlp": "yt-dlp",
+            "ffmpeg": "ffmpeg"
+          },
+          "ytdlp_desc": "Metadata & stream extraction",
+          "ffmpeg_desc": "Audio decoding & metadata injection",
+          "reinstall": "Reinstall Tools",
+          "install": "Install Tools",
+          "installing_title": "Installing Tools & Binaries",
+          "installing_desc": "Downloading and setting up yt-dlp & ffmpeg...",
+          "status": {
+            "installed": "Ready",
+            "missing": "Missing"
+          },
+          "install_all": "Install Missing Tools",
+          "installing": "Installing..."
+        },
+        "directories_status": {
+          "title": "Storage & Directories",
+          "description": "Manage the music library, cache, and downloads storage location",
+          "base_storage": "Base Storage Location",
+          "active_root": "Active Root",
+          "managed_directories": "Managed Directories",
+          "change_location": "Change Location",
+          "open": "Open",
+          "status": {
+            "exists": "Exists",
+            "missing": "Missing",
+            "writable": "Writable",
+            "readonly": "Read-Only"
+          },
+          "notice": {
+            "title": "Notice",
+            "description": "Manual modifications to these directories may cause unexpected behavior or app errors."
+          },
+          "confirm_dialog": {
+            "title": "Change Storage Location",
+            "description": "Ongaku will move your music library, playlists, cache, and database to the selected directory:",
+            "warning": "Any active audio playback will be stopped immediately, and data will be migrated to the new location.",
+            "cancel": "Cancel",
+            "confirm": "Change Location"
+          }
+        }
+      }
+    }
+  },
+  "playlists": {
+    "header": {
+      "title": "Playlists",
+      "count": "{{count}} playlist",
+      "count_plural": "{{count}} playlists",
+      "new_button": "New Playlist"
+    },
+    "search_placeholder": "Search playlists...",
+    "search_command_placeholder": "Type a playlist...",
+    "search_command_heading": "Search playlists",
+    "search_songs_placeholder": "Search songs...",
+    "search_songs_command_placeholder": "Type a song...",
+    "search_songs_command_heading": "Search songs",
+    "card": {
+      "songs_count": "{{count}} song",
+      "songs_count_plural": "{{count}} songs",
+      "tracks_count": "{{count}} track",
+      "tracks_count_plural": "{{count}} tracks",
+      "empty": "Empty playlist"
+    },
+    "empty": {
+      "title": "No playlists created yet",
+      "description": "Create your first playlist to organize your favorite songs."
+    },
+    "songs_empty": {
+      "title": "No songs in this playlist",
+      "description": "Import local audio files or search YouTube to add songs here"
+    },
+    "error": {
+      "title": "Error loading playlists",
+      "failed": "Failed to load playlists."
+    },
+    "songs_error": {
+      "title": "Error loading playlist songs",
+      "failed": "Failed to load playlist songs."
+    },
+    "dialogs": {
+      "new": {
+        "title": "Create New Playlist",
+        "description": "Give your playlist a name to start organizing your music.",
+        "placeholder": "e.g. Chill Vibes",
+        "field_label": "Playlist Name",
+        "field_description": "Type the playlist name to create it",
+        "submit": "Create Playlist"
+      },
+      "rename": {
+        "title": "Rename Playlist",
+        "description": "Enter a new name for this playlist.",
+        "placeholder": "Playlist name",
+        "field_label": "Playlist Name",
+        "field_description": "Choose a new name for your playlist",
+        "submit": "Rename Playlist"
+      },
+      "delete": {
+        "title": "Delete Playlist",
+        "description": "Are you sure you want to delete \"{{name}}\"? Songs in your main library will not be deleted.",
+        "warning": "Are you sure you want to delete this playlist? This action cannot be undone.",
+        "submit": "Delete Playlist"
+      },
+      "delete_song": {
+        "title_library": "Delete song \"{{name}}\"",
+        "title_playlist": "Remove song \"{{name}}\"",
+        "desc_library": "Are you sure you want to delete this song? This action cannot be undone and will permanently remove the audio file from your library.",
+        "desc_playlist": "Are you sure you want to remove this song from the playlist? The file will remain in your library.",
+        "action_library": "Delete",
+        "action_playlist": "Remove"
+      },
+      "move_song": {
+        "title": "Move song \"{{name}}\"",
+        "description": "Choose the target playlist to move this song into.",
+        "select_placeholder": "Select target playlist",
+        "no_other_playlists": "No other playlists available. Create another playlist first to move this song.",
+        "submit": "Move"
+      }
+    },
+    "batch": {
+      "selected": "{{count}} song selected",
+      "selected_plural": "{{count}} songs selected",
+      "select_song": "Select {{name}}",
+      "deselect_all": "Deselect all",
+      "move_to": "Move to...",
+      "move_dialog_title": "Move {{count}} song",
+      "move_dialog_title_plural": "Move {{count}} songs",
+      "move_dialog_desc": "Choose the target playlist to move this song into.",
+      "move_dialog_desc_plural": "Choose the target playlist to move these songs into.",
+      "select_target_placeholder": "Select target playlist",
+      "no_other_playlists": "No other playlists available. Create another playlist first to move songs.",
+      "current_playlist_suffix": "{{name}} (Current)",
+      "delete_dialog_title": "Delete {{count}} song",
+      "delete_dialog_title_plural": "Delete {{count}} songs",
+      "delete_dialog_desc": "Are you sure you want to delete this song? This action cannot be undone and will permanently remove the files from your computer.",
+      "delete_dialog_desc_plural": "Are you sure you want to delete these songs? This action cannot be undone and will permanently remove the files from your computer."
+    },
+    "actions": {
+      "open": "Open",
+      "play": "Play Playlist",
+      "rename": "Rename",
+      "delete": "Delete",
+      "open_folder": "Open Folder",
+      "move_to": "Move to Playlist",
+      "remove_from_playlist": "Remove from Playlist",
+      "copy_title": "Copy Title",
+      "import_songs": "Import songs",
+      "import_songs_tooltip": "Import audio files from computer (.mp3, .m4a, .ogg, .flac)"
+    }
+  },
+  "library": {
+    "header": {
+      "title": "Music Library",
+      "count": "{{count}} song",
+      "count_plural": "{{count}} songs",
+      "search_placeholder": "Search library songs..."
+    },
+    "your_library": "Your Library",
+    "refresh_library": "Refresh library",
+    "search_command_placeholder": "Type a song, artist, or album...",
+    "search_command_heading": "Search library songs",
+    "stats": {
+      "tracks": "Tracks",
+      "playlists": "Playlists"
+    },
+    "columns": {
+      "cover": "Cover",
+      "title": "Title",
+      "artist": "Artist",
+      "album": "Album",
+      "duration": "Time",
+      "actions": "Actions"
+    },
+    "empty": {
+      "title": "Your library is empty",
+      "description": "Import local music or search YouTube to download tracks to your library."
+    },
+    "error": {
+      "title": "Error loading library",
+      "failed": "Failed to load library tracks."
+    }
+  },
+  "youtube_search": {
+    "placeholder": "Search songs or paste a YouTube URL...",
+    "search_button": "Search",
+    "download_button": "Download",
+    "downloading": "Downloading...",
+    "download_to": "Download to...",
+    "search_bar_placeholder": "Search YouTube...",
+    "search_action": "Search Action",
+    "search_for": "Search for \"{{query}}\" on YouTube",
+    "recent_searches": "Recent Searches",
+    "no_recent_searches": "No recent searches. Type to search YouTube.",
+    "clear_history": "Clear history",
+    "no_results": "No results",
+    "no_results_desc": "There are no songs results",
+    "error_generic": "An unexpected error occurred while searching songs.",
+    "fetching_metadata": "Fetching tracks and audio metadata",
+    "empty": {
+      "title": "Search music on YouTube",
+      "description": "Type a song title, artist, or album to discover and stream music."
+    },
+    "loading": "Searching tracks...",
+    "results_count": "Found {{count}} result",
+    "results_count_plural": "Found {{count}} results",
+    "active_track": {
+      "no_active_track": "No active track",
+      "no_active_track_desc": "Select any song from search to view details and stream.",
+      "stream": "Stream",
+      "playing": "Playing",
+      "loading_stream": "Loading audio stream",
+      "fetching_audio": "Fetching YouTube audio source...",
+      "now_streaming": "Now Streaming",
+      "live_active": "Live audio playback active"
+    },
+    "tools_missing": {
+      "title": "Tools Required",
+      "description": "YouTube search and audio playback require auxiliary binaries (yt-dlp and ffmpeg). This content cannot be displayed until they are installed.",
+      "install_button": "Install Tools",
+      "installing": "Installing tools..."
+    },
+    "actions": {
+      "open_youtube": "Open on YouTube",
+      "download_on": "Download on"
+    }
+  },
+  "download_queue": {
+    "title": "Download Queue",
+    "downloads": "Downloads",
+    "download_failed": "Download failed",
+    "empty": "No active downloads in queue.",
+    "clear_completed": "Clear Completed",
+    "dialog_desc": "Active, queued and completed downloads",
+    "cancel_download": "Cancel download",
+    "remove_from_queue": "Remove from queue",
+    "tooltip_downloading": "Downloading ({{count}} active)",
+    "tooltip_finished": "Downloads ({{count}} finished)",
+    "active_count": "{{count}} active",
+    "queued_count": "{{count}} queued",
+    "completed_count": "{{count}} completed",
+    "failed_count": "{{count}} failed",
+    "saved_to": "Saved to {{playlist}}",
+    "starting_download": "Starting download...",
+    "status": {
+      "queued": "Queued",
+      "downloading": "Downloading",
+      "converting": "Converting Audio",
+      "completed": "Completed",
+      "error": "Failed"
+    }
+  },
+  "player": {
+    "queue_title": "Play Queue",
+    "now_playing": "Now Playing",
+    "empty_queue": "Queue is empty",
+    "empty_queue_desc": "Play a track from your library or playlists to start filling the queue.",
+    "tracks_count": "{{count}} track",
+    "tracks_count_plural": "{{count}} tracks",
+    "shuffle": "Shuffle",
+    "shuffle_disable": "Disable shuffle",
+    "repeat": "Repeat",
+    "repeat_disable": "Disable loop",
+    "previous": "Previous",
+    "previous_track": "Previous track",
+    "next": "Next",
+    "next_track": "Next track",
+    "play": "Play",
+    "pause": "Pause",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "volume": "Volume",
+    "volume_settings": "Volume settings",
+    "seek": "Seek",
+    "rewind_10s": "Rewind 10s",
+    "forward_10s": "Forward 10s"
+  },
+  "toasts": {
+    "config": {
+      "update_error": "Failed to update configuration",
+      "storage_changed": "Storage location changed successfully",
+      "storage_change_error": "Failed to change storage location",
+      "open_folder_error": "Failed to open folder: {{path}}",
+      "select_dir_error": "Failed to select directory"
+    },
+    "playlists": {
+      "created_success": "Playlist created successfully",
+      "already_exists": "A playlist with this name already exists",
+      "invalid_name": "Invalid playlist name",
+      "renamed_success": "Playlist renamed successfully",
+      "name_unchanged": "Playlist name is unchanged",
+      "deleted_success": "Playlist removed successfully",
+      "delete_error": "An error occurred while deleting the playlist",
+      "rename_error": "An error occurred while renaming the playlist",
+      "create_error": "An error occurred while creating the playlist"
+    },
+    "songs": {
+      "moved_success": "Song moved successfully",
+      "same_playlist": "Song is already in this playlist",
+      "already_in_playlist": "A song with this title is already in the target playlist",
+      "file_locked": "The audio file is in use. Please stop playback and retry.",
+      "move_error": "An error occurred while moving the song",
+      "deleted_success": "Song removed successfully",
+      "delete_error": "Failed to remove song",
+      "copied_title": "Song title copied to clipboard",
+      "copy_error": "Failed to copy song title to clipboard",
+      "playback_error": "An error occurred while playing the song",
+      "media_offline": "Media server is offline. Cannot play local tracks.",
+      "opened_folder": "Opened folder for \"{{name}}\"",
+      "open_folder_error": "Error opening playlist folder",
+      "importing_progress": "Importing songs: {{current}}/{{total}} ({{imported}} added)...",
+      "imported_success": "Imported {{count}} song successfully",
+      "imported_success_plural": "Imported {{count}} songs successfully",
+      "import_error": "An error occurred while importing songs",
+      "batch_deleted": "{{count}} song removed from playlist",
+      "batch_deleted_plural": "{{count}} songs removed from playlist",
+      "batch_deleted_library": "{{count}} song deleted successfully",
+      "batch_deleted_library_plural": "{{count}} songs deleted successfully",
+      "batch_delete_error": "Failed to delete {{count}} song(s)",
+      "batch_moved": "{{count}} song moved to \"{{target}}\"",
+      "batch_moved_plural": "{{count}} songs moved to \"{{target}}\"",
+      "batch_move_error": "Failed to move {{count}} song(s)",
+      "already_in_target": "Selected songs are already in \"{{target}}\"",
+      "stream_load_error": "Failed to load streaming audio.",
+      "playback_stopped_multiple": "Playback stopped. Multiple tracks could not be loaded.",
+      "cannot_play_song": "Cannot play \"{{name}}\"",
+      "open_browser_error": "Could not open web browser for YouTube",
+      "stream_expired": "Failed to stream audio from YouTube. The link might have expired."
+    },
+    "tools": {
+      "installed_success": "Tools installed successfully (yt-dlp & ffmpeg)",
+      "install_error": "An error occurred while downloading tools",
+      "open_folder_error": "Failed to open binaries folder"
+    },
+    "downloads": {
+      "added_single_for_playlist": "\"{{title}}\" added to download queue for \"{{playlist}}\"",
+      "added_for_playlist": "Added {{count}} song to download queue for \"{{playlist}}\"",
+      "added_for_playlist_plural": "Added {{count}} songs to download queue for \"{{playlist}}\"",
+      "added_to_queue": "Added {{count}} song to download queue",
+      "added_to_queue_plural": "Added {{count}} songs to download queue",
+      "saved_success": "\"{{title}}\" saved to {{playlist}}",
+      "download_failed": "Download failed"
+    },
+    "updater": {
+      "checking": "Checking for updates...",
+      "downloading": "Downloading update. Please wait...",
+      "installed_success": "Update installed successfully! Restarting app...",
+      "update_error": "Failed to update the app. Please try again.",
+      "notes_error": "Could not open release notes in your browser"
+    }
+  }
+}

@@ -22,12 +22,14 @@ import { Show } from '@/components/utility/show'
 import { YoutubeSongActions } from '@/features/youtube-search/components'
 import { cn } from 'cn'
 import { DotmSquare1, DotmSquare18 } from '@/components/loaders'
+import { useTranslation } from 'react-i18next'
 
 interface YoutubeSongInfoProps {
   className?: string
 }
 
 export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
+  const { t } = useTranslation()
   const currentTrack = useStreamingPlayerStore((state) => state.currentTrack)
   const isPlaying = useStreamingPlayerStore(
     (state) => state.playerState === 'playing',
@@ -51,9 +53,9 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
             <EmptyMedia variant='icon'>
               <HugeiconsIcon icon={Music01Icon} />
             </EmptyMedia>
-            <EmptyTitle>No active track</EmptyTitle>
+            <EmptyTitle>{t('youtube_search.active_track.no_active_track')}</EmptyTitle>
             <EmptyDescription>
-              Select any song from search to view details and stream.
+              {t('youtube_search.active_track.no_active_track_desc')}
             </EmptyDescription>
           </EmptyHeader>
         </Empty>
@@ -64,7 +66,7 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
   const thumbnailSrc =
     !imageError && currentTrack.thumbnail ? currentTrack.thumbnail : null
   const playButtonVariant = isPlaying ? 'default' : 'outline'
-  const playButtonLabel = isPlaying ? 'Pause' : 'Play'
+  const playButtonLabel = isPlaying ? t('player.pause') : t('player.play')
   const playButtonIcon = isPlaying ? PauseIcon : PlayIcon
 
   return (
@@ -105,7 +107,7 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
               icon={YoutubeIcon}
               className='size-2.5'
             />
-            <span>Stream</span>
+            <span>{t('youtube_search.active_track.stream')}</span>
           </Badge>
 
           <Show when={isPlaying}>
@@ -121,7 +123,7 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
                 speed={1.5}
                 className='text-primary'
               />
-              <span>Playing</span>
+              <span>{t('youtube_search.active_track.playing')}</span>
             </Badge>
           </Show>
         </div>
@@ -187,10 +189,10 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
             </div>
             <div className='flex flex-col min-w-0'>
               <span className='font-medium text-foreground text-xs leading-none truncate'>
-                Loading audio stream
+                {t('youtube_search.active_track.loading_stream')}
               </span>
               <span className='text-[10px] text-muted-foreground mt-1 leading-none truncate'>
-                Fetching YouTube audio source...
+                {t('youtube_search.active_track.fetching_audio')}
               </span>
             </div>
           </div>
@@ -211,10 +213,10 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
             </div>
             <div className='flex flex-col min-w-0'>
               <span className='font-medium text-foreground text-xs leading-none truncate'>
-                Now Streaming
+                {t('youtube_search.active_track.now_streaming')}
               </span>
               <span className='text-[10px] text-muted-foreground mt-1 leading-none truncate'>
-                Live audio playback active
+                {t('youtube_search.active_track.live_active')}
               </span>
             </div>
           </div>

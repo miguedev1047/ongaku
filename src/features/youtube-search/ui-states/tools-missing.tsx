@@ -12,6 +12,7 @@ import { AlertIcon, Download01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Show } from '@/components/utility/show'
 import { RouteSection } from '@/components/ui/route-section'
+import { useTranslation } from 'react-i18next'
 
 interface InstallActionProps {
   isPending: boolean
@@ -19,6 +20,8 @@ interface InstallActionProps {
 }
 
 function InstallAction({ isPending, onInstall }: InstallActionProps) {
+  const { t } = useTranslation()
+
   return (
     <Show
       when={!isPending}
@@ -29,7 +32,7 @@ function InstallAction({ isPending, onInstall }: InstallActionProps) {
           className='gap-2'
         >
           <Spinner className='size-3.5' />
-          Installing tools...
+          {t('youtube_search.tools_missing.installing')}
         </Button>
       }
     >
@@ -42,7 +45,7 @@ function InstallAction({ isPending, onInstall }: InstallActionProps) {
           icon={Download01Icon}
           className='size-3.5'
         />
-        Install Tools
+        {t('youtube_search.tools_missing.install_button')}
       </Button>
     </Show>
   )
@@ -52,6 +55,8 @@ export function YoutubeToolsMissing({
   isPending,
   onInstall,
 }: InstallActionProps) {
+  const { t } = useTranslation()
+
   return (
     <RouteSection className='flex items-center justify-center select-none'>
       <Empty className='border border-border/40 bg-card/30 max-w-lg w-full'>
@@ -65,17 +70,9 @@ export function YoutubeToolsMissing({
           />
         </EmptyMedia>
         <EmptyHeader>
-          <EmptyTitle>Tools Required</EmptyTitle>
+          <EmptyTitle>{t('youtube_search.tools_missing.title')}</EmptyTitle>
           <EmptyDescription>
-            YouTube search and audio playback require auxiliary binaries (
-            <span className='font-mono text-foreground font-semibold'>
-              yt-dlp
-            </span>{' '}
-            and{' '}
-            <span className='font-mono text-foreground font-semibold'>
-              ffmpeg
-            </span>
-            ). This content cannot be displayed until they are installed.
+            {t('youtube_search.tools_missing.description')}
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>

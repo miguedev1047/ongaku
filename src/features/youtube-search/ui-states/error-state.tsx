@@ -8,7 +8,9 @@ import {
 import { AlertIcon, RefreshIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Button } from "@/components/ui/button"
+import { Show } from "@/components/utility/show"
 import { cn } from "cn"
+import { useTranslation } from "react-i18next"
 
 interface YoutubeSearchErrorProps {
   error?: unknown
@@ -21,12 +23,14 @@ export function YoutubeSearchError({
   reset,
   className
 }: YoutubeSearchErrorProps) {
+  const { t } = useTranslation()
+
   const errorMessage =
     error instanceof Error
       ? error.message
       : typeof error === "string"
         ? error
-        : "An unexpected error occurred while searching songs."
+        : t("youtube_search.error_generic")
 
   return (
     <div
@@ -43,12 +47,12 @@ export function YoutubeSearchError({
               className="size-6 text-destructive"
             />
           </EmptyMedia>
-          <EmptyTitle>Error loading songs</EmptyTitle>
+          <EmptyTitle>{t("common.error_loading_songs")}</EmptyTitle>
           <EmptyDescription className="max-w-md">
             {errorMessage}
           </EmptyDescription>
         </EmptyHeader>
-        {reset && (
+        <Show when={Boolean(reset)}>
           <Button
             size="sm"
             variant="outline"
@@ -59,9 +63,9 @@ export function YoutubeSearchError({
               icon={RefreshIcon}
               className="size-3.5"
             />
-            <span>Try again</span>
+            <span>{t("common.retry")}</span>
           </Button>
-        )}
+        </Show>
       </Empty>
     </div>
   )

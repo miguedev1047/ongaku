@@ -11,8 +11,10 @@ import {
 import { usePlaylistHero } from '@/features/playlist-songs/hooks/use-playlist-hero'
 import { PlaylistHeroActions } from '@/blocks/song-actions/playlists'
 import { PlaylistHeroCover } from '@/features/playlist-songs/components/hero-cover'
+import { useTranslation } from 'react-i18next'
 
 export function PlaylistSongHero() {
+  const { t } = useTranslation()
   const {
     playlistName,
     songs,
@@ -74,7 +76,9 @@ export function PlaylistSongHero() {
                   onClick={handlePlayPlaylist}
                   disabled={tracksCount === 0}
                   aria-label={
-                    isPlaylistPlaying ? 'Pause playlist' : 'Play playlist'
+                    isPlaylistPlaying
+                      ? t('player.pause')
+                      : t('playlists.actions.play')
                   }
                   className={cn(
                     'size-10 sm:size-12 rounded-lg shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer shrink-0',

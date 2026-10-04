@@ -1,5 +1,6 @@
 import { useState, Suspense } from "react"
 import { useSuspenseQuery } from "@tanstack/react-query"
+import { useTranslation } from "react-i18next"
 import { playlistsQueryOpts } from "@/shared/queries/playlists"
 import { Button } from "@/components/ui/button"
 import {
@@ -42,6 +43,7 @@ function MovePlaylistSelect({
   value: string
   onValueChange: (value: string | null) => void
 }) {
+  const { t } = useTranslation()
   const { data: playlists = [] } = useSuspenseQuery(playlistsQueryOpts())
   const otherPlaylists = playlists.filter((p) => p.name !== currentPlaylist)
   const hasNoOtherPlaylists = otherPlaylists.length === 0
@@ -53,14 +55,16 @@ function MovePlaylistSelect({
         onValueChange={onValueChange}
       >
         <SelectTrigger className="w-full">
-          <SelectValue placeholder="Select target playlist" />
+          <SelectValue placeholder={t("playlists.batch.select_target_placeholder")} />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectLabel>Playlists</SelectLabel>
+            <SelectLabel>{t("playlists.header.title")}</SelectLabel>
             {playlists.map((playlist) => {
               const isCurrent = playlist.name === currentPlaylist
-              const label = isCurrent ? `${playlist.name} (Current)` : playlist.name
+              const label = isCurrent
+                ? t("playlists.batch.current_playlist_suffix", { name: playlist.name })
+                : playlist.name
               return (
                 <SelectItem
                   key={playlist.name}
@@ -77,8 +81,7 @@ function MovePlaylistSelect({
 
       <Show when={hasNoOtherPlaylists}>
         <p className="text-xs text-muted-foreground">
-          No other playlists available. Create another playlist first to move
-          songs.
+          {t("playlists.batch.no_other_playlists")}
         </p>
       </Show>
     </div>
@@ -93,6 +96,7 @@ export function BatchMoveDialog({
   onConfirm,
   isProcessing
 }: BatchMoveDialogProps) {
+  const { t } = useTranslation()
   const [targetPlaylist, setTargetPlaylist] = useState<string>("")
 
   const handleSubmit = () => {
@@ -102,9 +106,6 @@ export function BatchMoveDialog({
 
   const isValidTarget =
     Boolean(targetPlaylist) && targetPlaylist !== currentPlaylistName
-
-  const songLabel = count === 1 ? "song" : "songs"
-  const thisSongLabel = count === 1 ? "this song" : "these songs"
 
   return (
     <Dialog
@@ -117,10 +118,20 @@ export function BatchMoveDialog({
       <DialogContent onClick={(e) => e.stopPropagation()}>
         <DialogHeader>
           <DialogTitle>
-            Move {count} {songLabel}
+            <Show
+              when={count === 1}
+              fallback={t("playlists.batch.move_dialog_title_plural", { count })}
+            >
+              {t("playlists.batch.move_dialog_title", { count })}
+            </Show>
           </DialogTitle>
           <DialogDescription>
-            Choose the target playlist to move {thisSongLabel} into.
+            <Show
+              when={count === 1}
+              fallback={t("playlists.batch.move_dialog_desc_plural")}
+            >
+              {t("playlists.batch.move_dialog_desc")}
+            </Show>
           </DialogDescription>
         </DialogHeader>
 
@@ -139,7 +150,7 @@ export function BatchMoveDialog({
                 variant="outline"
                 disabled={isProcessing}
               >
-                Cancel
+                {t("common.cancel")}
               </Button>
             }
           />
@@ -150,7 +161,7 @@ export function BatchMoveDialog({
             <Show when={isProcessing}>
               <Spinner />
             </Show>
-            Move
+            {t("playlists.dialogs.move_song.submit")}
           </Button>
         </DialogFooter>
       </DialogContent>

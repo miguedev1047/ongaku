@@ -14,6 +14,7 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { RouteSection } from "@/components/ui/route-section"
 import { Show } from "@/components/utility/show"
 import { cn } from "cn"
+import { useTranslation } from "react-i18next"
 
 export interface RouteErrorStateProps extends Partial<ErrorComponentProps> {
   title?: string
@@ -21,21 +22,23 @@ export interface RouteErrorStateProps extends Partial<ErrorComponentProps> {
   className?: string
 }
 
-function getErrorMessage(error: unknown, fallbackMessage?: string): string {
+function getErrorMessage(error: unknown, fallbackMessage?: string, defaultMessage?: string): string {
   if (fallbackMessage) return fallbackMessage
   if (error instanceof Error) return error.message
   if (typeof error === "string") return error
-  return "An unexpected error occurred while loading this route."
+  return defaultMessage || "An unexpected error occurred while loading this route."
 }
 
 export function RouteErrorState({
   error,
   reset,
-  title = "Failed to load page",
+  title,
   message,
   className
 }: RouteErrorStateProps) {
-  const displayMessage = getErrorMessage(error, message)
+  const { t } = useTranslation()
+  const displayTitle = title ?? t("routes.error.title")
+  const displayMessage = getErrorMessage(error, message, t("routes.error.message"))
 
   return (
     <RouteSection
@@ -56,7 +59,7 @@ export function RouteErrorState({
         </EmptyMedia>
 
         <EmptyHeader>
-          <EmptyTitle>{title}</EmptyTitle>
+          <EmptyTitle>{displayTitle}</EmptyTitle>
           <EmptyDescription className="line-clamp-3 text-xs">
             {displayMessage}
           </EmptyDescription>
@@ -75,7 +78,7 @@ export function RouteErrorState({
                   icon={RefreshIcon}
                   className="size-3.5"
                 />
-                <span>Try again</span>
+                <span>{t("common.retry")}</span>
               </Button>
             </Show>
 
@@ -90,7 +93,7 @@ export function RouteErrorState({
                 icon={Home01Icon}
                 className="size-3.5"
               />
-              <span>Go to Playlists</span>
+              <span>{t("routes.error.go_playlists")}</span>
             </Button>
           </div>
         </EmptyContent>

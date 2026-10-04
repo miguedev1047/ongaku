@@ -8,8 +8,10 @@ import { useUpdateConfig } from '@/features/settings/hooks/use-config'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Folder } from '@/components/ui/folder'
 import { FOLDER_COLOR_PRESETS } from '@/constants'
+import { useTranslation } from 'react-i18next'
 
 export function FolderColorOptions() {
+  const { t } = useTranslation()
   const { data: config } = useQuery(systemConfigQueryOpts())
   const updateConfig = useUpdateConfig()
 
@@ -37,11 +39,11 @@ export function FolderColorOptions() {
               className='size-3.5 text-muted-foreground'
             />
             <label className='text-xs font-medium text-foreground'>
-              Playlist Folder Color
+              {t('settings.tabs.appearance.appearance_and_interface.folder_color.title')}
             </label>
           </div>
           <p className='text-[11px] text-muted-foreground'>
-            Choose a color theme for playlist folder cards across the app
+            {t('settings.tabs.appearance.appearance_and_interface.folder_color.description')}
           </p>
         </div>
 
@@ -79,7 +81,7 @@ export function FolderColorOptions() {
                 style={{ backgroundColor: preset.color }}
               />
               <span className='text-xs font-medium truncate'>
-                {preset.label}
+                {t(preset.labelKey)}
               </span>
             </label>
           )
@@ -88,7 +90,9 @@ export function FolderColorOptions() {
 
       {/* Custom Hex Color Picker */}
       <div className='flex items-center gap-2.5 pt-1'>
-        <span className='text-xs text-muted-foreground'>Custom HEX:</span>
+        <span className='text-xs text-muted-foreground'>
+          {t('settings.tabs.appearance.appearance_and_interface.folder_color.custom_hex')}
+        </span>
         <div className='flex items-center gap-2'>
           <input
             type='color'

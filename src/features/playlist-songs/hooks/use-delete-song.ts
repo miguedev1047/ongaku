@@ -13,11 +13,14 @@ interface UseDeleteSongProps {
   onSuccess?: () => void
 }
 
+import { useTranslation } from "react-i18next"
+
 export function useDeleteSong({
   song,
   context = 'playlist',
   onSuccess,
 }: UseDeleteSongProps) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const currentSong = useLocalPlayerStore((state) => state.currentSong)
   const setCurrentSong = useLocalPlayerStore((state) => state.setCurrentSong)
@@ -37,12 +40,17 @@ export function useDeleteSong({
       })
     },
     onSuccess: (data) => {
-      if (data.code === 'ERROR') {
-        toast.error(data.message)
+      if (data.code === 'LOCKED') {
+        toast.error(t('toasts.songs.file_locked'))
         return
       }
 
-      toast.success(data.message)
+      if (data.code === 'ERROR') {
+        toast.error(t('toasts.songs.delete_error'))
+        return
+      }
+
+      toast.success(t('toasts.songs.deleted_success'))
 
       useLocalPlayerStore.getState().removeFromQueue(song.id)
 
@@ -77,11 +85,7 @@ export function useDeleteSong({
       onSuccess?.()
     },
     onError: () => {
-      toast.error(
-        context === 'library'
-          ? 'An error occurred while deleting the song'
-          : 'An error occurred while removing the song from the playlist'
-      )
+      toast.error(t('toasts.songs.delete_error'))
     },
   })
 

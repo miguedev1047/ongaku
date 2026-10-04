@@ -33,6 +33,8 @@ export interface PlaylistSongActionsProps {
   showLabel?: boolean
 }
 
+import { useTranslation } from 'react-i18next'
+
 export function PlaylistSongActions({
   song,
   size = 'icon',
@@ -40,6 +42,7 @@ export function PlaylistSongActions({
   className,
   showLabel = false,
 }: PlaylistSongActionsProps) {
+  const { t } = useTranslation()
   const {
     isPlaying,
     isDeleteDialogOpen,
@@ -59,12 +62,12 @@ export function PlaylistSongActions({
               size={size}
               variant={variant}
               onClick={(e) => e.stopPropagation()}
-              aria-label='Song actions'
+              aria-label={t('common.actions')}
               className={cn(className)}
             >
               <HugeiconsIcon icon={MoreHorizontalSquare01Icon} />
               <Show when={showLabel}>
-                <span>Actions</span>
+                <span>{t('common.actions')}</span>
               </Show>
             </Button>
           }
@@ -75,7 +78,7 @@ export function PlaylistSongActions({
           onClick={(e) => e.stopPropagation()}
         >
           <DropdownMenuGroup>
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuLabel>{t('common.actions')}</DropdownMenuLabel>
             <DropdownMenuSeparator />
 
             <DropdownMenuItem
@@ -87,12 +90,12 @@ export function PlaylistSongActions({
                 fallback={
                   <>
                     <HugeiconsIcon icon={PlayIcon} />
-                    <span>Play</span>
+                    <span>{t('player.play')}</span>
                   </>
                 }
               >
                 <HugeiconsIcon icon={PauseIcon} />
-                <span>Pause</span>
+                <span>{t('player.pause')}</span>
               </Show>
             </DropdownMenuItem>
 
@@ -103,7 +106,7 @@ export function PlaylistSongActions({
               className='cursor-pointer'
             >
               <HugeiconsIcon icon={FolderIcon} />
-              <span>Open folder</span>
+              <span>{t('playlists.actions.open_folder')}</span>
             </DropdownMenuItem>
 
             <DropdownMenuItem
@@ -111,7 +114,7 @@ export function PlaylistSongActions({
               className='cursor-pointer'
             >
               <HugeiconsIcon icon={FolderTransferIcon} />
-              <span>Move</span>
+              <span>{t('playlists.actions.move_to')}</span>
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />
@@ -122,7 +125,7 @@ export function PlaylistSongActions({
               className='cursor-pointer'
             >
               <HugeiconsIcon icon={Delete01Icon} />
-              <span>Remove from playlist</span>
+              <span>{t('playlists.actions.remove_from_playlist')}</span>
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>

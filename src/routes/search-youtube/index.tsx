@@ -8,15 +8,21 @@ import { YoutubeToolsMissing } from '@/features/youtube-search/ui-states'
 import { useBinaries } from '@/features/download-queue/hooks'
 import { Show } from '@/components/utility/show'
 import { RoutePendingState, RouteErrorState } from '@/components/route-ui-state'
+import { useTranslation } from 'react-i18next'
+
+function SearchPending() {
+  const { t } = useTranslation()
+  return (
+    <RoutePendingState
+      title={t('routes.search.pending_title')}
+      message={t('routes.search.pending_message')}
+    />
+  )
+}
 
 export const Route = createFileRoute('/search-youtube/')({
   component: RouteComponent,
-  pendingComponent: () => (
-    <RoutePendingState
-      title='Loading YouTube Search'
-      message='Preparing search service'
-    />
-  ),
+  pendingComponent: SearchPending,
   errorComponent: RouteErrorState,
   validateSearch: youtubeSearchSchema,
   loaderDeps: ({ search: { q } }) => ({ q }),

@@ -10,12 +10,14 @@ import {
 import { Button } from "@/components/ui/button"
 import { AlertIcon, RefreshIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
+import { useTranslation } from "react-i18next"
 
 interface ErrorActionsProps {
   reset?: () => void
 }
 
 function ErrorActions({ reset }: ErrorActionsProps) {
+  const { t } = useTranslation()
   const handleReload = () => {
     window.location.reload()
   }
@@ -33,14 +35,14 @@ function ErrorActions({ reset }: ErrorActionsProps) {
             icon={RefreshIcon}
             className="size-3.5"
           />
-          Try again
+          <span>{t("common.retry")}</span>
         </Button>
         <Button
           onClick={handleReload}
           variant="outline"
           size="sm"
         >
-          Reload App
+          {t("routes.app_error.reload_app")}
         </Button>
       </div>
     )
@@ -53,13 +55,13 @@ function ErrorActions({ reset }: ErrorActionsProps) {
         variant="outline"
         size="sm"
       >
-        Reload App
+        {t("routes.app_error.reload_app")}
       </Button>
     </div>
   )
 }
 
-function getErrorMessage(error: unknown): string {
+function getErrorMessage(error: unknown, defaultMessage: string): string {
   if (error instanceof Error) {
     return error.message
   }
@@ -68,11 +70,12 @@ function getErrorMessage(error: unknown): string {
     return error
   }
 
-  return "An unexpected error occurred in the application."
+  return defaultMessage
 }
 
 export function AppErrorState({ error, reset }: ErrorComponentProps) {
-  const message = getErrorMessage(error)
+  const { t } = useTranslation()
+  const message = getErrorMessage(error, t("routes.app_error.message"))
 
   return (
     <div className="w-full h-screen min-h-screen flex flex-col items-center justify-center p-6 bg-background text-foreground select-none">
@@ -88,9 +91,9 @@ export function AppErrorState({ error, reset }: ErrorComponentProps) {
         </EmptyMedia>
 
         <EmptyHeader>
-          <EmptyTitle className="text-base">Something went wrong</EmptyTitle>
+          <EmptyTitle className="text-base">{t("routes.app_error.title")}</EmptyTitle>
           <EmptyDescription>
-            The application encountered an unexpected error.
+            {t("routes.app_error.description")}
           </EmptyDescription>
         </EmptyHeader>
 

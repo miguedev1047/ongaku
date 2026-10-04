@@ -32,6 +32,8 @@ export interface LibrarySongActionsProps {
   showLabel?: boolean
 }
 
+import { useTranslation } from 'react-i18next'
+
 export function LibrarySongActions({
   song,
   size = 'icon',
@@ -39,6 +41,7 @@ export function LibrarySongActions({
   className,
   showLabel = false,
 }: LibrarySongActionsProps) {
+  const { t } = useTranslation()
   const {
     isPlaying,
     isDeleteDialogOpen,
@@ -58,12 +61,12 @@ export function LibrarySongActions({
               size={size}
               variant={variant}
               onClick={(e) => e.stopPropagation()}
-              aria-label='Song actions'
+              aria-label={t('common.actions')}
               className={cn(className)}
             >
               <HugeiconsIcon icon={MoreHorizontalSquare01Icon} />
               <Show when={showLabel}>
-                <span>Actions</span>
+                <span>{t('common.actions')}</span>
               </Show>
             </Button>
           }
@@ -83,12 +86,12 @@ export function LibrarySongActions({
                 fallback={
                   <>
                     <HugeiconsIcon icon={PlayIcon} />
-                    <span>Play</span>
+                    <span>{t('player.play')}</span>
                   </>
                 }
               >
                 <HugeiconsIcon icon={PauseIcon} />
-                <span>Pause</span>
+                <span>{t('player.pause')}</span>
               </Show>
             </DropdownMenuItem>
 
@@ -99,7 +102,7 @@ export function LibrarySongActions({
               className='cursor-pointer'
             >
               <HugeiconsIcon icon={FolderIcon} />
-              <span>Open folder</span>
+              <span>{t('playlists.actions.open_folder')}</span>
             </DropdownMenuItem>
 
             <DropdownMenuItem
@@ -107,7 +110,7 @@ export function LibrarySongActions({
               className='cursor-pointer'
             >
               <HugeiconsIcon icon={FolderTransferIcon} />
-              <span>Move</span>
+              <span>{t('playlists.actions.move_to')}</span>
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />
@@ -118,7 +121,7 @@ export function LibrarySongActions({
               className='cursor-pointer'
             >
               <HugeiconsIcon icon={Delete01Icon} />
-              <span>Delete</span>
+              <span>{t('playlists.actions.delete')}</span>
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>

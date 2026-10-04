@@ -15,7 +15,10 @@ import { Suspense } from 'react'
 import { PlaylistHeroActions } from '@/blocks/song-actions/playlists'
 import { PlaylistSongsReloadList } from '@/features/playlist-songs/components'
 
+import { useTranslation } from 'react-i18next'
+
 export function PlaylistSongHeader() {
+  const { t } = useTranslation()
   const { playlistName } = useParams({ from: '/playlists/$playlistName' })
 
   return (
@@ -30,7 +33,7 @@ export function PlaylistSongHeader() {
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink render={<Link to='/playlists' />}>
-                Playlists
+                {t('playlists.header.title')}
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />

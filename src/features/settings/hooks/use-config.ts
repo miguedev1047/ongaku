@@ -4,6 +4,8 @@ import { systemConfigQueryOpts, type TAppConfig } from '@/shared/queries/config'
 import { useActivePlayerStore } from '@/shared/stores/player/use-active-player'
 import { toast } from 'sonner'
 
+import i18n from '@/lib/i18n'
+
 export function useUpdateConfig() {
   const queryClient = useQueryClient()
 
@@ -31,7 +33,7 @@ export function useUpdateConfig() {
       if (context?.previous) {
         queryClient.setQueryData(configKey, context.previous)
       }
-      toast.error('Failed to update configuration')
+      toast.error(i18n.t('toasts.config.update_error'))
     },
     onSettled: () => {
       queryClient.invalidateQueries({
@@ -60,11 +62,13 @@ export function useChangeAppDir() {
       useActivePlayerStore.getState().resetActivePlayer()
       queryClient.setQueryData(systemConfigQueryOpts().queryKey, updatedConfig)
       queryClient.invalidateQueries()
-      toast.success('Storage location changed successfully')
+      toast.success(i18n.t('toasts.config.storage_changed'))
     },
     onError: (err) => {
       toast.error(
-        typeof err === 'string' ? err : 'Failed to change storage location',
+        typeof err === 'string'
+          ? err
+          : i18n.t('toasts.config.storage_change_error'),
       )
     },
   })

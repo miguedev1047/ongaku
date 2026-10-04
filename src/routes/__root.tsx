@@ -1,6 +1,5 @@
 import { Outlet, createRootRouteWithContext } from '@tanstack/react-router'
 import { type QueryClient } from '@tanstack/react-query'
-import { invoke } from '@tauri-apps/api/core'
 import { Suspense } from 'react'
 import { TanstackDevtool } from '@/components/tanstack-devtools'
 import { PlayerRoot } from '@/blocks/player-root'
@@ -12,12 +11,11 @@ import { DownloadQueueDialog } from '@/features/download-queue/components'
 import { useDownloadQueueListener } from '@/features/download-queue/hooks'
 import { SidebarInset } from '@/components/ui/sidebar'
 import { AppSidebar, AppSidebarProvider } from '@/blocks/app-sidebar'
-
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
-
 import { useQuery } from '@tanstack/react-query'
 import { Show } from '@/components/utility/show'
+import i18n from '@/lib/i18n'
 
 interface RouteContext {
   queryClient: QueryClient
@@ -27,10 +25,21 @@ interface RouteContext {
 export const Route = createRootRouteWithContext<RouteContext>()({
   component: RootComponent,
   beforeLoad: async ({ context }) => {
-    const serverPort = await invoke<number>('get_server_port')
-    context.queryClient.query(systemConfigQueryOpts())
-    context.queryClient.query(systemHealthQueryOpts())
-    return { serverPort }
+    const [config, health] = await Promise.all([
+      context.queryClient.query(systemConfigQueryOpts()),
+      context.queryClient.query(systemHealthQueryOpts()),
+    ])
+
+    const serverPort = health.serverPort
+
+    if (config?.lang && i18n.language !== config.lang) {
+      i18n.changeLanguage(config.lang)
+    }
+    if (config?.lang) {
+      document.documentElement.setAttribute('lang', config.lang)
+    }
+
+    return { serverPort, config, health }
   },
 })
 

@@ -5,8 +5,11 @@ import { useDownloadQueue } from "@/features/download-queue/hooks"
 import { useActivePlayerStore } from "@/shared/stores/player"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Download01Icon } from "@hugeicons/core-free-icons"
+import { useTranslation } from "react-i18next"
+import { cn } from "cn"
 
 export function DownloadQueueTrigger() {
+  const { t } = useTranslation()
   const {
     hasTasks,
     isDownloading,
@@ -27,17 +30,19 @@ export function DownloadQueueTrigger() {
     <Button
       variant={isDownloading ? "default" : "secondary"}
       size="sm"
-      className={`fixed right-4 ${bottomClass} z-40 shadow-lg gap-2 px-3 h-8 rounded-lg transition-all duration-200 ${
-        isDialogOpen ? "ring-2 ring-primary" : ""
-      }`}
+      className={cn(
+        "fixed right-4 z-40 shadow-lg gap-2 px-3 h-8 rounded-lg transition-all duration-200",
+        bottomClass,
+        isDialogOpen && "ring-2 ring-primary"
+      )}
       onClick={() => toggleDialog()}
     >
       <HugeiconsIcon
         icon={Download01Icon}
-        className={`size-4 ${isDownloading ? "animate-pulse" : ""}`}
+        className={cn("size-4", isDownloading && "animate-pulse")}
       />
       <span className="text-xs font-medium hidden sm:inline">
-        {isDownloading ? "Downloading..." : "Downloads"}
+        {isDownloading ? t("youtube_search.downloading") : t("download_queue.downloads")}
       </span>
 
       <Badge

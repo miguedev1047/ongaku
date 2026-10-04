@@ -11,6 +11,7 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { Button } from "@/components/ui/button"
 import { Show } from "@/components/utility/show"
 import { cn } from "cn"
+import { useTranslation } from "react-i18next"
 
 export interface PlaylistSongsErrorStateProps {
   error?: unknown
@@ -23,12 +24,14 @@ export function PlaylistSongsErrorState({
   reset,
   className
 }: PlaylistSongsErrorStateProps) {
+  const { t } = useTranslation()
+
   const errorMessage =
     error instanceof Error
       ? error.message
       : typeof error === "string"
         ? error
-        : "Failed to load playlist songs."
+        : t("playlists.songs_error.failed")
 
   return (
     <div
@@ -45,7 +48,7 @@ export function PlaylistSongsErrorState({
               className="size-6 text-destructive"
             />
           </EmptyMedia>
-          <EmptyTitle>Error loading playlist songs</EmptyTitle>
+          <EmptyTitle>{t("playlists.songs_error.title")}</EmptyTitle>
           <EmptyDescription className="max-w-md">
             {errorMessage}
           </EmptyDescription>
@@ -62,7 +65,7 @@ export function PlaylistSongsErrorState({
                 icon={RefreshIcon}
                 className="size-3.5"
               />
-              <span>Try again</span>
+              <span>{t("common.retry")}</span>
             </Button>
           </EmptyContent>
         </Show>

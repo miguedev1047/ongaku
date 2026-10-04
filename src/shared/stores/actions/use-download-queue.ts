@@ -1,15 +1,16 @@
-import { create } from "zustand"
-import { invoke } from "@tauri-apps/api/core"
-import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
-import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
-import { queryClient } from "@/lib/query"
-import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs"
-import { playlistsQueryOpts } from "@/shared/queries/playlists"
-import { librarySongsQueryOpts } from "@/shared/queries/library"
-import { toast } from "sonner"
+import { create } from 'zustand'
+import { invoke } from '@tauri-apps/api/core'
+import type { TYoutubeSearchResult } from '@/shared/types/youtube.types'
+import type { TPlaylistSong } from '@/shared/types/playlist-songs.types'
+import { queryClient } from '@/lib/query'
+import { playlistSongsQueryOpts } from '@/shared/queries/playlist-songs'
+import { playlistsQueryOpts } from '@/shared/queries/playlists'
+import { librarySongsQueryOpts } from '@/shared/queries/library'
+import { toast } from 'sonner'
+import i18n from '@/lib/i18n'
 
 export type DownloadTaskStatus =
-  "queued" | "downloading" | "completed" | "error" | "cancelled"
+  'queued' | 'downloading' | 'completed' | 'error' | 'cancelled'
 
 export interface DownloadProgressPayload {
   id: string
@@ -41,7 +42,7 @@ export interface DownloadQueueStore {
   // Actions
   toggleDialog: (open?: boolean) => void
   enqueue: (
-    items: { item: TYoutubeSearchResult; playlistName: string }[]
+    items: { item: TYoutubeSearchResult; playlistName: string }[],
   ) => void
   cancelTask: (id: string) => Promise<void>
   retryTask: (id: string) => void
@@ -61,7 +62,7 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
 
   toggleDialog: (open) => {
     set((state) => ({
-      isDialogOpen: typeof open === "boolean" ? open : !state.isDialogOpen
+      isDialogOpen: typeof open === 'boolean' ? open : !state.isDialogOpen,
     }))
   },
 
@@ -77,35 +78,52 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
         id,
         item,
         playlistName,
-        status: "queued",
+        status: 'queued',
         progress: 0,
         downloadedBytes: 0,
         totalBytes: 0,
-        queuedAt: Date.now()
+        queuedAt: Date.now(),
       }
       newIds.push(id)
     }
 
     set((state) => ({
       tasks: { ...state.tasks, ...newTasks },
-      taskOrder: [...state.taskOrder, ...newIds]
+      taskOrder: [...state.taskOrder, ...newIds],
     }))
 
     if (items.length === 1) {
       toast.info(
-        `"${items[0].item.title}" added to download queue for "${items[0].playlistName}"`
+        i18n.t('toasts.downloads.added_single_for_playlist', {
+          title: items[0].item.title,
+          playlist: items[0].playlistName,
+        }),
       )
     } else {
       const targetPlaylist = items[0]?.playlistName
       const allSamePlaylist = items.every(
-        (i) => i.playlistName === targetPlaylist
+        (i) => i.playlistName === targetPlaylist,
       )
       if (allSamePlaylist && targetPlaylist) {
         toast.info(
-          `Added ${items.length} songs to download queue for "${targetPlaylist}"`
+          items.length === 1
+            ? i18n.t('toasts.downloads.added_for_playlist', {
+                count: items.length,
+                playlist: targetPlaylist,
+              })
+            : i18n.t('toasts.downloads.added_for_playlist_plural', {
+                count: items.length,
+                playlist: targetPlaylist,
+              }),
         )
       } else {
-        toast.info(`Added ${items.length} songs to download queue`)
+        toast.info(
+          items.length === 1
+            ? i18n.t('toasts.downloads.added_to_queue', { count: items.length })
+            : i18n.t('toasts.downloads.added_to_queue_plural', {
+                count: items.length,
+              }),
+        )
       }
     }
 
@@ -116,7 +134,7 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
     const task = get().tasks[id]
     if (!task) return
 
-    if (task.status === "downloading") {
+    if (task.status === 'downloading') {
       set((state) => {
         if (!state.tasks[id]) return state
         return {
@@ -124,21 +142,21 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
             ...state.tasks,
             [id]: {
               ...state.tasks[id],
-              status: "cancelled",
-              error: "Download cancelled"
-            }
-          }
+              status: 'cancelled',
+              error: 'Download cancelled',
+            },
+          },
         }
       })
 
       try {
-        await invoke("cancel_download", { id })
+        await invoke('cancel_download', { id })
       } catch (err) {
-        console.error("Error cancelling download in Rust:", err)
+        console.error('Error cancelling download in Rust:', err)
       }
 
       get()._processQueue()
-    } else if (task.status === "queued") {
+    } else if (task.status === 'queued') {
       set((state) => {
         if (!state.tasks[id]) return state
         return {
@@ -146,10 +164,10 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
             ...state.tasks,
             [id]: {
               ...state.tasks[id],
-              status: "cancelled",
-              error: "Download cancelled"
-            }
-          }
+              status: 'cancelled',
+              error: 'Download cancelled',
+            },
+          },
         }
       })
       get()._processQueue()
@@ -165,13 +183,13 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
           ...state.tasks,
           [id]: {
             ...task,
-            status: "queued",
+            status: 'queued',
             progress: 0,
             downloadedBytes: 0,
             totalBytes: 0,
-            error: undefined
-          }
-        }
+            error: undefined,
+          },
+        },
       }
     })
     get()._processQueue()
@@ -182,7 +200,7 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
       const { [id]: _, ...restTasks } = state.tasks
       return {
         tasks: restTasks,
-        taskOrder: state.taskOrder.filter((taskId) => taskId !== id)
+        taskOrder: state.taskOrder.filter((taskId) => taskId !== id),
       }
     })
   },
@@ -191,7 +209,7 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
     set((state) => {
       const activeIds = state.taskOrder.filter((id) => {
         const t = state.tasks[id]
-        return t && (t.status === "downloading" || t.status === "queued")
+        return t && (t.status === 'downloading' || t.status === 'queued')
       })
       const activeTasks: Record<string, DownloadTask> = {}
       for (const id of activeIds) {
@@ -201,7 +219,7 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
       }
       return {
         tasks: activeTasks,
-        taskOrder: activeIds
+        taskOrder: activeIds,
       }
     })
   },
@@ -217,9 +235,9 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
             ...task,
             progress: payload.progress,
             downloadedBytes: payload.downloaded_bytes,
-            totalBytes: payload.total_bytes
-          }
-        }
+            totalBytes: payload.total_bytes,
+          },
+        },
       }
     })
   },
@@ -227,14 +245,14 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
   _processQueue: async () => {
     const state = get()
     const activeTasks = Object.values(state.tasks).filter(
-      (t) => t.status === "downloading"
+      (t) => t.status === 'downloading',
     )
     const availableSlots = state.concurrency - activeTasks.length
     if (availableSlots <= 0) return
 
     const nextTasks = state.taskOrder
       .map((id) => state.tasks[id])
-      .filter((t): t is DownloadTask => !!t && t.status === "queued")
+      .filter((t): t is DownloadTask => !!t && t.status === 'queued')
       .slice(0, availableSlots)
 
     if (nextTasks.length === 0) return
@@ -246,7 +264,7 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
         if (updated[task.id]) {
           updated[task.id] = {
             ...updated[task.id],
-            status: "downloading"
+            status: 'downloading',
           }
         }
       }
@@ -257,10 +275,10 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
     for (const task of nextTasks) {
       ;(async () => {
         try {
-          const song = await invoke<TPlaylistSong>("download_song", {
+          const song = await invoke<TPlaylistSong>('download_song', {
             id: task.id,
             url: task.item.url,
-            playlistName: task.playlistName
+            playlistName: task.playlistName,
           })
 
           set((prev) => {
@@ -270,43 +288,48 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
                 ...prev.tasks,
                 [task.id]: {
                   ...prev.tasks[task.id],
-                  status: "completed",
+                  status: 'completed',
                   progress: 1,
-                  resultSong: song
-                }
-              }
+                  resultSong: song,
+                },
+              },
             }
           })
 
           // Invalidate React Query cache so playlist and library update immediately
           queryClient.invalidateQueries({
-            queryKey: playlistSongsQueryOpts(task.playlistName).queryKey
+            queryKey: playlistSongsQueryOpts(task.playlistName).queryKey,
           })
           queryClient.invalidateQueries({
-            queryKey: playlistsQueryOpts().queryKey
+            queryKey: playlistsQueryOpts().queryKey,
           })
           queryClient.invalidateQueries({
-            queryKey: librarySongsQueryOpts().queryKey
+            queryKey: librarySongsQueryOpts().queryKey,
           })
 
           // Notify completed song
-          toast.success(`"${task.item.title}" saved to ${task.playlistName}`)
+          toast.success(
+            i18n.t('toasts.downloads.saved_success', {
+              title: task.item.title,
+              playlist: task.playlistName,
+            }),
+          )
 
           // Continue queue
           get()._processQueue()
         } catch (err: unknown) {
           const currentTask = get().tasks[task.id]
-          if (currentTask && currentTask.status === "cancelled") {
+          if (currentTask && currentTask.status === 'cancelled') {
             get()._processQueue()
             return
           }
 
           const errorMessage =
-            typeof err === "string"
+            typeof err === 'string'
               ? err
               : err instanceof Error
                 ? err.message
-                : "Download failed"
+                : i18n.t('toasts.downloads.download_failed')
 
           set((prev) => {
             if (!prev.tasks[task.id]) return prev
@@ -315,10 +338,10 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
                 ...prev.tasks,
                 [task.id]: {
                   ...prev.tasks[task.id],
-                  status: "error",
-                  error: errorMessage
-                }
-              }
+                  status: 'error',
+                  error: errorMessage,
+                },
+              },
             }
           })
 
@@ -327,5 +350,5 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
         }
       })()
     }
-  }
+  },
 }))

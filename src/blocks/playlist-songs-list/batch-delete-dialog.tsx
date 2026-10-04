@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -26,8 +27,7 @@ export function BatchDeleteDialog({
   onConfirm,
   isProcessing
 }: BatchDeleteDialogProps) {
-  const songLabel = count === 1 ? "song" : "songs"
-  const thisSongLabel = count === 1 ? "this song" : "these songs"
+  const { t } = useTranslation()
 
   return (
     <Dialog
@@ -37,11 +37,20 @@ export function BatchDeleteDialog({
       <DialogContent onClick={(e) => e.stopPropagation()}>
         <DialogHeader>
           <DialogTitle>
-            Delete {count} {songLabel}
+            <Show
+              when={count === 1}
+              fallback={t("playlists.batch.delete_dialog_title_plural", { count })}
+            >
+              {t("playlists.batch.delete_dialog_title", { count })}
+            </Show>
           </DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete {thisSongLabel}? This action cannot
-            be undone and will permanently remove the files from your computer.
+            <Show
+              when={count === 1}
+              fallback={t("playlists.batch.delete_dialog_desc_plural")}
+            >
+              {t("playlists.batch.delete_dialog_desc")}
+            </Show>
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -51,7 +60,7 @@ export function BatchDeleteDialog({
                 variant="outline"
                 disabled={isProcessing}
               >
-                Cancel
+                {t("common.cancel")}
               </Button>
             }
           />
@@ -63,7 +72,7 @@ export function BatchDeleteDialog({
             <Show when={isProcessing}>
               <Spinner />
             </Show>
-            Delete
+            {t("common.delete")}
           </Button>
         </DialogFooter>
       </DialogContent>

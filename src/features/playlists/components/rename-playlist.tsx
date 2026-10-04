@@ -27,11 +27,14 @@ interface RenamePlaylistProps {
   onOpenChange: (open: boolean) => void
 }
 
+import { useTranslation } from "react-i18next"
+
 export function RenamePlaylist({
   playlist,
   open,
   onOpenChange
 }: RenamePlaylistProps) {
+  const { t } = useTranslation()
   const { form, isPending } = useRenamePlaylist({
     playlist,
     open,
@@ -47,9 +50,9 @@ export function RenamePlaylist({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Rename playlist</DialogTitle>
+          <DialogTitle>{t('playlists.dialogs.rename.title')}</DialogTitle>
           <DialogDescription>
-            Enter a new name for "{playlist.name}".
+            {t('playlists.dialogs.rename.description')}
           </DialogDescription>
         </DialogHeader>
 
@@ -69,7 +72,9 @@ export function RenamePlaylist({
                   field.state.meta.isTouched && !field.state.meta.isValid
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Playlist Name</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>
+                      {t('playlists.dialogs.rename.field_label')}
+                    </FieldLabel>
                     <Input
                       id={field.name}
                       name={field.name}
@@ -77,12 +82,12 @@ export function RenamePlaylist({
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
-                      placeholder="New playlist name"
+                      placeholder={t('playlists.dialogs.rename.placeholder')}
                       autoComplete="off"
                       disabled={isPending}
                     />
                     <FieldDescription>
-                      Choose a new name for your playlist
+                      {t('playlists.dialogs.rename.field_description')}
                     </FieldDescription>
                     <Show when={isInvalid}>
                       <FieldError errors={field.state.meta.errors} />
@@ -95,7 +100,7 @@ export function RenamePlaylist({
         </form>
 
         <DialogFooter>
-          <DialogClose render={<Button variant="outline">Close</Button>} />
+          <DialogClose render={<Button variant="outline">{t('common.close')}</Button>} />
           <Button
             type="submit"
             form={formId}
@@ -104,7 +109,7 @@ export function RenamePlaylist({
             <Show when={isPending}>
               <Spinner />
             </Show>
-            Rename
+            {t('playlists.dialogs.rename.submit')}
           </Button>
         </DialogFooter>
       </DialogContent>

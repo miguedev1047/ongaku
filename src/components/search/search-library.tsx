@@ -16,8 +16,10 @@ import { useHotkey } from '@tanstack/react-hotkeys'
 import { CoverImage } from '@/components/cover-image'
 import { useSongUtils } from '@/hooks/use-song-utils'
 import { useActivePlayerStore } from '@/shared/stores/player'
+import { useTranslation } from 'react-i18next'
 
 export function SearchLibrary() {
+  const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const { data: songs = [] } = useSuspenseQuery(librarySongsQueryOpts())
 
@@ -39,7 +41,7 @@ export function SearchLibrary() {
           icon={Search01Icon}
           className='size-4'
         />
-        Search songs...
+        {t('playlists.search_songs_placeholder')}
         <Kbd className='ml-auto'>⌘K</Kbd>
       </Button>
 
@@ -51,7 +53,7 @@ export function SearchLibrary() {
           className='max-w-md rounded-lg border'
           shouldFilter={false}
         >
-          <CommandInput placeholder='Type a song, artist, or album...' />
+          <CommandInput placeholder={t('library.search_command_placeholder')} />
           <CommandVirtualList
             data={songs}
             filter={(song, search) => {
@@ -66,7 +68,7 @@ export function SearchLibrary() {
               return nameMatch || artistMatch || albumMatch
             }}
             className='h-[40vh]'
-            heading='Search library songs'
+            heading={t('library.search_command_heading')}
           >
             {(song) => {
               const handleSelectSong = () => {
@@ -93,7 +95,7 @@ export function SearchLibrary() {
                       {song.name}
                     </h2>
                     <p className='text-xs text-muted-foreground line-clamp-1'>
-                      {song.metadata.artist || 'Unknown Artist'}
+                      {song.metadata.artist || t('common.unknown_artist')}
                     </p>
                   </div>
                 </CommandItem>

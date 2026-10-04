@@ -1,5 +1,6 @@
 import { openUrl } from '@tauri-apps/plugin-opener'
 import { toast } from 'sonner'
+import i18n from '@/lib/i18n'
 
 const RELEASES_BASE_URL = 'https://github.com/miguedev1047/ongaku/releases'
 
@@ -25,6 +26,6 @@ export async function openReleaseNotes(version?: string): Promise<void> {
     await openUrl(url)
   } catch (error) {
     console.error('Failed to open release notes:', error)
-    toast.error('Could not open the release notes in your browser')
+    toast.error(i18n.t('toasts.updater.notes_error'))
   }
 }

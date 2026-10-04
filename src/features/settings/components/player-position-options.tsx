@@ -8,25 +8,27 @@ import {
 import { useQuery } from '@tanstack/react-query'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import { useUpdateConfig } from '@/features/settings/hooks/use-config'
+import { useTranslation } from 'react-i18next'
+
+export const PLAYER_POSITION_OPTIONS = [
+  {
+    id: 'bottom',
+    icon: AlignBoxBottomCenterIcon,
+    labelKey: 'settings.tabs.appearance.appearance_and_interface.player_position.bottom',
+  },
+  {
+    id: 'top',
+    icon: AlignBoxTopCenterIcon,
+    labelKey: 'settings.tabs.appearance.appearance_and_interface.player_position.top',
+  },
+] as const
 
 export function PlayerPositionOptions() {
+  const { t } = useTranslation()
   const { data: config } = useQuery(systemConfigQueryOpts())
   const updateConfig = useUpdateConfig()
 
   const currentPosition = config?.player_position ?? 'bottom'
-
-  const positionOptions = [
-    {
-      id: 'bottom',
-      label: 'Bottom (Default)',
-      icon: AlignBoxBottomCenterIcon,
-    },
-    {
-      id: 'top',
-      label: 'Top',
-      icon: AlignBoxTopCenterIcon,
-    },
-  ] as const
 
   const handleSelectPosition = (position: 'bottom' | 'top') => {
     updateConfig.mutate({ key: 'player_position', value: position })
@@ -35,10 +37,10 @@ export function PlayerPositionOptions() {
   return (
     <div className='space-y-2'>
       <label className='text-xs font-medium text-foreground'>
-        Player Position
+        {t('settings.tabs.appearance.appearance_and_interface.player_position.title')}
       </label>
       <div className='grid grid-cols-2 gap-2'>
-        {positionOptions.map((opt) => {
+        {PLAYER_POSITION_OPTIONS.map((opt) => {
           const isSelected = currentPosition === opt.id
 
           return (
@@ -57,7 +59,7 @@ export function PlayerPositionOptions() {
                 icon={opt.icon}
                 className='size-3.5'
               />
-              <span>{opt.label}</span>
+              <span>{t(opt.labelKey)}</span>
             </Button>
           )
         })}

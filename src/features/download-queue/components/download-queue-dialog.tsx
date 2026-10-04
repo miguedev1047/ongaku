@@ -21,8 +21,10 @@ import {
 } from "@hugeicons/core-free-icons"
 import { Link } from "@tanstack/react-router"
 import { Show } from "@/components/utility/show"
+import { useTranslation } from "react-i18next"
 
 export function DownloadQueueDialog() {
+  const { t } = useTranslation()
   const {
     allTasks,
     activeTasks,
@@ -58,7 +60,7 @@ export function DownloadQueueDialog() {
                 icon={Download01Icon}
                 className="size-4 text-primary"
               />
-              <span>Download Queue</span>
+              <span>{t("download_queue.title")}</span>
             </DialogTitle>
 
             <div className="flex items-center gap-1">
@@ -67,7 +69,9 @@ export function DownloadQueueDialog() {
                   variant="default"
                   className="text-[10px] px-1.5 py-0"
                 >
-                  {activeTasks.length} active
+                  {t("download_queue.active_count", {
+                    count: activeTasks.length
+                  })}
                 </Badge>
               </Show>
               <Show when={hasQueuedTasks}>
@@ -75,7 +79,9 @@ export function DownloadQueueDialog() {
                   variant="secondary"
                   className="text-[10px] px-1.5 py-0"
                 >
-                  {queuedTasks.length} queued
+                  {t("download_queue.queued_count", {
+                    count: queuedTasks.length
+                  })}
                 </Badge>
               </Show>
               <Show when={hasCompletedTasks}>
@@ -83,7 +89,9 @@ export function DownloadQueueDialog() {
                   variant="outline"
                   className="text-[10px] px-1.5 py-0 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
                 >
-                  {completedTasks.length} completed
+                  {t("download_queue.completed_count", {
+                    count: completedTasks.length
+                  })}
                 </Badge>
               </Show>
               <Show when={hasFailedTasks}>
@@ -91,7 +99,9 @@ export function DownloadQueueDialog() {
                   variant="destructive"
                   className="text-[10px] px-1.5 py-0"
                 >
-                  {failedTasks.length} failed
+                  {t("download_queue.failed_count", {
+                    count: failedTasks.length
+                  })}
                 </Badge>
               </Show>
             </div>
@@ -104,13 +114,13 @@ export function DownloadQueueDialog() {
               className="text-xs h-7 px-2 text-muted-foreground hover:text-foreground"
               onClick={clearFinished}
             >
-              Clear completed
+              {t("download_queue.clear_completed")}
             </Button>
           </Show>
         </DialogHeader>
 
         <DialogDescription className="sr-only">
-          Active, queued and completed downloads
+          {t("download_queue.dialog_desc")}
         </DialogDescription>
 
         {/* Task List */}
@@ -123,7 +133,7 @@ export function DownloadQueueDialog() {
                   icon={Download01Icon}
                   className="size-8 text-muted-foreground/40"
                 />
-                <span>No active downloads</span>
+                <span>{t("download_queue.empty")}</span>
               </div>
             }
           >
@@ -140,12 +150,12 @@ export function DownloadQueueDialog() {
               const hasDownloadedBytes = task.downloadedBytes > 0
               const isStarting = percent === 0
               const progressLabel = isStarting
-                ? "Starting download..."
+                ? t("download_queue.starting_download")
                 : `${percent}%`
               const sizeLabel = totalMb
                 ? `${downloadedMb} MB / ${totalMb} MB`
                 : `${downloadedMb} MB`
-              const errorMessage = task.error || "Download failed"
+              const errorMessage = task.error || t("download_queue.download_failed")
 
               if (task.status === "downloading") {
                 return (
@@ -175,7 +185,7 @@ export function DownloadQueueDialog() {
                         variant="ghost"
                         className="size-6 text-muted-foreground hover:text-destructive shrink-0"
                         onClick={() => cancelTask(task.id)}
-                        title="Cancel download"
+                        title={t("download_queue.cancel_download")}
                       >
                         <HugeiconsIcon
                           icon={MultiplicationSignIcon}
@@ -220,7 +230,7 @@ export function DownloadQueueDialog() {
                         variant="secondary"
                         className="text-[10px] text-muted-foreground shrink-0"
                       >
-                        Queued
+                        {t("download_queue.status.queued")}
                       </Badge>
                       <span className="text-[10px] text-muted-foreground truncate">
                         → {task.playlistName}
@@ -232,7 +242,7 @@ export function DownloadQueueDialog() {
                       variant="ghost"
                       className="size-6 text-muted-foreground hover:text-destructive shrink-0"
                       onClick={() => cancelTask(task.id)}
-                      title="Remove from queue"
+                      title={t("download_queue.remove_from_queue")}
                     >
                       <HugeiconsIcon
                         icon={MultiplicationSignIcon}
@@ -271,7 +281,9 @@ export function DownloadQueueDialog() {
                           className="text-primary hover:underline font-medium"
                           onClick={() => toggleDialog(false)}
                         >
-                          Saved to {task.playlistName}
+                          {t("download_queue.saved_to", {
+                            playlist: task.playlistName
+                          })}
                         </Link>
                       </div>
                     </div>
@@ -281,7 +293,7 @@ export function DownloadQueueDialog() {
                       variant="ghost"
                       className="size-6 text-muted-foreground hover:text-foreground shrink-0"
                       onClick={() => removeTask(task.id)}
-                      title="Remove"
+                      title={t("common.remove")}
                     >
                       <HugeiconsIcon
                         icon={MultiplicationSignIcon}
@@ -321,7 +333,7 @@ export function DownloadQueueDialog() {
                         icon={RefreshIcon}
                         className="size-3"
                       />
-                      <span>Retry</span>
+                      <span>{t("common.retry")}</span>
                     </Button>
 
                     <Button
@@ -329,7 +341,7 @@ export function DownloadQueueDialog() {
                       variant="ghost"
                       className="size-6 text-muted-foreground hover:text-foreground"
                       onClick={() => removeTask(task.id)}
-                      title="Remove"
+                      title={t("common.remove")}
                     >
                       <HugeiconsIcon
                         icon={MultiplicationSignIcon}

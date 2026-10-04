@@ -19,6 +19,8 @@ export interface ImportSongsButtonProps {
   showText?: boolean
 }
 
+import { useTranslation } from 'react-i18next'
+
 export function ImportSongsButton({
   playlistName,
   variant = 'outline',
@@ -26,6 +28,7 @@ export function ImportSongsButton({
   className,
   showText = false,
 }: ImportSongsButtonProps) {
+  const { t } = useTranslation()
   const { importSongs, isImporting } = useImportSongs({ playlistName })
 
   return (
@@ -38,7 +41,7 @@ export function ImportSongsButton({
             onClick={() => importSongs()}
             disabled={isImporting}
             className={cn('gap-1.5 text-xs cursor-pointer', className)}
-            aria-label='Import songs'
+            aria-label={t('playlists.actions.import_songs')}
           >
             <Show
               when={!isImporting}
@@ -50,13 +53,13 @@ export function ImportSongsButton({
               />
             </Show>
             <Show when={showText}>
-              <span>Import songs</span>
+              <span>{t('playlists.actions.import_songs')}</span>
             </Show>
           </Button>
         }
       />
       <TooltipContent side='bottom'>
-        <p>Import audio files from computer (.mp3, .m4a, .ogg, .flac)</p>
+        <p>{t('playlists.actions.import_songs_tooltip')}</p>
       </TooltipContent>
     </Tooltip>
   )

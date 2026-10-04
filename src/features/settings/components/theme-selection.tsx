@@ -4,16 +4,30 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import { Moon, Sun, ComputerIcon } from '@hugeicons/core-free-icons'
 import { useTheme } from '@/components/theme-provider'
 import { useUpdateConfig } from '@/features/settings/hooks/use-config'
+import { useTranslation } from 'react-i18next'
+
+export const THEME_OPTIONS = [
+  {
+    id: 'light',
+    icon: Sun,
+    labelKey: 'settings.tabs.appearance.appearance_and_interface.interface_theme.light',
+  },
+  {
+    id: 'dark',
+    icon: Moon,
+    labelKey: 'settings.tabs.appearance.appearance_and_interface.interface_theme.dark',
+  },
+  {
+    id: 'system',
+    icon: ComputerIcon,
+    labelKey: 'settings.tabs.appearance.appearance_and_interface.interface_theme.system',
+  },
+] as const
 
 export function ThemeSelection() {
+  const { t } = useTranslation()
   const { theme, setTheme } = useTheme()
   const updateConfig = useUpdateConfig()
-
-  const themeOptions = [
-    { id: 'light', label: 'Light', icon: Sun },
-    { id: 'dark', label: 'Dark', icon: Moon },
-    { id: 'system', label: 'System', icon: ComputerIcon },
-  ] as const
 
   const handleSelectTheme = (selectedTheme: 'light' | 'dark' | 'system') => {
     setTheme(selectedTheme)
@@ -23,10 +37,10 @@ export function ThemeSelection() {
   return (
     <div className='space-y-2'>
       <label className='text-xs font-medium text-foreground'>
-        Interface Theme
+        {t('settings.tabs.appearance.appearance_and_interface.interface_theme.title')}
       </label>
       <div className='grid grid-cols-3 gap-2'>
-        {themeOptions.map((opt) => {
+        {THEME_OPTIONS.map((opt) => {
           const isSelected = theme === opt.id
 
           return (
@@ -45,7 +59,7 @@ export function ThemeSelection() {
                 icon={opt.icon}
                 className='size-3.5'
               />
-              <span>{opt.label}</span>
+              <span>{t(opt.labelKey)}</span>
             </Button>
           )
         })}

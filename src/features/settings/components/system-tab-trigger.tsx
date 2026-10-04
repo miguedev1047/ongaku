@@ -4,6 +4,7 @@ import { Show } from '@/components/utility/show'
 import { AlertCircleIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useAppStatus } from '@/features/settings/hooks'
+import { useTranslation } from 'react-i18next'
 import { cn } from 'cn'
 import type { ComponentProps } from 'react'
 
@@ -11,6 +12,7 @@ export function SystemTabTrigger({
   className,
   ...props
 }: Omit<ComponentProps<typeof TabsTrigger>, 'value'>) {
+  const { t } = useTranslation()
   const { hasError, errorReasons } = useAppStatus()
 
   return (
@@ -30,7 +32,7 @@ export function SystemTabTrigger({
           className='size-3.5 text-destructive animate-pulse shrink-0'
         />
       </Show>
-      <span>System & Health</span>
+      <span>{t('settings.tabs.system.title')}</span>
       <Show when={hasError}>
         <Badge
           variant='destructive'

@@ -3,8 +3,10 @@ import { usePlayerMedia } from '@/blocks/local-player/hooks'
 import { useSongUtils } from '@/hooks/use-song-utils'
 import { useLocalPlayerStore } from '@/shared/stores/player'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 
 export function LocalPlayerElement() {
+  const { t } = useTranslation()
   const { songActive, isLoop, handleNextSong, handleTimeUpdate, setAudioRef } =
     usePlayerMedia()
   const { getSongUrl } = useSongUtils()
@@ -22,13 +24,13 @@ export function LocalPlayerElement() {
     failureCountRef.current += 1
 
     if (failureCountRef.current >= 3) {
-      toast.error('Playback stopped. Multiple tracks could not be loaded.')
+      toast.error(t('toasts.songs.playback_stopped_multiple'))
       useLocalPlayerStore.getState().setPlayerState('idle')
       failureCountRef.current = 0
       return
     }
 
-    toast.error(`Cannot play "${songActive.name}"`)
+    toast.error(t('toasts.songs.cannot_play_song', { name: songActive.name }))
     handleNextSong()
   }
 

@@ -16,17 +16,21 @@ export interface PlaylistHeroCoverProps {
   currentSong: TPlaylistSong | null
 }
 
+import { useTranslation } from 'react-i18next'
+
 export function PlaylistHeroCover({
   coverUrl,
   coverAlt,
   playlistName,
   tracksCount,
-  trackLabel,
+  trackLabel: _trackLabel,
   durationText,
   hasShowCover,
   isPlaylistPlaying,
   currentSong,
 }: PlaylistHeroCoverProps) {
+  const { t } = useTranslation()
+
   return (
     <div
       className={cn(
@@ -53,7 +57,7 @@ export function PlaylistHeroCover({
             'text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-muted-foreground',
           )}
         >
-          Playlist
+          {t('sidebar.navigation.routes.playlists')}
         </span>
         <h1
           className={cn(
@@ -69,7 +73,12 @@ export function PlaylistHeroCover({
           )}
         >
           <p>
-            {tracksCount} {trackLabel}
+            <Show
+              when={tracksCount === 1}
+              fallback={t('playlists.card.tracks_count_plural', { count: tracksCount })}
+            >
+              {t('playlists.card.tracks_count', { count: tracksCount })}
+            </Show>
           </p>
           <p>•</p>
           <p>{durationText}</p>
@@ -99,7 +108,7 @@ export function PlaylistHeroCover({
                     'font-semibold text-foreground shrink-0 text-[11px]',
                   )}
                 >
-                  Now playing:
+                  {t('player.now_playing')}:
                 </span>
                 <span
                   className={cn('text-[11px] text-muted-foreground truncate')}

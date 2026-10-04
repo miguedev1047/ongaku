@@ -16,6 +16,8 @@ import {
 import type { TPlaylistAction } from '@/shared/types/playlist-actions'
 import type { TPlaylist } from '@/shared/types/playlist.types'
 
+import { useTranslation } from 'react-i18next'
+
 interface UseRenamePlaylistProps {
   playlist: TPlaylist
   open: boolean
@@ -27,6 +29,7 @@ export function useRenamePlaylist({
   open,
   onSuccess,
 }: UseRenamePlaylistProps) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const playlistsQueryKey = playlistsQueryOpts().queryKey
   const navigate = useNavigate()
@@ -42,11 +45,19 @@ export function useRenamePlaylist({
     },
     onSuccess: (data, variables) => {
       if (data.code === 'ERROR') {
-        toast.error(data.message)
+        if (data.message.includes('already exists')) {
+          toast.error(t('toasts.playlists.already_exists'))
+        } else {
+          toast.error(t('toasts.playlists.invalid_name'))
+        }
         return
       }
 
-      toast.success(data.message)
+      if (data.message.includes('unchanged')) {
+        toast.info(t('toasts.playlists.name_unchanged'))
+      } else {
+        toast.success(t('toasts.playlists.renamed_success'))
+      }
       const trimmedNewName = variables.new_name.trim()
 
       // Seamlessly update active playlist name in player if it is currently playing
@@ -76,7 +87,7 @@ export function useRenamePlaylist({
     },
     onError: (err) => {
       console.log(err)
-      toast.error('An error occurred while renaming the playlist')
+      toast.error(t('toasts.playlists.rename_error'))
     },
   })
 

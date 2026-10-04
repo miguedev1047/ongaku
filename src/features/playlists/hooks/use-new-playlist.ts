@@ -13,7 +13,10 @@ interface UseNewPlaylistProps {
   onSuccess?: () => void
 }
 
+import { useTranslation } from "react-i18next"
+
 export function useNewPlaylist({ onSuccess }: UseNewPlaylistProps = {}) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const playlistsQueryKey = playlistsQueryOpts().queryKey
 
@@ -26,18 +29,22 @@ export function useNewPlaylist({ onSuccess }: UseNewPlaylistProps = {}) {
     },
     onSuccess: (data) => {
       if (data.code === "ERROR") {
-        toast.error(data.message)
+        if (data.message.includes("already exists")) {
+          toast.error(t("toasts.playlists.already_exists"))
+        } else {
+          toast.error(t("toasts.playlists.invalid_name"))
+        }
         return
       }
 
       form.reset()
       onSuccess?.()
 
-      toast.success(data.message)
+      toast.success(t("toasts.playlists.created_success"))
       queryClient.invalidateQueries({ queryKey: playlistsQueryKey })
     },
     onError: () => {
-      toast.error("An error occurred while creating the playlist")
+      toast.error(t("toasts.playlists.create_error"))
     }
   })
 

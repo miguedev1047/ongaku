@@ -6,14 +6,16 @@ import {
 import { Link } from "@tanstack/react-router"
 import { useAppStatus } from "@/features/settings/hooks"
 import { StatusIcon, StatusBadge, CollapsedIndicator } from '@/blocks/app-sidebar/components/settings-nav-status'
+import { useTranslation } from 'react-i18next'
 
 export function SettingsNav() {
+  const { t } = useTranslation()
   const { status, badgeText, tooltipText } = useAppStatus()
 
   return (
     <SidebarMenuItem>
       <SidebarMenuButton
-        tooltip={tooltipText}
+        tooltip={tooltipText || t('sidebar.settings')}
         render={
           <Link
             to="/settings"
@@ -28,7 +30,7 @@ export function SettingsNav() {
         )}
       >
         <StatusIcon status={status} />
-        <span className="truncate">Settings</span>
+        <span className="truncate">{t('sidebar.settings')}</span>
         <StatusBadge
           status={status}
           badgeText={badgeText}

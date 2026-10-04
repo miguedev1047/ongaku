@@ -4,6 +4,8 @@ import { Spinner } from "@/components/ui/spinner"
 import { Item, ItemActions, ItemContent, ItemMedia } from "@/components/ui/item"
 import { YoutubeIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
+import { useTranslation } from "react-i18next"
+import { Show } from "@/components/utility/show"
 
 interface YoutubeItemSkeletonProps {
   titleWidth?: string
@@ -63,10 +65,12 @@ export function YoutubeSearchSkeleton({
   count = 8,
   className
 }: YoutubeSearchSkeletonProps) {
+  const { t } = useTranslation()
+
   return (
     <ul
       className={cn("space-y-1 w-full", className)}
-      aria-label="Loading search results"
+      aria-label={t("youtube_search.loading")}
       aria-busy="true"
     >
       {Array.from({ length: count }).map((_, index) => {
@@ -93,10 +97,14 @@ export interface YoutubeLoadingSpinnerProps {
 }
 
 export function YoutubeLoadingSpinner({
-  message = "Searching YouTube...",
-  submessage = "Fetching tracks and audio metadata",
+  message,
+  submessage,
   className
 }: YoutubeLoadingSpinnerProps) {
+  const { t } = useTranslation()
+  const displayMessage = message ?? t("youtube_search.loading")
+  const displaySubmessage = submessage ?? t("youtube_search.fetching_metadata")
+
   return (
     <div
       className={cn(
@@ -116,13 +124,13 @@ export function YoutubeLoadingSpinner({
 
       <div className="flex flex-col items-center gap-1">
         <p className="text-sm font-medium tracking-tight text-foreground">
-          {message}
+          {displayMessage}
         </p>
-        {submessage && (
+        <Show when={Boolean(displaySubmessage)}>
           <p className="text-xs text-muted-foreground animate-pulse">
-            {submessage}
+            {displaySubmessage}
           </p>
-        )}
+        </Show>
       </div>
     </div>
   )

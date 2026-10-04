@@ -1,9 +1,9 @@
-import { create } from "zustand"
-import { useLocalPlayerStore } from "./use-local-player"
-import { useStreamingPlayerStore } from "./use-streaming-player"
-import type { PlaybackContext, ActivePlayerType } from "./types"
-import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
-import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
+import { create } from 'zustand'
+import { useLocalPlayerStore } from './use-local-player'
+import { useStreamingPlayerStore } from './use-streaming-player'
+import type { PlaybackContext, ActivePlayerType } from './types'
+import type { TPlaylistSong } from '@/shared/types/playlist-songs.types'
+import type { TYoutubeSearchResult } from '@/shared/types/youtube.types'
 
 interface ActivePlayerStore {
   activePlayer: ActivePlayerType
@@ -15,7 +15,7 @@ interface ActivePlayerStore {
   playSong: (
     song: TPlaylistSong,
     queueOrContext?: readonly TPlaylistSong[] | PlaybackContext,
-    context?: PlaybackContext
+    context?: PlaybackContext,
   ) => void
   playStream: (track: TYoutubeSearchResult) => void
 
@@ -29,7 +29,7 @@ interface ActivePlayerStore {
 
 export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => ({
   activePlayer: null,
-  activePlaylist: "",
+  activePlaylist: '',
   lastNonZeroVolume: 80,
 
   setActivePlayer: (type) => set({ activePlayer: type }),
@@ -52,8 +52,8 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => ({
       resolvedContext = context
     } else if (
       queueOrContext &&
-      typeof queueOrContext === "object" &&
-      "type" in queueOrContext
+      typeof queueOrContext === 'object' &&
+      'type' in queueOrContext
     ) {
       resolvedQueue = undefined
       resolvedContext = queueOrContext
@@ -63,17 +63,19 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => ({
     }
 
     // 3. Set song in local player store with context and queue
-    useLocalPlayerStore.getState().setCurrentSong(song, resolvedQueue, resolvedContext)
+    useLocalPlayerStore
+      .getState()
+      .setCurrentSong(song, resolvedQueue, resolvedContext)
 
     // 4. Mark active player as local and record active playlist / source
     const nextPlaylist =
-      resolvedContext?.type === "playlist"
+      resolvedContext?.type === 'playlist'
         ? resolvedContext.playlistName
-        : resolvedContext?.type === "library"
-          ? "Library"
-          : song?.playlist_name || ""
+        : resolvedContext?.type === 'library'
+          ? 'Library'
+          : song?.playlist_name || ''
 
-    set({ activePlayer: "local", activePlaylist: nextPlaylist })
+    set({ activePlayer: 'local', activePlaylist: nextPlaylist })
   },
 
   playStream: (track) => {
@@ -82,49 +84,49 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => ({
     if (localState.audioRef) {
       localState.audioRef.pause()
       localState.setCurrentSong(null)
-      localState.setPlayerState("paused")
+      localState.setPlayerState('paused')
     }
 
     // 2. Set current track in streaming player store
     useStreamingPlayerStore.getState().setCurrentTrack(track)
 
     // 3. Mark active player as streaming
-    set({ activePlayer: "streaming" })
+    set({ activePlayer: 'streaming' })
   },
 
   togglePlay: () => {
     const { activePlayer } = get()
-    if (activePlayer === "local") {
+    if (activePlayer === 'local') {
       const localState = useLocalPlayerStore.getState()
       const audioRef = localState.audioRef
       if (!audioRef || !localState.currentSong) return
 
-      if (localState.playerState === "playing") {
-        localState.setPlayerState("paused")
+      if (localState.playerState === 'playing') {
+        localState.setPlayerState('paused')
         audioRef.pause()
       } else {
-        localState.setPlayerState("playing")
+        localState.setPlayerState('playing')
         audioRef.play().catch(() => {})
       }
-    } else if (activePlayer === "streaming") {
+    } else if (activePlayer === 'streaming') {
       useStreamingPlayerStore.getState().togglePlay()
     }
   },
 
   seek: (deltaSeconds: number) => {
     const { activePlayer } = get()
-    if (activePlayer === "local") {
+    if (activePlayer === 'local') {
       const localState = useLocalPlayerStore.getState()
       const audioRef = localState.audioRef
       if (!audioRef) return
       const duration = localState.duration || audioRef.duration || 0
       const target = Math.max(
         0,
-        Math.min(duration, audioRef.currentTime + deltaSeconds)
+        Math.min(duration, audioRef.currentTime + deltaSeconds),
       )
       audioRef.currentTime = target
       localState.setProgress(target)
-    } else if (activePlayer === "streaming") {
+    } else if (activePlayer === 'streaming') {
       const streamingState = useStreamingPlayerStore.getState()
       const audioRef = streamingState.audioRef
       if (!audioRef) return
@@ -171,6 +173,6 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => ({
   resetActivePlayer: () => {
     useLocalPlayerStore.getState().resetPlayer()
     useStreamingPlayerStore.getState().stop()
-    set({ activePlayer: null, activePlaylist: "" })
+    set({ activePlayer: null, activePlaylist: '' })
   },
 }))

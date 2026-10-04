@@ -7,7 +7,10 @@ import { openFolder } from '@/shared/helpers/open-folder'
 import { toast } from 'sonner'
 import { useState } from 'react'
 
+import { useTranslation } from 'react-i18next'
+
 export function useDirectoriesStatus() {
+  const { t } = useTranslation()
   const { data: health } = useSuspenseQuery(systemHealthQueryOpts())
   const { data: config } = useSuspenseQuery(systemConfigQueryOpts())
 
@@ -22,7 +25,7 @@ export function useDirectoriesStatus() {
     try {
       await openFolder(path)
     } catch {
-      toast.error(`Failed to open folder: ${path}`)
+      toast.error(t('toasts.config.open_folder_error', { path }))
     }
   }
 
@@ -34,7 +37,7 @@ export function useDirectoriesStatus() {
         setIsConfirmOpen(true)
       }
     } catch {
-      toast.error('Failed to select directory')
+      toast.error(t('toasts.config.select_dir_error'))
     }
   }
 

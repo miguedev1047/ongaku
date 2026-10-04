@@ -17,6 +17,7 @@ import { useNavigate, useRouter } from '@tanstack/react-router'
 import { useHotkey } from '@tanstack/react-hotkeys'
 import { Show } from '@/components/utility/show'
 import type { TPlaylist } from '@/shared/types/playlist.types'
+import { useTranslation } from 'react-i18next'
 
 interface SearchPlaylistItemProps {
   playlist: TPlaylist
@@ -24,6 +25,7 @@ interface SearchPlaylistItemProps {
 }
 
 function SearchPlaylistItem({ playlist, onSelect }: SearchPlaylistItemProps) {
+  const { t } = useTranslation()
   const router = useRouter()
   const navigate = useNavigate()
 
@@ -55,12 +57,17 @@ function SearchPlaylistItem({ playlist, onSelect }: SearchPlaylistItemProps) {
 
       <CommandShortcut className='flex items-center gap-1'>
         <p className='ml-auto text-[11px] text-muted-foreground font-mono'>
-          {playlist.tracks}{' '}
           <Show
             when={playlist.tracks === 1}
-            fallback={<>tracks</>}
+            fallback={
+              <>
+                {t('playlists.card.tracks_count_plural', {
+                  count: playlist.tracks,
+                })}
+              </>
+            }
           >
-            track
+            {t('playlists.card.tracks_count', { count: playlist.tracks })}
           </Show>
         </p>
       </CommandShortcut>
@@ -69,6 +76,7 @@ function SearchPlaylistItem({ playlist, onSelect }: SearchPlaylistItemProps) {
 }
 
 export function SearchPlaylists() {
+  const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const { data: playlists } = useSuspenseQuery(playlistsQueryOpts())
 
@@ -79,14 +87,13 @@ export function SearchPlaylists() {
       <Button
         onClick={() => setIsOpen(true)}
         variant='outline'
-        className='w-52'
         size='sm'
       >
         <HugeiconsIcon
           icon={Search01Icon}
           className='size-4'
         />
-        Search playlists...
+        {t('playlists.search_placeholder')}
         <Kbd className='ml-auto'>⌘K</Kbd>
       </Button>
 
@@ -98,7 +105,9 @@ export function SearchPlaylists() {
           className='max-w-sm rounded-lg border'
           shouldFilter={false}
         >
-          <CommandInput placeholder='Type a playlist...' />
+          <CommandInput
+            placeholder={t('playlists.search_command_placeholder')}
+          />
           <CommandVirtualList
             data={playlists}
             filter={(playlist, search) => {
@@ -108,7 +117,7 @@ export function SearchPlaylists() {
               return nameMatch
             }}
             className='h-[40vh]'
-            heading='Search playlist'
+            heading={t('playlists.search_command_heading')}
           >
             {(playlist) => (
               <SearchPlaylistItem

@@ -13,10 +13,13 @@ interface UseDeletePlaylistProps {
   onSuccess?: () => void
 }
 
+import { useTranslation } from "react-i18next"
+
 export function useDeletePlaylist({
   playlist,
   onSuccess
 }: UseDeletePlaylistProps) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const playlistsQueryKey = playlistsQueryOpts().queryKey
   const navigate = useNavigate()
@@ -29,11 +32,11 @@ export function useDeletePlaylist({
     },
     onSuccess: (data) => {
       if (data.code === "ERROR") {
-        toast.error(data.message)
+        toast.error(t("toasts.playlists.delete_error"))
         return
       }
 
-      toast.success(data.message)
+      toast.success(t("toasts.playlists.deleted_success"))
 
       // Reset playback if the active playlist is the one being deleted
       const { playbackContext, audioRef, setCurrentSong, setPlayerState, setQueue } =
@@ -54,7 +57,7 @@ export function useDeletePlaylist({
       onSuccess?.()
     },
     onError: () => {
-      toast.error("An error occurred while deleting the playlist")
+      toast.error(t("toasts.playlists.delete_error"))
     }
   })
 

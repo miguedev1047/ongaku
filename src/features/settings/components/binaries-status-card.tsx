@@ -8,9 +8,11 @@ import { openFolder } from "@/shared/helpers/open-folder"
 import { toast } from "sonner"
 import { Show } from "@/components/utility/show"
 import { DotmSquare10 } from "@/components/loaders/dotm-square-10"
+import { useTranslation } from "react-i18next"
 import { cn } from "cn"
 
 export function BinariesStatusCard() {
+  const { t } = useTranslation()
   const { isBinariesInstalled, binariesInfo, isPending, installBinaries } =
     useBinaries()
 
@@ -19,7 +21,7 @@ export function BinariesStatusCard() {
     try {
       await openFolder(binariesInfo.bin_dir)
     } catch {
-      toast.error("Failed to open binaries folder")
+      toast.error(t('toasts.tools.open_folder_error'))
     }
   }
 
@@ -46,10 +48,10 @@ export function BinariesStatusCard() {
           </div>
           <div>
             <h2 className={cn("text-sm font-semibold text-foreground")}>
-              Auxiliary Binaries
+              {t('settings.tabs.system.binaries_status.title')}
             </h2>
             <p className={cn("text-xs text-muted-foreground")}>
-              Tools used for YouTube search, audio transcoding, and ID3 tagging
+              {t('settings.tabs.system.binaries_status.description')}
             </p>
           </div>
         </div>
@@ -61,7 +63,7 @@ export function BinariesStatusCard() {
               variant="destructive"
               className={cn("text-[10px]")}
             >
-              Missing Tools
+              {t('settings.tabs.system.binaries_status.status.missing')}
             </Badge>
           }
         >
@@ -71,7 +73,7 @@ export function BinariesStatusCard() {
               "text-[10px] bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
             )}
           >
-            Installed
+            {t('settings.tabs.system.binaries_status.status.installed')}
           </Badge>
         </Show>
       </div>
@@ -89,7 +91,7 @@ export function BinariesStatusCard() {
             <span
               className={cn("text-[10px] text-muted-foreground block mt-0.5")}
             >
-              Metadata & stream extraction
+              {t('settings.tabs.system.binaries_status.ytdlp_desc')}
             </span>
           </div>
 
@@ -102,7 +104,7 @@ export function BinariesStatusCard() {
                   "text-[9px] h-4 px-1.5 text-amber-500 border-amber-500/30"
                 )}
               >
-                Missing
+                {t('settings.tabs.system.binaries_status.status.missing')}
               </Badge>
             }
           >
@@ -112,7 +114,7 @@ export function BinariesStatusCard() {
                 "text-[9px] h-4 px-1.5 text-emerald-500 border-emerald-500/30"
               )}
             >
-              Ready
+              {t('settings.tabs.system.binaries_status.status.installed')}
             </Badge>
           </Show>
         </div>
@@ -129,7 +131,7 @@ export function BinariesStatusCard() {
             <span
               className={cn("text-[10px] text-muted-foreground block mt-0.5")}
             >
-              Audio decoding & metadata injection
+              {t('settings.tabs.system.binaries_status.ffmpeg_desc')}
             </span>
           </div>
 
@@ -142,7 +144,7 @@ export function BinariesStatusCard() {
                   "text-[9px] h-4 px-1.5 text-amber-500 border-amber-500/30"
                 )}
               >
-                Missing
+                {t('settings.tabs.system.binaries_status.status.missing')}
               </Badge>
             }
           >
@@ -152,7 +154,7 @@ export function BinariesStatusCard() {
                 "text-[9px] h-4 px-1.5 text-emerald-500 border-emerald-500/30"
               )}
             >
-              Ready
+              {t('settings.tabs.system.binaries_status.status.installed')}
             </Badge>
           </Show>
         </div>
@@ -186,7 +188,7 @@ export function BinariesStatusCard() {
               icon={FolderIcon}
               className={cn("size-3.5")}
             />
-            <span>Open Folder</span>
+            <span>{t('settings.tabs.system.binaries_status.open_folder')}</span>
           </Button>
 
           <Button
@@ -210,13 +212,13 @@ export function BinariesStatusCard() {
                 fallback={
                   <Show
                     when={isBinariesInstalled}
-                    fallback="Install Tools"
+                    fallback={t('settings.tabs.system.binaries_status.install')}
                   >
-                    Reinstall Tools
+                    {t('settings.tabs.system.binaries_status.reinstall')}
                   </Show>
                 }
               >
-                Installing...
+                {t('settings.tabs.system.binaries_status.installing')}
               </Show>
             </span>
           </Button>
@@ -242,10 +244,10 @@ export function BinariesStatusCard() {
           </div>
           <div className={cn("min-w-0 flex-1 space-y-0.5")}>
             <p className={cn("text-xs font-semibold text-foreground")}>
-              Installing Tools & Binaries
+              {t('settings.tabs.system.binaries_status.installing_title')}
             </p>
             <p className={cn("text-[11px] text-muted-foreground truncate")}>
-              Downloading and setting up yt-dlp & ffmpeg...
+              {t('settings.tabs.system.binaries_status.installing_desc')}
             </p>
           </div>
         </div>

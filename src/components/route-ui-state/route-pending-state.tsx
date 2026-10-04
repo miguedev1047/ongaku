@@ -1,6 +1,7 @@
 import { Spinner } from "@/components/ui/spinner"
 import { RouteSection } from "@/components/ui/route-section"
 import { cn } from "cn"
+import { useTranslation } from "react-i18next"
 
 export interface RoutePendingStateProps {
   title?: string
@@ -9,10 +10,13 @@ export interface RoutePendingStateProps {
 }
 
 export function RoutePendingState({
-  title = "Loading...",
-  message = "Please wait a moment",
+  title,
+  message,
   className
 }: RoutePendingStateProps) {
+  const { t } = useTranslation()
+  const displayTitle = title ?? t("common.loading")
+  const displayMessage = message ?? t("common.please_wait")
   return (
     <RouteSection
       className={cn(
@@ -27,10 +31,10 @@ export function RoutePendingState({
 
         <div className="flex flex-col items-center gap-1">
           <h4 className="font-heading text-sm font-semibold tracking-tight text-foreground">
-            {title}
+            {displayTitle}
           </h4>
           <p className="text-xs font-mono text-muted-foreground shimmer">
-            {message}
+            {displayMessage}
           </p>
         </div>
       </div>

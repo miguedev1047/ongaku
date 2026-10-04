@@ -20,12 +20,15 @@ interface DeleteSongProps {
   context?: 'playlist' | 'library'
 }
 
+import { useTranslation } from "react-i18next"
+
 export function DeleteSong({
   song,
   open,
   onOpenChange,
   context = 'playlist',
 }: DeleteSongProps) {
+  const { t } = useTranslation()
   const { handleDeleteSong, isPending } = useDeleteSong({
     song,
     context,
@@ -44,23 +47,22 @@ export function DeleteSong({
           <DialogTitle>
             <Show
               when={isLibrary}
-              fallback={`Remove song "${song.name}"`}
+              fallback={t('playlists.dialogs.delete_song.title_playlist', { name: song.name })}
             >
-              Delete song "{song.name}"
+              {t('playlists.dialogs.delete_song.title_library', { name: song.name })}
             </Show>
           </DialogTitle>
           <DialogDescription>
             <Show
               when={isLibrary}
-              fallback="Are you sure you want to remove this song from the playlist? The file will remain in your library."
+              fallback={t('playlists.dialogs.delete_song.desc_playlist')}
             >
-              Are you sure you want to delete this song? This action cannot be
-              undone and will permanently remove the audio file from your library.
+              {t('playlists.dialogs.delete_song.desc_library')}
             </Show>
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <DialogClose render={<Button variant="outline">Cancel</Button>} />
+          <DialogClose render={<Button variant="outline">{t('common.cancel')}</Button>} />
           <Button
             disabled={isPending}
             onClick={handleDeleteSong}
@@ -71,9 +73,9 @@ export function DeleteSong({
             </Show>
             <Show
               when={isLibrary}
-              fallback="Remove"
+              fallback={t('playlists.dialogs.delete_song.action_playlist')}
             >
-              Delete
+              {t('playlists.dialogs.delete_song.action_library')}
             </Show>
           </Button>
         </DialogFooter>

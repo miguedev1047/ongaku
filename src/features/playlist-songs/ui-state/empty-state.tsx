@@ -19,10 +19,13 @@ export interface PlaylistSongsEmptyStateProps {
   playlistName?: string
 }
 
+import { useTranslation } from "react-i18next"
+
 export function PlaylistSongsEmptyState({
   className,
   playlistName: propPlaylistName,
 }: PlaylistSongsEmptyStateProps) {
+  const { t } = useTranslation()
   const params = useParams({ strict: false }) as { playlistName?: string }
   const playlistName = propPlaylistName || params.playlistName || ""
 
@@ -38,9 +41,9 @@ export function PlaylistSongsEmptyState({
           <EmptyMedia variant="icon">
             <HugeiconsIcon icon={MusicNote01Icon} />
           </EmptyMedia>
-          <EmptyTitle>No songs in this playlist</EmptyTitle>
+          <EmptyTitle>{t('playlists.songs_empty.title')}</EmptyTitle>
           <EmptyDescription>
-            Import local audio files or search YouTube to add songs here
+            {t('playlists.songs_empty.description')}
           </EmptyDescription>
         </EmptyHeader>
         <Show when={Boolean(playlistName)}>

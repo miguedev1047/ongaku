@@ -5,11 +5,15 @@ import {
   PlayerDescription,
 } from '@/components/ui/player'
 import { Link } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 
 export function LocalPlayerTrackInfo() {
+  const { t } = useTranslation()
   const currentSong = useLocalPlayerStore((state) => state.currentSong)
 
   if (!currentSong) return null
+
+  const artist = currentSong.metadata?.artist || t('common.unknown_artist')
 
   return (
     <PlayerTrackInfo>
@@ -25,9 +29,9 @@ export function LocalPlayerTrackInfo() {
         </PlayerTitle>
       </Link>
       <PlayerDescription
-        title={currentSong.metadata?.artist || 'Unknown Artist'}
+        title={artist}
       >
-        {currentSong.metadata?.artist || 'Unknown Artist'}
+        {artist}
       </PlayerDescription>
     </PlayerTrackInfo>
   )

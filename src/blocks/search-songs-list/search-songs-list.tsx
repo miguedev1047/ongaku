@@ -19,12 +19,15 @@ import { SearchBatchBar } from "@/blocks/search-songs-list/search-batch-bar"
 import { searchTableFeatures } from "@/blocks/search-songs-list/search-table-features"
 import { searchSongColumns } from "@/blocks/search-songs-list/search-table-columns"
 import { SearchSongTableRow } from "@/blocks/search-songs-list/search-table-row"
+import { useTranslation } from "react-i18next"
+import { Show } from "@/components/utility/show"
 
 interface SearchSongsListProps {
   data: TYoutubeSearchResult[]
 }
 
 export function SearchSongsList({ data }: SearchSongsListProps) {
+  const { t } = useTranslation()
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -90,7 +93,7 @@ export function SearchSongsList({ data }: SearchSongsListProps) {
                   <Checkbox
                     checked={isAllSelected}
                     onCheckedChange={() => table.toggleAllRowsSelected()}
-                    aria-label="Select all songs"
+                    aria-label={t("common.select_all_songs")}
                   />
                 )}
               </Subscribe>
@@ -98,20 +101,25 @@ export function SearchSongsList({ data }: SearchSongsListProps) {
 
             {/* 2. Cover spacer (36px) */}
             <TableHead className="size-9 shrink-0 justify-center p-0">
-              Cover
+              {t("library.columns.cover")}
             </TableHead>
 
             {/* 3. Title column header (flex-1 min-w-0) */}
             <TableHead className="flex-1 min-w-0 flex items-center gap-2 p-0">
-              <span>Title</span>
+              <span>{t("library.columns.title")}</span>
               <span className="text-[11px] font-mono text-muted-foreground/70">
-                ({data.length} {data.length === 1 ? "result" : "results"})
+                <Show
+                  when={data.length === 1}
+                  fallback={`(${t("youtube_search.results_count_plural", { count: data.length })})`}
+                >
+                  {`(${t("youtube_search.results_count", { count: data.length })})`}
+                </Show>
               </span>
             </TableHead>
 
             {/* 4. Duration column header (64px) */}
             <TableHead className="w-16 shrink-0 justify-end p-0 text-right">
-              Time
+              {t("library.columns.duration")}
             </TableHead>
 
             {/* 5. Actions spacer (36px) */}

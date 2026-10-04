@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { updatesQueryOpts } from '@/shared/queries/updates'
 import { binariesInfoQueryOpts } from '@/shared/queries/binaries'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
+import { useTranslation } from 'react-i18next'
 
 export type AppStateStatus = 'idle' | 'update' | 'error'
 
@@ -16,6 +17,7 @@ export interface AppStatusResult {
 }
 
 export function useAppStatus(): AppStatusResult {
+  const { t } = useTranslation()
   const { data: update } = useQuery(updatesQueryOpts())
   const { data: binariesInfo } = useQuery(binariesInfoQueryOpts())
   const { data: health } = useQuery(systemHealthQueryOpts())
@@ -54,8 +56,13 @@ export function useAppStatus(): AppStatusResult {
   if (hasError) {
     return {
       status: 'error',
-      badgeText: 'Issue',
-      tooltipText: `Settings • ${errorReasons.length} system ${errorReasons.length === 1 ? 'issue' : 'issues'} detected`,
+      badgeText: t('settings.status_badge_issue'),
+      tooltipText:
+        errorReasons.length === 1
+          ? t('settings.status_tooltip_issues', { count: errorReasons.length })
+          : t('settings.status_tooltip_issues_plural', {
+              count: errorReasons.length,
+            }),
       hasError: true,
       hasUpdate,
       updateVersion: update?.version,
@@ -67,7 +74,9 @@ export function useAppStatus(): AppStatusResult {
     return {
       status: 'update',
       badgeText: `v${update.version}`,
-      tooltipText: `Settings • Update available: v${update.version}`,
+      tooltipText: t('settings.status_tooltip_update', {
+        version: update.version,
+      }),
       hasError: false,
       hasUpdate: true,
       updateVersion: update.version,
@@ -78,7 +87,7 @@ export function useAppStatus(): AppStatusResult {
   return {
     status: 'idle',
     badgeText: undefined,
-    tooltipText: 'Settings & System Status',
+    tooltipText: t('settings.status_tooltip_idle'),
     hasError: false,
     hasUpdate: false,
     updateVersion: undefined,

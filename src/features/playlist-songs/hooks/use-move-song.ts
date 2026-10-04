@@ -12,7 +12,10 @@ interface UseMoveSongProps {
   onSuccess?: () => void
 }
 
+import { useTranslation } from "react-i18next"
+
 export function useMoveSong({ song, onSuccess }: UseMoveSongProps) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const currentSong = useLocalPlayerStore((state) => state.currentSong)
   const setCurrentSong = useLocalPlayerStore((state) => state.setCurrentSong)
@@ -30,21 +33,21 @@ export function useMoveSong({ song, onSuccess }: UseMoveSongProps) {
     },
     onSuccess: (data, targetPlaylist) => {
       if (data.code === "SAME_FILE") {
-        toast.info(data.message)
+        toast.info(t("toasts.songs.same_playlist"))
         return
       }
 
       if (data.code === "ALREADY_EXISTS") {
-        toast.warning(data.message)
+        toast.warning(t("toasts.songs.already_in_playlist"))
         return
       }
 
       if (data.code === "ERROR") {
-        toast.error(data.message)
+        toast.error(t("toasts.songs.move_error"))
         return
       }
 
-      toast.success(data.message)
+      toast.success(t("toasts.songs.moved_success"))
 
       useLocalPlayerStore.getState().removeFromQueue(song.id)
 
@@ -80,7 +83,7 @@ export function useMoveSong({ song, onSuccess }: UseMoveSongProps) {
       onSuccess?.()
     },
     onError: () => {
-      toast.error("An error occurred while moving the song")
+      toast.error(t("toasts.songs.move_error"))
     }
   })
 

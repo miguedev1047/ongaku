@@ -8,14 +8,16 @@ import { Badge } from '@/components/ui/badge'
 import { YoutubeIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useYoutubeSearchStore } from '@/shared/stores/actions'
+import { useTranslation } from 'react-i18next'
 
 export function YoutubeSearchNav() {
+  const { t } = useTranslation()
   const lastQuery = useYoutubeSearchStore((state) => state.lastQuery)
 
   return (
     <SidebarMenuItem>
       <SidebarMenuButton
-        tooltip='YouTube Search'
+        tooltip={t('sidebar.search')}
         render={
           <Link
             to='/search-youtube'
@@ -29,13 +31,13 @@ export function YoutubeSearchNav() {
           icon={YoutubeIcon}
           className='size-4 shrink-0'
         />
-        <span className='truncate'>YouTube Search</span>
+        <span className='truncate'>{t('sidebar.search')}</span>
         <SidebarMenuBadge>
           <Badge
             variant='destructive'
             className='text-[9px] px-1 py-0 h-3.5 leading-none'
           >
-            Alpha
+            {t('common.alpha')}
           </Badge>
         </SidebarMenuBadge>
       </SidebarMenuButton>

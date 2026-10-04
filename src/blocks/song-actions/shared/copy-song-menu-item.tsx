@@ -3,11 +3,14 @@ import { Copy01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useCopySongTitle } from "@/blocks/song-actions/shared/use-copy-song-title"
 
+import { useTranslation } from "react-i18next"
+
 interface CopySongMenuItemProps {
   title: string
 }
 
 export function CopySongMenuItem({ title }: CopySongMenuItemProps) {
+  const { t } = useTranslation()
   const { copySongTitle } = useCopySongTitle()
 
   return (
@@ -19,7 +22,7 @@ export function CopySongMenuItem({ title }: CopySongMenuItemProps) {
       className="cursor-pointer"
     >
       <HugeiconsIcon icon={Copy01Icon} />
-      <span>Copy title</span>
+      <span>{t('playlists.actions.copy_title')}</span>
     </DropdownMenuItem>
   )
 }

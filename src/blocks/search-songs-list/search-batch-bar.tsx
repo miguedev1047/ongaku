@@ -14,8 +14,11 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { Cancel01Icon, Download01Icon } from "@hugeicons/core-free-icons"
 
 import { cn } from "cn"
+import { useTranslation } from "react-i18next"
+import { Show } from "@/components/utility/show"
 
 export function SearchBatchBar() {
+  const { t } = useTranslation()
   const activePlayer = useActivePlayerStore((s) => s.activePlayer)
   const { selectedCount, clearSelection, handleBatchDownload } =
     useSearchBatchActions()
@@ -35,7 +38,12 @@ export function SearchBatchBar() {
     >
       <div className="flex items-center gap-2">
         <span className="text-xs font-semibold text-foreground">
-          {selectedCount} {selectedCount === 1 ? "song" : "songs"} selected
+          <Show
+            when={selectedCount === 1}
+            fallback={t("playlists.batch.selected_plural", { count: selectedCount })}
+          >
+            {t("playlists.batch.selected", { count: selectedCount })}
+          </Show>
         </span>
 
         <Button
@@ -43,7 +51,7 @@ export function SearchBatchBar() {
           variant="ghost"
           className="size-6 text-muted-foreground hover:text-foreground"
           onClick={clearSelection}
-          title="Deselect all"
+          title={t("playlists.batch.deselect_all")}
         >
           <HugeiconsIcon
             icon={Cancel01Icon}
@@ -65,7 +73,7 @@ export function SearchBatchBar() {
                 icon={Download01Icon}
                 className="size-3.5"
               />
-              <span>Download to...</span>
+              <span>{t("youtube_search.download_to")}</span>
             </Button>
           }
         />

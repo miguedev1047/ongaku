@@ -8,12 +8,15 @@ import {
 import { YoutubeIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { cn } from "cn"
+import { useTranslation } from "react-i18next"
 
 interface YoutubeSearchEmptyProps {
   className?: string
 }
 
 export function YoutubeSearchEmpty({ className }: YoutubeSearchEmptyProps) {
+  const { t } = useTranslation()
+
   return (
     <div
       className={cn(
@@ -29,9 +32,9 @@ export function YoutubeSearchEmpty({ className }: YoutubeSearchEmptyProps) {
               className="size-6 text-muted-foreground/70"
             />
           </EmptyMedia>
-          <EmptyTitle>Search music on YouTube</EmptyTitle>
+          <EmptyTitle>{t("youtube_search.empty.title")}</EmptyTitle>
           <EmptyDescription>
-            Type a song title, artist, or album to discover and stream music.
+            {t("youtube_search.empty.description")}
           </EmptyDescription>
         </EmptyHeader>
       </Empty>

@@ -8,12 +8,15 @@ import {
 import { MusicNote01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { cn } from "cn"
+import { useTranslation } from "react-i18next"
 
 export interface LibraryEmptyStateProps {
   className?: string
 }
 
 export function LibraryEmptyState({ className }: LibraryEmptyStateProps) {
+  const { t } = useTranslation()
+
   return (
     <div
       className={cn(
@@ -26,9 +29,9 @@ export function LibraryEmptyState({ className }: LibraryEmptyStateProps) {
           <EmptyMedia variant="icon">
             <HugeiconsIcon icon={MusicNote01Icon} />
           </EmptyMedia>
-          <EmptyTitle>No tracks in your library</EmptyTitle>
+          <EmptyTitle>{t("library.empty.title")}</EmptyTitle>
           <EmptyDescription>
-            Create playlists and download songs to populate your library
+            {t("library.empty.description")}
           </EmptyDescription>
         </EmptyHeader>
       </Empty>

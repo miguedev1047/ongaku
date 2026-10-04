@@ -5,11 +5,14 @@ import { openFolder } from "@/shared/helpers/open-folder"
 import { toast } from "sonner"
 import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
 
+import { useTranslation } from "react-i18next"
+
 interface UsePlaylistSongActionsProps {
   song: TPlaylistSong
 }
 
 export function usePlaylistSongActions({ song }: UsePlaylistSongActionsProps) {
+  const { t } = useTranslation()
   const currentSong = useLocalPlayerStore((state) => state.currentSong)
   const playerState = useLocalPlayerStore((state) => state.playerState)
   const audioRef = useLocalPlayerStore((state) => state.audioRef)
@@ -27,7 +30,7 @@ export function usePlaylistSongActions({ song }: UsePlaylistSongActionsProps) {
       } else {
         setPlayerState("playing")
         audioRef?.play().catch(() => {
-          toast.error("An error occurred while playing the song")
+          toast.error(t("toasts.songs.playback_error"))
         })
       }
       return
@@ -40,10 +43,10 @@ export function usePlaylistSongActions({ song }: UsePlaylistSongActionsProps) {
     try {
       const songPath = getPlaylistPath(song.path)
       await openFolder(songPath)
-      toast.info(`Opened folder for "${song.playlist_name}"`)
+      toast.info(t("toasts.songs.opened_folder", { name: song.playlist_name }))
     } catch (err) {
       console.log(err)
-      toast.error("Error opening playlist folder")
+      toast.error(t("toasts.songs.open_folder_error"))
     }
   }
 

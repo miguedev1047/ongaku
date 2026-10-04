@@ -28,6 +28,8 @@ import { Show } from '@/components/utility/show'
 import { cn } from 'cn'
 import { CONTEXT_ACTIONS_MENU_WIDTH } from '@/constants/styles'
 
+import { useTranslation } from 'react-i18next'
+
 export interface SearchSongContextMenuProps {
   item: TYoutubeSearchResult
   children: React.ReactNode
@@ -37,6 +39,7 @@ export function SearchSongContextMenu({
   item,
   children,
 }: SearchSongContextMenuProps) {
+  const { t } = useTranslation()
   const {
     isPlaying,
     isLoading,
@@ -62,12 +65,12 @@ export function SearchSongContextMenu({
               fallback={
                 <>
                   <HugeiconsIcon icon={PlayIcon} />
-                  <span>Play</span>
+                  <span>{t('player.play')}</span>
                 </>
               }
             >
               <HugeiconsIcon icon={PauseIcon} />
-              <span>Pause</span>
+              <span>{t('player.pause')}</span>
             </Show>
           </ContextMenuItem>
 
@@ -76,7 +79,7 @@ export function SearchSongContextMenu({
             className='cursor-pointer'
           >
             <HugeiconsIcon icon={Copy01Icon} />
-            <span>Copy title</span>
+            <span>{t('playlists.actions.copy_title')}</span>
           </ContextMenuItem>
 
           <ContextMenuItem
@@ -84,7 +87,7 @@ export function SearchSongContextMenu({
             className='cursor-pointer'
           >
             <HugeiconsIcon icon={YoutubeIcon} />
-            <span>Open on YouTube</span>
+            <span>{t('youtube_search.actions.open_youtube')}</span>
           </ContextMenuItem>
 
           <ContextMenuSeparator />
@@ -92,13 +95,13 @@ export function SearchSongContextMenu({
           <ContextMenuSub>
             <ContextMenuSubTrigger className='cursor-pointer'>
               <HugeiconsIcon icon={Music01Icon} />
-              <span>Download on</span>
+              <span>{t('youtube_search.actions.download_on')}</span>
             </ContextMenuSubTrigger>
             <ContextMenuSubContent className='w-48'>
               <Suspense
                 fallback={
                   <ContextMenuGroup>
-                    <ContextMenuLabel>Playlists</ContextMenuLabel>
+                    <ContextMenuLabel>{t('playlists.header.title')}</ContextMenuLabel>
                     <ContextMenuSeparator />
                     <div className='p-3 flex items-center justify-center'>
                       <Spinner className='size-4' />

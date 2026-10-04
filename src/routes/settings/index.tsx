@@ -15,20 +15,27 @@ import {
   BinariesStatusCard,
   AppUpdatesCard,
   AppearanceCard,
+  LanguageSelection,
   SystemTabTrigger,
 } from '@/features/settings/components'
 import { SettingsTabLoadingState } from '@/features/settings/ui-state'
 import { useSystemHealth } from '@/features/settings/hooks'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Suspense } from 'react'
+import { useTranslation } from 'react-i18next'
+
+function SettingsPending() {
+  const { t } = useTranslation()
+  return (
+    <RoutePendingState
+      title={t('routes.settings.pending_title')}
+      message={t('routes.settings.pending_message')}
+    />
+  )
+}
 
 export const Route = createFileRoute('/settings/')({
-  pendingComponent: () => (
-    <RoutePendingState
-      title='Loading settings'
-      message='Fetching system diagnostics and health status'
-    />
-  ),
+  pendingComponent: SettingsPending,
   errorComponent: RouteErrorState,
   loader: ({ context }) => {
     context.queryClient.query(systemConfigQueryOpts())
@@ -41,6 +48,7 @@ export const Route = createFileRoute('/settings/')({
 })
 
 function RouteComponent() {
+  const { t } = useTranslation()
   const { isLoading, refreshHealth } = useSystemHealth()
 
   return (
@@ -58,8 +66,12 @@ function RouteComponent() {
             variant='default'
             className='grid grid-cols-3 max-w-md'
           >
-            <TabsTrigger value='general'>General</TabsTrigger>
-            <TabsTrigger value='appearance'>Appearance</TabsTrigger>
+            <TabsTrigger value='general'>
+              {t('settings.tab_general')}
+            </TabsTrigger>
+            <TabsTrigger value='appearance'>
+              {t('settings.tab_appearance')}
+            </TabsTrigger>
             <SystemTabTrigger />
           </TabsList>
 
@@ -68,6 +80,7 @@ function RouteComponent() {
             className='flex flex-col gap-4 pt-2'
           >
             <Suspense fallback={<SettingsTabLoadingState />}>
+              <LanguageSelection />
               <AppUpdatesCard />
             </Suspense>
           </TabsContent>

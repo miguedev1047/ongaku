@@ -24,6 +24,8 @@ import { Show } from '@/components/utility/show'
 import { cn } from 'cn'
 import { CONTEXT_ACTIONS_MENU_WIDTH } from '@/constants/styles'
 
+import { useTranslation } from 'react-i18next'
+
 export interface LibrarySongContextMenuProps {
   song: TPlaylistSong
   children: React.ReactNode
@@ -33,6 +35,7 @@ export function LibrarySongContextMenu({
   song,
   children,
 }: LibrarySongContextMenuProps) {
+  const { t } = useTranslation()
   const {
     isPlaying,
     isDeleteDialogOpen,
@@ -60,12 +63,12 @@ export function LibrarySongContextMenu({
                 fallback={
                   <>
                     <HugeiconsIcon icon={PlayIcon} />
-                    <span>Play</span>
+                    <span>{t('player.play')}</span>
                   </>
                 }
               >
                 <HugeiconsIcon icon={PauseIcon} />
-                <span>Pause</span>
+                <span>{t('player.pause')}</span>
               </Show>
             </ContextMenuItem>
 
@@ -74,7 +77,7 @@ export function LibrarySongContextMenu({
               className='cursor-pointer'
             >
               <HugeiconsIcon icon={Copy01Icon} />
-              <span>Copy title</span>
+              <span>{t('playlists.actions.copy_title')}</span>
             </ContextMenuItem>
 
             <ContextMenuItem
@@ -82,7 +85,7 @@ export function LibrarySongContextMenu({
               className='cursor-pointer'
             >
               <HugeiconsIcon icon={FolderIcon} />
-              <span>Open folder</span>
+              <span>{t('playlists.actions.open_folder')}</span>
             </ContextMenuItem>
 
             <ContextMenuItem
@@ -90,7 +93,7 @@ export function LibrarySongContextMenu({
               className='cursor-pointer'
             >
               <HugeiconsIcon icon={FolderTransferIcon} />
-              <span>Move</span>
+              <span>{t('playlists.actions.move_to')}</span>
             </ContextMenuItem>
 
             <ContextMenuSeparator />
@@ -101,7 +104,7 @@ export function LibrarySongContextMenu({
               className='cursor-pointer'
             >
               <HugeiconsIcon icon={Delete01Icon} />
-              <span>Delete</span>
+              <span>{t('playlists.actions.delete')}</span>
             </ContextMenuItem>
           </ContextMenuGroup>
         </ContextMenuContent>

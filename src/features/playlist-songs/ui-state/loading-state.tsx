@@ -8,6 +8,7 @@ import {
   TableCell
 } from "@/components/ui/table"
 import { cn } from "cn"
+import { useTranslation } from "react-i18next"
 
 export interface PlaylistSongsLoadingStateProps {
   count?: number
@@ -29,13 +30,15 @@ export function PlaylistSongsLoadingState({
   count = 8,
   className
 }: PlaylistSongsLoadingStateProps) {
+  const { t } = useTranslation()
+
   return (
     <div
       className={cn(
         "relative size-full flex flex-col overflow-hidden border border-border/40 rounded-xl bg-card/40 select-none",
         className
       )}
-      aria-label="Loading songs"
+      aria-label={t("common.loading")}
       aria-busy="true"
     >
       <Table
@@ -49,19 +52,19 @@ export function PlaylistSongsLoadingState({
               <Skeleton className="size-4 rounded-sm" />
             </TableHead>
             <TableHead className="size-9 shrink-0 justify-center p-0">
-              Cover
+              {t("library.columns.cover")}
             </TableHead>
             <TableHead className="flex-1 min-w-0 flex items-center gap-2 p-0">
-              <span>Title</span>
+              <span>{t("library.columns.title")}</span>
             </TableHead>
             <TableHead className="w-40 shrink-0 p-0 hidden sm:flex items-center">
-              Artist
+              {t("library.columns.artist")}
             </TableHead>
             <TableHead className="w-40 shrink-0 p-0 hidden md:flex items-center">
-              Album
+              {t("library.columns.album")}
             </TableHead>
             <TableHead className="w-16 shrink-0 justify-end p-0 text-right">
-              Time
+              {t("library.columns.duration")}
             </TableHead>
             <TableHead className="w-9 shrink-0 p-0" />
           </TableRow>

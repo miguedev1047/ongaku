@@ -31,6 +31,8 @@ import { useNewPlaylist } from '@/features/playlists/hooks'
 import { Show } from '@/components/utility/show'
 import { cn } from 'cn'
 
+import { useTranslation } from 'react-i18next'
+
 export interface CreatePlaylistDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -40,6 +42,7 @@ export function CreatePlaylistDialog({
   open,
   onOpenChange,
 }: CreatePlaylistDialogProps) {
+  const { t } = useTranslation()
   const { form, isPending } = useNewPlaylist({
     onSuccess: () => onOpenChange(false),
   })
@@ -51,9 +54,9 @@ export function CreatePlaylistDialog({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add playlist</DialogTitle>
+          <DialogTitle>{t('playlists.dialogs.new.title')}</DialogTitle>
           <DialogDescription>
-            Enter a name to create a new playlist.
+            {t('playlists.dialogs.new.description')}
           </DialogDescription>
         </DialogHeader>
 
@@ -73,7 +76,9 @@ export function CreatePlaylistDialog({
                   field.state.meta.isTouched && !field.state.meta.isValid
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Playlist Name</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>
+                      {t('playlists.dialogs.new.field_label')}
+                    </FieldLabel>
                     <Input
                       id={field.name}
                       name={field.name}
@@ -81,12 +86,12 @@ export function CreatePlaylistDialog({
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
-                      placeholder='Rock Playlist'
+                      placeholder={t('playlists.dialogs.new.placeholder')}
                       autoComplete='off'
                       disabled={isPending}
                     />
                     <FieldDescription>
-                      Type the playlist name to create it
+                      {t('playlists.dialogs.new.field_description')}
                     </FieldDescription>
                     <Show when={isInvalid}>
                       <FieldError errors={field.state.meta.errors} />
@@ -99,7 +104,7 @@ export function CreatePlaylistDialog({
         </form>
 
         <DialogFooter>
-          <DialogClose render={<Button variant='outline'>Close</Button>} />
+          <DialogClose render={<Button variant='outline'>{t('common.close')}</Button>} />
           <Button
             type='submit'
             form='new-playlist-form'
@@ -108,7 +113,7 @@ export function CreatePlaylistDialog({
             <Show when={isPending}>
               <Spinner />
             </Show>
-            Create
+            {t('playlists.dialogs.new.submit')}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -121,6 +126,7 @@ export interface NewPlaylistCardProps {
 }
 
 export function NewPlaylistCard({ className }: NewPlaylistCardProps = {}) {
+  const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
 
   useHotkey('Alt+P', () => setIsOpen((prev) => !prev))
@@ -149,7 +155,7 @@ export function NewPlaylistCard({ className }: NewPlaylistCardProps = {}) {
           side='bottom'
           className='flex items-center gap-1.5'
         >
-          <span>Add new playlist</span>
+          <span>{t('playlists.header.new_button')}</span>
           <KbdGroup>
             <Kbd>Alt</Kbd>
             <Kbd>P</Kbd>

@@ -17,6 +17,7 @@ import { Subscribe } from "@tanstack/react-table"
 import { TableRow, TableCell } from "@/components/ui/table"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Show } from "@/components/utility/show"
+import { useTranslation } from "react-i18next"
 
 interface SearchSongTableRowProps {
   row: Row<SearchTableFeatures, TYoutubeSearchResult>
@@ -25,6 +26,7 @@ interface SearchSongTableRowProps {
 export const SearchSongTableRow = memo(function SearchSongTableRow({
   row
 }: SearchSongTableRowProps) {
+  const { t } = useTranslation()
   const [hasImageError, setHasImageError] = useState(false)
   const item = row.original
 
@@ -81,7 +83,7 @@ export const SearchSongTableRow = memo(function SearchSongTableRow({
                       className="hidden group-hover:flex"
                       checked={false}
                       onCheckedChange={() => row.toggleSelected()}
-                      aria-label={`Select ${item.title}`}
+                      aria-label={t("playlists.batch.select_song", { name: item.title })}
                     />
                   </div>
                 }
@@ -89,7 +91,7 @@ export const SearchSongTableRow = memo(function SearchSongTableRow({
                 <Checkbox
                   checked={isSelected}
                   onCheckedChange={() => row.toggleSelected()}
-                  aria-label={`Select ${item.title}`}
+                  aria-label={t("playlists.batch.select_song", { name: item.title })}
                 />
               </Show>
             )}

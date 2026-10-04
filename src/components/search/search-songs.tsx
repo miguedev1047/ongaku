@@ -17,8 +17,10 @@ import { playlistSongsQueryOpts } from '@/shared/queries/playlist-songs'
 import { CoverImage } from '@/components/cover-image'
 import { useSongUtils } from '@/hooks/use-song-utils'
 import { useActivePlayerStore } from '@/shared/stores/player'
+import { useTranslation } from 'react-i18next'
 
 export function SearchSongs() {
+  const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
 
   const { playlistName } = useParams({ from: '/playlists/$playlistName' })
@@ -42,7 +44,7 @@ export function SearchSongs() {
           icon={Search01Icon}
           className='size-4'
         />
-        Search songs...
+        {t('playlists.search_songs_placeholder')}
         <Kbd className='ml-auto'>⌘K</Kbd>
       </Button>
 
@@ -54,7 +56,7 @@ export function SearchSongs() {
           className='max-w-sm rounded-lg border'
           shouldFilter={false}
         >
-          <CommandInput placeholder='Type a song...' />
+          <CommandInput placeholder={t('playlists.search_songs_command_placeholder')} />
           <CommandVirtualList
             data={songs}
             filter={(song, search) => {
@@ -65,7 +67,7 @@ export function SearchSongs() {
               )
             }}
             className='h-[40vh]'
-            heading='Search song'
+            heading={t('playlists.search_songs_command_heading')}
           >
             {(song) => {
               const handleSelectSong = () => {
@@ -92,7 +94,7 @@ export function SearchSongs() {
                   <div>
                     <h2 className='line-clamp-1 text-sm'>{song.name}</h2>
                     <p className='text-xs text-muted-foreground line-clamp-1'>
-                      {song.metadata.artist}
+                      {song.metadata.artist || t('common.unknown_artist')}
                     </p>
                   </div>
                 </CommandItem>
