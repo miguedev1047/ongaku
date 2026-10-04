@@ -27,56 +27,71 @@ interface ActivePlayerStore {
   resetActivePlayer: () => void
 }
 
-export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => ({
-  activePlayer: null,
-  activePlaylist: '',
-  lastNonZeroVolume: 80,
+export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => {
+  const localInitialState = useLocalPlayerStore.getState()
+  const initialActivePlayer = localInitialState.currentSong ? 'local' : null
+  const initialActivePlaylist =
+    localInitialState.currentPlaylist ||
+    (localInitialState.playbackContext.type === 'playlist'
+      ? localInitialState.playbackContext.playlistName
+      : '')
 
-  setActivePlayer: (type) => set({ activePlayer: type }),
-  setActivePlaylist: (playlistName) => set({ activePlaylist: playlistName }),
+  return {
+    activePlayer: initialActivePlayer,
+    activePlaylist: initialActivePlaylist,
+    lastNonZeroVolume: localInitialState.volume || 80,
 
-  playSong: (song, queueOrContext, context) => {
-    // 1. Pause streaming if it was playing
-    const streamingState = useStreamingPlayerStore.getState()
-    if (streamingState.audioRef) {
-      streamingState.setCurrentTrack(null)
-      streamingState.pause()
-    }
+    setActivePlayer: (type) => set({ activePlayer: type }),
+    setActivePlaylist: (playlistName) => set({ activePlaylist: playlistName }),
 
-    // 2. Resolve queue and context
-    let resolvedQueue: readonly TPlaylistSong[] | undefined
-    let resolvedContext: PlaybackContext | undefined
+    playSong: (song, queueOrContext, context) => {
+      // 1. Pause streaming if it was playing
+      const streamingState = useStreamingPlayerStore.getState()
+      if (streamingState.audioRef) {
+        streamingState.setCurrentTrack(null)
+        streamingState.pause()
+      }
 
-    if (Array.isArray(queueOrContext)) {
-      resolvedQueue = queueOrContext
-      resolvedContext = context
-    } else if (
-      queueOrContext &&
-      typeof queueOrContext === 'object' &&
-      'type' in queueOrContext
-    ) {
-      resolvedQueue = undefined
-      resolvedContext = queueOrContext
-    } else {
-      resolvedQueue = undefined
-      resolvedContext = context
-    }
+      // 2. Resolve queue and context
+      let resolvedQueue: readonly TPlaylistSong[] | undefined
+      let resolvedContext: PlaybackContext | undefined
 
-    // 3. Set song in local player store with context and queue
-    useLocalPlayerStore
-      .getState()
-      .setCurrentSong(song, resolvedQueue, resolvedContext)
+      if (Array.isArray(queueOrContext)) {
+        resolvedQueue = queueOrContext
+        resolvedContext = context
+      } else if (
+        queueOrContext &&
+        typeof queueOrContext === 'object' &&
+        'type' in queueOrContext
+      ) {
+        resolvedQueue = undefined
+        resolvedContext = queueOrContext
+      } else {
+        resolvedQueue = undefined
+        resolvedContext = context
+      }
 
-    // 4. Mark active player as local and record active playlist / source
-    const nextPlaylist =
-      resolvedContext?.type === 'playlist'
-        ? resolvedContext.playlistName
-        : resolvedContext?.type === 'library'
-          ? 'Library'
-          : song?.playlist_name || ''
+      // 3. Set song in local player store with context and queue
+      useLocalPlayerStore
+        .getState()
+        .setCurrentSong(song, resolvedQueue, resolvedContext)
 
-    set({ activePlayer: 'local', activePlaylist: nextPlaylist })
-  },
+      // 4. Mark active player as local and record active playlist / source
+      const nextPlaylist =
+        resolvedContext?.type === 'playlist'
+          ? resolvedContext.playlistName
+          : resolvedContext?.type === 'library'
+            ? 'Library'
+            : song?.playlist_name || ''
+
+      set({ activePlayer: 'local', activePlaylist: nextPlaylist })
+
+      // 5. Directly request playback on the audio element if already mounted
+      const localAudio = useLocalPlayerStore.getState().audioRef
+      if (localAudio) {
+        localAudio.play().catch(() => {})
+      }
+    },
 
   playStream: (track) => {
     // 1. Pause local audio if it was playing
@@ -170,9 +185,10 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => ({
     }
   },
 
-  resetActivePlayer: () => {
-    useLocalPlayerStore.getState().resetPlayer()
-    useStreamingPlayerStore.getState().stop()
-    set({ activePlayer: null, activePlaylist: '' })
-  },
-}))
+    resetActivePlayer: () => {
+      useLocalPlayerStore.getState().resetPlayer()
+      useStreamingPlayerStore.getState().stop()
+      set({ activePlayer: null, activePlaylist: '' })
+    },
+  }
+})

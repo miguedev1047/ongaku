@@ -1,4 +1,5 @@
 import { create } from "zustand"
+import { persist } from "zustand/middleware"
 import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
 import type { LocalPlayerState, PlaybackContext } from "./types"
 
@@ -35,10 +36,15 @@ export interface LocalPlayerStore {
   setProgress: (progress: number) => void
   setVolume: (volume: number) => void
   setPlayerState: (state: LocalPlayerState) => void
+  play: () => void
+  pause: () => void
+  togglePlay: () => void
   resetPlayer: () => void
 }
 
-export const useLocalPlayerStore = create<LocalPlayerStore>((set) => ({
+export const useLocalPlayerStore = create<LocalPlayerStore>()(
+  persist(
+    (set, get) => ({
   audioRef: null,
   currentSong: null,
   currentPlaylist: "",
@@ -138,6 +144,28 @@ export const useLocalPlayerStore = create<LocalPlayerStore>((set) => ({
   setDuration: (duration) => set({ duration }),
   setProgress: (progress) => set({ progress }),
   setVolume: (volume) => set({ volume }),
+  play: () => {
+    const { audioRef } = get()
+    set({ playerState: "playing" })
+    if (audioRef) {
+      audioRef.play().catch(() => {})
+    }
+  },
+  pause: () => {
+    const { audioRef } = get()
+    set({ playerState: "paused" })
+    if (audioRef) {
+      audioRef.pause()
+    }
+  },
+  togglePlay: () => {
+    const { playerState, play, pause } = get()
+    if (playerState === "playing") {
+      pause()
+    } else {
+      play()
+    }
+  },
   resetPlayer: () =>
     set((state) => {
       if (state.audioRef) {
@@ -153,4 +181,33 @@ export const useLocalPlayerStore = create<LocalPlayerStore>((set) => ({
         currentPlaylist: "",
       }
     }),
-}))
+    }),
+    {
+      name: "ongaku-local-player",
+      partialize: (state) => ({
+        currentSong: state.currentSong,
+        currentPlaylist: state.currentPlaylist,
+        playbackContext: state.playbackContext,
+        queue: state.queue,
+        isLoop: state.isLoop,
+        isShuffle: state.isShuffle,
+        duration: state.duration,
+        progress: state.progress,
+        volume: state.volume,
+      }),
+      onRehydrateStorage: () => (state) => {
+        if (!state) return
+
+        // Always ensure initial state is idle and not seeking
+        state.setPlayerState("idle")
+        state.setIsSeeking(false)
+
+        // If progress is at or beyond the track duration, restart from 0
+        if (state.duration > 0 && state.progress >= state.duration - 1) {
+          state.setProgress(0)
+        }
+      },
+    },
+  ),
+)
+

@@ -157,7 +157,7 @@ export function usePlayerToggle() {
       return
     }
 
-    if (playerState === "paused") {
+    if (playerState === "paused" || playerState === "idle") {
       setPlayerState("playing")
       audioRef.play().catch((err: unknown) => {
         if (err instanceof Error && err.name === "AbortError") return
