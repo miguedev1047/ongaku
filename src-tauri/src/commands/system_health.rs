@@ -27,6 +27,7 @@ pub struct SystemHealthInfo {
     pub server_port: u16,
     pub server_host: String,
     pub app_version: String,
+    pub binaries_installed: bool,
     pub ytdlp_installed: bool,
     pub ffmpeg_installed: bool,
     pub bin_dir: String,
@@ -126,14 +127,18 @@ pub fn get_system_health(
     let port = server_port.0;
     let server_healthy = port > 0;
     let package_type = detect_package_type();
+    let ytdlp_installed = ytdlp_path.is_file();
+    let ffmpeg_installed = ffmpeg_path.is_file();
+    let binaries_installed = ytdlp_installed && ffmpeg_installed;
 
     Ok(SystemHealthInfo {
         server_healthy,
         server_port: port,
         server_host: SERVER_HOST.to_string(),
         app_version: env!("CARGO_PKG_VERSION").to_string(),
-        ytdlp_installed: ytdlp_path.is_file(),
-        ffmpeg_installed: ffmpeg_path.is_file(),
+        binaries_installed,
+        ytdlp_installed,
+        ffmpeg_installed,
         bin_dir: app_paths.bin_dir.to_string_lossy().to_string(),
         music_dir: app_paths.library_dir.to_string_lossy().to_string(),
         db_path: db_path.to_string_lossy().to_string(),

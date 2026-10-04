@@ -1,20 +1,27 @@
-import {
-  binariesCheckQueryOpts,
-  binariesInfoQueryOpts,
-  type TBinariesInfo,
-} from '@/shared/queries/binaries'
+import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import { useBinariesStore } from '@/shared/stores/actions'
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 
-export type { TBinariesInfo }
+export interface TBinariesInfo {
+  is_installed: boolean
+  bin_dir: string
+  ytdlp_installed: boolean
+  ffmpeg_installed: boolean
+}
 
 export function useBinaries() {
-  const { data: isBinariesInstalled } = useSuspenseQuery(
-    binariesCheckQueryOpts()
+  const { data: health } = useSuspenseQuery(systemHealthQueryOpts())
+
+  const isBinariesInstalled = Boolean(
+    health.binariesInstalled ?? (health.ytdlpInstalled && health.ffmpegInstalled)
   )
-  const { data: binariesInfo } = useSuspenseQuery(
-    binariesInfoQueryOpts()
-  )
+
+  const binariesInfo: TBinariesInfo = {
+    is_installed: isBinariesInstalled,
+    bin_dir: health.binDir,
+    ytdlp_installed: health.ytdlpInstalled,
+    ffmpeg_installed: health.ffmpegInstalled,
+  }
 
   const queryClient = useQueryClient()
   const status = useBinariesStore((state) => state.status)
@@ -22,8 +29,14 @@ export function useBinaries() {
 
   const isPending = status === 'installing'
 
-  const installBinaries = () => {
-    void install(queryClient)
+  const installBinaries = async () => {
+    const success = await install(queryClient)
+    if (success) {
+      await queryClient.invalidateQueries({
+        ...systemHealthQueryOpts(),
+        refetchType: 'all',
+      })
+    }
   }
 
   return {

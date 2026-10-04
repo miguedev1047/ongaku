@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { usePlayerMedia } from '@/blocks/local-player/hooks'
 import { useSongUtils } from '@/hooks/use-song-utils'
-import { useLocalPlayerStore } from '@/shared/stores/player'
+import { useLocalPlayerStore, useActivePlayerStore } from '@/shared/stores/player'
 import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
 
@@ -9,6 +9,7 @@ export function LocalPlayerElement() {
   const { t } = useTranslation()
   const { songActive, isLoop, handleNextSong, handleTimeUpdate, setAudioRef } =
     usePlayerMedia()
+  const queue = useLocalPlayerStore((state) => state.queue)
   const audioRef = useLocalPlayerStore((state) => state.audioRef)
   const playerState = useLocalPlayerStore((state) => state.playerState)
   const initialProgress = useLocalPlayerStore((state) => state.progress)
@@ -54,13 +55,17 @@ export function LocalPlayerElement() {
 
     if (failureCountRef.current >= 3) {
       toast.error(t('toasts.songs.playback_stopped_multiple'))
-      useLocalPlayerStore.getState().setPlayerState('idle')
+      useActivePlayerStore.getState().resetActivePlayer()
       failureCountRef.current = 0
       return
     }
 
     toast.error(t('toasts.songs.cannot_play_song', { name: songActive.name }))
-    handleNextSong()
+    if (queue.length <= 1) {
+      useActivePlayerStore.getState().resetActivePlayer()
+    } else {
+      handleNextSong()
+    }
   }
 
   return (

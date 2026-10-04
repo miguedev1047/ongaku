@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/empty'
 import { formatDuration } from '@/shared/helpers/format-duration'
 import { Show } from '@/components/utility/show'
-import { YoutubeSongActions } from '@/features/youtube-search/components'
+import { SearchSongActions } from '@/blocks/song-actions/search-songs'
 import { cn } from 'cn'
 import { DotmSquare1, DotmSquare18 } from '@/components/loaders'
 import { useTranslation } from 'react-i18next'
@@ -169,7 +169,7 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
           <span>{playButtonLabel}</span>
         </Button>
 
-        <YoutubeSongActions item={currentTrack} />
+        <SearchSongActions item={currentTrack} />
       </div>
 
       {/* Interactive Status Footer */}

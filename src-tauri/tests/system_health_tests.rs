@@ -7,6 +7,7 @@ fn test_system_health_info_serialization() {
         server_port: 41903,
         server_host: "127.0.0.1".to_string(),
         app_version: "0.1.14".to_string(),
+        binaries_installed: true,
         ytdlp_installed: true,
         ffmpeg_installed: true,
         bin_dir: "/dummy/bin".to_string(),
@@ -36,6 +37,7 @@ fn test_system_health_info_serialization() {
     assert!(json.contains("\"serverHealthy\":true"));
     assert!(json.contains("\"serverPort\":41903"));
     assert!(json.contains("\"appVersion\":\"0.1.14\""));
+    assert!(json.contains("\"binariesInstalled\":true"));
     assert!(json.contains("\"directories\":["));
     assert!(json.contains("\"writable\":true"));
     assert!(json.contains("\"packageType\":\"appimage\""));

@@ -5,7 +5,7 @@ import { formatDuration } from "@/shared/helpers/format-duration"
 import { useStreamingPlayerStore } from "@/shared/stores/player"
 import { useActivePlayerStore } from "@/shared/stores/player"
 import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
-import { YoutubeSongActions } from "./actions"
+import { SearchSongActions } from "@/blocks/song-actions/search-songs"
 import {
   Item,
   ItemActions,
@@ -91,7 +91,7 @@ export function SearchYoutubeItem({ item }: YoutubeCardProps) {
         </Show>
 
         <Suspense fallback={<Skeleton className="size-7" />}>
-          <YoutubeSongActions item={item} />
+          <SearchSongActions item={item} />
         </Suspense>
       </ItemActions>
     </Item>

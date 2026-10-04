@@ -21,6 +21,7 @@ export interface TSystemHealthInfo {
   serverPort: number
   serverHost: string
   appVersion: string
+  binariesInstalled: boolean
   ytdlpInstalled: boolean
   ffmpegInstalled: boolean
   binDir: string

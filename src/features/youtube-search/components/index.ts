@@ -1,6 +1,5 @@
 export * from "@/features/youtube-search/components/item"
 export * from "@/features/youtube-search/components/list"
-export * from "@/features/youtube-search/components/actions"
 export * from "@/features/youtube-search/components/playlist-menu-group"
 export * from "@/features/youtube-search/components/playlist-context-menu-group"
 export * from "@/features/youtube-search/components/youtube-search-bar"

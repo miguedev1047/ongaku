@@ -1,10 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import { updatesQueryOpts } from '@/shared/queries/updates'
-import {
-  binariesInfoQueryOpts,
-  binariesCheckQueryOpts,
-} from '@/shared/queries/binaries'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import { RouteSection } from '@/components/ui/route-section'
 import { RoutePendingState, RouteErrorState } from '@/components/route-ui-state'
@@ -41,8 +37,6 @@ export const Route = createFileRoute('/settings/')({
     context.queryClient.query(systemConfigQueryOpts())
     context.queryClient.query(systemHealthQueryOpts())
     context.queryClient.query(updatesQueryOpts())
-    context.queryClient.query(binariesInfoQueryOpts())
-    context.queryClient.query(binariesCheckQueryOpts())
   },
   component: RouteComponent,
 })

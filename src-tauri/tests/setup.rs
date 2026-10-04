@@ -2,9 +2,9 @@ use std::fs;
 use std::sync::Mutex;
 use tauri_app_lib::db::{init_and_sync_db, queries::get_all_config};
 use tauri_app_lib::helpers::{
-    ensure_dirs, get_app_paths, get_bin_dir, get_cache_dir, get_config_dir, get_db_dir,
-    get_db_path, get_library_dir, get_paths_config_path, get_staging_dir, set_app_dir,
-    AppPaths,
+    ensure_dirs, get_app_paths, get_bin_dir, get_cache_dir, get_cache_pictures_dir,
+    get_config_dir, get_db_dir, get_db_path, get_library_dir, get_paths_config_path,
+    get_staging_dir, set_app_dir, AppPaths,
 };
 
 static TEST_LOCK: Mutex<()> = Mutex::new(());
@@ -26,6 +26,7 @@ fn test_ensure_dirs_creates_all_required_directories() {
     // Assert that all required directories are created
     assert!(get_library_dir().exists(), "library dir must exist");
     assert!(get_cache_dir().exists(), "cache dir must exist");
+    assert!(get_cache_pictures_dir().exists(), "cache pictures dir must exist");
     assert!(get_bin_dir().exists(), "bin dir must exist");
     assert!(get_config_dir().exists(), "config dir must exist");
     assert!(get_db_dir().exists(), "db dir must exist");

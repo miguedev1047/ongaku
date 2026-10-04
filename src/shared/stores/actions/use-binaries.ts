@@ -31,7 +31,7 @@ export const useBinariesStore = create<BinariesStoreProps>((set, get) => ({
       set({ status: 'done' })
       toast.success(i18n.t('toasts.tools.installed_success'))
       if (queryClient) {
-        queryClient.invalidateQueries({ queryKey: ['system'] })
+        queryClient.invalidateQueries({ queryKey: ['system'], refetchType: 'all' })
       }
       return true
     } catch (error) {

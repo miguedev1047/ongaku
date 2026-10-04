@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
 import { updatesQueryOpts } from '@/shared/queries/updates'
-import { binariesInfoQueryOpts } from '@/shared/queries/binaries'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import { useTranslation } from 'react-i18next'
 
@@ -19,17 +18,16 @@ export interface AppStatusResult {
 export function useAppStatus(): AppStatusResult {
   const { t } = useTranslation()
   const { data: update } = useQuery(updatesQueryOpts())
-  const { data: binariesInfo } = useQuery(binariesInfoQueryOpts())
   const { data: health } = useQuery(systemHealthQueryOpts())
 
   const errorReasons: string[] = []
 
   // Check 1: Auxiliary binaries
-  if (binariesInfo) {
-    if (!binariesInfo.ytdlp_installed) {
+  if (health) {
+    if (!health.ytdlpInstalled) {
       errorReasons.push('yt-dlp is not installed')
     }
-    if (!binariesInfo.ffmpeg_installed) {
+    if (!health.ffmpegInstalled) {
       errorReasons.push('ffmpeg is not installed')
     }
   }

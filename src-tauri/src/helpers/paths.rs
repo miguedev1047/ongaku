@@ -87,7 +87,9 @@ pub fn get_staging_dir() -> PathBuf {
 }
 
 pub fn get_cache_pictures_dir() -> PathBuf {
-    get_cache_dir().join("pictures")
+    let dir = get_cache_dir().join("pictures");
+    let _ = fs::create_dir_all(&dir);
+    dir
 }
 
 pub fn get_bin_dir() -> PathBuf {
