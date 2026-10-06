@@ -24,7 +24,6 @@ export function useDeleteSong({
   const currentSong = useLocalPlayerStore((state) => state.currentSong)
   const setCurrentSong = useLocalPlayerStore((state) => state.setCurrentSong)
   const setPlayerState = useLocalPlayerStore((state) => state.setPlayerState)
-  const audioRef = useLocalPlayerStore((state) => state.audioRef)
 
   const mutation = useMutation({
     mutationFn: async () => {
@@ -53,11 +52,9 @@ export function useDeleteSong({
 
       useLocalPlayerStore.getState().removeFromQueue(song.id)
 
-      // If the currently playing song is deleted or removed, reset the player
+      // If the currently playing song is deleted or removed, stop audio and reset the player
       if (currentSong?.id === song.id) {
-        if (audioRef) {
-          audioRef.pause()
-        }
+        platformService.invoke('local_audio_stop').catch(() => {})
         setCurrentSong(null)
         setPlayerState('idle')
       }

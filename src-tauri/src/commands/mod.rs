@@ -13,6 +13,7 @@ mod search_youtube;
 mod song_actions;
 mod sync_library;
 mod system_health;
+mod local_audio;
 
 pub use check_binaries::*;
 pub use config::*;
@@ -29,3 +30,4 @@ pub use search_youtube::*;
 pub use song_actions::*;
 pub use sync_library::*;
 pub use system_health::*;
+pub use local_audio::*;

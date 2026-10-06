@@ -42,6 +42,14 @@ r2d2 = "0.8"
 r2d2_sqlite = "0.25"
 rayon = "1.10"
 rfd = "0.15"
+rodio = { version = "0.22", default-features = false, features = [
+    "playback",
+    "mp3",
+    "flac",
+    "wav",
+    "vorbis",
+    "mp4",
+] }
 
 # Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration
 [profile.release]

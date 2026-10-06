@@ -512,6 +512,10 @@
       "stream_load_error": "Failed to load streaming audio.",
       "playback_stopped_multiple": "Playback stopped. Multiple tracks could not be loaded.",
       "cannot_play_song": "Cannot play \"{{name}}\"",
+      "song_file_not_found": "Audio file not found for \"{{name}}\"",
+      "song_decode_error": "Cannot decode \"{{name}}\". File may be corrupted or unsupported",
+      "song_permission_denied": "Permission denied reading \"{{name}}\"",
+      "audio_device_error": "Audio output device disconnected or unavailable",
       "open_browser_error": "Could not open web browser for YouTube",
       "stream_expired": "Failed to stream audio from YouTube. The link might have expired."
     },
