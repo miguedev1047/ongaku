@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { invoke } from '@tauri-apps/api/core'
+import { platformService } from '@/infrastructure/platform'
 import { toast } from 'sonner'
 import type { QueryClient } from '@tanstack/react-query'
 import i18n from '@/lib/i18n'
@@ -27,7 +27,7 @@ export const useBinariesStore = create<BinariesStoreProps>((set, get) => ({
     set({ status: 'installing' })
 
     try {
-      await invoke('download_binaries')
+      await platformService.invoke('download_binaries')
       set({ status: 'done' })
       toast.success(i18n.t('toasts.tools.installed_success'))
       if (queryClient) {

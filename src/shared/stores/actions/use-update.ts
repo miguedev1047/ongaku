@@ -1,7 +1,6 @@
 import { create } from "zustand"
-import { relaunch } from "@tauri-apps/plugin-process"
 import { toast } from "sonner"
-import type { Update } from "@tauri-apps/plugin-updater"
+import { platformService, type AppUpdate as Update } from "@/infrastructure/platform"
 import i18n from "@/lib/i18n"
 
 export type UpdateStatus =
@@ -67,11 +66,11 @@ export const useUpdateStore = create<UpdateStoreProps>((set, get) => ({
       await update.downloadAndInstall((event) => {
         switch (event.event) {
           case "Started":
-            total = event.data.contentLength ?? 0
+            total = event.data?.contentLength ?? 0
             get().setProgress(0, total)
             return
           case "Progress":
-            downloaded += event.data.chunkLength
+            downloaded += event.data?.chunkLength ?? 0
             get().setProgress(downloaded, total)
             return
           case "Finished":
@@ -86,7 +85,7 @@ export const useUpdateStore = create<UpdateStoreProps>((set, get) => ({
       toast.success(i18n.t("toasts.updater.installed_success"), {
         id: "updater-toast"
       })
-      setTimeout(async () => await relaunch(), RESTARTING_DELAY)
+      setTimeout(async () => await platformService.relaunch(), RESTARTING_DELAY)
     } catch (err) {
       set({
         status: "error",

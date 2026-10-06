@@ -1,14 +1,13 @@
 import { queryOptions } from '@tanstack/react-query'
-import { invoke } from '@tauri-apps/api/core'
+import { platformService } from '@/infrastructure/platform'
 import { TEN_MINUTES, ONE_HOUR } from '@/constants/times'
-import type { TYoutubeSearchResult } from '@/shared/types/youtube.types'
 
 export const youtubeSearchQueryOpts = (searchName: string) =>
   queryOptions({
     queryKey: ['youtube-search', searchName],
     queryFn: async () => {
       if (!searchName.trim()) return []
-      return invoke<TYoutubeSearchResult[]>('search_youtube', {
+      return platformService.invoke('search_youtube', {
         searchName: searchName.trim(),
         maxResults: 50,
       })

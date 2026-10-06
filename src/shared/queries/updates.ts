@@ -1,10 +1,10 @@
 import { queryOptions } from '@tanstack/react-query'
-import { check, type Update } from '@tauri-apps/plugin-updater'
+import { platformService, type AppUpdate } from '@/infrastructure/platform'
 import { ONE_HOUR } from '@/constants/times'
 
-export async function checkForUpdates(): Promise<Update | null> {
+export async function checkForUpdates(): Promise<AppUpdate | null> {
   try {
-    const update = await check()
+    const update = await platformService.checkForUpdates()
     if (update) {
       console.log(`[ONGAKU]: Update available: v${update.version}`)
       return update
@@ -26,4 +26,4 @@ export const updatesQueryOpts = () =>
   })
 
 export const systemUpdatesQueryOptions = updatesQueryOpts
-export type { Update }
+export type { AppUpdate as Update }

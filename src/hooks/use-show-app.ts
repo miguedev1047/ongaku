@@ -1,12 +1,11 @@
 import { useEffect } from "react"
-import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow"
+import { platformService } from "@/infrastructure/platform"
 
 export function useShowApp() {
   useEffect(() => {
     const showWindow = async () => {
-      const win = getCurrentWebviewWindow()
-      await win.show()
-      await win.setFocus()
+      await platformService.showWindow()
+      await platformService.focusWindow()
     }
     showWindow().catch(console.error)
   }, [])

@@ -10,7 +10,7 @@ import { playlistsQueryOpts } from "@/shared/queries/playlists"
 import { ReloadIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useQuery } from "@tanstack/react-query"
-import { invoke } from "@tauri-apps/api/core"
+import { platformService } from "@/infrastructure/platform"
 
 import { useTranslation } from "react-i18next"
 
@@ -21,7 +21,7 @@ export function PlaylistsReloadList() {
 
   const handleReload = async () => {
     try {
-      await invoke("sync_library")
+      await platformService.invoke("sync_library")
     } finally {
       await refetch()
     }

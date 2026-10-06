@@ -1,5 +1,5 @@
-import { invoke } from "@tauri-apps/api/core"
+import { platformService } from "@/infrastructure/platform"
 
 export async function openFolder(path: string): Promise<void> {
-  await invoke("open_folder", { path })
+  await platformService.invoke("open_folder", { path })
 }
