@@ -8,6 +8,7 @@ interface StreamingPlayerStore {
   currentTrack: TYoutubeSearchResult | null
   playerState: StreamingPlayerState
   isSeeking: boolean
+  hasEnded: boolean
   duration: number
   progress: number
   volume: number
@@ -30,6 +31,7 @@ export const useStreamingPlayerStore = create<StreamingPlayerStore>(
     currentTrack: null,
     playerState: "idle",
     isSeeking: false,
+    hasEnded: false,
     duration: 0,
     progress: 0,
     volume: 80,
@@ -39,6 +41,7 @@ export const useStreamingPlayerStore = create<StreamingPlayerStore>(
         currentTrack: track,
         duration: track?.duration ?? 0,
         progress: 0,
+        hasEnded: false,
         playerState: track ? "loading" : "idle",
       }),
 
@@ -54,26 +57,29 @@ export const useStreamingPlayerStore = create<StreamingPlayerStore>(
     },
 
     play: () => {
-      const { playerState, currentTrack, volume, progress } = get()
+      const { playerState, currentTrack, volume, progress, hasEnded } = get()
       if (!currentTrack) return
 
-      if (playerState === "paused") {
+      // If user paused manually during playback (and track hasn't ended), resume playback
+      if (playerState === "paused" && !hasEnded && progress > 0) {
         set({ playerState: "playing" })
         platformService.invoke("streaming_audio_resume").catch(() => {})
       } else {
-        set({ playerState: "loading" })
+        // Track ended, was idle, or restart requested: reload and play from start/progress
+        set({ playerState: "loading", hasEnded: false })
+        const startPos = hasEnded ? 0 : progress > 0 ? progress : undefined
         platformService
           .invoke("streaming_audio_play", {
             videoId: currentTrack.id,
             volume: volume / 100,
-            startPosSecs: progress > 0 ? progress : undefined,
+            startPosSecs: startPos,
           })
           .then(() => {
-            set({ playerState: "playing" })
+            set({ playerState: "playing", hasEnded: false })
           })
           .catch((err) => {
             console.error("Failed to play streaming audio via rodio:", err)
-            set({ playerState: "idle" })
+            set({ playerState: "idle", hasEnded: false })
           })
       }
     },
@@ -93,13 +99,30 @@ export const useStreamingPlayerStore = create<StreamingPlayerStore>(
     },
 
     seekTo: (time: number) => {
-      const { duration } = get()
+      const { duration, currentTrack, volume, hasEnded } = get()
       const max = duration || 0
       const clamped = max > 0 ? Math.min(Math.max(0, time), max) : Math.max(0, time)
       set({ progress: clamped })
-      platformService
-        .invoke("streaming_audio_seek", { positionSecs: clamped })
-        .catch(() => {})
+
+      if (hasEnded && currentTrack) {
+        set({ playerState: "loading", hasEnded: false })
+        platformService
+          .invoke("streaming_audio_play", {
+            videoId: currentTrack.id,
+            volume: volume / 100,
+            startPosSecs: clamped,
+          })
+          .then(() => {
+            set({ playerState: "playing", hasEnded: false })
+          })
+          .catch(() => {
+            set({ playerState: "idle" })
+          })
+      } else {
+        platformService
+          .invoke("streaming_audio_seek", { positionSecs: clamped })
+          .catch(() => {})
+      }
     },
 
     stop: () => {
@@ -107,6 +130,7 @@ export const useStreamingPlayerStore = create<StreamingPlayerStore>(
       set({
         currentTrack: null,
         playerState: "idle",
+        hasEnded: false,
         progress: 0,
         duration: 0,
       })
@@ -121,6 +145,9 @@ if (typeof window !== "undefined") {
       const state = useStreamingPlayerStore.getState()
       if (!state.isSeeking && state.playerState === "playing") {
         state.setProgress(payload.currentTime)
+        if (state.hasEnded) {
+          useStreamingPlayerStore.setState({ hasEnded: false })
+        }
       }
     })
     .catch(() => {})
@@ -130,6 +157,7 @@ if (typeof window !== "undefined") {
       const state = useStreamingPlayerStore.getState()
       state.setPlayerState("paused")
       state.setProgress(0)
+      useStreamingPlayerStore.setState({ hasEnded: true })
     })
     .catch(() => {})
 }

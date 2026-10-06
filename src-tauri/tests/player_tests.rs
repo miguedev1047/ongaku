@@ -304,3 +304,42 @@ async fn test_streaming_player_handles_corrupt_cached_file() {
 
     let _ = fs::remove_file(&cache_dest);
 }
+
+#[tokio::test]
+async fn test_streaming_player_replay_after_stop_or_end() {
+    let song_path = match find_library_song() {
+        Some(p) => p,
+        None => {
+            eprintln!("[SKIP] No song found in library dir, skipping replay test");
+            return;
+        }
+    };
+
+    let test_vid = "test_replay_vid_789";
+    let cache_dir = tauri_app_lib::helpers::get_streaming_cache_dir();
+    let cache_dest = cache_dir.join(format!("{test_vid}.mp3"));
+    let _ = fs::copy(&song_path, &cache_dest);
+
+    let player = StreamingAudioPlayer::new();
+
+    // 1. Play first time
+    player.play_stream(test_vid.to_string(), Some(0.5), None).await.unwrap();
+    sleep(Duration::from_millis(100));
+    assert!(player.get_status().unwrap().is_playing);
+
+    // 2. Stop (simulating track end / clear)
+    player.stop().unwrap();
+    assert!(!player.get_status().unwrap().is_playing);
+
+    // 3. Replay from beginning (start_pos_secs = 0.0)
+    let replay_res = player.play_stream(test_vid.to_string(), Some(0.5), Some(0.0)).await;
+    assert!(replay_res.is_ok(), "Replay on streaming track must succeed without ghost state");
+    sleep(Duration::from_millis(100));
+
+    let status = player.get_status().unwrap();
+    assert!(status.is_playing, "Streaming player must be actively playing upon replay");
+    assert!(!status.is_paused);
+
+    player.stop().unwrap();
+    let _ = fs::remove_file(&cache_dest);
+}
