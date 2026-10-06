@@ -1,6 +1,6 @@
 [package]
 name = "ongaku"
-version = "0.1.20"
+version = "0.1.21"
 description = "A lightweight and simple mp3 player"
 authors = ["miguedev1047"]
 edition = "2021"
@@ -61,4 +61,3 @@ strip = true
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-updater = "2"
-
