@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/react-query'
-import { invoke } from '@tauri-apps/api/core'
+import { platformService } from '@/infrastructure/platform'
 
 export interface TAppConfig {
   theme: 'light' | 'dark' | 'system'
@@ -13,7 +13,7 @@ export interface TAppConfig {
 export const systemConfigQueryOpts = () =>
   queryOptions({
     queryKey: ['system', 'config'] as const,
-    queryFn: async () => invoke<TAppConfig>('get_app_config'),
+    queryFn: async () => platformService.invoke('get_app_config'),
     staleTime: Infinity,
   })
 

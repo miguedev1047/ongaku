@@ -1,9 +1,6 @@
 import { useEffect } from "react"
-import { listen } from "@tauri-apps/api/event"
-import {
-  useDownloadQueueStore,
-  type DownloadProgressPayload
-} from "@/shared/stores/actions"
+import { platformService } from "@/infrastructure/platform"
+import { useDownloadQueueStore } from "@/shared/stores/actions"
 
 export function useDownloadQueueListener() {
   const updateProgress = useDownloadQueueStore((s) => s._updateProgress)
@@ -11,8 +8,8 @@ export function useDownloadQueueListener() {
   useEffect(() => {
     let unlistenFn: (() => void) | undefined
 
-    listen<DownloadProgressPayload>("download:progress", (event) => {
-      updateProgress(event.payload)
+    platformService.on("download:progress", (payload) => {
+      updateProgress(payload)
     }).then((unlisten) => {
       unlistenFn = unlisten
     })

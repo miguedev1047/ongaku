@@ -1,4 +1,4 @@
-import { openUrl } from '@tauri-apps/plugin-opener'
+import { platformService } from '@/infrastructure/platform'
 import { toast } from 'sonner'
 import i18n from '@/lib/i18n'
 
@@ -23,7 +23,7 @@ export async function openReleaseNotes(version?: string): Promise<void> {
   if (!url.startsWith(`${RELEASES_BASE_URL}`)) return
 
   try {
-    await openUrl(url)
+    await platformService.openUrl(url)
   } catch (error) {
     console.error('Failed to open release notes:', error)
     toast.error(i18n.t('toasts.updater.notes_error'))

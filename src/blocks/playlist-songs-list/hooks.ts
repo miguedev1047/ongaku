@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useQueryClient } from "@tanstack/react-query"
-import { invoke } from "@tauri-apps/api/core"
+import { platformService } from "@/infrastructure/platform"
 import { toast } from "sonner"
 import { usePlaylistBatchStore } from "@/shared/stores/batch-operations"
 import { useLocalPlayerStore } from "@/shared/stores/player"
@@ -25,12 +25,6 @@ export function usePlaylistBatchActions(currentPlaylistName?: string) {
   const setPlayerState = useLocalPlayerStore((s) => s.setPlayerState)
   const audioRef = useLocalPlayerStore((s) => s.audioRef)
 
-interface BatchActionResponse {
-  success_count: number
-  failed_count: number
-  failed_items: string[]
-}
-
   const handleBatchDelete = async () => {
     if (selectedSongs.length === 0) return
     setIsProcessing(true)
@@ -41,7 +35,7 @@ interface BatchActionResponse {
         id: song.id || undefined
       }))
 
-      const res = await invoke<BatchActionResponse>("batch_delete_songs", {
+      const res = await platformService.invoke("batch_delete_songs", {
         items,
         playlistName: currentPlaylistName || undefined,
       })
@@ -109,7 +103,7 @@ interface BatchActionResponse {
         return
       }
 
-      const res = await invoke<BatchActionResponse>("batch_move_songs", {
+      const res = await platformService.invoke("batch_move_songs", {
         paths,
         targetPlaylist
       })

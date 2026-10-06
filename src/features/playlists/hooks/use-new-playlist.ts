@@ -1,13 +1,12 @@
 import { useForm } from "@tanstack/react-form"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { invoke } from "@tauri-apps/api/core"
+import { platformService } from "@/infrastructure/platform"
 import { toast } from "sonner"
 import { playlistsQueryOpts } from "@/shared/queries/playlists"
 import {
   newPlaylistSchema,
   type TNewPlaylistSchema
 } from "@/shared/schemas/playlists"
-import type { TPlaylistAction } from "@/shared/types/playlist-actions"
 
 interface UseNewPlaylistProps {
   onSuccess?: () => void
@@ -23,7 +22,7 @@ export function useNewPlaylist({ onSuccess }: UseNewPlaylistProps = {}) {
   const mutation = useMutation({
     mutationFn: async (value: TNewPlaylistSchema) => {
       const trimmedPlaylist = value.name.trim()
-      return await invoke<TPlaylistAction>("new_playlist", {
+      return await platformService.invoke("new_playlist", {
         name: trimmedPlaylist
       })
     },

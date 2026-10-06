@@ -1,9 +1,8 @@
 import { queryOptions } from "@tanstack/react-query"
-import { invoke } from "@tauri-apps/api/core"
-import type { TLibrarySong } from "@/shared/types/playlist-songs.types"
+import { platformService } from "@/infrastructure/platform"
 
 export const librarySongsQueryOpts = () =>
   queryOptions({
     queryKey: ["library-songs"],
-    queryFn: async () => invoke<TLibrarySong[]>("library")
+    queryFn: async () => platformService.invoke("library")
   })

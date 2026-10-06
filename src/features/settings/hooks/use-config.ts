@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { invoke } from '@tauri-apps/api/core'
+import { platformService } from '@/infrastructure/platform'
 import { systemConfigQueryOpts, type TAppConfig } from '@/shared/queries/config'
 import { useActivePlayerStore } from '@/shared/stores/player/use-active-player'
 import { toast } from 'sonner'
@@ -11,7 +11,7 @@ export function useUpdateConfig() {
 
   return useMutation({
     mutationFn: async ({ key, value }: { key: string; value: string }) => {
-      await invoke('set_app_config', { key, value })
+      await platformService.invoke('set_app_config', { key, value })
       return { key, value }
     },
     onMutate: async ({ key, value }) => {
@@ -52,7 +52,7 @@ export function useChangeAppDir() {
       useActivePlayerStore.getState().resetActivePlayer()
 
       // 2. Perform folder migration and path updating on backend
-      const updatedConfig = await invoke<TAppConfig>('change_app_dir', {
+      const updatedConfig = await platformService.invoke('change_app_dir', {
         newParentDir,
       })
       return updatedConfig
@@ -75,5 +75,5 @@ export function useChangeAppDir() {
 }
 
 export async function selectDirectory(): Promise<string | null> {
-  return invoke<string | null>('select_directory')
+  return platformService.invoke('select_directory')
 }

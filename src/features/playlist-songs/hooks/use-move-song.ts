@@ -1,11 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { invoke } from "@tauri-apps/api/core"
+import { platformService } from "@/infrastructure/platform"
 import { toast } from "sonner"
 import { useLocalPlayerStore } from "@/shared/stores/player"
 import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs"
 import { playlistsQueryOpts } from "@/shared/queries/playlists"
 import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
-import type { TSongAction } from "@/shared/types/song-actions"
 
 interface UseMoveSongProps {
   song: TPlaylistSong
@@ -24,7 +23,7 @@ export function useMoveSong({ song, onSuccess }: UseMoveSongProps) {
 
   const mutation = useMutation({
     mutationFn: async (targetPlaylist: string) => {
-      return await invoke<TSongAction>("move_song", {
+      return await platformService.invoke("move_song", {
         path: song.path,
         id: song.id,
         sourcePlaylist: song.playlist_name,

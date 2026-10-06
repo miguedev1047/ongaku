@@ -1,13 +1,9 @@
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import { useBinariesStore } from '@/shared/stores/actions'
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
+import type { TBinariesInfo } from '@/shared/types/binaries.types'
 
-export interface TBinariesInfo {
-  is_installed: boolean
-  bin_dir: string
-  ytdlp_installed: boolean
-  ffmpeg_installed: boolean
-}
+export type { TBinariesInfo }
 
 export function useBinaries() {
   const { data: health } = useSuspenseQuery(systemHealthQueryOpts())

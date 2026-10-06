@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useForm } from '@tanstack/react-form'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useLocation } from '@tanstack/react-router'
-import { invoke } from '@tauri-apps/api/core'
+import { platformService } from '@/infrastructure/platform'
 import { toast } from 'sonner'
 import { playlistsQueryOpts } from '@/shared/queries/playlists'
 import {
@@ -13,7 +13,6 @@ import {
   renamePlaylistSchema,
   type TRenamePlaylistSchema,
 } from '@/shared/schemas/playlists'
-import type { TPlaylistAction } from '@/shared/types/playlist-actions'
 import type { TPlaylist } from '@/shared/types/playlist.types'
 
 import { useTranslation } from 'react-i18next'
@@ -38,7 +37,7 @@ export function useRenamePlaylist({
   const mutation = useMutation({
     mutationFn: async (value: TRenamePlaylistSchema) => {
       const trimmedNewName = value.new_name.trim()
-      return await invoke<TPlaylistAction>('rename_playlist', {
+      return await platformService.invoke('rename_playlist', {
         oldName: playlist.name,
         newName: trimmedNewName,
       })

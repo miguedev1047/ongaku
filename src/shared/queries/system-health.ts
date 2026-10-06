@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/react-query'
-import { invoke } from '@tauri-apps/api/core'
+import { platformService } from '@/infrastructure/platform'
 
 export interface TDirectoryHealth {
   id: string
@@ -35,7 +35,7 @@ export interface TSystemHealthInfo {
 export const systemHealthQueryOpts = () =>
   queryOptions({
     queryKey: ['system', 'health'] as const,
-    queryFn: async () => invoke<TSystemHealthInfo>('get_system_health'),
+    queryFn: async () => platformService.invoke('get_system_health'),
     staleTime: 10_000,
   })
 

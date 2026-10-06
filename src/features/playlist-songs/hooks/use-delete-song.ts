@@ -1,11 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { invoke } from "@tauri-apps/api/core"
+import { platformService } from "@/infrastructure/platform"
 import { toast } from "sonner"
 import { useLocalPlayerStore } from "@/shared/stores/player"
 import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs"
 import { playlistsQueryOpts } from "@/shared/queries/playlists"
 import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
-import type { TSongAction } from "@/shared/types/song-actions"
 
 interface UseDeleteSongProps {
   song: TPlaylistSong
@@ -30,11 +29,11 @@ export function useDeleteSong({
   const mutation = useMutation({
     mutationFn: async () => {
       if (context === 'library') {
-        return await invoke<TSongAction>('delete_song_from_library', {
+        return await platformService.invoke('delete_song_from_library', {
           songId: song.id,
         })
       }
-      return await invoke<TSongAction>('remove_song_from_playlist', {
+      return await platformService.invoke('remove_song_from_playlist', {
         playlistName: song.playlist_name,
         songId: song.id,
       })

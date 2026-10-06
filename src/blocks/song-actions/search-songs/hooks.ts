@@ -1,6 +1,6 @@
 import { useYoutubePlayback } from "@/features/youtube-search/hooks"
 import { useDownloadQueueStore } from "@/shared/stores/actions"
-import { openUrl } from "@tauri-apps/plugin-opener"
+import { platformService } from "@/infrastructure/platform"
 import { toast } from "sonner"
 import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
 import { useTranslation } from "react-i18next"
@@ -16,7 +16,7 @@ export function useSearchSongActions({ item }: UseSearchSongActionsProps) {
 
   const handleOpenYoutube = async () => {
     try {
-      await openUrl(item.url)
+      await platformService.openUrl(item.url)
     } catch {
       toast.error(t("toasts.songs.open_browser_error"))
     }

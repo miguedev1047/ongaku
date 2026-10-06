@@ -1,11 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
-import { invoke } from "@tauri-apps/api/core"
+import { platformService } from "@/infrastructure/platform"
 import { toast } from "sonner"
 import { playlistsQueryOpts } from "@/shared/queries/playlists"
 import { useLocalPlayerStore } from "@/shared/stores/player"
 import type { TDeletePlaylistSchema } from "@/shared/schemas/playlists"
-import type { TPlaylistAction } from "@/shared/types/playlist-actions"
 import type { TPlaylist } from "@/shared/types/playlist.types"
 
 interface UseDeletePlaylistProps {
@@ -26,7 +25,7 @@ export function useDeletePlaylist({
 
   const mutation = useMutation({
     mutationFn: async (value: TDeletePlaylistSchema) => {
-      return await invoke<TPlaylistAction>("delete_playlist", {
+      return await platformService.invoke("delete_playlist", {
         name: value.name
       })
     },

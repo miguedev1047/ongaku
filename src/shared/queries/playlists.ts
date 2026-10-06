@@ -1,9 +1,8 @@
 import { queryOptions } from "@tanstack/react-query"
-import { invoke } from "@tauri-apps/api/core"
-import type { TPlaylist } from "@/shared/types/playlist.types"
+import { platformService } from "@/infrastructure/platform"
 
 export const playlistsQueryOpts = () =>
   queryOptions({
     queryKey: ["playlists"],
-    queryFn: async () => invoke<TPlaylist[]>("get_playlists")
+    queryFn: async () => platformService.invoke("get_playlists")
   })

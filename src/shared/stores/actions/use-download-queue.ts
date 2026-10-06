@@ -1,7 +1,8 @@
 import { create } from 'zustand'
-import { invoke } from '@tauri-apps/api/core'
+import { platformService } from '@/infrastructure/platform'
 import type { TYoutubeSearchResult } from '@/shared/types/youtube.types'
 import type { TPlaylistSong } from '@/shared/types/playlist-songs.types'
+import type { DownloadProgressPayload } from '@/shared/types/download.types'
 import { queryClient } from '@/lib/query'
 import { playlistSongsQueryOpts } from '@/shared/queries/playlist-songs'
 import { playlistsQueryOpts } from '@/shared/queries/playlists'
@@ -12,13 +13,7 @@ import i18n from '@/lib/i18n'
 export type DownloadTaskStatus =
   'queued' | 'downloading' | 'completed' | 'error' | 'cancelled'
 
-export interface DownloadProgressPayload {
-  id: string
-  progress: number
-  downloaded_bytes: number
-  total_bytes: number
-  done: boolean
-}
+export type { DownloadProgressPayload }
 
 export interface DownloadTask {
   id: string
@@ -150,7 +145,7 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
       })
 
       try {
-        await invoke('cancel_download', { id })
+        await platformService.invoke('cancel_download', { id })
       } catch (err) {
         console.error('Error cancelling download in Rust:', err)
       }
@@ -275,7 +270,7 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
     for (const task of nextTasks) {
       ;(async () => {
         try {
-          const song = await invoke<TPlaylistSong>('download_song', {
+          const song = await platformService.invoke('download_song', {
             id: task.id,
             url: task.item.url,
             playlistName: task.playlistName,
