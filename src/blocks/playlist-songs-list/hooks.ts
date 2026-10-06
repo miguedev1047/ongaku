@@ -43,7 +43,7 @@ export function usePlaylistBatchActions(currentPlaylistName?: string) {
       for (const song of selectedSongs) {
         useLocalPlayerStore.getState().removeFromQueue(song.id)
         if (currentSong?.id === song.id) {
-          audioRef?.pause()
+          platformService.invoke("local_audio_stop").catch(() => {})
           setCurrentSong(null)
           setPlayerState("idle")
         }

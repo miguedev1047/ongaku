@@ -38,14 +38,14 @@ export function useDeletePlaylist({
       toast.success(t("toasts.playlists.deleted_success"))
 
       // Reset playback if the active playlist is the one being deleted
-      const { playbackContext, audioRef, setCurrentSong, setPlayerState, setQueue } =
+      const { playbackContext, setCurrentSong, setPlayerState, setQueue } =
         useLocalPlayerStore.getState()
 
       if (
         playbackContext.type === "playlist" &&
         playbackContext.playlistName === playlist.name
       ) {
-        audioRef?.pause()
+        platformService.invoke('local_audio_stop').catch(() => {})
         setCurrentSong(null)
         setQueue([])
         setPlayerState("idle")

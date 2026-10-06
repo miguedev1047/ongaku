@@ -1,5 +1,6 @@
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
+import { platformService } from "@/infrastructure/platform"
 import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
 import type { LocalPlayerState, PlaybackContext } from "./types"
 
@@ -143,20 +144,17 @@ export const useLocalPlayerStore = create<LocalPlayerStore>()(
   setPlayerState: (state) => set({ playerState: state }),
   setDuration: (duration) => set({ duration }),
   setProgress: (progress) => set({ progress }),
-  setVolume: (volume) => set({ volume }),
+  setVolume: (volume) => {
+    set({ volume })
+    platformService.invoke("local_audio_set_volume", { volume: volume / 100 }).catch(() => {})
+  },
   play: () => {
-    const { audioRef } = get()
     set({ playerState: "playing" })
-    if (audioRef) {
-      audioRef.play().catch(() => {})
-    }
+    platformService.invoke("local_audio_resume").catch(() => {})
   },
   pause: () => {
-    const { audioRef } = get()
     set({ playerState: "paused" })
-    if (audioRef) {
-      audioRef.pause()
-    }
+    platformService.invoke("local_audio_pause").catch(() => {})
   },
   togglePlay: () => {
     const { playerState, play, pause } = get()
@@ -166,21 +164,17 @@ export const useLocalPlayerStore = create<LocalPlayerStore>()(
       play()
     }
   },
-  resetPlayer: () =>
-    set((state) => {
-      if (state.audioRef) {
-        state.audioRef.pause()
-        state.audioRef.src = ""
-      }
-      return {
-        currentSong: null,
-        queue: [],
-        progress: 0,
-        duration: 0,
-        playerState: "idle",
-        currentPlaylist: "",
-      }
-    }),
+  resetPlayer: () => {
+    platformService.invoke("local_audio_stop").catch(() => {})
+    set({
+      currentSong: null,
+      queue: [],
+      progress: 0,
+      duration: 0,
+      playerState: "idle",
+      currentPlaylist: "",
+    })
+  },
     }),
     {
       name: "ongaku-local-player",

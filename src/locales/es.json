@@ -512,6 +512,10 @@
       "stream_load_error": "No se pudo cargar el streaming de audio.",
       "playback_stopped_multiple": "Reproducción detenida. No se pudieron cargar varias pistas.",
       "cannot_play_song": "No se puede reproducir \"{{name}}\"",
+      "song_file_not_found": "No se encontró el archivo de audio para \"{{name}}\"",
+      "song_decode_error": "No se puede decodificar \"{{name}}\". El archivo podría estar corrupto o no ser compatible",
+      "song_permission_denied": "Permiso denegado para leer \"{{name}}\"",
+      "audio_device_error": "El dispositivo de salida de audio se desconectó o no está disponible",
       "open_browser_error": "No se pudo abrir el navegador para YouTube",
       "stream_expired": "No se pudo reproducir el audio de YouTube. Es posible que el enlace haya caducado."
     },

@@ -4,26 +4,15 @@ import { getRandomSong } from "@/shared/helpers/get-random-song"
 
 export function usePlaybackActions() {
   const play = () => {
-    const { audioRef, setPlayerState } = useLocalPlayerStore.getState()
-    if (!audioRef) return
-    setPlayerState("playing")
-    audioRef.play().catch(() => {})
+    useLocalPlayerStore.getState().play()
   }
 
   const pause = () => {
-    const { audioRef, setPlayerState } = useLocalPlayerStore.getState()
-    if (!audioRef) return
-    setPlayerState("paused")
-    audioRef.pause()
+    useLocalPlayerStore.getState().pause()
   }
 
   const togglePlay = () => {
-    const { playerState } = useLocalPlayerStore.getState()
-    if (playerState === "playing") {
-      pause()
-    } else {
-      play()
-    }
+    useLocalPlayerStore.getState().togglePlay()
   }
 
   const nextTrack = () => {

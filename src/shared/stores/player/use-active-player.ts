@@ -1,7 +1,11 @@
 import { create } from 'zustand'
-import { useLocalPlayerStore } from './use-local-player'
-import { useStreamingPlayerStore } from './use-streaming-player'
-import type { PlaybackContext, ActivePlayerType } from './types'
+import { platformService } from '@/infrastructure/platform'
+import { useLocalPlayerStore } from '@/shared/stores/player/use-local-player'
+import { useStreamingPlayerStore } from '@/shared/stores/player/use-streaming-player'
+import type {
+  PlaybackContext,
+  ActivePlayerType,
+} from '@/shared/stores/player/types'
 import type { TPlaylistSong } from '@/shared/types/playlist-songs.types'
 import type { TYoutubeSearchResult } from '@/shared/types/youtube.types'
 
@@ -93,97 +97,90 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => {
       }
     },
 
-  playStream: (track) => {
-    // 1. Pause local audio if it was playing
-    const localState = useLocalPlayerStore.getState()
-    if (localState.audioRef) {
-      localState.audioRef.pause()
-      localState.setCurrentSong(null)
+    playStream: (track) => {
+      // 1. Stop local Rodio playback immediately
+      const localState = useLocalPlayerStore.getState()
       localState.setPlayerState('paused')
-    }
+      platformService.invoke('local_audio_stop').catch(() => {})
 
-    // 2. Set current track in streaming player store
-    useStreamingPlayerStore.getState().setCurrentTrack(track)
+      // 2. Set current track in streaming player store
+      useStreamingPlayerStore.getState().setCurrentTrack(track)
 
-    // 3. Mark active player as streaming
-    set({ activePlayer: 'streaming' })
-  },
+      // 3. Mark active player as streaming
+      set({ activePlayer: 'streaming' })
+    },
 
-  togglePlay: () => {
-    const { activePlayer } = get()
-    if (activePlayer === 'local') {
-      const localState = useLocalPlayerStore.getState()
-      const audioRef = localState.audioRef
-      if (!audioRef || !localState.currentSong) return
-
-      if (localState.playerState === 'playing') {
-        localState.setPlayerState('paused')
-        audioRef.pause()
-      } else {
-        localState.setPlayerState('playing')
-        audioRef.play().catch(() => {})
+    togglePlay: () => {
+      const { activePlayer } = get()
+      if (activePlayer === 'local') {
+        useLocalPlayerStore.getState().togglePlay()
+      } else if (activePlayer === 'streaming') {
+        useStreamingPlayerStore.getState().togglePlay()
       }
-    } else if (activePlayer === 'streaming') {
-      useStreamingPlayerStore.getState().togglePlay()
-    }
-  },
+    },
 
-  seek: (deltaSeconds: number) => {
-    const { activePlayer } = get()
-    if (activePlayer === 'local') {
+    seek: (deltaSeconds: number) => {
+      const { activePlayer } = get()
+      if (activePlayer === 'local') {
+        const localState = useLocalPlayerStore.getState()
+        if (!localState.currentSong) return
+        const duration = localState.duration || 0
+        const current = localState.progress
+        const target = Math.max(
+          0,
+          duration > 0
+            ? Math.min(duration, current + deltaSeconds)
+            : current + deltaSeconds,
+        )
+        localState.setProgress(target)
+        platformService
+          .invoke('local_audio_seek', { positionSecs: target })
+          .catch((err) => {
+            console.error('Failed to seek local audio via rodio:', err)
+          })
+      } else if (activePlayer === 'streaming') {
+        const streamingState = useStreamingPlayerStore.getState()
+        const audioRef = streamingState.audioRef
+        if (!audioRef) return
+        const current = audioRef.currentTime
+        streamingState.seekTo(current + deltaSeconds)
+      }
+    },
+
+    changeVolume: (delta: number) => {
       const localState = useLocalPlayerStore.getState()
-      const audioRef = localState.audioRef
-      if (!audioRef) return
-      const duration = localState.duration || audioRef.duration || 0
-      const target = Math.max(
-        0,
-        Math.min(duration, audioRef.currentTime + deltaSeconds),
-      )
-      audioRef.currentTime = target
-      localState.setProgress(target)
-    } else if (activePlayer === 'streaming') {
+      const currentVol = localState.volume
+      const newVol = Math.max(0, Math.min(100, currentVol + delta))
+
+      useLocalPlayerStore.getState().setVolume(newVol)
+      useStreamingPlayerStore.getState().setVolume(newVol)
+
+      if (newVol > 0) {
+        set({ lastNonZeroVolume: newVol })
+      }
+
+      if (localState.audioRef) {
+        localState.audioRef.volume = newVol / 100
+        localState.audioRef.muted = newVol === 0
+      }
+
       const streamingState = useStreamingPlayerStore.getState()
-      const audioRef = streamingState.audioRef
-      if (!audioRef) return
-      const current = audioRef.currentTime
-      streamingState.seekTo(current + deltaSeconds)
-    }
-  },
+      if (streamingState.audioRef) {
+        streamingState.audioRef.volume = newVol / 100
+        streamingState.audioRef.muted = newVol === 0
+      }
+    },
 
-  changeVolume: (delta: number) => {
-    const localState = useLocalPlayerStore.getState()
-    const currentVol = localState.volume
-    const newVol = Math.max(0, Math.min(100, currentVol + delta))
-
-    useLocalPlayerStore.getState().setVolume(newVol)
-    useStreamingPlayerStore.getState().setVolume(newVol)
-
-    if (newVol > 0) {
-      set({ lastNonZeroVolume: newVol })
-    }
-
-    if (localState.audioRef) {
-      localState.audioRef.volume = newVol / 100
-      localState.audioRef.muted = newVol === 0
-    }
-
-    const streamingState = useStreamingPlayerStore.getState()
-    if (streamingState.audioRef) {
-      streamingState.audioRef.volume = newVol / 100
-      streamingState.audioRef.muted = newVol === 0
-    }
-  },
-
-  toggleMute: () => {
-    const currentVol = useLocalPlayerStore.getState().volume
-    if (currentVol > 0) {
-      set({ lastNonZeroVolume: currentVol })
-      get().changeVolume(-currentVol)
-    } else {
-      const restore = get().lastNonZeroVolume || 80
-      get().changeVolume(restore)
-    }
-  },
+    toggleMute: () => {
+      const currentVol = useLocalPlayerStore.getState().volume
+      if (currentVol > 0) {
+        set({ lastNonZeroVolume: currentVol })
+        get().changeVolume(-currentVol)
+      } else {
+        const restore = get().lastNonZeroVolume || 80
+        get().changeVolume(restore)
+      }
+    },
 
     resetActivePlayer: () => {
       useLocalPlayerStore.getState().resetPlayer()

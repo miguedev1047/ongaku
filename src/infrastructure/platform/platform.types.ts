@@ -1,19 +1,28 @@
-import type { TPlaylist } from "@/shared/types/playlist.types"
-import type { TPlaylistSong, TLibrarySong } from "@/shared/types/playlist-songs.types"
+import type { TPlaylist } from '@/shared/types/playlist.types'
+import type {
+  TPlaylistSong,
+  TLibrarySong,
+} from '@/shared/types/playlist-songs.types'
 import type {
   TSongAction,
   BatchDeleteSongItem,
-  BatchActionResponse
-} from "@/shared/types/song-actions"
-import type { TPlaylistAction } from "@/shared/types/playlist-actions"
-import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
-import type { TAppConfig } from "@/shared/queries/config"
-import type { TSystemHealthInfo } from "@/shared/queries/system-health"
-import type { TBinariesInfo } from "@/shared/types/binaries.types"
-import type { TSyncStats } from "@/shared/types/sync.types"
-import type { ImportSongsResult, ImportProgressPayload } from "@/shared/types/import.types"
-import type { AppUpdate, UpdateProgressEvent } from "@/shared/types/update.types"
-import type { DownloadProgressPayload } from "@/shared/types/download.types"
+  BatchActionResponse,
+} from '@/shared/types/song-actions'
+import type { TPlaylistAction } from '@/shared/types/playlist-actions'
+import type { TYoutubeSearchResult } from '@/shared/types/youtube.types'
+import type { TAppConfig } from '@/shared/queries/config'
+import type { TSystemHealthInfo } from '@/shared/queries/system-health'
+import type { TBinariesInfo } from '@/shared/types/binaries.types'
+import type { TSyncStats } from '@/shared/types/sync.types'
+import type {
+  ImportSongsResult,
+  ImportProgressPayload,
+} from '@/shared/types/import.types'
+import type {
+  AppUpdate,
+  UpdateProgressEvent,
+} from '@/shared/types/update.types'
+import type { DownloadProgressPayload } from '@/shared/types/download.types'
 
 export type {
   AppUpdate,
@@ -22,7 +31,7 @@ export type {
   ImportSongsResult,
   ImportProgressPayload,
   DownloadProgressPayload,
-  TBinariesInfo
+  TBinariesInfo,
 }
 
 export interface CommandMap {
@@ -150,30 +159,73 @@ export interface CommandMap {
     args: { playlistName: string; paths: string[] }
     return: ImportSongsResult
   }
+  local_audio_play: {
+    args: { path: string; volume?: number; startPosSecs?: number }
+    return: void
+  }
+  local_audio_pause: {
+    args?: undefined
+    return: void
+  }
+  local_audio_resume: {
+    args?: undefined
+    return: void
+  }
+  local_audio_stop: {
+    args?: undefined
+    return: void
+  }
+  local_audio_seek: {
+    args: { positionSecs: number }
+    return: void
+  }
+  local_audio_set_volume: {
+    args: { volume: number }
+    return: void
+  }
+  local_audio_get_status: {
+    args?: undefined
+    return: AudioPlayerStatus
+  }
+}
+
+export interface AudioPlayerStatus {
+  is_playing: boolean
+  is_paused: boolean
+  current_path: string | null
+  volume: number
+  position_secs: number
+}
+
+export interface AudioPlayerError {
+  code: 'NotFound' | 'PermissionDenied' | 'DecodeError' | 'DeviceError' | 'Internal'
+  message?: string
 }
 
 export interface EventMap {
   'download:progress': DownloadProgressPayload
   'import-progress': ImportProgressPayload
+  'local-player://time-update': { currentTime: number }
+  'local-player://ended': void
 }
 
 export interface PlatformService {
   invoke<K extends keyof CommandMap>(
     command: K,
-    args?: CommandMap[K]['args']
+    args?: CommandMap[K]['args'],
   ): Promise<CommandMap[K]['return']>
   invoke<T = unknown>(
     command: string,
-    args?: Record<string, unknown>
+    args?: Record<string, unknown>,
   ): Promise<T>
 
   on<K extends keyof EventMap>(
     event: K,
-    handler: (payload: EventMap[K]) => void
+    handler: (payload: EventMap[K]) => void,
   ): Promise<() => void>
   on<T = unknown>(
     event: string,
-    handler: (payload: T) => void
+    handler: (payload: T) => void,
   ): Promise<() => void>
 
   openUrl(url: string): Promise<void>

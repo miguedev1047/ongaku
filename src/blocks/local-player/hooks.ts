@@ -1,63 +1,55 @@
-import { useEffect } from "react"
 import { useHotkey } from "@tanstack/react-hotkeys"
-import { toast } from "sonner"
+import { platformService } from "@/infrastructure/platform"
 import { getAdjacentSong } from "@/shared/helpers/get-adjacent-song"
 import { getRandomSong } from "@/shared/helpers/get-random-song"
 import { useLocalPlayerStore } from "@/shared/stores/player"
-import { useTranslation } from "react-i18next"
 
 export function usePlayerProgressbar() {
-  const { t } = useTranslation()
-  const audioRef = useLocalPlayerStore((state) => state.audioRef)
   const progress = useLocalPlayerStore((state) => state.progress)
   const duration = useLocalPlayerStore((state) => state.duration)
 
   const setProgress = useLocalPlayerStore((state) => state.setProgress)
-  const setPlayerState = useLocalPlayerStore((state) => state.setPlayerState)
   const setIsSeeking = useLocalPlayerStore((state) => state.setIsSeeking)
 
   const handleSeek = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!audioRef) return
-
     const target = event.target as HTMLInputElement
-    setProgress(parseFloat(target.value))
-    audioRef.currentTime = parseFloat(target.value)
+    const val = parseFloat(target.value)
+    setProgress(val)
   }
 
   const handlePointerDown = () => {
-    if (!audioRef) return
-
     setIsSeeking(true)
-    setPlayerState("paused")
-    audioRef.pause()
   }
 
   const handlePointerUp = () => {
-    if (!audioRef) return
-
     setIsSeeking(false)
-    setPlayerState("playing")
-    audioRef.play().catch((err: unknown) => {
-      if (err instanceof Error && err.name === "AbortError") return
-      toast.error(t("toasts.songs.playback_error"))
-    })
+    const currentProgress = useLocalPlayerStore.getState().progress
+    platformService
+      .invoke("local_audio_seek", { positionSecs: currentProgress })
+      .catch((err) => {
+        console.error("Failed to seek via rodio:", err)
+      })
   }
 
   const handlePreviusSeekSecs = () => {
-    if (!audioRef) return
-    const newTime = Math.max(0, audioRef.currentTime - 5)
-    audioRef.currentTime = newTime
+    const newTime = Math.max(0, progress - 5)
     setProgress(newTime)
+    platformService
+      .invoke("local_audio_seek", { positionSecs: newTime })
+      .catch((err) => {
+        console.error("Failed to seek via rodio:", err)
+      })
   }
 
   const handleNextSeekSecs = () => {
-    if (!audioRef) return
-    const maxDuration = duration || audioRef.duration || 0
-    const newTime = maxDuration
-      ? Math.min(maxDuration, audioRef.currentTime + 5)
-      : audioRef.currentTime + 5
-    audioRef.currentTime = newTime
+    const maxDuration = duration || 0
+    const newTime = maxDuration ? Math.min(maxDuration, progress + 5) : progress + 5
     setProgress(newTime)
+    platformService
+      .invoke("local_audio_seek", { positionSecs: newTime })
+      .catch((err) => {
+        console.error("Failed to seek via rodio:", err)
+      })
   }
 
   return {
@@ -67,7 +59,7 @@ export function usePlayerProgressbar() {
     handleNextSeekSecs,
     handlePreviusSeekSecs,
     handlePointerDown,
-    handlePointerUp
+    handlePointerUp,
   }
 }
 
@@ -138,66 +130,13 @@ export function usePlayerLoop() {
 }
 
 export function usePlayerToggle() {
-  const { t } = useTranslation()
-  const audioRef = useLocalPlayerStore((state) => state.audioRef)
-  const playerState = useLocalPlayerStore((state) => state.playerState)
-
   const isPlaying = useLocalPlayerStore(
     (state) => state.playerState === "playing"
   )
 
-  const setPlayerState = useLocalPlayerStore((state) => state.setPlayerState)
-
   const handlePlayerToggle = () => {
-    if (!audioRef) return
-
-    if (playerState === "playing") {
-      setPlayerState("paused")
-      audioRef.pause()
-      return
-    }
-
-    if (playerState === "paused" || playerState === "idle") {
-      setPlayerState("playing")
-      audioRef.play().catch((err: unknown) => {
-        if (err instanceof Error && err.name === "AbortError") return
-        toast.error(t("toasts.songs.playback_error"))
-      })
-      return
-    }
+    useLocalPlayerStore.getState().togglePlay()
   }
 
   return { isPlaying, handlePlayerToggle }
-}
-
-export function usePlayerMedia() {
-  const audioRef = useLocalPlayerStore((state) => state.audioRef)
-  const volume = useLocalPlayerStore((state) => state.volume)
-  const songActive = useLocalPlayerStore((state) => state.currentSong)
-  const isLoop = useLocalPlayerStore((state) => state.isLoop)
-
-  const setProgress = useLocalPlayerStore((state) => state.setProgress)
-  const setAudioRef = useLocalPlayerStore((state) => state.setAudioRef)
-
-  const { handleNextSong } = usePlayerNextSong()
-
-  const handleTimeUpdate = (event: React.SyntheticEvent<HTMLAudioElement>) => {
-    const target = event.target as HTMLAudioElement
-    setProgress(target.currentTime)
-  }
-
-  useEffect(() => {
-    if (!audioRef) return
-    audioRef.volume = volume / 100
-    audioRef.muted = volume === 0
-    audioRef.loop = isLoop
-  }, [audioRef, volume, isLoop])
-
-  return {
-    songActive,
-    isLoop,
-    setAudioRef,
-    handleNextSong,
-    handleTimeUpdate
-  }
 }
