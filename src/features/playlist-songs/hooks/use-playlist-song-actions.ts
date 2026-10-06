@@ -36,14 +36,14 @@ export function usePlaylistSongActions({ song }: UsePlaylistSongActionsProps) {
       return
     }
 
-    playSong(song, { type: "playlist", playlistName: song.playlist_name })
+    playSong(song, { type: "playlist", playlistName: song.playlist_name || "" })
   }
 
   const handleOpenFolder = async () => {
     try {
       const songPath = getPlaylistPath(song.path)
       await openFolder(songPath)
-      toast.info(t("toasts.songs.opened_folder", { name: song.playlist_name }))
+      toast.info(t("toasts.songs.opened_folder", { name: song.playlist_name || "" }))
     } catch (err) {
       console.log(err)
       toast.error(t("toasts.songs.open_folder_error"))

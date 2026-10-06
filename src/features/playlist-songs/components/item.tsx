@@ -30,7 +30,7 @@ export function PlaylistSongItem({ song }: PlaylistSongItemProps) {
     if (isItemAction(e)) return
 
     if (!isActiveTrack) {
-      playSong(song, { type: "playlist", playlistName: song.playlist_name })
+      playSong(song, { type: "playlist", playlistName: song.playlist_name || "" })
     }
   }
 

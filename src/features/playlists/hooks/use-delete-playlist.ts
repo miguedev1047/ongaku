@@ -54,6 +54,7 @@ export function useDeletePlaylist({
 
       navigate({ to: "/playlists" })
       queryClient.invalidateQueries({ queryKey: playlistsQueryKey })
+      queryClient.invalidateQueries({ queryKey: ["library-songs"] })
       onSuccess?.()
     },
     onError: () => {

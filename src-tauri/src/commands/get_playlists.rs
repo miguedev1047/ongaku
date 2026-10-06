@@ -7,7 +7,6 @@ use crate::db::DbPool;
 pub struct Playlist {
     pub name: String,
     pub id: String,
-    pub path: String,
     pub created: u64,
     pub tracks: usize,
     #[serde(rename = "previewTracks")]

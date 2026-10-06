@@ -35,8 +35,22 @@ pub fn remove_song_from_playlist(
         .get()
         .map_err(|err| format!("Failed to acquire DB connection: {}", err))?;
 
-    crate::db::queries::remove_song_from_playlist(&conn, playlist_name, song_id)
+    let deleted_path_opt = crate::db::queries::remove_song_from_playlist_with_ref_check(&conn, playlist_name, song_id)
         .map_err(|err| format!("Database error removing song from playlist: {}", err))?;
+
+    if let Some(path) = deleted_path_opt {
+        let file = Path::new(&path);
+        if file.exists() {
+            let _ = remove_file(file);
+        }
+
+        let cache_pictures_dir = get_cache_pictures_dir();
+        if let Ok(cover_path) = resolve_inside(&cache_pictures_dir, &format!("{}.webp", song_id)) {
+            if cover_path.exists() && cover_path.is_file() {
+                let _ = remove_file(cover_path);
+            }
+        }
+    }
 
     Ok(SongActionResponse {
         code: "SUCCESS".into(),
@@ -250,8 +264,9 @@ pub fn batch_delete_songs(
     let mut failed_count = 0;
     let mut failed_items = Vec::new();
 
-    // If playlist_name is provided, we only remove them from the playlist!
+    // If playlist_name is provided, we remove them from the playlist with ref-check!
     if let Some(ref pl_name) = playlist_name {
+        let cache_pictures_dir = get_cache_pictures_dir();
         for item in items {
             let song_id = item.id.or_else(|| {
                 Path::new(&item.path)
@@ -260,10 +275,24 @@ pub fn batch_delete_songs(
                     .map(extract_song_id)
             });
 
-            if let Some(id) = song_id {
-                if crate::db::queries::remove_song_from_playlist(&conn, pl_name, &id).is_ok() {
-                    success_count += 1;
-                    continue;
+            if let Some(ref id) = song_id {
+                match crate::db::queries::remove_song_from_playlist_with_ref_check(&conn, pl_name, id) {
+                    Ok(deleted_path_opt) => {
+                        if let Some(path) = deleted_path_opt {
+                            let file = Path::new(&path);
+                            if file.exists() {
+                                let _ = remove_file(file);
+                            }
+                            if let Ok(cover_path) = resolve_inside(&cache_pictures_dir, &format!("{}.webp", id)) {
+                                if cover_path.exists() && cover_path.is_file() {
+                                    let _ = remove_file(cover_path);
+                                }
+                            }
+                        }
+                        success_count += 1;
+                        continue;
+                    }
+                    Err(_) => {}
                 }
             }
             failed_count += 1;

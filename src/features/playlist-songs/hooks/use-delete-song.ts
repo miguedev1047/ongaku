@@ -76,11 +76,9 @@ export function useDeleteSong({
       })
 
       // Invalidate library songs query
-      if (context === 'library') {
-        queryClient.invalidateQueries({
-          queryKey: ['library-songs'],
-        })
-      }
+      queryClient.invalidateQueries({
+        queryKey: ['library-songs'],
+      })
 
       onSuccess?.()
     },

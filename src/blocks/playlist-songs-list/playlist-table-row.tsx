@@ -51,7 +51,7 @@ export const PlaylistSongTableRow = memo(function PlaylistSongTableRow({
     if (!isActiveTrack) {
       playSong(song, row.table.options.data, {
         type: 'playlist',
-        playlistName: song.playlist_name,
+        playlistName: song.playlist_name || '',
       })
     }
   }

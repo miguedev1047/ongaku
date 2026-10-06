@@ -56,7 +56,7 @@ export function useLibrarySongActions({ song }: UseLibrarySongActionsProps) {
     try {
       const songPath = getPlaylistPath(song.path)
       await openFolder(songPath)
-      toast.info(t('toasts.songs.opened_folder', { name: song.playlist_name }))
+      toast.info(t('toasts.songs.opened_folder', { name: t('sidebar.library') }))
     } catch {
       toast.error(t('toasts.songs.open_folder_error'))
     }

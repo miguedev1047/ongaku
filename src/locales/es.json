@@ -286,7 +286,7 @@
       },
       "delete": {
         "title": "Eliminar Lista",
-        "description": "¿Estás seguro de que deseas eliminar \"{{name}}\"? Las canciones en tu biblioteca principal no se borrarán.",
+        "description": "¿Estás seguro de que deseas eliminar \"{{name}}\"? Las canciones exclusivas de esta playlist también se eliminarán de tu biblioteca.",
         "warning": "¿Estás seguro de que deseas eliminar esta lista? Esta acción no se puede deshacer.",
         "submit": "Eliminar Lista"
       },
@@ -294,7 +294,7 @@
         "title_library": "Eliminar canción \"{{name}}\"",
         "title_playlist": "Quitar canción \"{{name}}\"",
         "desc_library": "¿Estás seguro de que deseas eliminar esta canción? Esta acción no se puede deshacer y borrará permanentemente el archivo de audio de tu biblioteca.",
-        "desc_playlist": "¿Estás seguro de que deseas quitar esta canción de la lista? El archivo permanecerá en tu biblioteca.",
+        "desc_playlist": "¿Estás seguro de que deseas quitar esta canción de la lista? Si no pertenece a ninguna otra lista, también se eliminará de tu biblioteca.",
         "action_library": "Eliminar",
         "action_playlist": "Quitar"
       },

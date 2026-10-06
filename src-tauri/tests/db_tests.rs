@@ -1,9 +1,10 @@
 use std::fs;
 use tauri_app_lib::db::queries::{
-    add_song_to_playlist, create_playlist_in_db, delete_playlist_in_db,
+    add_song_to_playlist, cleanup_orphan_songs, create_playlist_in_db,
+    delete_playlist_in_db, delete_playlist_with_orphan_cleanup,
     delete_song_from_library, get_all_config, get_all_songs, get_config, get_playlist_songs,
-    get_playlists, move_song_between_playlists, remove_song_from_playlist, rename_playlist_in_db,
-    set_config,
+    get_playlists, move_song_between_playlists, remove_song_from_playlist,
+    remove_song_from_playlist_with_ref_check, rename_playlist_in_db, set_config,
 };
 use tauri_app_lib::db::schema::init_schema;
 use tauri_app_lib::db::sync::sync_library;
@@ -283,4 +284,177 @@ fn test_config_table_and_queries() {
     set_config(&conn, "volume", "0.8").unwrap();
     let volume = get_config(&conn, "volume").unwrap();
     assert_eq!(volume, Some("0.8".to_string()));
+}
+
+#[test]
+fn test_delete_playlist_with_orphan_cleanup_distinguishes_shared_and_exclusive() {
+    let mut conn = setup_in_memory_db();
+
+    create_playlist_in_db(&conn, "Rock").unwrap();
+    create_playlist_in_db(&conn, "Favorites").unwrap();
+
+    // Insert 2 songs: song-shared and song-exclusive
+    conn.execute(
+        "INSERT INTO songs (id, path, file_name, title, artist, album, duration, file_size, mtime, created_at)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
+        rusqlite::params![
+            "song-shared",
+            "/music/library/Shared [song-shared].mp3",
+            "Shared [song-shared].mp3",
+            "Shared Song",
+            Some("Artist A"),
+            None::<String>,
+            Some(200.0),
+            1000,
+            1000,
+            1000
+        ],
+    ).unwrap();
+
+    conn.execute(
+        "INSERT INTO songs (id, path, file_name, title, artist, album, duration, file_size, mtime, created_at)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
+        rusqlite::params![
+            "song-exclusive",
+            "/music/library/Exclusive [song-exclusive].mp3",
+            "Exclusive [song-exclusive].mp3",
+            "Exclusive Song",
+            Some("Artist B"),
+            None::<String>,
+            Some(180.0),
+            1000,
+            1000,
+            1000
+        ],
+    ).unwrap();
+
+    // song-shared is in both Rock and Favorites
+    add_song_to_playlist(&conn, "Rock", "song-shared").unwrap();
+    add_song_to_playlist(&conn, "Favorites", "song-shared").unwrap();
+
+    // song-exclusive is ONLY in Rock
+    add_song_to_playlist(&conn, "Rock", "song-exclusive").unwrap();
+
+    assert_eq!(get_playlist_songs(&conn, "Rock").unwrap().len(), 2);
+    assert_eq!(get_playlist_songs(&conn, "Favorites").unwrap().len(), 1);
+    assert_eq!(get_all_songs(&conn).unwrap().len(), 2);
+
+    // Delete playlist Rock with orphan cleanup
+    let exclusive_deleted = delete_playlist_with_orphan_cleanup(&mut conn, "Rock").unwrap();
+
+    // Only song-exclusive should have been deleted
+    assert_eq!(exclusive_deleted.len(), 1);
+    assert_eq!(exclusive_deleted[0].0, "song-exclusive");
+    assert_eq!(exclusive_deleted[0].1, "/music/library/Exclusive [song-exclusive].mp3");
+
+    // Rock playlist is deleted
+    assert!(!get_playlists(&conn).unwrap().iter().any(|p| p.name == "Rock"));
+    assert!(get_playlists(&conn).unwrap().iter().any(|p| p.name == "Favorites"));
+
+    // Favorites STILL has song-shared
+    let fav_songs = get_playlist_songs(&conn, "Favorites").unwrap();
+    assert_eq!(fav_songs.len(), 1);
+    assert_eq!(fav_songs[0].id, "song-shared");
+
+    // General library still has song-shared, but song-exclusive is GONE!
+    let all_songs = get_all_songs(&conn).unwrap();
+    assert_eq!(all_songs.len(), 1);
+    assert_eq!(all_songs[0].id, "song-shared");
+}
+
+#[test]
+fn test_remove_song_from_playlist_with_ref_check() {
+    let conn = setup_in_memory_db();
+
+    create_playlist_in_db(&conn, "List A").unwrap();
+    create_playlist_in_db(&conn, "List B").unwrap();
+
+    conn.execute(
+        "INSERT INTO songs (id, path, file_name, title, artist, album, duration, file_size, mtime, created_at)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
+        rusqlite::params![
+            "track-1",
+            "/music/library/Track 1 [track-1].mp3",
+            "Track 1 [track-1].mp3",
+            "Track 1",
+            None::<String>,
+            None::<String>,
+            Some(100.0),
+            500,
+            500,
+            500
+        ],
+    ).unwrap();
+
+    add_song_to_playlist(&conn, "List A", "track-1").unwrap();
+    add_song_to_playlist(&conn, "List B", "track-1").unwrap();
+
+    // 1. Remove from List A: track-1 is still in List B -> returns None (no deletion)
+    let deleted_path = remove_song_from_playlist_with_ref_check(&conn, "List A", "track-1").unwrap();
+    assert_eq!(deleted_path, None);
+    assert_eq!(get_playlist_songs(&conn, "List A").unwrap().len(), 0);
+    assert_eq!(get_playlist_songs(&conn, "List B").unwrap().len(), 1);
+    assert_eq!(get_all_songs(&conn).unwrap().len(), 1);
+
+    // 2. Remove from List B: track-1 has NO remaining playlists -> returns Some(path) and deleted from songs!
+    let deleted_path2 = remove_song_from_playlist_with_ref_check(&conn, "List B", "track-1").unwrap();
+    assert_eq!(deleted_path2, Some("/music/library/Track 1 [track-1].mp3".to_string()));
+    assert_eq!(get_playlist_songs(&conn, "List B").unwrap().len(), 0);
+    assert_eq!(get_all_songs(&conn).unwrap().len(), 0);
+}
+
+#[test]
+fn test_cleanup_orphan_songs() {
+    let mut conn = setup_in_memory_db();
+
+    create_playlist_in_db(&conn, "Active List").unwrap();
+
+    conn.execute(
+        "INSERT INTO songs (id, path, file_name, title, artist, album, duration, file_size, mtime, created_at)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
+        rusqlite::params![
+            "active-song",
+            "/music/library/Active [active-song].mp3",
+            "Active [active-song].mp3",
+            "Active Song",
+            None::<String>,
+            None::<String>,
+            Some(120.0),
+            600,
+            600,
+            600
+        ],
+    ).unwrap();
+
+    conn.execute(
+        "INSERT INTO songs (id, path, file_name, title, artist, album, duration, file_size, mtime, created_at)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
+        rusqlite::params![
+            "orphan-song",
+            "/music/library/Orphan [orphan-song].mp3",
+            "Orphan [orphan-song].mp3",
+            "Orphan Song",
+            None::<String>,
+            None::<String>,
+            Some(90.0),
+            400,
+            400,
+            400
+        ],
+    ).unwrap();
+
+    add_song_to_playlist(&conn, "Active List", "active-song").unwrap();
+    // orphan-song is intentionally NOT added to any playlist
+
+    assert_eq!(get_all_songs(&conn).unwrap().len(), 2);
+
+    let cleaned = cleanup_orphan_songs(&mut conn).unwrap();
+    assert_eq!(cleaned.len(), 1);
+    assert_eq!(cleaned[0].0, "orphan-song");
+    assert_eq!(cleaned[0].1, "/music/library/Orphan [orphan-song].mp3");
+
+    // Only active-song remains in DB
+    let remaining = get_all_songs(&conn).unwrap();
+    assert_eq!(remaining.len(), 1);
+    assert_eq!(remaining[0].id, "active-song");
 }

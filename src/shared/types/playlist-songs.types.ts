@@ -8,8 +8,11 @@ export interface SongMetadata {
 export interface TPlaylistSong {
   name: string
   id: string
-  playlist_name: string
+  playlist_name?: string
   path: string
   created: number
   metadata: SongMetadata
 }
+
+export type TSong = TPlaylistSong
+export type TLibrarySong = TPlaylistSong

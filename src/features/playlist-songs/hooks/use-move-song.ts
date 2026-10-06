@@ -61,9 +61,11 @@ export function useMoveSong({ song, onSuccess }: UseMoveSongProps) {
       }
 
       // Invalidate source playlist songs
-      queryClient.invalidateQueries({
-        queryKey: playlistSongsQueryOpts(song.playlist_name).queryKey
-      })
+      if (song.playlist_name) {
+        queryClient.invalidateQueries({
+          queryKey: playlistSongsQueryOpts(song.playlist_name).queryKey
+        })
+      }
 
       // Invalidate target playlist songs
       queryClient.invalidateQueries({

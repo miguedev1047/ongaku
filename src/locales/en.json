@@ -286,7 +286,7 @@
       },
       "delete": {
         "title": "Delete Playlist",
-        "description": "Are you sure you want to delete \"{{name}}\"? Songs in your main library will not be deleted.",
+        "description": "Are you sure you want to delete \"{{name}}\"? Songs exclusive to this playlist will also be removed from your library.",
         "warning": "Are you sure you want to delete this playlist? This action cannot be undone.",
         "submit": "Delete Playlist"
       },
@@ -294,7 +294,7 @@
         "title_library": "Delete song \"{{name}}\"",
         "title_playlist": "Remove song \"{{name}}\"",
         "desc_library": "Are you sure you want to delete this song? This action cannot be undone and will permanently remove the audio file from your library.",
-        "desc_playlist": "Are you sure you want to remove this song from the playlist? The file will remain in your library.",
+        "desc_playlist": "Are you sure you want to remove this song from the playlist? If it belongs to no other playlists, it will also be removed from your library.",
         "action_library": "Delete",
         "action_playlist": "Remove"
       },

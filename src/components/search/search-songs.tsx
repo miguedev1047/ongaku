@@ -74,7 +74,7 @@ export function SearchSongs() {
                 setIsOpen(false)
                 playSong(song, songs, {
                   type: 'playlist',
-                  playlistName: playlistName || song.playlist_name,
+                  playlistName: playlistName || song.playlist_name || '',
                 })
               }
 

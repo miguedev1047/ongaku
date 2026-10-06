@@ -37,6 +37,12 @@ pub fn init_and_sync_db(db_path: &Path) -> Result<DbPool, Box<dyn std::error::Er
             if let Err(err) = sync::sync_library(&mut conn) {
                 eprintln!("[ONGAKU DB WARNING]: Initial library sync encountered an issue: {err}");
             }
+            if let Err(err) = sync::cleanup_orphan_songs(&mut conn) {
+                eprintln!("[ONGAKU DB WARNING]: Cleanup orphan songs encountered an issue: {err}");
+            }
+            if let Err(err) = sync::cleanup_orphan_covers(&conn) {
+                eprintln!("[ONGAKU DB WARNING]: Cleanup orphan covers encountered an issue: {err}");
+            }
         }
         Err(err) => {
             eprintln!("[ONGAKU DB WARNING]: Could not acquire DB connection for initial sync: {err}");

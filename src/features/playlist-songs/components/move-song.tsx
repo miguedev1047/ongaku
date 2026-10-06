@@ -129,7 +129,7 @@ export function MoveSong({ song, open, onOpenChange }: MoveSongProps) {
 
         <Suspense fallback={<Skeleton className="h-7 w-full my-2" />}>
           <MovePlaylistSelect
-            currentPlaylist={song.playlist_name}
+            currentPlaylist={song.playlist_name || ""}
             value={targetPlaylist}
             onValueChange={(val) => setTargetPlaylist(val ?? "")}
           />

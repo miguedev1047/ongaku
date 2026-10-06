@@ -7,6 +7,8 @@ import {
 import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 
+import { Show } from '@/components/utility/show'
+
 export function LocalPlayerTrackInfo() {
   const { t } = useTranslation()
   const currentSong = useLocalPlayerStore((state) => state.currentSong)
@@ -17,17 +19,33 @@ export function LocalPlayerTrackInfo() {
 
   return (
     <PlayerTrackInfo>
-      <Link
-        to='/playlists/$playlistName'
-        params={{ playlistName: currentSong.playlist_name }}
+      <Show
+        when={currentSong.playlist_name}
+        fallback={
+          <Link to='/library'>
+            <PlayerTitle
+              className='hover:underline'
+              title={currentSong.name}
+            >
+              {currentSong.name}
+            </PlayerTitle>
+          </Link>
+        }
       >
-        <PlayerTitle
-          className='hover:underline'
-          title={currentSong.name}
-        >
-          {currentSong.name}
-        </PlayerTitle>
-      </Link>
+        {(playlistName) => (
+          <Link
+            to='/playlists/$playlistName'
+            params={{ playlistName }}
+          >
+            <PlayerTitle
+              className='hover:underline'
+              title={currentSong.name}
+            >
+              {currentSong.name}
+            </PlayerTitle>
+          </Link>
+        )}
+      </Show>
       <PlayerDescription
         title={artist}
       >

@@ -1,9 +1,9 @@
 use rusqlite::{params, Connection, OptionalExtension, Result};
 
-use crate::commands::PlaylistSong;
+use crate::commands::{LibrarySong, PlaylistSong};
 use crate::helpers::SongMetadata;
 
-pub fn get_all_songs(conn: &Connection) -> Result<Vec<PlaylistSong>> {
+pub fn get_all_songs(conn: &Connection) -> Result<Vec<LibrarySong>> {
     let mut stmt = conn.prepare(
         "SELECT title, id, path, created_at, duration, artist, album
          FROM songs
@@ -19,10 +19,9 @@ pub fn get_all_songs(conn: &Connection) -> Result<Vec<PlaylistSong>> {
         let artist: Option<String> = row.get(5)?;
         let album: Option<String> = row.get(6)?;
 
-        Ok(PlaylistSong {
+        Ok(LibrarySong {
             name: title,
             id,
-            playlist_name: "".into(),
             path,
             created: created as u64,
             metadata: SongMetadata {
@@ -125,6 +124,89 @@ pub fn remove_song_from_playlist(
            AND song_id = ?2",
         params![playlist_name, song_id],
     )
+}
+
+pub fn remove_song_from_playlist_with_ref_check(
+    conn: &Connection,
+    playlist_name: &str,
+    song_id: &str,
+) -> Result<Option<String>> {
+    let playlist_id_opt: Option<i64> = conn
+        .query_row(
+            "SELECT id FROM playlists WHERE name = ?1",
+            params![playlist_name],
+            |row| row.get(0),
+        )
+        .optional()?;
+
+    let playlist_id = match playlist_id_opt {
+        Some(id) => id,
+        None => return Ok(None),
+    };
+
+    conn.execute(
+        "DELETE FROM playlist_songs WHERE playlist_id = ?1 AND song_id = ?2",
+        params![playlist_id, song_id],
+    )?;
+
+    let remaining_count: i64 = conn.query_row(
+        "SELECT COUNT(*) FROM playlist_songs WHERE song_id = ?1",
+        params![song_id],
+        |row| row.get(0),
+    )?;
+
+    if remaining_count == 0 {
+        let path: Option<String> = conn
+            .query_row(
+                "SELECT path FROM songs WHERE id = ?1",
+                params![song_id],
+                |row| row.get(0),
+            )
+            .optional()?;
+
+        if path.is_some() {
+            conn.execute("DELETE FROM songs WHERE id = ?1", params![song_id])?;
+        }
+
+        Ok(path)
+    } else {
+        Ok(None)
+    }
+}
+
+pub fn cleanup_orphan_songs(
+    conn: &mut Connection,
+) -> Result<Vec<(String, String)>> {
+    let orphan_songs: Vec<(String, String)> = {
+        let mut stmt = conn.prepare(
+            "SELECT s.id, s.path
+             FROM songs s
+             LEFT JOIN playlist_songs ps ON ps.song_id = s.id
+             WHERE ps.song_id IS NULL",
+        )?;
+
+        let songs = stmt
+            .query_map([], |row| {
+                let id: String = row.get(0)?;
+                let path: String = row.get(1)?;
+                Ok((id, path))
+            })?
+            .filter_map(|r| r.ok())
+            .collect();
+        songs
+    };
+
+    if orphan_songs.is_empty() {
+        return Ok(Vec::new());
+    }
+
+    let tx = conn.transaction()?;
+    for (id, _) in &orphan_songs {
+        tx.execute("DELETE FROM songs WHERE id = ?1", params![id])?;
+    }
+    tx.commit()?;
+
+    Ok(orphan_songs)
 }
 
 pub fn delete_song_from_library(

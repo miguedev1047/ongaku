@@ -1,4 +1,4 @@
-use rusqlite::{params, Connection, Result};
+use rusqlite::{params, Connection, OptionalExtension, Result};
 
 use crate::commands::{Playlist, PlaylistSong};
 use crate::helpers::SongMetadata;
@@ -75,7 +75,6 @@ pub fn get_playlists(conn: &Connection) -> Result<Vec<Playlist>> {
         playlists.push(Playlist {
             id: pl.id.to_string(),
             name: pl.name,
-            path: "".into(),
             created: pl.created as u64,
             tracks,
             preview_tracks: preview_songs,
@@ -121,6 +120,59 @@ pub fn delete_playlist_in_db(conn: &Connection, playlist_name: &str) -> Result<(
         params![playlist_name],
     )?;
     Ok(())
+}
+
+pub fn delete_playlist_with_orphan_cleanup(
+    conn: &mut Connection,
+    playlist_name: &str,
+) -> Result<Vec<(String, String)>> {
+    let playlist_id_opt: Option<i64> = conn
+        .query_row(
+            "SELECT id FROM playlists WHERE name = ?1",
+            params![playlist_name],
+            |row| row.get(0),
+        )
+        .optional()?;
+
+    let playlist_id = match playlist_id_opt {
+        Some(id) => id,
+        None => return Ok(Vec::new()),
+    };
+
+    // 1. Identify exclusive songs (songs that belong ONLY to this playlist)
+    let exclusive_songs: Vec<(String, String)> = {
+        let mut stmt = conn.prepare(
+            "SELECT ps.song_id, s.path
+             FROM playlist_songs ps
+             JOIN songs s ON s.id = ps.song_id
+             WHERE ps.playlist_id = ?1
+               AND (SELECT COUNT(*) FROM playlist_songs ps2 WHERE ps2.song_id = ps.song_id AND ps2.playlist_id != ?1) = 0",
+        )?;
+
+        let songs = stmt
+            .query_map(params![playlist_id], |row| {
+                let song_id: String = row.get(0)?;
+                let path: String = row.get(1)?;
+                Ok((song_id, path))
+            })?
+            .filter_map(|r| r.ok())
+            .collect();
+        songs
+    };
+
+    let tx = conn.transaction()?;
+
+    // 2. Delete exclusive songs from `songs` table (this cascades to playlist_songs)
+    for (song_id, _) in &exclusive_songs {
+        tx.execute("DELETE FROM songs WHERE id = ?1", params![song_id])?;
+    }
+
+    // 3. Delete the playlist itself (cascades to any remaining shared songs in playlist_songs)
+    tx.execute("DELETE FROM playlists WHERE id = ?1", params![playlist_id])?;
+
+    tx.commit()?;
+
+    Ok(exclusive_songs)
 }
 
 pub fn reorder_playlists(conn: &mut Connection, playlist_names: &[String]) -> Result<()> {

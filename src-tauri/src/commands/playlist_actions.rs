@@ -119,12 +119,26 @@ pub fn delete_playlist(
         }
     };
 
-    let conn = db
+    let mut conn = db
         .get()
         .map_err(|err| format!("Failed to acquire DB connection: {}", err))?;
 
-    crate::db::queries::delete_playlist_in_db(&conn, &safe_name)
+    let exclusive_songs = crate::db::queries::delete_playlist_with_orphan_cleanup(&mut conn, &safe_name)
         .map_err(|err| format!("Database error deleting playlist: {}", err))?;
+
+    let cache_pictures_dir = crate::helpers::get_cache_pictures_dir();
+    for (song_id, path_str) in exclusive_songs {
+        let file = std::path::Path::new(&path_str);
+        if file.exists() {
+            let _ = std::fs::remove_file(file);
+        }
+
+        if let Ok(cover_path) = crate::helpers::resolve_inside(&cache_pictures_dir, &format!("{}.webp", song_id)) {
+            if cover_path.exists() && cover_path.is_file() {
+                let _ = std::fs::remove_file(cover_path);
+            }
+        }
+    }
 
     Ok(PlaylistActionResponse {
         code: "SUCCESS".into(),
