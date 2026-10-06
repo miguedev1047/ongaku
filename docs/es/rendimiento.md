@@ -15,51 +15,74 @@ graph TD
         TR[TanStack Router - File Based]
         TQ[TanStack React Query - Cache & Suspense]
         ZS[Zustand Stores - Estado Persistente]
+        ADAPT[PlatformService Adapter Layer]
     end
 
     subgraph Backend ["Backend Nativo (Tauri v2 + Rust)"]
-        CMD[Tauri Commands / IPC]
+        CMD[Tauri Commands / IPC Router]
+        RODIO[Motor de Audio Nativo Rodio + Symphonia]
         AXUM[Servidor HTTP Axum en Localhost]
         SQL[SQLite / rusqlite - Modo WAL]
         META[Motor Lofty + Rayon Multihilo]
         POOL[Downloader Pool - yt-dlp + ffmpeg]
+        FS[("Sistema de Archivos Local\nlibrary/ & cache/")]
+    end
+
+    subgraph OS ["Sistema Operativo & Audio"]
+        AUDIO[PipeWire / PulseAudio / ALSA]
     end
 
     UI --> TQ
     UI --> ZS
     TR --> TQ
-    TQ -->|IPC Invocations| CMD
-    UI -->|206 Audio Streaming & WebP Covers| AXUM
+    TQ --> ADAPT
+    ZS --> ADAPT
+    ADAPT -->|IPC Invocations & Listeners| CMD
+    UI -->|WebP Covers & YouTube Stream| AXUM
+    CMD --> RODIO
     CMD --> SQL
     CMD --> META
     CMD --> POOL
+    RODIO -->|Lectura Directa de Archivo| FS
+    RODIO -->|PCM Stream Multihilo| AUDIO
+    RODIO -.->|Ticker Events 250ms| CMD
+    CMD -.->|time-update & ended| ZS
 ```
 
 ---
 
 ## 🧩 2. Componentes Técnicos Clave
 
-### A. Frontend (React 19 & Ecosistema TanStack)
+### A. Frontend (React 19, Ecosistema TanStack & PlatformService)
 - **TanStack Router**: Enrutamiento estricto basado en archivos (`/playlists/$playlistName`, `/library`, `/settings/`, `/search-youtube`). Los *loaders* de ruta precargan los datos mediante `.query()` para una navegación fluida sin parpadeos.
 - **TanStack React Query & Suspense**: Manejo declarativo del estado asíncrono y caché en memoria. La UI utiliza `useSuspenseQuery` para consumir datos precalentados de salud del sistema, bibliotecas y configuración.
-- **Zustand Actions Stores**: Persistencia del estado global para operaciones largas (progreso de descargas de audio, instalación de binarios y estado del actualizador de la app), garantizando que las tareas activas continúen intactas al cambiar de ruta.
+- **Zustand Action Stores**: Persistencia del estado global para operaciones largas (progreso de descargas de audio, instalación de binarios y estado del reproductor persistido).
 - **Tablas Virtualizadas**: Renderizado virtualizado mediante TanStack Table / Virtual, calculando y montando en el DOM únicamente los elementos visibles en pantalla (manteniendo 60+ FPS estables con miles de canciones).
+- **Capa PlatformService**: Abstracción del runtime que desacopla la interfaz React de las llamadas directas de Tauri, facilitando la modularidad y pruebas del frontend.
 
-### B. Servidor Local Axum & Streaming
+### B. Motor de Audio Nativo en Rust (Rodio, Symphonia & CPAL)
+- **Decodificación y Reproducción Nativa**: Reemplazo completo del elemento HTML5 `<audio>` del WebView por `rodio` (v0.22) y `symphonia` para la biblioteca local. Erradica el 100% de los cuelgues de WebKitGTK / GStreamer en Linux al no procesar audio dentro del motor de renderizado.
+- **Compatibilidad de Formatos**: Decodificación nativa de alta fidelidad para `.mp3`, `.flac`, `.wav`, `.ogg` (Vorbis) y `.m4a`/`.mp4` (AAC).
+- **Seeking Desacoplado a 60 FPS**: El arrastre del control deslizante actualiza visualmente la posición a 60 FPS (`isSeeking = true`) sin saturar el procesador; el comando `local_audio_seek` se despacha a Rust únicamente al soltar el ratón (`onPointerUp`) o en saltos discretos de ±5s.
+- **Ticker de Sincronización en Tiempo Real**: Hilo dedicado del sistema operativo (`local-audio-ticker`) que consulta la posición física del decodificador cada 250ms y emite eventos `local-player://time-update` y `local-player://ended`.
+- **Exclusión Mutua Estricta (YouTube vs Local)**: Al reproducir una pista de YouTube en streaming, `local_audio_stop` detiene en seco a Rodio; al reproducir música local, el audio de streaming se limpia inmediatamente, eliminando la reproducción simultánea dual.
+- **Blindaje y Resiliencia (Circuit Breaker & Rapid Fire)**: Control de concurrencia atómica (`AtomicU64`) para descartar solicitudes obsoletas en cambios rápidos de pista, disyuntor de seguridad (máximo 3 fallos consecutivos ante archivos ausentes) y prevención de estados fantasma en pistas persistidas.
+
+### C. Servidor Local Axum & Covers On-Demand
 - **Servidor HTTP Interno**: Instancia Axum en `localhost` con asignación dinámica de puerto para aislar el tráfico.
-- **Soporte 206 Partial Content**: Permite al reproductor webview solicitar fragmentos de audio por rangos de bytes (*byte-ranges*), habilitando rebobinado y avance instantáneo sin cargar el archivo completo en memoria.
 - **Procesamiento de Portadas On-Demand**: Extracción y reescalado de carátulas mediante algoritmo `Lanczos3` y compresión WebP al vuelo, optimizando el consumo de memoria caché a ~16MB.
+- **Resolución de Streaming de YouTube**: Puente eficiente para la extracción y entrega de streams remotos de YouTube.
 
-### C. Base de Datos SQLite en Modo WAL
+### D. Base de Datos SQLite en Modo WAL
 - **Transacciones Relacionales**: Tablas normalizadas (`songs`, `playlists`, `playlist_songs`, `config`).
 - **Modo WAL (Write-Ahead Logging)**: Permite lecturas simultáneas concurrentes sin bloquear las operaciones de escritura.
 - **Consultas Indexadas**: Búsquedas por ID y ordenaciones por posición con índices dedicados.
 
-### D. Pipeline de Ingesta & Blindaje en Chunks (Lofty + Rayon)
+### E. Pipeline de Ingesta & Blindaje en Chunks (Lofty + Rayon)
 - **Procesamiento Multihilo**: `Rayon` distribuye la carga de extracción de metadatos (ID3v2, Vorbis, FLAC, MP4) entre todos los núcleos disponibles de la CPU.
 - **Importación Acotada (Bounded Chunks)**: La importación masiva de archivos se divide en lotes de 100 (`IMPORT_CHUNK_SIZE`), realizando copias seguras al directorio interno, sincronización delta y transacciones SQLite acotadas con emisión de eventos de progreso en tiempo real (`import-progress`).
 
-### E. Cola Inteligente de Descargas (yt-dlp + ffmpeg)
+### F. Cola Inteligente de Descargas (yt-dlp + ffmpeg)
 - **Pool Concurrente**: Administrador de tareas con control de concurrencia para evitar saturación de CPU y bloqueos por tasa de peticiones (HTTP 429).
 - **Sanitización de URLs**: Filtra automáticamente listas de reproducción y radios en vivo para descargar exactamente la pista solicitada.
 - **Cancelación Atómica**: Finalización inmediata del subproceso con eliminación de residuos en la carpeta temporal de *staging*.

@@ -15,51 +15,74 @@ graph TD
         TR[TanStack Router - File Based]
         TQ[TanStack React Query - Cache & Suspense]
         ZS[Zustand Stores - Persistent Action State]
+        ADAPT[PlatformService Adapter Layer]
     end
 
     subgraph Backend ["Native Backend (Tauri v2 + Rust)"]
-        CMD[Tauri Commands / IPC]
+        CMD[Tauri Commands / IPC Router]
+        RODIO[Native Audio Engine - Rodio + Symphonia]
         AXUM[Localhost Axum HTTP Server]
         SQL[SQLite / rusqlite - WAL Mode]
         META[Lofty + Rayon Multithreaded Engine]
         POOL[Downloader Pool - yt-dlp + ffmpeg]
+        FS[("Local Filesystem\nlibrary/ & cache/")]
+    end
+
+    subgraph OS ["Operating System & Audio Server"]
+        AUDIO[PipeWire / PulseAudio / ALSA]
     end
 
     UI --> TQ
     UI --> ZS
     TR --> TQ
-    TQ -->|IPC Invocations| CMD
-    UI -->|206 Audio Streaming & WebP Covers| AXUM
+    TQ --> ADAPT
+    ZS --> ADAPT
+    ADAPT -->|IPC Invocations & Listeners| CMD
+    UI -->|WebP Covers & YouTube Stream| AXUM
+    CMD --> RODIO
     CMD --> SQL
     CMD --> META
     CMD --> POOL
+    RODIO -->|Direct Disk I/O| FS
+    RODIO -->|Multithreaded PCM Stream| AUDIO
+    RODIO -.->|Ticker Events 250ms| CMD
+    CMD -.->|time-update & ended| ZS
 ```
 
 ---
 
 ## 🧩 2. Core Technical Components
 
-### A. Frontend (React 19 & TanStack Ecosystem)
+### A. Frontend (React 19, TanStack Ecosystem & PlatformService)
 - **TanStack Router**: File-based routing (`/playlists/$playlistName`, `/library`, `/settings/`, `/search-youtube`). Route loaders prewarm query caches with `.query()` to guarantee flicker-free transitions.
 - **TanStack React Query & Suspense**: Declarative asynchronous state and in-memory caching. The UI relies on `useSuspenseQuery` for system health, audio libraries, and configuration.
-- **Zustand Action Stores**: Global state persistence across navigation for long-running workflows (audio download progress, binary installation status, app update downloads).
+- **Zustand Action Stores**: Global state persistence across navigation for long-running workflows (audio download progress, binary installation status, persisted player state).
 - **Virtualized Tables**: Powered by TanStack Table / Virtual, rendering only visible DOM elements for smooth 60+ FPS scrolling across thousands of tracks.
+- **PlatformService Layer**: Runtime abstraction isolating the React UI from direct Tauri API calls, enabling modularity and seamless cross-platform adaptability.
 
-### B. Local Axum Server & Media Streaming
+### B. Native Rust Audio Engine (Rodio, Symphonia & CPAL)
+- **Native Decoding and Playback**: Replaced the webview HTML5 `<audio>` element with `rodio` (v0.22) and `symphonia` for local library playback. Completely eliminates WebKitGTK / GStreamer freezes on Linux by offloading audio decoding outside the web browser process.
+- **Format Compatibility**: High-fidelity native decoding for `.mp3`, `.flac`, `.wav`, `.ogg` (Vorbis), and `.m4a`/`.mp4` (AAC).
+- **Decoupled 60 FPS Seeking**: Dragging the progress slider visually updates the position at 60 FPS (`isSeeking = true`) without CPU overhead; IPC seek commands (`local_audio_seek`) are dispatched to Rust only on pointer release (`onPointerUp`) or discrete ±5s steps.
+- **Real-Time Synchronization Ticker**: Dedicated OS background thread (`local-audio-ticker`) polling decoder position every 250ms and emitting `local-player://time-update` and `local-player://ended` events.
+- **Strict Mutual Exclusion (YouTube vs Local)**: When playing a remote YouTube stream, `local_audio_stop` immediately terminates Rodio; when playing local audio, the streaming element is instantly cleared, eliminating dual audio playback.
+- **Resilience and Circuit Breaker**: Atomic generation tracking (`AtomicU64`) to discard stale playback requests during rapid track switching, automatic circuit breaker (stops after 3 consecutive failures on missing files), and phantom state prevention for cold-deleted persisted tracks.
+
+### C. Local Axum Server & On-Demand Covers
 - **Internal HTTP Server**: Binds Axum to `localhost` on a dynamic OS-assigned port to isolate local traffic.
-- **206 Partial Content Support**: Enables the webview audio player to request arbitrary byte ranges for instant seeking and scrubber scrubbing without loading entire files into memory.
 - **On-Demand Cover Processing**: Extract album artwork and downscale via `Lanczos3` with WebP compression on the fly, keeping image cache compact (~16MB).
+- **YouTube Stream Delivery**: Efficient bridge for streaming remote YouTube tracks into the webview.
 
-### C. SQLite Database in WAL Mode
+### D. SQLite Database in WAL Mode
 - **Relational Integrity**: Normalized schemas (`songs`, `playlists`, `playlist_songs`, `config`).
 - **Write-Ahead Logging (WAL)**: Allows concurrent reads without blocking database writes.
 - **Indexed Queries**: Fast queries by song ID and positional sorting with dedicated database indexes.
 
-### D. Ingestion Pipeline & Chunked Shield (Lofty + Rayon)
+### E. Ingestion Pipeline & Chunked Shield (Lofty + Rayon)
 - **Multithreaded Parsing**: `Rayon` balances metadata extraction (ID3v2, Vorbis, FLAC, MP4) across all available CPU cores.
 - **Bounded Chunk Processing**: Mass file imports are processed in batches of 100 (`IMPORT_CHUNK_SIZE`), executing safe internal file copies, delta synchronization, and bounded SQLite transactions while emitting live progress events (`import-progress`).
 
-### E. Smart Download Queue (yt-dlp + ffmpeg)
+### F. Smart Download Queue (yt-dlp + ffmpeg)
 - **Worker Pool**: Queue manager with concurrency limits to prevent CPU throttling and YouTube rate limits (HTTP 429).
 - **URL Sanitizer**: Strips extraneous query parameters, playlist queues, and radio mixes to ensure accurate single-track downloads.
 - **Atomic Cancellation**: Kills the active subprocess and cleans temporary staging files immediately.
