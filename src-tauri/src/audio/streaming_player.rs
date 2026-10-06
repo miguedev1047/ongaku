@@ -21,7 +21,7 @@ use crate::{
         types::{AudioPlayerError, AudioPlayerStatus},
         volume::set_player_volume,
     },
-    helpers::{get_streaming_cache_dir, get_ytdlp_path},
+    helpers::{get_bin_dir, get_streaming_cache_dir, get_ytdlp_path},
 };
 
 pub struct StreamingAudioPlayer {
@@ -63,15 +63,27 @@ impl StreamingAudioPlayer {
 
     pub fn find_cached_file(video_id: &str) -> Option<PathBuf> {
         let cache_dir = get_streaming_cache_dir();
+        let direct_mp3 = cache_dir.join(format!("{video_id}.mp3"));
+        if direct_mp3.is_file() {
+            if let Ok(meta) = direct_mp3.metadata() {
+                if meta.len() > 1024 {
+                    return Some(direct_mp3);
+                }
+            }
+        }
+
         if let Ok(entries) = fs::read_dir(&cache_dir) {
             for entry in entries.flatten() {
                 let path = entry.path();
                 if path.is_file() {
                     if let Some(stem) = path.file_stem() {
                         if stem == video_id {
-                            if let Ok(meta) = path.metadata() {
-                                if meta.len() > 1024 {
-                                    return Some(path);
+                            let ext = path.extension().and_then(|e| e.to_str()).unwrap_or("");
+                            if ["mp3", "m4a", "flac", "wav", "ogg"].contains(&ext) {
+                                if let Ok(meta) = path.metadata() {
+                                    if meta.len() > 1024 {
+                                        return Some(path);
+                                    }
                                 }
                             }
                         }
@@ -121,7 +133,6 @@ impl StreamingAudioPlayer {
         let audio_path = match cached_path_opt {
             Some(path) => path,
             None => {
-                // Download audio via yt-dlp to cache/streaming/{video_id}.%(ext)s
                 let ytdlp_path = get_ytdlp_path();
                 if !ytdlp_path.is_file() {
                     return Err(AudioPlayerError::NotFound(
@@ -129,6 +140,7 @@ impl StreamingAudioPlayer {
                     ));
                 }
 
+                let bin_dir = get_bin_dir();
                 let video_url = if clean_id.starts_with("http://") || clean_id.starts_with("https://") {
                     clean_id.to_string()
                 } else {
@@ -139,8 +151,15 @@ impl StreamingAudioPlayer {
 
                 let mut cmd = Command::new(&ytdlp_path);
                 cmd.args([
-                    "-f",
-                    "bestaudio/best",
+                    "--ffmpeg-location",
+                    bin_dir.to_string_lossy().as_ref(),
+                    "--encoding",
+                    "utf-8",
+                    "--extractor-args",
+                    "youtube:player_client=android,ios,mweb",
+                    "-x",
+                    "--audio-format",
+                    "mp3",
                     "--no-playlist",
                     "--no-warnings",
                     "-o",

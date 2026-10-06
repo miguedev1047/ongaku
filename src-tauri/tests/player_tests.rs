@@ -232,3 +232,75 @@ fn test_player_rapid_fire_requests() {
     assert!(status.is_playing, "Player should be playing after rapid fire requests");
     player.stop().expect("stop should succeed");
 }
+
+#[tokio::test]
+async fn test_streaming_player_decodes_cached_mp3_stream() {
+    let song_path = match find_library_song() {
+        Some(p) => p,
+        None => {
+            eprintln!("[SKIP] No song found in library dir, skipping streaming cached test");
+            return;
+        }
+    };
+
+    let test_vid = "test_streaming_vid_123";
+    let cache_dir = tauri_app_lib::helpers::get_streaming_cache_dir();
+    let cache_dest = cache_dir.join(format!("{test_vid}.mp3"));
+    let _ = fs::copy(&song_path, &cache_dest);
+
+    let player = StreamingAudioPlayer::new();
+
+    // Play cached stream
+    let res = player.play_stream(test_vid.to_string(), Some(0.4), None).await;
+    assert!(res.is_ok(), "play_stream on cached mp3 should succeed: {:?}", res.err());
+
+    sleep(Duration::from_millis(150));
+
+    let status = player.get_status().unwrap();
+    assert!(status.is_playing, "Streaming player should be playing");
+    assert!(!status.is_paused, "Streaming player should not be paused");
+    assert_eq!(status.volume, 0.4, "Volume should match initial volume");
+
+    // Seek
+    let seek_res = player.seek(5.0);
+    assert!(seek_res.is_ok(), "seek should succeed on streaming track");
+
+    sleep(Duration::from_millis(150));
+
+    // Pause & Resume
+    player.pause().expect("pause should succeed");
+    let paused_status = player.get_status().unwrap();
+    assert!(paused_status.is_paused, "Streaming player should be paused");
+
+    player.resume().expect("resume should succeed");
+    let resumed_status = player.get_status().unwrap();
+    assert!(resumed_status.is_playing && !resumed_status.is_paused, "Streaming player should resume");
+
+    player.stop().expect("stop should succeed");
+    let stopped_status = player.get_status().unwrap();
+    assert!(!stopped_status.is_playing, "Streaming player should be stopped");
+
+    let _ = fs::remove_file(&cache_dest);
+}
+
+#[tokio::test]
+async fn test_streaming_player_handles_corrupt_cached_file() {
+    let test_vid = "test_corrupt_vid_456";
+    let cache_dir = tauri_app_lib::helpers::get_streaming_cache_dir();
+    let cache_dest = cache_dir.join(format!("{test_vid}.mp3"));
+    {
+        let mut f = File::create(&cache_dest).expect("Failed to create corrupt stream file");
+        let fake_corrupt_bytes = vec![0x7F; 4096];
+        f.write_all(&fake_corrupt_bytes).unwrap();
+    }
+
+    let player = StreamingAudioPlayer::new();
+    let res = player.play_stream(test_vid.to_string(), None, None).await;
+    assert!(res.is_err(), "play_stream on corrupt stream file must return Err");
+    match res.unwrap_err() {
+        AudioPlayerError::DecodeError(_) => {} // Expected
+        other => panic!("Expected AudioPlayerError::DecodeError, got: {:?}", other),
+    }
+
+    let _ = fs::remove_file(&cache_dest);
+}
