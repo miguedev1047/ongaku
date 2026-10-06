@@ -1,6 +1,4 @@
-import { Component, type ReactNode, Suspense } from "react"
 import { useStreamingPlayerStore } from "@/shared/stores/player"
-import { StreamingAudio } from "./streaming-audio"
 import { StreamingCover } from "./streaming-cover"
 import { StreamingControls } from "./streaming-controls"
 import { StreamingTrackInfo } from "./streaming-track-info"
@@ -9,44 +7,6 @@ import { StreamingPlayerTime } from "./streaming-time"
 import { StreamingPlayerVolume } from "./streaming-volume"
 import { Player } from "@/components/ui/player"
 import { TooltipProvider } from "@/components/ui/tooltip"
-import { toast } from "sonner"
-import i18n from "@/lib/i18n"
-
-interface ErrorBoundaryProps {
-  children: ReactNode
-  onError: () => void
-}
-
-interface ErrorBoundaryState {
-  hasError: boolean
-}
-
-class StreamingAudioErrorBoundary extends Component<
-  ErrorBoundaryProps,
-  ErrorBoundaryState
-> {
-  constructor(props: ErrorBoundaryProps) {
-    super(props)
-    this.state = { hasError: false }
-  }
-
-  static getDerivedStateFromError() {
-    return { hasError: true }
-  }
-
-  componentDidCatch(error: unknown) {
-    console.error("StreamingAudio error:", error)
-    toast.error(i18n.t("toasts.songs.stream_load_error"))
-    this.props.onError()
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return null
-    }
-    return this.props.children
-  }
-}
 
 interface StreamingPlayerProps {
   position?: "bottom" | "top"
@@ -54,22 +14,12 @@ interface StreamingPlayerProps {
 
 export function StreamingPlayer({ position = "bottom" }: StreamingPlayerProps) {
   const currentTrack = useStreamingPlayerStore((s) => s.currentTrack)
-  const stop = useStreamingPlayerStore((s) => s.stop)
 
   if (!currentTrack) return null
 
   return (
     <TooltipProvider delay={300}>
       <Player position={position}>
-        <StreamingAudioErrorBoundary
-          key={currentTrack.id}
-          onError={stop}
-        >
-          <Suspense fallback={null}>
-            <StreamingAudio track={currentTrack} />
-          </Suspense>
-        </StreamingAudioErrorBoundary>
-
         <StreamingPlayerProgressbar position={position} />
 
         {/* Column 1 (Left): Cover & Track Info side by side */}

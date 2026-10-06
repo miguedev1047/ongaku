@@ -10,7 +10,7 @@ export function useYoutubePlayback(item: TYoutubeSearchResult) {
 
   const isCurrentTrack = currentTrack?.id === item.id
   const isPlaying = isCurrentTrack && playerState === "playing"
-  const isLoading = playerState === "loading"
+  const isLoading = isCurrentTrack && playerState === "loading"
 
   const togglePlayback = () => {
     if (isCurrentTrack) {

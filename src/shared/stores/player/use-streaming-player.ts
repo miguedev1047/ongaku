@@ -1,21 +1,18 @@
 import { create } from "zustand"
+import { platformService } from "@/infrastructure/platform"
 import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
 
 export type StreamingPlayerState = "idle" | "loading" | "playing" | "paused"
 
 interface StreamingPlayerStore {
-  audioRef: HTMLAudioElement | null
   currentTrack: TYoutubeSearchResult | null
-  streamUrl: string | null
   playerState: StreamingPlayerState
   isSeeking: boolean
   duration: number
   progress: number
   volume: number
 
-  setAudioRef: (audio: HTMLAudioElement | null) => void
   setCurrentTrack: (track: TYoutubeSearchResult | null) => void
-  setStreamUrl: (url: string | null) => void
   setPlayerState: (state: StreamingPlayerState) => void
   setIsSeeking: (isSeeking: boolean) => void
   setDuration: (duration: number) => void
@@ -30,45 +27,60 @@ interface StreamingPlayerStore {
 
 export const useStreamingPlayerStore = create<StreamingPlayerStore>(
   (set, get) => ({
-    audioRef: null,
     currentTrack: null,
-    streamUrl: null,
     playerState: "idle",
     isSeeking: false,
     duration: 0,
     progress: 0,
     volume: 80,
 
-    setAudioRef: (ref) => set({ audioRef: ref }),
     setCurrentTrack: (track) =>
       set({
         currentTrack: track,
-        streamUrl: null,
         duration: track?.duration ?? 0,
         progress: 0,
-        playerState: track ? "loading" : "idle"
+        playerState: track ? "loading" : "idle",
       }),
-    setStreamUrl: (url) => set({ streamUrl: url }),
+
     setPlayerState: (state) => set({ playerState: state }),
     setIsSeeking: (isSeeking) => set({ isSeeking }),
     setDuration: (duration) => set({ duration }),
     setProgress: (progress) => set({ progress }),
-    setVolume: (volume) => set({ volume }),
-
-    play: () => {
-      const { audioRef } = get()
-      if (!audioRef) return
-      audioRef
-        .play()
-        .then(() => set({ playerState: "playing" }))
+    setVolume: (volume) => {
+      set({ volume })
+      platformService
+        .invoke("streaming_audio_set_volume", { volume: volume / 100 })
         .catch(() => {})
     },
 
+    play: () => {
+      const { playerState, currentTrack, volume, progress } = get()
+      if (!currentTrack) return
+
+      if (playerState === "paused") {
+        set({ playerState: "playing" })
+        platformService.invoke("streaming_audio_resume").catch(() => {})
+      } else {
+        set({ playerState: "loading" })
+        platformService
+          .invoke("streaming_audio_play", {
+            videoId: currentTrack.id,
+            volume: volume / 100,
+            startPosSecs: progress > 0 ? progress : undefined,
+          })
+          .then(() => {
+            set({ playerState: "playing" })
+          })
+          .catch((err) => {
+            console.error("Failed to play streaming audio via rodio:", err)
+            set({ playerState: "idle" })
+          })
+      }
+    },
+
     pause: () => {
-      const { audioRef } = get()
-      if (!audioRef) return
-      audioRef.pause()
       set({ playerState: "paused" })
+      platformService.invoke("streaming_audio_pause").catch(() => {})
     },
 
     togglePlay: () => {
@@ -81,28 +93,43 @@ export const useStreamingPlayerStore = create<StreamingPlayerStore>(
     },
 
     seekTo: (time: number) => {
-      const { audioRef, duration } = get()
-      if (!audioRef) return
-      const max = duration || audioRef.duration || 0
-      const clamped =
-        max > 0 ? Math.min(Math.max(0, time), max) : Math.max(0, time)
-      audioRef.currentTime = clamped
+      const { duration } = get()
+      const max = duration || 0
+      const clamped = max > 0 ? Math.min(Math.max(0, time), max) : Math.max(0, time)
       set({ progress: clamped })
+      platformService
+        .invoke("streaming_audio_seek", { positionSecs: clamped })
+        .catch(() => {})
     },
 
     stop: () => {
-      const { audioRef } = get()
-      if (audioRef) {
-        audioRef.pause()
-        audioRef.currentTime = 0
-      }
+      platformService.invoke("streaming_audio_stop").catch(() => {})
       set({
         currentTrack: null,
-        streamUrl: null,
         playerState: "idle",
         progress: 0,
-        duration: 0
+        duration: 0,
       })
-    }
+    },
   })
 )
+
+// Platform event listeners for streaming audio
+if (typeof window !== "undefined") {
+  platformService
+    .on("streaming-player://time-update", (payload) => {
+      const state = useStreamingPlayerStore.getState()
+      if (!state.isSeeking && state.playerState === "playing") {
+        state.setProgress(payload.currentTime)
+      }
+    })
+    .catch(() => {})
+
+  platformService
+    .on("streaming-player://ended", () => {
+      const state = useStreamingPlayerStore.getState()
+      state.setPlayerState("paused")
+      state.setProgress(0)
+    })
+    .catch(() => {})
+}

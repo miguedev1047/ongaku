@@ -13,10 +13,10 @@ export function useDownloadQueue() {
   const allTasks = taskOrder.map((id) => tasksMap[id]).filter(Boolean)
 
   const activeTasks = allTasks.filter((t) => t.status === "downloading")
-  const queuedTasks = allTasks.filter((t) => t.status === "queued")
-  const completedTasks = allTasks.filter((t) => t.status === "completed")
+  const queuedTasks = allTasks.filter((t) => t.status === "queued" || t.status === "retry")
+  const completedTasks = allTasks.filter((t) => t.status === "on-saved")
   const failedTasks = allTasks.filter(
-    (t) => t.status === "error" || t.status === "cancelled"
+    (t) => t.status === "error" || t.status === "network-error" || t.status === "cancelled"
   )
 
   const isDownloading = activeTasks.length > 0

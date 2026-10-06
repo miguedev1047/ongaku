@@ -2,8 +2,9 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
-  DialogTitle
+  DialogTitle,
 } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -17,7 +18,9 @@ import {
   FolderIcon,
   MultiplicationSignIcon,
   Queue01Icon,
-  RefreshIcon
+  RefreshIcon,
+  WifiOff01Icon,
+  Alert02Icon,
 } from "@hugeicons/core-free-icons"
 import { Link } from "@tanstack/react-router"
 import { Show } from "@/components/utility/show"
@@ -36,7 +39,7 @@ export function DownloadQueueDialog() {
     cancelTask,
     retryTask,
     removeTask,
-    clearFinished
+    clearFinished,
   } = useDownloadQueue()
 
   const hasActiveTasks = activeTasks.length > 0
@@ -52,71 +55,15 @@ export function DownloadQueueDialog() {
       onOpenChange={(open) => toggleDialog(open)}
     >
       <DialogContent className="sm:max-w-xl max-h-[80vh] flex flex-col p-4 gap-3">
-        {/* Header */}
+        {/* Header - Clean & minimal */}
         <DialogHeader className="flex flex-row items-center justify-between pb-2 border-b border-border/50 shrink-0 pr-6">
-          <div className="flex items-center gap-2 flex-wrap">
-            <DialogTitle className="flex items-center gap-1.5 font-semibold text-sm">
-              <HugeiconsIcon
-                icon={Download01Icon}
-                className="size-4 text-primary"
-              />
-              <span>{t("download_queue.title")}</span>
-            </DialogTitle>
-
-            <div className="flex items-center gap-1">
-              <Show when={hasActiveTasks}>
-                <Badge
-                  variant="default"
-                  className="text-[10px] px-1.5 py-0"
-                >
-                  {t("download_queue.active_count", {
-                    count: activeTasks.length
-                  })}
-                </Badge>
-              </Show>
-              <Show when={hasQueuedTasks}>
-                <Badge
-                  variant="secondary"
-                  className="text-[10px] px-1.5 py-0"
-                >
-                  {t("download_queue.queued_count", {
-                    count: queuedTasks.length
-                  })}
-                </Badge>
-              </Show>
-              <Show when={hasCompletedTasks}>
-                <Badge
-                  variant="outline"
-                  className="text-[10px] px-1.5 py-0 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
-                >
-                  {t("download_queue.completed_count", {
-                    count: completedTasks.length
-                  })}
-                </Badge>
-              </Show>
-              <Show when={hasFailedTasks}>
-                <Badge
-                  variant="destructive"
-                  className="text-[10px] px-1.5 py-0"
-                >
-                  {t("download_queue.failed_count", {
-                    count: failedTasks.length
-                  })}
-                </Badge>
-              </Show>
-            </div>
-          </div>
-
-          <Show when={hasFinishedTasks}>
-            <Button
-              size="sm"
-              variant="ghost"
-              className="text-xs h-7 px-2 text-muted-foreground hover:text-foreground"
-              onClick={clearFinished}
-            >
-              {t("download_queue.clear_completed")}
-            </Button>
-          </Show>
+          <DialogTitle className="flex items-center gap-1.5 font-semibold text-sm">
+            <HugeiconsIcon
+              icon={Download01Icon}
+              className="size-4 text-primary"
+            />
+            <span>{t("download_queue.title")}</span>
+          </DialogTitle>
         </DialogHeader>
 
         <DialogDescription className="sr-only">
@@ -155,8 +102,8 @@ export function DownloadQueueDialog() {
               const sizeLabel = totalMb
                 ? `${downloadedMb} MB / ${totalMb} MB`
                 : `${downloadedMb} MB`
-              const errorMessage = task.error || t("download_queue.download_failed")
 
+              // 1. Downloading
               if (task.status === "downloading") {
                 return (
                   <div
@@ -209,17 +156,26 @@ export function DownloadQueueDialog() {
                 )
               }
 
-              if (task.status === "queued") {
+              // 2. Queued or Retry
+              if (task.status === "queued" || task.status === "retry") {
+                const isRetrying = task.status === "retry"
                 return (
                   <div
                     key={task.id}
                     className="p-2 rounded-lg bg-muted/30 border border-border/30 flex items-center justify-between gap-2 text-xs"
                   >
                     <div className="flex items-center gap-2 min-w-0">
-                      <HugeiconsIcon
-                        icon={Queue01Icon}
-                        className="size-3.5 text-muted-foreground shrink-0"
-                      />
+                      <Show
+                        when={isRetrying}
+                        fallback={
+                          <HugeiconsIcon
+                            icon={Queue01Icon}
+                            className="size-3.5 text-muted-foreground shrink-0"
+                          />
+                        }
+                      >
+                        <Spinner className="size-3.5 text-amber-500 shrink-0" />
+                      </Show>
                       <span
                         className="truncate text-foreground/80"
                         title={task.item.title}
@@ -230,7 +186,9 @@ export function DownloadQueueDialog() {
                         variant="secondary"
                         className="text-[10px] text-muted-foreground shrink-0"
                       >
-                        {t("download_queue.status.queued")}
+                        {isRetrying
+                          ? t("download_queue.status.retry")
+                          : t("download_queue.status.queued")}
                       </Badge>
                       <span className="text-[10px] text-muted-foreground truncate">
                         → {task.playlistName}
@@ -253,7 +211,8 @@ export function DownloadQueueDialog() {
                 )
               }
 
-              if (task.status === "completed") {
+              // 3. Completed / On Saved
+              if (task.status === "on-saved") {
                 return (
                   <div
                     key={task.id}
@@ -282,7 +241,7 @@ export function DownloadQueueDialog() {
                           onClick={() => toggleDialog(false)}
                         >
                           {t("download_queue.saved_to", {
-                            playlist: task.playlistName
+                            playlist: task.playlistName,
                           })}
                         </Link>
                       </div>
@@ -304,22 +263,89 @@ export function DownloadQueueDialog() {
                 )
               }
 
-              // Error or Cancelled
+              // 4. Network Error
+              if (task.status === "network-error") {
+                return (
+                  <div
+                    key={task.id}
+                    className="p-2 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-between gap-2 text-xs"
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <HugeiconsIcon
+                        icon={WifiOff01Icon}
+                        className="size-3.5 text-amber-500 shrink-0"
+                      />
+                      <div className="flex flex-col gap-0.5 min-w-0">
+                        <span
+                          className="truncate font-medium text-foreground"
+                          title={task.item.title}
+                        >
+                          {task.item.title}
+                        </span>
+                        <span className="text-[11px] text-amber-600 dark:text-amber-400 truncate">
+                          {task.error || t("download_queue.status.network_error")}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1 shrink-0">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-6 text-[11px] px-2 gap-1 border-amber-500/30 text-amber-700 dark:text-amber-300 hover:bg-amber-500/10"
+                        onClick={() => retryTask(task.id)}
+                      >
+                        <HugeiconsIcon
+                          icon={RefreshIcon}
+                          className="size-3"
+                        />
+                        <span>{t("common.retry")}</span>
+                      </Button>
+
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="size-6 text-muted-foreground hover:text-foreground"
+                        onClick={() => removeTask(task.id)}
+                        title={t("common.remove")}
+                      >
+                        <HugeiconsIcon
+                          icon={MultiplicationSignIcon}
+                          className="size-3.5"
+                        />
+                      </Button>
+                    </div>
+                  </div>
+                )
+              }
+
+              // 5. General Error or Cancelled
+              const isCancelled = task.status === "cancelled"
+              const errorMessage = isCancelled
+                ? t("download_queue.status.cancelled")
+                : task.error || t("download_queue.download_failed")
+
               return (
                 <div
                   key={task.id}
                   className="p-2 rounded-lg bg-destructive/5 border border-destructive/20 flex items-center justify-between gap-2 text-xs"
                 >
-                  <div className="flex flex-col gap-0.5 min-w-0">
-                    <span
-                      className="truncate font-medium text-foreground"
-                      title={task.item.title}
-                    >
-                      {task.item.title}
-                    </span>
-                    <span className="text-[11px] text-destructive truncate">
-                      {errorMessage}
-                    </span>
+                  <div className="flex items-center gap-2 min-w-0">
+                    <HugeiconsIcon
+                      icon={Alert02Icon}
+                      className="size-3.5 text-destructive shrink-0"
+                    />
+                    <div className="flex flex-col gap-0.5 min-w-0">
+                      <span
+                        className="truncate font-medium text-foreground"
+                        title={task.item.title}
+                      >
+                        {task.item.title}
+                      </span>
+                      <span className="text-[11px] text-destructive truncate">
+                        {errorMessage}
+                      </span>
+                    </div>
                   </div>
 
                   <div className="flex items-center gap-1 shrink-0">
@@ -354,6 +380,65 @@ export function DownloadQueueDialog() {
             })}
           </Show>
         </div>
+
+        {/* Footer with Badges and Clear Action */}
+        <DialogFooter className="mt-auto pt-3 border-t border-border/40">
+          <div className="flex items-center justify-between w-full gap-2">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <Show when={hasActiveTasks}>
+                <Badge
+                  variant="default"
+                  className="text-[10px] px-1.5 py-0"
+                >
+                  {t("download_queue.active_count", {
+                    count: activeTasks.length,
+                  })}
+                </Badge>
+              </Show>
+              <Show when={hasQueuedTasks}>
+                <Badge
+                  variant="secondary"
+                  className="text-[10px] px-1.5 py-0"
+                >
+                  {t("download_queue.queued_count", {
+                    count: queuedTasks.length,
+                  })}
+                </Badge>
+              </Show>
+              <Show when={hasCompletedTasks}>
+                <Badge
+                  variant="outline"
+                  className="text-[10px] px-1.5 py-0 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
+                >
+                  {t("download_queue.completed_count", {
+                    count: completedTasks.length,
+                  })}
+                </Badge>
+              </Show>
+              <Show when={hasFailedTasks}>
+                <Badge
+                  variant="destructive"
+                  className="text-[10px] px-1.5 py-0"
+                >
+                  {t("download_queue.failed_count", {
+                    count: failedTasks.length,
+                  })}
+                </Badge>
+              </Show>
+            </div>
+
+            <Show when={hasFinishedTasks}>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="text-xs h-7 px-2 text-muted-foreground hover:text-foreground shrink-0"
+                onClick={clearFinished}
+              >
+                {t("download_queue.clear_completed")}
+              </Button>
+            </Show>
+          </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

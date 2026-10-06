@@ -2,7 +2,7 @@ use std::sync::Arc;
 use std::time::Duration;
 use tauri::{AppHandle, Emitter};
 
-use crate::audio::player::LocalAudioPlayer;
+use crate::audio::LocalAudioPlayer;
 
 pub fn spawn_playback_ticker(player: Arc<LocalAudioPlayer>, app_handle: AppHandle) {
     let _ = std::thread::Builder::new()

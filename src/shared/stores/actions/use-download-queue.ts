@@ -11,7 +11,13 @@ import { toast } from 'sonner'
 import i18n from '@/lib/i18n'
 
 export type DownloadTaskStatus =
-  'queued' | 'downloading' | 'completed' | 'error' | 'cancelled'
+  | 'queued'
+  | 'downloading'
+  | 'network-error'
+  | 'error'
+  | 'on-saved'
+  | 'retry'
+  | 'cancelled'
 
 export type { DownloadProgressPayload }
 
@@ -49,6 +55,23 @@ export interface DownloadQueueStore {
   _processQueue: () => Promise<void>
 }
 
+function isNetworkError(errMessage: string): boolean {
+  const lower = errMessage.toLowerCase()
+  return (
+    typeof navigator !== 'undefined' && !navigator.onLine ||
+    lower.includes('network') ||
+    lower.includes('connection') ||
+    lower.includes('timeout') ||
+    lower.includes('timed out') ||
+    lower.includes('offline') ||
+    lower.includes('disconnected') ||
+    lower.includes('dns') ||
+    lower.includes('unreachable') ||
+    lower.includes('failed to fetch') ||
+    lower.includes('err_internet_disconnected')
+  )
+}
+
 export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
   tasks: {},
   taskOrder: [],
@@ -63,6 +86,11 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
 
   enqueue: (items) => {
     if (!items.length) return
+
+    if (typeof navigator !== 'undefined' && !navigator.onLine) {
+      toast.error(i18n.t('toasts.network.offline_download_blocked'))
+      return
+    }
 
     const newTasks: Record<string, DownloadTask> = {}
     const newIds: string[] = []
@@ -151,7 +179,7 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
       }
 
       get()._processQueue()
-    } else if (task.status === 'queued') {
+    } else if (task.status === 'queued' || task.status === 'retry') {
       set((state) => {
         if (!state.tasks[id]) return state
         return {
@@ -178,7 +206,7 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
           ...state.tasks,
           [id]: {
             ...task,
-            status: 'queued',
+            status: 'retry',
             progress: 0,
             downloadedBytes: 0,
             totalBytes: 0,
@@ -187,7 +215,23 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
         },
       }
     })
-    get()._processQueue()
+
+    setTimeout(() => {
+      set((state) => {
+        const task = state.tasks[id]
+        if (!task || task.status !== 'retry') return state
+        return {
+          tasks: {
+            ...state.tasks,
+            [id]: {
+              ...task,
+              status: 'queued',
+            },
+          },
+        }
+      })
+      get()._processQueue()
+    }, 300)
   },
 
   removeTask: (id) => {
@@ -204,7 +248,7 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
     set((state) => {
       const activeIds = state.taskOrder.filter((id) => {
         const t = state.tasks[id]
-        return t && (t.status === 'downloading' || t.status === 'queued')
+        return t && (t.status === 'downloading' || t.status === 'queued' || t.status === 'retry')
       })
       const activeTasks: Record<string, DownloadTask> = {}
       for (const id of activeIds) {
@@ -239,6 +283,26 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
 
   _processQueue: async () => {
     const state = get()
+    if (typeof navigator !== 'undefined' && !navigator.onLine) {
+      // Mark all actively downloading tasks as network-error
+      set((prev) => {
+        const updated = { ...prev.tasks }
+        let changed = false
+        for (const [id, t] of Object.entries(updated)) {
+          if (t.status === 'downloading') {
+            updated[id] = {
+              ...t,
+              status: 'network-error',
+              error: i18n.t('toasts.network.offline_download_blocked'),
+            }
+            changed = true
+          }
+        }
+        return changed ? { tasks: updated } : prev
+      })
+      return
+    }
+
     const activeTasks = Object.values(state.tasks).filter(
       (t) => t.status === 'downloading',
     )
@@ -283,7 +347,7 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
                 ...prev.tasks,
                 [task.id]: {
                   ...prev.tasks[task.id],
-                  status: 'completed',
+                  status: 'on-saved',
                   progress: 1,
                   resultSong: song,
                 },
@@ -319,12 +383,18 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
             return
           }
 
-          const errorMessage =
+          const rawError =
             typeof err === 'string'
               ? err
               : err instanceof Error
                 ? err.message
                 : i18n.t('toasts.downloads.download_failed')
+
+          const isNet = isNetworkError(rawError)
+          const status: DownloadTaskStatus = isNet ? 'network-error' : 'error'
+          const errorMessage = isNet
+            ? i18n.t('download_queue.status.network_error')
+            : rawError
 
           set((prev) => {
             if (!prev.tasks[task.id]) return prev
@@ -333,7 +403,7 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
                 ...prev.tasks,
                 [task.id]: {
                   ...prev.tasks[task.id],
-                  status: 'error',
+                  status,
                   error: errorMessage,
                 },
               },
@@ -347,3 +417,10 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
     }
   },
 }))
+
+// Auto reconnect listener
+if (typeof window !== 'undefined') {
+  window.addEventListener('online', () => {
+    useDownloadQueueStore.getState()._processQueue()
+  })
+}

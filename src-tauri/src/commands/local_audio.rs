@@ -1,15 +1,17 @@
 use std::sync::Arc;
 use tauri::State;
 
-use crate::audio::player::{AudioPlayerError, AudioPlayerStatus, LocalAudioPlayer};
+use crate::audio::{AudioPlayerError, AudioPlayerStatus, LocalAudioPlayer, StreamingAudioPlayer};
 
 #[tauri::command]
 pub async fn local_audio_play(
     player: State<'_, Arc<LocalAudioPlayer>>,
+    streaming_player: State<'_, Arc<StreamingAudioPlayer>>,
     path: String,
     volume: Option<f32>,
     start_pos_secs: Option<f64>,
 ) -> Result<(), AudioPlayerError> {
+    let _ = streaming_player.stop();
     let player = player.inner().clone();
     tokio::task::spawn_blocking(move || player.play_file(path, volume, start_pos_secs))
         .await

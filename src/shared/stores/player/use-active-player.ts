@@ -49,12 +49,8 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => {
     setActivePlaylist: (playlistName) => set({ activePlaylist: playlistName }),
 
     playSong: (song, queueOrContext, context) => {
-      // 1. Pause streaming if it was playing
-      const streamingState = useStreamingPlayerStore.getState()
-      if (streamingState.audioRef) {
-        streamingState.setCurrentTrack(null)
-        streamingState.pause()
-      }
+      // 1. Stop streaming playback immediately
+      useStreamingPlayerStore.getState().stop()
 
       // 2. Resolve queue and context
       let resolvedQueue: readonly TPlaylistSong[] | undefined
@@ -90,21 +86,26 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => {
 
       set({ activePlayer: 'local', activePlaylist: nextPlaylist })
 
-      // 5. Directly request playback on the audio element if already mounted
-      const localAudio = useLocalPlayerStore.getState().audioRef
-      if (localAudio) {
-        localAudio.play().catch(() => {})
-      }
+      // 5. Start playback via Rodio
+      platformService
+        .invoke('local_audio_play', {
+          path: song.path,
+          volume: useLocalPlayerStore.getState().volume / 100,
+        })
+        .catch((err) => {
+          console.error('Failed to play local audio:', err)
+        })
     },
 
     playStream: (track) => {
       // 1. Stop local Rodio playback immediately
-      const localState = useLocalPlayerStore.getState()
-      localState.setPlayerState('paused')
+      useLocalPlayerStore.getState().setPlayerState('paused')
       platformService.invoke('local_audio_stop').catch(() => {})
 
-      // 2. Set current track in streaming player store
-      useStreamingPlayerStore.getState().setCurrentTrack(track)
+      // 2. Set current track in streaming player store and trigger play
+      const streamingStore = useStreamingPlayerStore.getState()
+      streamingStore.setCurrentTrack(track)
+      streamingStore.play()
 
       // 3. Mark active player as streaming
       set({ activePlayer: 'streaming' })
@@ -140,9 +141,8 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => {
           })
       } else if (activePlayer === 'streaming') {
         const streamingState = useStreamingPlayerStore.getState()
-        const audioRef = streamingState.audioRef
-        if (!audioRef) return
-        const current = audioRef.currentTime
+        if (!streamingState.currentTrack) return
+        const current = streamingState.progress
         streamingState.seekTo(current + deltaSeconds)
       }
     },
@@ -157,17 +157,6 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => {
 
       if (newVol > 0) {
         set({ lastNonZeroVolume: newVol })
-      }
-
-      if (localState.audioRef) {
-        localState.audioRef.volume = newVol / 100
-        localState.audioRef.muted = newVol === 0
-      }
-
-      const streamingState = useStreamingPlayerStore.getState()
-      if (streamingState.audioRef) {
-        streamingState.audioRef.volume = newVol / 100
-        streamingState.audioRef.muted = newVol === 0
       }
     },
 

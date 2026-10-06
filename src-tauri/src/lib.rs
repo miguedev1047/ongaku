@@ -9,7 +9,7 @@ mod server;
 use std::sync::Arc;
 
 use crate::{
-    audio::player::LocalAudioPlayer,
+    audio::{LocalAudioPlayer, StreamingAudioPlayer},
     commands::{
         batch_delete_songs, batch_move_songs, cancel_download, change_app_dir, check_binaries,
         delete_playlist, delete_song, delete_song_from_library, download_binaries, download_song,
@@ -18,7 +18,9 @@ use crate::{
         local_audio_get_status, local_audio_pause, local_audio_play, local_audio_resume,
         local_audio_seek, local_audio_set_volume, local_audio_stop, move_song, new_playlist,
         open_folder, remove_song_from_playlist, rename_playlist, search_youtube, select_directory,
-        set_app_config, sync_library, DownloadManagerState,
+        set_app_config, streaming_audio_get_status, streaming_audio_pause, streaming_audio_play,
+        streaming_audio_resume, streaming_audio_seek, streaming_audio_set_volume,
+        streaming_audio_stop, sync_library, DownloadManagerState,
     },
     helpers::{setup_app, single_instance_plugin},
 };
@@ -28,9 +30,13 @@ pub fn run() {
     let local_player = Arc::new(LocalAudioPlayer::new());
     let ticker_player = local_player.clone();
 
+    let streaming_player = Arc::new(StreamingAudioPlayer::new());
+    let ticker_streaming = streaming_player.clone();
+
     tauri::Builder::default()
         .manage(DownloadManagerState::default())
         .manage(local_player)
+        .manage(streaming_player)
         .plugin(single_instance_plugin())
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
@@ -38,6 +44,7 @@ pub fn run() {
         .setup(move |app| {
             setup_app(app)?;
             LocalAudioPlayer::start_playback_ticker(ticker_player, app.handle().clone());
+            StreamingAudioPlayer::start_playback_ticker(ticker_streaming, app.handle().clone());
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -75,7 +82,14 @@ pub fn run() {
             local_audio_stop,
             local_audio_seek,
             local_audio_set_volume,
-            local_audio_get_status
+            local_audio_get_status,
+            streaming_audio_play,
+            streaming_audio_pause,
+            streaming_audio_resume,
+            streaming_audio_stop,
+            streaming_audio_seek,
+            streaming_audio_set_volume,
+            streaming_audio_get_status
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

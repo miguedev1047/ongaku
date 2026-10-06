@@ -187,6 +187,34 @@ export interface CommandMap {
     args?: undefined
     return: AudioPlayerStatus
   }
+  streaming_audio_play: {
+    args: { videoId: string; volume?: number; startPosSecs?: number }
+    return: void
+  }
+  streaming_audio_pause: {
+    args?: undefined
+    return: void
+  }
+  streaming_audio_resume: {
+    args?: undefined
+    return: void
+  }
+  streaming_audio_stop: {
+    args?: undefined
+    return: void
+  }
+  streaming_audio_seek: {
+    args: { positionSecs: number }
+    return: void
+  }
+  streaming_audio_set_volume: {
+    args: { volume: number }
+    return: void
+  }
+  streaming_audio_get_status: {
+    args?: undefined
+    return: AudioPlayerStatus
+  }
 }
 
 export interface AudioPlayerStatus {
@@ -207,6 +235,8 @@ export interface EventMap {
   'import-progress': ImportProgressPayload
   'local-player://time-update': { currentTime: number }
   'local-player://ended': void
+  'streaming-player://time-update': { currentTime: number }
+  'streaming-player://ended': void
 }
 
 export interface PlatformService {

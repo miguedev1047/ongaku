@@ -389,6 +389,10 @@
       "title": "Search music on YouTube",
       "description": "Type a song title, artist, or album to discover and stream music."
     },
+    "offline": {
+      "title": "No internet connection",
+      "description": "Please check your network connection to search for tracks on YouTube."
+    },
     "loading": "Searching tracks...",
     "results_count": "Found {{count}} result",
     "results_count_plural": "Found {{count}} results",
@@ -433,8 +437,12 @@
     "status": {
       "queued": "Queued",
       "downloading": "Downloading",
+      "network_error": "Connection error",
       "converting": "Converting Audio",
       "completed": "Completed",
+      "on_saved": "Saved",
+      "retry": "Retrying...",
+      "cancelled": "Cancelled",
       "error": "Failed"
     }
   },
@@ -532,6 +540,9 @@
       "added_to_queue_plural": "Added {{count}} songs to download queue",
       "saved_success": "\"{{title}}\" saved to {{playlist}}",
       "download_failed": "Download failed"
+    },
+    "network": {
+      "offline_download_blocked": "Cannot download while offline. Please connect to the internet."
     },
     "updater": {
       "checking": "Checking for updates...",

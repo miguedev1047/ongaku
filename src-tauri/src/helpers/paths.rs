@@ -92,6 +92,12 @@ pub fn get_cache_pictures_dir() -> PathBuf {
     dir
 }
 
+pub fn get_streaming_cache_dir() -> PathBuf {
+    let dir = get_cache_dir().join("streaming");
+    let _ = fs::create_dir_all(&dir);
+    dir
+}
+
 pub fn get_bin_dir() -> PathBuf {
     get_app_dir().join("bin")
 }

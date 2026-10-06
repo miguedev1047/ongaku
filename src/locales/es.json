@@ -389,6 +389,10 @@
       "title": "Buscar música en YouTube",
       "description": "Escribe el título de una canción, artista o álbum para descubrir y reproducir música."
     },
+    "offline": {
+      "title": "Sin conexión a internet",
+      "description": "Comprueba tu conexión de red para buscar canciones en YouTube."
+    },
     "loading": "Buscando temas...",
     "results_count": "{{count}} resultado encontrado",
     "results_count_plural": "{{count}} resultados encontrados",
@@ -433,8 +437,12 @@
     "status": {
       "queued": "En cola",
       "downloading": "Descargando",
+      "network_error": "Error de conexión",
       "converting": "Convirtiendo Audio",
       "completed": "Completado",
+      "on_saved": "Guardado",
+      "retry": "Reintentando...",
+      "cancelled": "Cancelado",
       "error": "Falló"
     }
   },
@@ -532,6 +540,9 @@
       "added_to_queue_plural": "Se añadieron {{count}} canciones a la cola de descargas",
       "saved_success": "\"{{title}}\" guardada en {{playlist}}",
       "download_failed": "Error en la descarga"
+    },
+    "network": {
+      "offline_download_blocked": "No se puede descargar sin conexión a internet. Conéctate a una red."
     },
     "updater": {
       "checking": "Buscando actualizaciones...",
