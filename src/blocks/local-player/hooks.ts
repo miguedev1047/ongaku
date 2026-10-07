@@ -1,8 +1,7 @@
 import { useHotkey } from "@tanstack/react-hotkeys"
-import { platformService } from "@/infrastructure/platform"
 import { getAdjacentSong } from "@/shared/helpers/get-adjacent-song"
 import { getRandomSong } from "@/shared/helpers/get-random-song"
-import { useLocalPlayerStore } from "@/shared/stores/player"
+import { useLocalPlayerStore, useActivePlayerStore } from "@/shared/stores/player"
 
 export function usePlayerProgressbar() {
   const progress = useLocalPlayerStore((state) => state.progress)
@@ -24,32 +23,15 @@ export function usePlayerProgressbar() {
   const handlePointerUp = () => {
     setIsSeeking(false)
     const currentProgress = useLocalPlayerStore.getState().progress
-    platformService
-      .invoke("local_audio_seek", { positionSecs: currentProgress })
-      .catch((err) => {
-        console.error("Failed to seek via rodio:", err)
-      })
+    useLocalPlayerStore.getState().seekTo(currentProgress)
   }
 
   const handlePreviusSeekSecs = () => {
-    const newTime = Math.max(0, progress - 5)
-    setProgress(newTime)
-    platformService
-      .invoke("local_audio_seek", { positionSecs: newTime })
-      .catch((err) => {
-        console.error("Failed to seek via rodio:", err)
-      })
+    useLocalPlayerStore.getState().seekTo(progress - 5)
   }
 
   const handleNextSeekSecs = () => {
-    const maxDuration = duration || 0
-    const newTime = maxDuration ? Math.min(maxDuration, progress + 5) : progress + 5
-    setProgress(newTime)
-    platformService
-      .invoke("local_audio_seek", { positionSecs: newTime })
-      .catch((err) => {
-        console.error("Failed to seek via rodio:", err)
-      })
+    useLocalPlayerStore.getState().seekTo(progress + 5)
   }
 
   return {
@@ -67,19 +49,18 @@ export function usePlayerNextSong() {
   const currentSong = useLocalPlayerStore((state) => state.currentSong)
   const queue = useLocalPlayerStore((state) => state.queue)
   const isShuffle = useLocalPlayerStore((state) => state.isShuffle)
-  const setCurrentSong = useLocalPlayerStore((state) => state.setCurrentSong)
 
   const handleNextSong = () => {
     if (queue.length === 0) return
 
     if (isShuffle) {
       const randomSong = getRandomSong(queue, currentSong)
-      if (randomSong) setCurrentSong(randomSong)
+      if (randomSong) useActivePlayerStore.getState().playSong(randomSong)
       return
     }
 
     const nextSong = getAdjacentSong(queue, currentSong, 1)
-    if (nextSong) setCurrentSong(nextSong)
+    if (nextSong) useActivePlayerStore.getState().playSong(nextSong)
   }
 
   useHotkey("N", () => handleNextSong())
@@ -91,19 +72,18 @@ export function usePlayerPreviousSong() {
   const currentSong = useLocalPlayerStore((state) => state.currentSong)
   const queue = useLocalPlayerStore((state) => state.queue)
   const isShuffle = useLocalPlayerStore((state) => state.isShuffle)
-  const setCurrentSong = useLocalPlayerStore((state) => state.setCurrentSong)
 
   const handlePreviousSong = () => {
     if (queue.length === 0) return
 
     if (isShuffle) {
       const randomSong = getRandomSong(queue, currentSong)
-      if (randomSong) setCurrentSong(randomSong)
+      if (randomSong) useActivePlayerStore.getState().playSong(randomSong)
       return
     }
 
     const previousSong = getAdjacentSong(queue, currentSong, -1)
-    if (previousSong) setCurrentSong(previousSong)
+    if (previousSong) useActivePlayerStore.getState().playSong(previousSong)
   }
 
   useHotkey("P", () => handlePreviousSong())

@@ -16,10 +16,6 @@ import { useTranslation } from "react-i18next"
 export function useMoveSong({ song, onSuccess }: UseMoveSongProps) {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
-  const currentSong = useLocalPlayerStore((state) => state.currentSong)
-  const setCurrentSong = useLocalPlayerStore((state) => state.setCurrentSong)
-  const setPlayerState = useLocalPlayerStore((state) => state.setPlayerState)
-  const audioRef = useLocalPlayerStore((state) => state.audioRef)
 
   const mutation = useMutation({
     mutationFn: async (targetPlaylist: string) => {
@@ -50,14 +46,16 @@ export function useMoveSong({ song, onSuccess }: UseMoveSongProps) {
 
       useLocalPlayerStore.getState().removeFromQueue(song.id)
 
-      // If the moved song is currently playing, reset playback
-      if (currentSong?.id === song.id) {
-        if (audioRef) {
-          audioRef.pause()
+      // If the moved song is currently playing, update its playlist_name without interrupting Rodio playback
+      useLocalPlayerStore.setState((state) => {
+        if (!state.currentSong || state.currentSong.id !== song.id) return state
+        return {
+          currentSong: {
+            ...state.currentSong,
+            playlist_name: targetPlaylist,
+          },
         }
-        setCurrentSong(null)
-        setPlayerState("idle")
-      }
+      })
 
       // Invalidate source playlist songs
       if (song.playlist_name) {

@@ -48,10 +48,10 @@ chmod +x ongaku_*_amd64.AppImage
 sudo dpkg -i ongaku_*_amd64.deb
 ```
 
-### Dependencias Multimedia del Sistema (Para AppImage o compilación local)
+### Dependencias del Sistema (Para AppImage o compilación local)
 A diferencia de aplicaciones pesadas basadas en Electron, Ongaku usa librerías nativas ligeras:
 - **WebKit2GTK** (`libwebkit2gtk-4.1-0`)
-- **GStreamer y codecs de audio** (`gstreamer1.0-plugins-good`, `gstreamer1.0-plugins-bad`, `gstreamer1.0-libav`)
+- **ALSA Audio** (`libasound2` / `libasound2-dev`): El motor de audio y los decodificadores (MP3, FLAC, WAV, Vorbis, etc.) están integrados nativamente en Rust mediante Rodio, por lo que **no requiere plugins de GStreamer**.
 
 ---
 

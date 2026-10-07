@@ -3,6 +3,7 @@ import { PaintBoardIcon } from '@hugeicons/core-free-icons'
 import { ThemeSelection } from '@/features/settings/components/theme-selection'
 import { FolderColorOptions } from '@/features/settings/components/folder-color-options'
 import { PlayerPositionOptions } from '@/features/settings/components/player-position-options'
+import { AppBackgroundsSelection } from '@/features/settings/components/app-backgrounds-selection'
 import { useTranslation } from 'react-i18next'
 
 export function AppearanceCard() {
@@ -36,6 +37,9 @@ export function AppearanceCard() {
 
       {/* 4. Folder Color Selection */}
       <FolderColorOptions />
+
+      {/* 5. Custom Wallpaper Selection */}
+      <AppBackgroundsSelection />
     </div>
   )
 }

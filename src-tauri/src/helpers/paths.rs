@@ -13,6 +13,7 @@ pub struct AppPaths {
     pub bin_dir: PathBuf,
     pub config_dir: PathBuf,
     pub db_dir: PathBuf,
+    pub backgrounds_dir: PathBuf,
 }
 
 static APP_DIR_OVERRIDE: OnceLock<RwLock<Option<PathBuf>>> = OnceLock::new();
@@ -106,6 +107,10 @@ pub fn get_config_dir() -> PathBuf {
     get_app_dir().join("config")
 }
 
+pub fn get_backgrounds_dir() -> PathBuf {
+    get_app_dir().join("backgrounds")
+}
+
 pub fn get_paths_config_path() -> PathBuf {
     get_config_dir().join("paths.json")
 }
@@ -119,6 +124,7 @@ pub fn get_app_paths() -> AppPaths {
         bin_dir: get_bin_dir(),
         config_dir: get_config_dir(),
         db_dir: get_db_dir(),
+        backgrounds_dir: get_backgrounds_dir(),
     }
 }
 

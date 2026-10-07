@@ -39,11 +39,15 @@ export function FolderColorOptions() {
               className='size-3.5 text-muted-foreground'
             />
             <label className='text-xs font-medium text-foreground'>
-              {t('settings.tabs.appearance.appearance_and_interface.folder_color.title')}
+              {t(
+                'settings.tabs.appearance.appearance_and_interface.folder_color.title',
+              )}
             </label>
           </div>
           <p className='text-[11px] text-muted-foreground'>
-            {t('settings.tabs.appearance.appearance_and_interface.folder_color.description')}
+            {t(
+              'settings.tabs.appearance.appearance_and_interface.folder_color.description',
+            )}
           </p>
         </div>
 
@@ -69,7 +73,7 @@ export function FolderColorOptions() {
               key={preset.id}
               className={cn(
                 'flex items-center gap-2 p-2 rounded-md border border-border/40 bg-muted/20 cursor-pointer hover:bg-accent/40 transition-colors',
-                isChecked && 'border-primary bg-primary/5',
+                isChecked && 'border-accent-foreground/20 bg-primary/5',
               )}
             >
               <RadioGroupItem
@@ -91,7 +95,9 @@ export function FolderColorOptions() {
       {/* Custom Hex Color Picker */}
       <div className='flex items-center gap-2.5 pt-1'>
         <span className='text-xs text-muted-foreground'>
-          {t('settings.tabs.appearance.appearance_and_interface.folder_color.custom_hex')}
+          {t(
+            'settings.tabs.appearance.appearance_and_interface.folder_color.custom_hex',
+          )}
         </span>
         <div className='flex items-center gap-2'>
           <input

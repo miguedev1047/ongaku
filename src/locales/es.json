@@ -164,6 +164,35 @@
               "neutral_zinc": "Zinc Neutral"
             },
             "custom_hex": "HEX Personalizado:"
+          },
+          "app_background": {
+            "title": "Fondo de Pantalla",
+            "description": "Personaliza el fondo de la aplicación con imágenes personalizadas",
+            "default": "Por defecto",
+            "active": "Activo",
+            "import_file": "Importar del dispositivo",
+            "import_url": "Importar desde URL",
+            "open_folder": "Abrir carpeta",
+            "delete": "Eliminar fondo",
+            "delete_confirm": "¿Estás seguro de que deseas eliminar este fondo?",
+            "url_dialog": {
+              "title": "Importar fondo desde URL",
+              "description": "Ingresa la dirección web directa de una imagen para descargarla y optimizarla como fondo.",
+              "label": "URL de la imagen",
+              "placeholder": "https://ejemplo.com/fondo.jpg",
+              "submit": "Descargar e importar",
+              "cancel": "Cancelar",
+              "preview": "Vista previa",
+              "invalid_url": "Por favor ingresa una URL de imagen HTTP o HTTPS válida"
+            },
+            "toasts": {
+              "imported": "Fondo importado exitosamente",
+              "deleted": "Fondo eliminado",
+              "applied": "Fondo aplicado",
+              "reset_default": "Fondo restablecido por defecto",
+              "error_import": "Error al importar fondo",
+              "error_delete": "Error al eliminar fondo"
+            }
           }
         }
       },

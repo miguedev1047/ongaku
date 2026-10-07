@@ -13,6 +13,7 @@ pub struct AppConfig {
     pub player_position: String,
     pub toggle_sidebar: String,
     pub lang: String,
+    pub app_background: String,
 }
 
 #[tauri::command]
@@ -47,6 +48,10 @@ pub fn get_app_config(db: State<'_, DbPool>) -> Result<AppConfig, String> {
             .get("lang")
             .cloned()
             .unwrap_or_else(|| "en".to_string()),
+        app_background: all
+            .get("app_background")
+            .cloned()
+            .unwrap_or_default(),
     })
 }
 
@@ -143,5 +148,9 @@ pub fn change_app_dir(db: State<'_, DbPool>, new_parent_dir: String) -> Result<A
             .get("lang")
             .cloned()
             .unwrap_or_else(|| "en".to_string()),
+        app_background: all
+            .get("app_background")
+            .cloned()
+            .unwrap_or_default(),
     })
 }

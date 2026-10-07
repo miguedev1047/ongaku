@@ -10,18 +10,7 @@ use std::sync::Arc;
 
 use crate::{
     audio::{LocalAudioPlayer, StreamingAudioPlayer},
-    commands::{
-        batch_delete_songs, batch_move_songs, cancel_download, change_app_dir, check_binaries,
-        delete_playlist, delete_song, delete_song_from_library, download_binaries, download_song,
-        get_app_config, get_binaries_info, get_playlist_songs, get_playlists, get_system_health,
-        get_youtube_stream_url, import_songs_by_paths, import_songs_to_playlist, library,
-        local_audio_get_status, local_audio_pause, local_audio_play, local_audio_resume,
-        local_audio_seek, local_audio_set_volume, local_audio_stop, move_song, new_playlist,
-        open_folder, remove_song_from_playlist, rename_playlist, search_youtube, select_directory,
-        set_app_config, streaming_audio_get_status, streaming_audio_pause, streaming_audio_play,
-        streaming_audio_resume, streaming_audio_seek, streaming_audio_set_volume,
-        streaming_audio_stop, sync_library, DownloadManagerState,
-    },
+    commands::*,
     helpers::{setup_app, single_instance_plugin},
 };
 
@@ -74,6 +63,11 @@ pub fn run() {
             set_app_config,
             select_directory,
             change_app_dir,
+            get_backgrounds,
+            import_background_from_file,
+            import_background_from_url,
+            delete_background,
+            open_backgrounds_folder,
             import_songs_to_playlist,
             import_songs_by_paths,
             local_audio_play,

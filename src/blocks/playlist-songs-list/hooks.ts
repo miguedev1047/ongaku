@@ -23,7 +23,6 @@ export function usePlaylistBatchActions(currentPlaylistName?: string) {
   const currentSong = useLocalPlayerStore((s) => s.currentSong)
   const setCurrentSong = useLocalPlayerStore((s) => s.setCurrentSong)
   const setPlayerState = useLocalPlayerStore((s) => s.setPlayerState)
-  const audioRef = useLocalPlayerStore((s) => s.audioRef)
 
   const handleBatchDelete = async () => {
     if (selectedSongs.length === 0) return
@@ -110,11 +109,15 @@ export function usePlaylistBatchActions(currentPlaylistName?: string) {
 
       for (const song of candidateSongs) {
         useLocalPlayerStore.getState().removeFromQueue(song.id)
-        if (currentSong?.id === song.id) {
-          audioRef?.pause()
-          setCurrentSong(null)
-          setPlayerState("idle")
-        }
+        useLocalPlayerStore.setState((state) => {
+          if (!state.currentSong || state.currentSong.id !== song.id) return state
+          return {
+            currentSong: {
+              ...state.currentSong,
+              playlist_name: targetPlaylist,
+            },
+          }
+        })
       }
 
       if (res.success_count > 0) {

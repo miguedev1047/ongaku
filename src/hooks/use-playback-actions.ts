@@ -1,4 +1,4 @@
-import { useLocalPlayerStore } from "@/shared/stores/player"
+import { useLocalPlayerStore, useActivePlayerStore } from "@/shared/stores/player"
 import { getAdjacentSong } from "@/shared/helpers/get-adjacent-song"
 import { getRandomSong } from "@/shared/helpers/get-random-song"
 
@@ -16,44 +16,37 @@ export function usePlaybackActions() {
   }
 
   const nextTrack = () => {
-    const { isShuffle, currentSong, queue, setCurrentSong } =
-      useLocalPlayerStore.getState()
+    const { isShuffle, currentSong, queue } = useLocalPlayerStore.getState()
 
     if (!queue || queue.length === 0) return
 
     if (isShuffle) {
       const randomSong = getRandomSong(queue, currentSong)
-      if (randomSong) setCurrentSong(randomSong)
+      if (randomSong) useActivePlayerStore.getState().playSong(randomSong)
       return
     }
 
     const next = getAdjacentSong(queue, currentSong, 1)
-    if (next) setCurrentSong(next)
+    if (next) useActivePlayerStore.getState().playSong(next)
   }
 
   const prevTrack = () => {
-    const { isShuffle, currentSong, queue, setCurrentSong } =
-      useLocalPlayerStore.getState()
+    const { isShuffle, currentSong, queue } = useLocalPlayerStore.getState()
 
     if (!queue || queue.length === 0) return
 
     if (isShuffle) {
       const randomSong = getRandomSong(queue, currentSong)
-      if (randomSong) setCurrentSong(randomSong)
+      if (randomSong) useActivePlayerStore.getState().playSong(randomSong)
       return
     }
 
     const prev = getAdjacentSong(queue, currentSong, -1)
-    if (prev) setCurrentSong(prev)
+    if (prev) useActivePlayerStore.getState().playSong(prev)
   }
 
   const seekTo = (time: number) => {
-    const { audioRef, duration, setProgress } = useLocalPlayerStore.getState()
-    if (!audioRef) return
-
-    const clampedTime = Math.max(0, Math.min(time, duration))
-    audioRef.currentTime = clampedTime
-    setProgress(clampedTime)
+    useLocalPlayerStore.getState().seekTo(time)
   }
 
   return {

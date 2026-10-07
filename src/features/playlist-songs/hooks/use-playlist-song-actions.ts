@@ -15,8 +15,6 @@ export function usePlaylistSongActions({ song }: UsePlaylistSongActionsProps) {
   const { t } = useTranslation()
   const currentSong = useLocalPlayerStore((state) => state.currentSong)
   const playerState = useLocalPlayerStore((state) => state.playerState)
-  const audioRef = useLocalPlayerStore((state) => state.audioRef)
-  const setPlayerState = useLocalPlayerStore((state) => state.setPlayerState)
   const playSong = useActivePlayerStore((state) => state.playSong)
 
   const isCurrentSong = currentSong?.id === song.id
@@ -24,15 +22,7 @@ export function usePlaylistSongActions({ song }: UsePlaylistSongActionsProps) {
 
   const handleTogglePlayback = () => {
     if (isCurrentSong) {
-      if (isPlaying) {
-        setPlayerState("paused")
-        audioRef?.pause()
-      } else {
-        setPlayerState("playing")
-        audioRef?.play().catch(() => {
-          toast.error(t("toasts.songs.playback_error"))
-        })
-      }
+      useLocalPlayerStore.getState().togglePlay()
       return
     }
 

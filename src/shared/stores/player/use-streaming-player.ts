@@ -137,27 +137,3 @@ export const useStreamingPlayerStore = create<StreamingPlayerStore>(
     },
   })
 )
-
-// Platform event listeners for streaming audio
-if (typeof window !== "undefined") {
-  platformService
-    .on("streaming-player://time-update", (payload) => {
-      const state = useStreamingPlayerStore.getState()
-      if (!state.isSeeking && state.playerState === "playing") {
-        state.setProgress(payload.currentTime)
-        if (state.hasEnded) {
-          useStreamingPlayerStore.setState({ hasEnded: false })
-        }
-      }
-    })
-    .catch(() => {})
-
-  platformService
-    .on("streaming-player://ended", () => {
-      const state = useStreamingPlayerStore.getState()
-      state.setPlayerState("paused")
-      state.setProgress(0)
-      useStreamingPlayerStore.setState({ hasEnded: true })
-    })
-    .catch(() => {})
-}

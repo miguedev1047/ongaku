@@ -16,6 +16,8 @@ import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import { useQuery } from '@tanstack/react-query'
 import { Show } from '@/components/utility/show'
 import i18n from '@/lib/i18n'
+import { AppBackground } from '@/blocks/app-background'
+import { cn } from 'cn'
 
 interface RouteContext {
   queryClient: QueryClient
@@ -51,6 +53,9 @@ function RootComponent() {
 
   const { data: config } = useQuery(systemConfigQueryOpts())
   const isPlayerTop = config?.player_position === 'top'
+  const hasBackground = Boolean(
+    config?.app_background && config.app_background.trim().length > 0,
+  )
 
   return (
     <AppSidebarProvider>
@@ -64,12 +69,17 @@ function RootComponent() {
           </Suspense>
         </Show>
 
-        <div className='flex-1 min-h-0 flex overflow-hidden'>
+        <AppBackground>
           <AppSidebar />
-          <SidebarInset className='flex-1 min-h-0 min-w-0 overflow-hidden flex flex-col'>
+          <SidebarInset
+            className={cn(
+              'flex-1 min-h-0 min-w-0 overflow-hidden flex flex-col',
+              hasBackground && 'bg-transparent',
+            )}
+          >
             <Outlet />
           </SidebarInset>
-        </div>
+        </AppBackground>
 
         <DownloadQueueDialog />
 

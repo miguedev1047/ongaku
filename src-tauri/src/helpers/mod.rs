@@ -1,3 +1,4 @@
+mod background_utils;
 mod binaries;
 mod created_time;
 mod downloader;
@@ -10,6 +11,8 @@ mod single_instance;
 mod song_utils;
 mod validate_name;
 mod youtube_utils;
+
+pub use background_utils::*;
 
 pub use binaries::*;
 pub use created_time::*;

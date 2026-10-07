@@ -5,7 +5,7 @@ use tauri::Manager;
 
 use crate::{
     constants::SERVER_HOST,
-    server::{get_home, get_song_cover, get_song_stream},
+    server::{get_background, get_home, get_song_cover, get_song_stream},
 };
 
 pub struct ServerPort(pub u16);
@@ -21,6 +21,7 @@ pub fn init_server(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error
         .route("/", get(get_home))
         .route("/api/song-stream", get(get_song_stream))
         .route("/api/song-cover", get(get_song_cover))
+        .route("/api/background", get(get_background))
         .layer(CorsLayer::very_permissive());
 
     let bind_addr = format!("{SERVER_HOST}:0");

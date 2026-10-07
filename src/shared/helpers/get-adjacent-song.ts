@@ -7,7 +7,9 @@ export function getAdjacentSong<T extends { id: string }>(
 
   const currentIndex = songs.findIndex((item) => item.id === currentTrack.id)
 
-  if (currentIndex === -1) return undefined
+  if (currentIndex === -1) {
+    return direction === 1 ? songs[0] : songs[songs.length - 1]
+  }
 
   const nextIndex = (currentIndex + direction + songs.length) % songs.length
   return songs[nextIndex]

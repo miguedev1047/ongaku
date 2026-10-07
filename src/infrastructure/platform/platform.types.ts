@@ -11,6 +11,7 @@ import type {
 import type { TPlaylistAction } from '@/shared/types/playlist-actions'
 import type { TYoutubeSearchResult } from '@/shared/types/youtube.types'
 import type { TAppConfig } from '@/shared/queries/config'
+import type { TBackgroundItem } from '@/shared/queries/backgrounds'
 import type { TSystemHealthInfo } from '@/shared/queries/system-health'
 import type { TBinariesInfo } from '@/shared/types/binaries.types'
 import type { TSyncStats } from '@/shared/types/sync.types'
@@ -150,6 +151,26 @@ export interface CommandMap {
   change_app_dir: {
     args: { newParentDir: string }
     return: TAppConfig
+  }
+  get_backgrounds: {
+    args?: undefined
+    return: TBackgroundItem[]
+  }
+  import_background_from_file: {
+    args?: undefined
+    return: TBackgroundItem | null
+  }
+  import_background_from_url: {
+    args: { url: string }
+    return: TBackgroundItem
+  }
+  delete_background: {
+    args: { id: string }
+    return: void
+  }
+  open_backgrounds_folder: {
+    args?: undefined
+    return: void
   }
   import_songs_to_playlist: {
     args: { playlistName: string }

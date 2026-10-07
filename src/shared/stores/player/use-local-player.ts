@@ -5,7 +5,6 @@ import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
 import type { LocalPlayerState, PlaybackContext } from "./types"
 
 export interface LocalPlayerStore {
-  audioRef: HTMLAudioElement | null
   currentSong: TPlaylistSong | null
   currentPlaylist: string
   playbackContext: PlaybackContext
@@ -18,7 +17,6 @@ export interface LocalPlayerStore {
   volume: number
   playerState: LocalPlayerState
 
-  setAudioRef: (audio: HTMLAudioElement | null) => void
   setCurrentSong: (
     song: TPlaylistSong | null,
     queueOrContext?: readonly TPlaylistSong[] | PlaybackContext,
@@ -40,13 +38,14 @@ export interface LocalPlayerStore {
   play: () => void
   pause: () => void
   togglePlay: () => void
+  seekTo: (time: number) => void
+  stop: () => void
   resetPlayer: () => void
 }
 
 export const useLocalPlayerStore = create<LocalPlayerStore>()(
   persist(
     (set, get) => ({
-  audioRef: null,
   currentSong: null,
   currentPlaylist: "",
   playbackContext: { type: "library" },
@@ -58,8 +57,6 @@ export const useLocalPlayerStore = create<LocalPlayerStore>()(
   duration: 0,
   progress: 0,
   volume: 80,
-
-  setAudioRef: (ref) => set({ audioRef: ref }),
   setCurrentSong: (song, queueOrContext, context) =>
     set((state) => {
       let resolvedQueue: readonly TPlaylistSong[] | undefined
@@ -149,8 +146,26 @@ export const useLocalPlayerStore = create<LocalPlayerStore>()(
     platformService.invoke("local_audio_set_volume", { volume: volume / 100 }).catch(() => {})
   },
   play: () => {
-    set({ playerState: "playing" })
-    platformService.invoke("local_audio_resume").catch(() => {})
+    const { playerState, currentSong, volume, progress } = get()
+    if (!currentSong) return
+
+    if (playerState === "paused") {
+      set({ playerState: "playing" })
+      platformService.invoke("local_audio_resume").catch(() => {})
+    } else {
+      set({ playerState: "playing" })
+      const startPos = progress > 0 ? progress : undefined
+      platformService
+        .invoke("local_audio_play", {
+          path: currentSong.path,
+          volume: volume / 100,
+          startPosSecs: startPos,
+        })
+        .catch((err) => {
+          console.error("Failed to play local audio via rodio:", err)
+          set({ playerState: "idle" })
+        })
+    }
   },
   pause: () => {
     set({ playerState: "paused" })
@@ -163,6 +178,25 @@ export const useLocalPlayerStore = create<LocalPlayerStore>()(
     } else {
       play()
     }
+  },
+  seekTo: (time: number) => {
+    const { duration, currentSong } = get()
+    if (!currentSong) return
+    const max = duration || 0
+    const clamped = max > 0 ? Math.min(Math.max(0, time), max) : Math.max(0, time)
+    set({ progress: clamped })
+    platformService
+      .invoke("local_audio_seek", { positionSecs: clamped })
+      .catch((err) => {
+        console.error("Failed to seek local audio via rodio:", err)
+      })
+  },
+  stop: () => {
+    platformService.invoke("local_audio_stop").catch(() => {})
+    set({
+      playerState: "idle",
+      progress: 0,
+    })
   },
   resetPlayer: () => {
     platformService.invoke("local_audio_stop").catch(() => {})

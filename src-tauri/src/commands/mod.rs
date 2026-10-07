@@ -1,3 +1,4 @@
+mod backgrounds;
 mod check_binaries;
 mod config;
 mod download_binaries;
@@ -16,6 +17,7 @@ mod streaming_audio;
 mod sync_library;
 mod system_health;
 
+pub use backgrounds::*;
 pub use check_binaries::*;
 pub use config::*;
 pub use download_binaries::*;

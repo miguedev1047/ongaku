@@ -5,7 +5,6 @@ import { LocalPlayerTrackInfo } from './local-track-info'
 import { LocalPlayerVolume } from './local-volume'
 import { LocalPlayerProgressbar } from './local-progressbar'
 import { LocalPlayerTime } from './local-time'
-import { LocalPlayerElement } from './local-element'
 import { Player } from '@/components/ui/player'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { useLocalPlayerStore } from '@/shared/stores/player'
@@ -26,10 +25,6 @@ export function LocalPlayer({ position = 'bottom' }: LocalPlayerProps) {
   return (
     <TooltipProvider delay={300}>
       <Player position={position}>
-        <Suspense>
-          <LocalPlayerElement />
-        </Suspense>
-
         <LocalPlayerProgressbar position={position} />
 
         {/* Column 1 (Left): Cover & Track Info side by side */}

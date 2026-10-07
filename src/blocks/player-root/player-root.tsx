@@ -2,6 +2,7 @@ import { useActivePlayerStore } from "@/shared/stores/player"
 import { LocalPlayer } from "@/blocks/local-player"
 import { StreamingPlayer } from "@/blocks/streaming-player"
 import { useMediaSession } from "@/hooks/use-media-session"
+import { usePlayerSync } from "@/blocks/player-root/use-player-sync"
 
 interface PlayerRootProps {
   position?: "bottom" | "top"
@@ -10,6 +11,7 @@ interface PlayerRootProps {
 export function PlayerRoot({ position = "bottom" }: PlayerRootProps) {
   const activePlayer = useActivePlayerStore((s) => s.activePlayer)
   useMediaSession()
+  usePlayerSync()
 
   if (activePlayer === "streaming") {
     return <StreamingPlayer position={position} />

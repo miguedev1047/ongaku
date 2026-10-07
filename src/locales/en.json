@@ -164,6 +164,35 @@
               "neutral_zinc": "Neutral Zinc"
             },
             "custom_hex": "Custom HEX:"
+          },
+          "app_background": {
+            "title": "App Wallpaper",
+            "description": "Customize your app background with custom wallpapers",
+            "default": "Default",
+            "active": "Active",
+            "import_file": "Import from Device",
+            "import_url": "Import from URL",
+            "open_folder": "Open Folder",
+            "delete": "Delete Wallpaper",
+            "delete_confirm": "Are you sure you want to delete this wallpaper?",
+            "url_dialog": {
+              "title": "Import Wallpaper from URL",
+              "description": "Enter the direct web address of an image to download and optimize it as a wallpaper.",
+              "label": "Image URL",
+              "placeholder": "https://example.com/wallpaper.jpg",
+              "submit": "Download & Import",
+              "cancel": "Cancel",
+              "preview": "Image Preview",
+              "invalid_url": "Please enter a valid HTTP or HTTPS image URL"
+            },
+            "toasts": {
+              "imported": "Wallpaper imported successfully",
+              "deleted": "Wallpaper deleted",
+              "applied": "Wallpaper applied",
+              "reset_default": "Wallpaper reset to default",
+              "error_import": "Failed to import wallpaper",
+              "error_delete": "Failed to delete wallpaper"
+            }
           }
         }
       },

@@ -31,6 +31,7 @@ fn test_ensure_dirs_creates_all_required_directories() {
     assert!(get_config_dir().exists(), "config dir must exist");
     assert!(get_db_dir().exists(), "db dir must exist");
     assert!(get_staging_dir().exists(), "staging dir must exist");
+    assert!(tauri_app_lib::helpers::get_backgrounds_dir().exists(), "backgrounds dir must exist");
 
     // Verify paths.json configuration file is written and parseable
     let config_path = get_paths_config_path();

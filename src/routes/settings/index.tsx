@@ -19,6 +19,7 @@ import { useSystemHealth } from '@/features/settings/hooks'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
+import { systemBackgroundsOpts } from '@/shared/queries/backgrounds'
 
 function SettingsPending() {
   const { t } = useTranslation()
@@ -37,6 +38,7 @@ export const Route = createFileRoute('/settings/')({
     context.queryClient.query(systemConfigQueryOpts())
     context.queryClient.query(systemHealthQueryOpts())
     context.queryClient.query(updatesQueryOpts())
+    context.queryClient.query(systemBackgroundsOpts())
   },
   component: RouteComponent,
 })

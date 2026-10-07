@@ -10,17 +10,20 @@ export const THEME_OPTIONS = [
   {
     id: 'light',
     icon: Sun,
-    labelKey: 'settings.tabs.appearance.appearance_and_interface.interface_theme.light',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.interface_theme.light',
   },
   {
     id: 'dark',
     icon: Moon,
-    labelKey: 'settings.tabs.appearance.appearance_and_interface.interface_theme.dark',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.interface_theme.dark',
   },
   {
     id: 'system',
     icon: ComputerIcon,
-    labelKey: 'settings.tabs.appearance.appearance_and_interface.interface_theme.system',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.interface_theme.system',
   },
 ] as const
 
@@ -37,7 +40,9 @@ export function ThemeSelection() {
   return (
     <div className='space-y-2'>
       <label className='text-xs font-medium text-foreground'>
-        {t('settings.tabs.appearance.appearance_and_interface.interface_theme.title')}
+        {t(
+          'settings.tabs.appearance.appearance_and_interface.interface_theme.title',
+        )}
       </label>
       <div className='grid grid-cols-3 gap-2'>
         {THEME_OPTIONS.map((opt) => {
@@ -52,7 +57,7 @@ export function ThemeSelection() {
               className={cn(
                 'h-9 text-xs gap-2 rounded-md font-medium border-border/40',
                 isSelected &&
-                  'border-primary bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary',
+                  'bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary border-accent-foreground/20',
               )}
             >
               <HugeiconsIcon
