@@ -183,6 +183,11 @@
               "submit": "Download & Import",
               "cancel": "Cancel",
               "preview": "Image Preview",
+              "preview_loading": "Loading preview...",
+              "preview_error": "Unable to preview image. Make sure the URL points directly to an image file (.jpg, .png, .webp).",
+              "preview_ready": "Preview loaded",
+              "sources_title": "Popular Wallpaper Sources",
+              "sources_hint": "Tip: Right-click any wallpaper on these sites, select \"Copy image address\", and paste it here.",
               "invalid_url": "Please enter a valid HTTP or HTTPS image URL"
             },
             "toasts": {

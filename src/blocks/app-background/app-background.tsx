@@ -1,4 +1,5 @@
 import { Show } from '@/components/utility/show'
+import { getBackgroundUrl } from '@/lib/song-utils'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import { useQuery } from '@tanstack/react-query'
@@ -16,7 +17,7 @@ export function AppBackground({ children, className, ...props }: AppBackgroundPr
 
   const backgroundUrl =
     hasBackground && serverPort
-      ? `http://localhost:${serverPort}/api/background?id=${encodeURIComponent(bgId!)}`
+      ? getBackgroundUrl({ id: bgId!, port: serverPort })
       : null
 
   return (

@@ -86,7 +86,9 @@ pub async fn import_background_from_url(url: String) -> Result<BackgroundItem, S
     }
 
     let client = reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(20))
+        .user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Ongaku/0.1")
+        .timeout(std::time::Duration::from_secs(25))
+        .redirect(reqwest::redirect::Policy::limited(5))
         .build()
         .map_err(|err| err.to_string())?;
 
@@ -98,6 +100,14 @@ pub async fn import_background_from_url(url: String) -> Result<BackgroundItem, S
 
     if !response.status().is_success() {
         return Err(format!("Download failed with status: {}", response.status()));
+    }
+
+    if let Some(content_type) = response.headers().get(reqwest::header::CONTENT_TYPE) {
+        if let Ok(ct_str) = content_type.to_str() {
+            if ct_str.to_ascii_lowercase().starts_with("text/html") {
+                return Err("The provided URL points to an HTML webpage, not a direct image file. Please copy the direct image address (e.g. ending in .jpg, .png, or .webp).".to_string());
+            }
+        }
     }
 
     let bytes = response

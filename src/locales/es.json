@@ -183,6 +183,11 @@
               "submit": "Descargar e importar",
               "cancel": "Cancelar",
               "preview": "Vista previa",
+              "preview_loading": "Cargando vista previa...",
+              "preview_error": "No se pudo cargar la vista previa. Asegúrate de que la URL apunte directamente a un archivo de imagen (.jpg, .png, .webp).",
+              "preview_ready": "Vista previa cargada",
+              "sources_title": "Fuentes populares de fondos",
+              "sources_hint": "Consejo: Haz clic derecho en cualquier fondo en estos sitios, elige \"Copiar dirección de la imagen\" y pégala aquí.",
               "invalid_url": "Por favor ingresa una URL de imagen HTTP o HTTPS válida"
             },
             "toasts": {

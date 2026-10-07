@@ -75,7 +75,7 @@ export function useAppBackgrounds() {
       !trimmed ||
       (!trimmed.startsWith('http://') && !trimmed.startsWith('https://'))
     ) {
-      toast.error(message)
+      toast.error(t(message))
       return
     }
 

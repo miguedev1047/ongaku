@@ -38,3 +38,15 @@ export function getYoutubeStreamUrl({
   const url = `http://127.0.0.1:${port}/api/youtube-stream?id=${encodeURIComponent(id)}`
   return url
 }
+
+export function getBackgroundUrl({
+  id,
+  port = 31047
+}: {
+  id: string
+  port?: number
+}) {
+  const url = `http://127.0.0.1:${port}/api/background?id=${encodeURIComponent(id)}`
+  return url
+}
+
