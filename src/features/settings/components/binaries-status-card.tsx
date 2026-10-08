@@ -7,7 +7,7 @@ import { useBinaries } from "@/features/download-queue/hooks"
 import { openFolder } from "@/shared/helpers/open-folder"
 import { toast } from "sonner"
 import { Show } from "@/components/utility/show"
-import { DotmSquare10 } from "@/components/loaders/dotm-square-10"
+import { DotmSquare10 } from "@/components/generic/loaders/dotm-square-10"
 import { useTranslation } from "react-i18next"
 import { cn } from "cn"
 

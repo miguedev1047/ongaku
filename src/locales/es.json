@@ -90,7 +90,7 @@
           "description": "Versión del entorno instalada y canal de actualización automática",
           "status": {
             "checking": "Buscando actualizaciones...",
-            "updated": "Al día",
+            "updated": "Actualizado",
             "available": "Actualización disponible",
             "downloading": "Descargando actualización",
             "installing": "Instalando actualización",

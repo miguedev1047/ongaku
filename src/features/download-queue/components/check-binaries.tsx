@@ -17,7 +17,7 @@ import {
   PopoverTrigger
 } from "@/components/ui/popover"
 import { Show } from "@/components/utility/show"
-import { DotmSquare10 } from "@/components/loaders/dotm-square-10"
+import { DotmSquare10 } from "@/components/generic/loaders/dotm-square-10"
 import { cn } from "cn"
 
 interface StatusProps {

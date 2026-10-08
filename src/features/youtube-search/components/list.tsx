@@ -1,7 +1,7 @@
 import { youtubeSearchQueryOpts } from "@/shared/queries/youtube"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { useSearch } from "@tanstack/react-router"
-import { SearchSongsList } from "@/blocks/search-songs-list"
+import { SearchSongsList } from "@/components/blocks/search-songs-list"
 import {
   Empty,
   EmptyDescription,

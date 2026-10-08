@@ -7,7 +7,7 @@ import {
 import { YoutubeToolsMissing } from '@/features/youtube-search/ui-states'
 import { useBinaries } from '@/features/download-queue/hooks'
 import { Show } from '@/components/utility/show'
-import { RoutePendingState, RouteErrorState } from '@/components/route-ui-state'
+import { RoutePendingState, RouteErrorState } from '@/components/compounds/route-ui-state'
 import { useTranslation } from 'react-i18next'
 
 function SearchPending() {

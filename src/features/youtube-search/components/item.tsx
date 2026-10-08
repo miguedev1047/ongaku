@@ -5,7 +5,7 @@ import { formatDuration } from "@/shared/helpers/format-duration"
 import { useStreamingPlayerStore } from "@/shared/stores/player"
 import { useActivePlayerStore } from "@/shared/stores/player"
 import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
-import { SearchSongActions } from "@/blocks/song-actions/search-songs"
+import { SearchSongActions } from "@/components/blocks/song-actions/search-songs"
 import {
   Item,
   ItemActions,

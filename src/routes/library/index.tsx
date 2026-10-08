@@ -9,7 +9,7 @@ import {
   LibraryStatsSkeleton
 } from "@/features/library/ui-state"
 import { RouteSection } from "@/components/ui/route-section"
-import { RoutePendingState, RouteErrorState } from "@/components/route-ui-state"
+import { RoutePendingState, RouteErrorState } from "@/components/compounds/route-ui-state"
 import { createFileRoute } from "@tanstack/react-router"
 import { librarySongsQueryOpts } from "@/shared/queries/library"
 import { useTranslation } from "react-i18next"

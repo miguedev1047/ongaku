@@ -7,11 +7,11 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { CoverImage } from '@/components/cover-image'
+import { CoverImage } from '@/components/generic/cover-image'
 import { usePlaylistItem } from '@/features/playlists/hooks'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import type { TPlaylist } from '@/shared/types/playlist.types'
-import { PlaylistActionsContextMenu } from '@/blocks/song-actions/playlists'
+import { PlaylistActionsContextMenu } from '@/components/blocks/song-actions/playlists'
 import { Show } from '@/components/utility/show'
 import { useTranslation } from 'react-i18next'
 

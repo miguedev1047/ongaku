@@ -19,9 +19,9 @@ import {
 } from '@/components/ui/empty'
 import { formatDuration } from '@/shared/helpers/format-duration'
 import { Show } from '@/components/utility/show'
-import { SearchSongActions } from '@/blocks/song-actions/search-songs'
+import { SearchSongActions } from '@/components/blocks/song-actions/search-songs'
 import { cn } from 'cn'
-import { DotmSquare1, DotmSquare18 } from '@/components/loaders'
+import { DotmSquare1, DotmSquare18 } from '@/components/generic/loaders'
 import { useTranslation } from 'react-i18next'
 
 interface YoutubeSongInfoProps {

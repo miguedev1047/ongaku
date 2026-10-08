@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs"
 import { useParams } from "@tanstack/react-router"
-import { PlaylistSongsList as PlaylistSongsBlock } from "@/blocks/playlist-songs-list"
+import { PlaylistSongsList as PlaylistSongsBlock } from "@/components/blocks/playlist-songs-list"
 import { PlaylistSongsEmptyState } from "@/features/playlist-songs/ui-state"
 
 export function PlaylistSongsList() {

@@ -7,7 +7,7 @@ import {
   ItemMedia,
   ItemTitle
 } from "@/components/ui/item"
-import { CoverImage } from "@/components/cover-image"
+import { CoverImage } from "@/components/generic/cover-image"
 import { useSongUtils } from "@/hooks/use-song-utils"
 import { formatDuration } from "@/shared/helpers/format-duration"
 import { useLocalPlayerStore } from "@/shared/stores/player"

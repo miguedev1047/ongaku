@@ -11,7 +11,7 @@ import { RouteSection } from "@/components/ui/route-section";
 import {
   RoutePendingState,
   RouteErrorState,
-} from "@/components/route-ui-state";
+} from "@/components/compounds/route-ui-state";
 import { useTranslation } from "react-i18next";
 
 function PlaylistSongPending() {

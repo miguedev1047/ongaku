@@ -1,4 +1,4 @@
-import { useTheme } from "@/components/theme-provider"
+import { useTheme } from "@/components/compounds/theme-provider"
 import { Toaster as Sonner, type ToasterProps } from "sonner"
 import "sonner/dist/styles.css"
 import { HugeiconsIcon } from "@hugeicons/react"

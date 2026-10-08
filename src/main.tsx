@@ -3,7 +3,7 @@ import '@/lib/i18n'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import { queryClient, QueryProvider } from '@/lib/query'
-import { RoutePendingState, RouteErrorState } from '@/components/route-ui-state'
+import { RoutePendingState, RouteErrorState } from '@/components/compounds/route-ui-state'
 import { AppProvider } from '@/providers/app-provider'
 import {
   RouterProvider,

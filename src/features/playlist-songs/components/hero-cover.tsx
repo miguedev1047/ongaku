@@ -1,5 +1,5 @@
-import { CoverImage } from '@/components/cover-image'
-import { DotmSquare18 } from '@/components/loaders/dotm-square-18'
+import { CoverImage } from '@/components/generic/cover-image'
+import { DotmSquare18 } from '@/components/generic/loaders/dotm-square-18'
 import { Show } from '@/components/utility/show'
 import { cn } from 'cn'
 import type { TPlaylistSong } from '@/shared/types/playlist-songs.types'

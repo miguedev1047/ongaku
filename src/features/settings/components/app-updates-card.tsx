@@ -14,7 +14,7 @@ import { useSuspenseQuery } from '@tanstack/react-query'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import { updatesQueryOpts } from '@/shared/queries/updates'
 import { openReleaseNotes } from '@/shared/helpers/open-release-notes'
-import { DotmSquare10 } from '@/components/loaders/dotm-square-10'
+import { DotmSquare10 } from '@/components/generic/loaders/dotm-square-10'
 import { useTranslation } from 'react-i18next'
 import { cn } from 'cn'
 

@@ -9,7 +9,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { usePlaylistHero } from '@/features/playlist-songs/hooks/use-playlist-hero'
-import { PlaylistHeroActions } from '@/blocks/song-actions/playlists'
+import { PlaylistHeroActions } from '@/components/blocks/song-actions/playlists'
 import { PlaylistHeroCover } from '@/features/playlist-songs/components/hero-cover'
 import { useTranslation } from 'react-i18next'
 

@@ -1,4 +1,4 @@
 export {
   PlaylistSongActions,
   type PlaylistSongActionsProps
-} from "@/blocks/song-actions/playlist-songs"
+} from "@/components/blocks/song-actions/playlist-songs"

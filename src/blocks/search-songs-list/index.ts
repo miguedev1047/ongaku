@@ -1,6 +1,0 @@
-export * from "@/blocks/search-songs-list/search-songs-list"
-export * from "@/blocks/search-songs-list/search-table-row"
-export * from "@/blocks/search-songs-list/search-table-columns"
-export * from "@/blocks/search-songs-list/search-table-features"
-export * from "@/blocks/search-songs-list/search-batch-bar"
-export * from "@/blocks/search-songs-list/hooks"

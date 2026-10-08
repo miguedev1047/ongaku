@@ -2,7 +2,7 @@ import { cn } from 'cn'
 import { Button } from '@/components/ui/button'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Moon, Sun, ComputerIcon } from '@hugeicons/core-free-icons'
-import { useTheme } from '@/components/theme-provider'
+import { useTheme } from '@/components/compounds/theme-provider'
 import { useUpdateConfig } from '@/features/settings/hooks/use-config'
 import { useTranslation } from 'react-i18next'
 
