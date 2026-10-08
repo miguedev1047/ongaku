@@ -10,6 +10,7 @@ pub struct AppPaths {
     pub library_dir: PathBuf,
     pub cache_dir: PathBuf,
     pub cache_pictures_dir: PathBuf,
+    pub cache_thumbs_dir: PathBuf,
     pub bin_dir: PathBuf,
     pub config_dir: PathBuf,
     pub db_dir: PathBuf,
@@ -93,6 +94,12 @@ pub fn get_cache_pictures_dir() -> PathBuf {
     dir
 }
 
+pub fn get_cache_thumbs_dir() -> PathBuf {
+    let dir = get_cache_dir().join("thumbs");
+    let _ = fs::create_dir_all(&dir);
+    dir
+}
+
 pub fn get_streaming_cache_dir() -> PathBuf {
     let dir = get_cache_dir().join("streaming");
     let _ = fs::create_dir_all(&dir);
@@ -121,6 +128,7 @@ pub fn get_app_paths() -> AppPaths {
         library_dir: get_library_dir(),
         cache_dir: get_cache_dir(),
         cache_pictures_dir: get_cache_pictures_dir(),
+        cache_thumbs_dir: get_cache_thumbs_dir(),
         bin_dir: get_bin_dir(),
         config_dir: get_config_dir(),
         db_dir: get_db_dir(),

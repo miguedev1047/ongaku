@@ -175,6 +175,8 @@
             "open_folder": "Abrir carpeta",
             "delete": "Eliminar fondo",
             "delete_confirm": "¿Estás seguro de que deseas eliminar este fondo?",
+            "show_more": "Mostrar más (quedan {{count}})",
+            "show_all": "Mostrar todos ({{count}})",
             "url_dialog": {
               "title": "Importar fondo desde URL",
               "description": "Ingresa la dirección web directa de una imagen para descargarla y optimizarla como fondo.",

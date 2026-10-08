@@ -3,7 +3,8 @@ use std::sync::Mutex;
 use tauri_app_lib::commands::get_backgrounds;
 use tauri_app_lib::db::{init_and_sync_db, queries::get_config};
 use tauri_app_lib::helpers::{
-    encode_background_webp, get_backgrounds_dir, save_background_bytes, set_app_dir,
+    encode_background_webp, ensure_background_thumbnail, get_backgrounds_dir,
+    get_cache_thumbs_dir, save_background_bytes, set_app_dir,
 };
 
 static TEST_LOCK: Mutex<()> = Mutex::new(());
@@ -47,6 +48,16 @@ fn test_save_and_get_and_delete_background_flow() {
     let bg_file = get_backgrounds_dir().join(&item.file_name);
     assert!(bg_file.exists(), "Background file must be written to disk");
 
+    let thumb_file = get_cache_thumbs_dir().join(&item.file_name);
+    assert!(thumb_file.exists(), "Thumbnail file must be written to disk in cache/thumbs");
+
+    // Verify ensure_background_thumbnail regenerates if thumb missing
+    let _ = fs::remove_file(&thumb_file);
+    assert!(!thumb_file.exists());
+    let regen_res = ensure_background_thumbnail(&item.id);
+    assert!(regen_res.is_ok(), "ensure_background_thumbnail should succeed");
+    assert!(thumb_file.exists(), "Regenerated thumbnail must exist");
+
     // 2. Query backgrounds list
     let list = get_backgrounds().expect("get_backgrounds failed");
     assert!(!list.is_empty(), "Backgrounds list should not be empty");
@@ -62,10 +73,10 @@ fn test_save_and_get_and_delete_background_flow() {
     }
 
     // 4. Delete background
-    // To invoke delete_background, create a State wrapper or test logic
-    // Wait, delete_background takes tauri::State<DbPool>. In a test, we can verify db query + file removal logic.
     let _ = fs::remove_file(&bg_file);
     assert!(!bg_file.exists(), "Background file should be deleted");
+    let _ = fs::remove_file(&thumb_file);
+    assert!(!thumb_file.exists(), "Thumbnail should be deleted");
 
     // Reset config
     {

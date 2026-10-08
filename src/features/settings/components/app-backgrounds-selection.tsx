@@ -54,6 +54,11 @@ export function AppBackgroundsSelection() {
     'idle' | 'loading' | 'success' | 'error'
   >('idle')
 
+  const [visibleCount, setVisibleCount] = useState(16)
+  const visibleBackgrounds = backgrounds.slice(0, visibleCount)
+  const remainingCount = Math.max(0, backgrounds.length - visibleCount)
+  const hasMore = remainingCount > 0
+
   const trimmedUrl = urlInput.trim()
   const isValidUrl =
     trimmedUrl.length > 10 &&
@@ -193,10 +198,10 @@ export function AppBackgroundsSelection() {
           </Show>
         </div>
 
-        {backgrounds.map((bg) => {
+        {visibleBackgrounds.map((bg) => {
           const isChecked = currentBackground === bg.id
           const imageUrl = serverPort
-            ? getBackgroundUrl({ id: bg.id, port: serverPort })
+            ? getBackgroundUrl({ id: bg.id, port: serverPort, thumb: true })
             : ''
 
           return (
@@ -206,7 +211,7 @@ export function AppBackgroundsSelection() {
               role='button'
               tabIndex={0}
               className={cn(
-                'group relative overflow-hidden h-36 rounded-md border border-border/40 bg-muted/20 cursor-pointer hover:border-foreground/30 transition-all select-none',
+                'group relative overflow-hidden h-36 rounded-md border border-border/40 bg-muted/20 cursor-pointer hover:border-foreground/30 transition-colors select-none',
                 isChecked && 'border-accent-foreground/20 bg-primary/5',
               )}
             >
@@ -216,6 +221,7 @@ export function AppBackgroundsSelection() {
                   alt={bg.file_name}
                   className='absolute inset-0 size-full object-cover'
                   loading='lazy'
+                  decoding='async'
                 />
               </Show>
 
@@ -253,6 +259,23 @@ export function AppBackgroundsSelection() {
           )
         })}
       </div>
+
+      <Show when={hasMore}>
+        <div className='flex items-center justify-center pt-1'>
+          <Button
+            type='button'
+            variant='outline'
+            size='sm'
+            onClick={() => setVisibleCount((prev) => prev + 16)}
+            className='h-7 text-xs px-3 rounded-md border-border/60 hover:bg-accent/60'
+          >
+            {t(
+              'settings.tabs.appearance.appearance_and_interface.app_background.show_more',
+              { count: remainingCount },
+            )}
+          </Button>
+        </div>
+      </Show>
 
       <Dialog
         open={isUrlDialogOpen}

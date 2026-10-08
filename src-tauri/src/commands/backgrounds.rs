@@ -3,7 +3,8 @@ use tauri::State;
 
 use crate::db::DbPool;
 use crate::helpers::{
-    created_time, get_backgrounds_dir, resolve_inside, save_background_bytes, BackgroundItem,
+    created_time, get_backgrounds_dir, get_cache_thumbs_dir, resolve_inside, save_background_bytes,
+    BackgroundItem,
 };
 
 #[tauri::command]
@@ -137,6 +138,11 @@ pub fn delete_background(db: State<DbPool>, id: String) -> Result<(), String> {
     let dir = get_backgrounds_dir();
     if let Ok(file_path) = resolve_inside(&dir, &filename) {
         let _ = fs::remove_file(file_path);
+    }
+
+    let thumbs_dir = get_cache_thumbs_dir();
+    if let Ok(thumb_path) = resolve_inside(&thumbs_dir, &filename) {
+        let _ = fs::remove_file(thumb_path);
     }
 
     // If currently active wallpaper was this one, reset to default

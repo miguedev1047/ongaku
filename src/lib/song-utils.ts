@@ -41,12 +41,18 @@ export function getYoutubeStreamUrl({
 
 export function getBackgroundUrl({
   id,
-  port = 31047
+  port = 31047,
+  thumb = false,
 }: {
   id: string
   port?: number
+  thumb?: boolean
 }) {
-  const url = `http://127.0.0.1:${port}/api/background?id=${encodeURIComponent(id)}`
+  const query = thumb
+    ? `?id=${encodeURIComponent(id)}&thumb=true`
+    : `?id=${encodeURIComponent(id)}`
+  const url = `http://127.0.0.1:${port}/api/background${query}`
   return url
 }
+
 

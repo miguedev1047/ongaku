@@ -175,6 +175,8 @@
             "open_folder": "Open Folder",
             "delete": "Delete Wallpaper",
             "delete_confirm": "Are you sure you want to delete this wallpaper?",
+            "show_more": "Show more ({{count}} remaining)",
+            "show_all": "Show all ({{count}})",
             "url_dialog": {
               "title": "Import Wallpaper from URL",
               "description": "Enter the direct web address of an image to download and optimize it as a wallpaper.",
