@@ -1,10 +1,4 @@
-import { useState, useEffect, useRef } from "react"
-import {
-  useTable,
-  Subscribe,
-  type RowSelectionState
-} from "@tanstack/react-table"
-import { useVirtualizer } from "@tanstack/react-virtual"
+import { Subscribe } from "@tanstack/react-table"
 import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -14,11 +8,12 @@ import {
   TableRow,
   TableHead
 } from "@/components/ui/table"
-import { useSearchBatchStore } from "@/shared/stores/batch-operations"
 import { SearchBatchBar } from "@/components/blocks/search-songs-list/search-batch-bar"
-import { searchTableFeatures } from "@/components/blocks/search-songs-list/search-table-features"
-import { searchSongColumns } from "@/components/blocks/search-songs-list/search-table-columns"
 import { SearchSongTableRow } from "@/components/blocks/search-songs-list/search-table-row"
+import {
+  useSearchBatchSync,
+  useSearchList
+} from "@/components/blocks/search-songs-list/hooks"
 import { useTranslation } from "react-i18next"
 import { Show } from "@/components/utility/show"
 
@@ -27,52 +22,19 @@ interface SearchSongsListProps {
 }
 
 export function SearchSongsList({ data }: SearchSongsListProps) {
+  "use no memo"
   const { t } = useTranslation()
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
-  const scrollRef = useRef<HTMLDivElement>(null)
 
-  const table = useTable({
-    features: searchTableFeatures,
-    columns: searchSongColumns,
-    data,
-    getRowId: (row) => row.id,
-    state: {
-      rowSelection
-    },
-    onRowSelectionChange: setRowSelection
-  })
+  const {
+    rowSelection,
+    rowVirtualizer,
+    table,
+    scrollRef,
+    rows,
+    setRowSelection
+  } = useSearchList({ data })
 
-  // Synchronize table selection with useSearchBatchStore
-  useEffect(() => {
-    const selectedMap: Record<string, TYoutubeSearchResult> = {}
-    for (const id in rowSelection) {
-      if (rowSelection[id]) {
-        const item = data.find((s) => s.id === id)
-        if (item) selectedMap[id] = item
-      }
-    }
-    useSearchBatchStore.setState({ selectedMap })
-  }, [rowSelection, data])
-
-  // Clear table selection if useSearchBatchStore is cleared externally
-  useEffect(() => {
-    const unsub = useSearchBatchStore.subscribe((state) => {
-      if (Object.keys(state.selectedMap).length === 0) {
-        setRowSelection((prev) => (Object.keys(prev).length === 0 ? prev : {}))
-      }
-    })
-    return unsub
-  }, [])
-
-  const rows = table.getRowModel().rows
-
-  const rowVirtualizer = useVirtualizer({
-    count: rows.length,
-    getScrollElement: () => scrollRef.current,
-    estimateSize: () => 52,
-    getItemKey: (index) => rows[index]?.id ?? index,
-    overscan: 5
-  })
+  useSearchBatchSync({ rowSelection, setRowSelection, data })
 
   return (
     <div className="size-full flex flex-col overflow-hidden">

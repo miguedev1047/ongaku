@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -13,7 +13,11 @@ import {
 import { Input } from '@/components/ui/input'
 import { Spinner } from '@/components/ui/spinner'
 import { Show } from '@/components/utility/show'
-import { useAppBackgrounds } from '@/features/settings/hooks'
+import {
+  useAppBackgrounds,
+  useAppBackgroundMutations,
+  useAppBackgroundUrlDialog,
+} from '@/features/settings/hooks'
 import { RECOMMENDED_WALLPAPER_SOURCES } from '@/features/settings/constants/wallpaper-sources'
 import { platformService } from '@/infrastructure/platform'
 import { getBackgroundUrl } from '@/lib/song-utils'
@@ -33,65 +37,63 @@ import { useTranslation } from 'react-i18next'
 
 export function AppBackgroundsSelection() {
   const { t } = useTranslation()
+  const { backgrounds, serverPort, currentBackground } = useAppBackgrounds()
   const {
-    backgrounds,
-    serverPort,
-    currentBackground,
-    isUrlDialogOpen,
-    setIsUrlDialogOpen,
-    urlInput,
-    setUrlInput,
-    isImportingFile,
-    isImportingUrl,
-    handleSelectBackground,
     handleImportFile,
     handleImportUrl,
-    handleDelete,
-    handleOpenFolder,
-  } = useAppBackgrounds()
+    handleDeleteBackground,
+    selectBackground,
+    openFolder,
+    isImportingFile,
+    isImportingUrl,
+  } = useAppBackgroundMutations()
 
-  const [previewStatus, setPreviewStatus] = useState<
-    'idle' | 'loading' | 'success' | 'error'
-  >('idle')
+  const {
+    isOpen: isUrlDialogOpen,
+    setIsOpen: setIsUrlDialogOpen,
+    urlInput,
+    setUrlInput,
+    previewStatus,
+    setPreviewStatus,
+    trimmedUrl,
+    isValidUrl,
+    handleSubmit: handleSubmitUrl,
+  } = useAppBackgroundUrlDialog({
+    onImport: handleImportUrl,
+  })
 
   const [visibleCount, setVisibleCount] = useState(16)
   const visibleBackgrounds = backgrounds.slice(0, visibleCount)
   const remainingCount = Math.max(0, backgrounds.length - visibleCount)
   const hasMore = remainingCount > 0
 
-  const trimmedUrl = urlInput.trim()
-  const isValidUrl =
-    trimmedUrl.length > 10 &&
-    (trimmedUrl.startsWith('http://') || trimmedUrl.startsWith('https://'))
-
-  useEffect(() => {
-    if (isValidUrl) {
-      setPreviewStatus('loading')
-    } else {
-      setPreviewStatus('idle')
-    }
-  }, [trimmedUrl, isValidUrl])
+  const handleDelete = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation()
+    handleDeleteBackground(id)
+  }
 
   return (
-    <div className='space-y-3 pt-2 border-t border-border/30'>
+    <div className='p-4 rounded-md border border-border/50 bg-card/60 backdrop-blur-sm space-y-4'>
       <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-2.5'>
-        <div className='space-y-0.5'>
-          <div className='flex items-center gap-1.5'>
+        <div className='flex items-center gap-2.5'>
+          <div className='size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary'>
             <HugeiconsIcon
               icon={ImageIcon}
-              className='size-3.5 text-muted-foreground'
+              className='size-4'
             />
-            <label className='text-xs font-medium text-foreground'>
+          </div>
+          <div>
+            <h2 className='text-sm font-semibold text-foreground'>
               {t(
                 'settings.tabs.appearance.appearance_and_interface.app_background.title',
               )}
-            </label>
+            </h2>
+            <p className='text-xs text-muted-foreground'>
+              {t(
+                'settings.tabs.appearance.appearance_and_interface.app_background.description',
+              )}
+            </p>
           </div>
-          <p className='text-[11px] text-muted-foreground'>
-            {t(
-              'settings.tabs.appearance.appearance_and_interface.app_background.description',
-            )}
-          </p>
         </div>
 
         <div className='flex items-center gap-1.5 self-start sm:self-auto flex-wrap'>
@@ -143,7 +145,7 @@ export function AppBackgroundsSelection() {
             type='button'
             variant='ghost'
             size='sm'
-            onClick={handleOpenFolder}
+            onClick={openFolder}
             className='h-7 text-xs px-2 gap-1.5 rounded-md text-muted-foreground hover:text-foreground'
             title={t(
               'settings.tabs.appearance.appearance_and_interface.app_background.open_folder',
@@ -164,7 +166,7 @@ export function AppBackgroundsSelection() {
 
       <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 pt-1'>
         <div
-          onClick={() => handleSelectBackground('')}
+          onClick={() => selectBackground('')}
           role='button'
           tabIndex={0}
           className={cn(
@@ -207,7 +209,7 @@ export function AppBackgroundsSelection() {
           return (
             <div
               key={bg.id}
-              onClick={() => handleSelectBackground(bg.id)}
+              onClick={() => selectBackground(bg.id)}
               role='button'
               tabIndex={0}
               className={cn(
@@ -422,7 +424,7 @@ export function AppBackgroundsSelection() {
             />
             <Button
               type='button'
-              onClick={handleImportUrl}
+              onClick={handleSubmitUrl}
               disabled={isImportingUrl || !urlInput.trim()}
             >
               <Show when={isImportingUrl}>

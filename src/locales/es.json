@@ -9,7 +9,7 @@
     "loading": "Cargando...",
     "error": "Error",
     "search": "Buscar",
-    "alpha": "Alfa",
+    "alpha": "Alpha",
     "refresh": "Actualizar",
     "actions": "Acciones",
     "retry": "Reintentar",
@@ -23,14 +23,14 @@
   },
   "sidebar": {
     "library": "Biblioteca",
-    "playlists": "Listas de reproducción",
+    "playlists": "Playlists",
     "search": "Búsqueda en YouTube",
     "settings": "Ajustes",
     "navigation": {
       "label": "Navegación",
       "routes": {
         "library": "Biblioteca",
-        "playlists": "Listas de reproducción",
+        "playlists": "Playlists",
         "search": "Búsqueda en YouTube",
         "settings": "Ajustes"
       }
@@ -39,13 +39,13 @@
   "routes": {
     "library": {
       "pending_title": "Cargando biblioteca",
-      "pending_message": "Obteniendo tus pistas y estadísticas"
+      "pending_message": "Obteniendo tus canciones y estadísticas"
     },
     "playlists": {
-      "pending_title": "Cargando listas de reproducción",
+      "pending_title": "Cargando playlists",
       "pending_message": "Obteniendo tus colecciones de música",
-      "pending_song_title": "Cargando lista de reproducción",
-      "pending_song_message": "Obteniendo pistas de la lista"
+      "pending_song_title": "Cargando playlist",
+      "pending_song_message": "Obteniendo canciones de la playlist"
     },
     "search": {
       "pending_title": "Cargando búsqueda de YouTube",
@@ -58,7 +58,7 @@
     "error": {
       "title": "Error al cargar la página",
       "message": "Ocurrió un error inesperado al cargar esta ruta.",
-      "go_playlists": "Ir a listas de reproducción"
+      "go_playlists": "Ir a playlists"
     },
     "app_error": {
       "title": "Algo salió mal",
@@ -133,18 +133,20 @@
           "description": "Personaliza el aspecto, temas, posición del reproductor y colores de carpetas",
           "interface_theme": {
             "title": "Tema de la Interfaz",
+            "description": "Selecciona el tema visual de tu preferencia para la interfaz",
             "light": "Claro",
             "dark": "Oscuro",
             "system": "Sistema"
           },
           "player_position": {
             "title": "Posición del Reproductor",
+            "description": "Elige dónde se posiciona la barra del reproductor de audio",
             "bottom": "Abajo (Predeterminado)",
             "top": "Arriba"
           },
           "folder_color": {
-            "title": "Color de Carpetas de Listas",
-            "description": "Elige un tema de color para las tarjetas de carpetas de reproducción",
+            "title": "Color de Carpetas de Playlists",
+            "description": "Elige un tema de color para las tarjetas de carpetas de playlists",
             "colors": {
               "classic_blue": "Azul Clásico",
               "emerald": "Esmeralda",
@@ -166,39 +168,39 @@
             "custom_hex": "HEX Personalizado:"
           },
           "app_background": {
-            "title": "Fondo de Pantalla",
-            "description": "Personaliza el fondo de la aplicación con imágenes personalizadas",
-            "default": "Por defecto",
+            "title": "Wallpaper de la App",
+            "description": "Personaliza el fondo de la aplicación con tus propios wallpapers",
+            "default": "Predeterminado",
             "active": "Activo",
             "import_file": "Importar del dispositivo",
             "import_url": "Importar desde URL",
             "open_folder": "Abrir carpeta",
-            "delete": "Eliminar fondo",
-            "delete_confirm": "¿Estás seguro de que deseas eliminar este fondo?",
+            "delete": "Eliminar wallpaper",
+            "delete_confirm": "¿Estás seguro de que deseas eliminar este wallpaper?",
             "show_more": "Mostrar más (quedan {{count}})",
             "show_all": "Mostrar todos ({{count}})",
             "url_dialog": {
-              "title": "Importar fondo desde URL",
-              "description": "Ingresa la dirección web directa de una imagen para descargarla y optimizarla como fondo.",
+              "title": "Importar wallpaper desde URL",
+              "description": "Ingresa la dirección web directa de una imagen para descargarla y optimizarla como wallpaper.",
               "label": "URL de la imagen",
-              "placeholder": "https://ejemplo.com/fondo.jpg",
+              "placeholder": "https://ejemplo.com/wallpaper.jpg",
               "submit": "Descargar e importar",
               "cancel": "Cancelar",
               "preview": "Vista previa",
               "preview_loading": "Cargando vista previa...",
               "preview_error": "No se pudo cargar la vista previa. Asegúrate de que la URL apunte directamente a un archivo de imagen (.jpg, .png, .webp).",
               "preview_ready": "Vista previa cargada",
-              "sources_title": "Fuentes populares de fondos",
-              "sources_hint": "Consejo: Haz clic derecho en cualquier fondo en estos sitios, elige \"Copiar dirección de la imagen\" y pégala aquí.",
+              "sources_title": "Fuentes populares de wallpapers",
+              "sources_hint": "Consejo: Haz clic derecho en cualquier wallpaper en estos sitios, elige \"Copiar dirección de la imagen\" y pégala aquí.",
               "invalid_url": "Por favor ingresa una URL de imagen HTTP o HTTPS válida"
             },
             "toasts": {
-              "imported": "Fondo importado exitosamente",
-              "deleted": "Fondo eliminado",
-              "applied": "Fondo aplicado",
-              "reset_default": "Fondo restablecido por defecto",
-              "error_import": "Error al importar fondo",
-              "error_delete": "Error al eliminar fondo"
+              "imported": "Wallpaper importado con éxito",
+              "deleted": "Wallpaper eliminado",
+              "applied": "Wallpaper aplicado",
+              "reset_default": "Wallpaper restablecido al predeterminado",
+              "error_import": "Error al importar wallpaper",
+              "error_delete": "Error al eliminar wallpaper"
             }
           }
         }
@@ -258,7 +260,7 @@
           },
           "confirm_dialog": {
             "title": "Cambiar Ubicación de Almacenamiento",
-            "description": "Ongaku moverá tu biblioteca musical, listas de reproducción, caché y base de datos al directorio seleccionado:",
+            "description": "Ongaku moverá tu biblioteca musical, playlists, caché y base de datos al directorio seleccionado:",
             "warning": "Cualquier reproducción de audio activa se detendrá inmediatamente y los datos se migrarán a la nueva ubicación.",
             "cancel": "Cancelar",
             "confirm": "Cambiar Ubicación"
@@ -269,14 +271,14 @@
   },
   "playlists": {
     "header": {
-      "title": "Listas de reproducción",
-      "count": "{{count}} lista",
-      "count_plural": "{{count}} listas",
-      "new_button": "Nueva Lista"
+      "title": "Playlists",
+      "count": "{{count}} playlist",
+      "count_plural": "{{count}} playlists",
+      "new_button": "Nueva Playlist"
     },
-    "search_placeholder": "Buscar listas de reproducción...",
-    "search_command_placeholder": "Escribe una lista...",
-    "search_command_heading": "Buscar listas de reproducción",
+    "search_placeholder": "Buscar playlists...",
+    "search_command_placeholder": "Escribe una playlist...",
+    "search_command_heading": "Buscar playlists",
     "search_songs_placeholder": "Buscar canciones...",
     "search_songs_command_placeholder": "Escribe una canción...",
     "search_songs_command_heading": "Buscar canciones",
@@ -285,60 +287,60 @@
       "songs_count_plural": "{{count}} canciones",
       "tracks_count": "{{count}} canción",
       "tracks_count_plural": "{{count}} canciones",
-      "empty": "Lista vacía"
+      "empty": "Playlist vacía"
     },
     "empty": {
-      "title": "Aún no hay listas de reproducción",
-      "description": "Crea tu primera lista para organizar tus canciones favoritas."
+      "title": "Aún no hay playlists",
+      "description": "Crea tu primera playlist para organizar tus canciones favoritas."
     },
     "songs_empty": {
-      "title": "No hay canciones en esta lista",
+      "title": "No hay canciones en esta playlist",
       "description": "Importa archivos locales o busca en YouTube para agregar canciones"
     },
     "error": {
-      "title": "Error al cargar listas de reproducción",
-      "failed": "Error al cargar listas de reproducción."
+      "title": "Error al cargar playlists",
+      "failed": "Error al cargar playlists."
     },
     "songs_error": {
-      "title": "Error al cargar canciones de la lista",
-      "failed": "Error al cargar canciones de la lista."
+      "title": "Error al cargar canciones de la playlist",
+      "failed": "Error al cargar canciones de la playlist."
     },
     "dialogs": {
       "new": {
-        "title": "Crear Nueva Lista",
-        "description": "Asigna un nombre a tu lista para empezar a organizar tu música.",
+        "title": "Crear Nueva Playlist",
+        "description": "Asigna un nombre a tu playlist para empezar a organizar tu música.",
         "placeholder": "ej. Música para Relajarse",
-        "field_label": "Nombre de la Lista",
-        "field_description": "Escribe el nombre de la lista para crearla",
-        "submit": "Crear Lista"
+        "field_label": "Nombre de la Playlist",
+        "field_description": "Escribe el nombre de la playlist para crearla",
+        "submit": "Crear Playlist"
       },
       "rename": {
-        "title": "Renombrar Lista",
-        "description": "Ingresa un nuevo nombre para esta lista de reproducción.",
-        "placeholder": "Nombre de la lista",
-        "field_label": "Nombre de la Lista",
-        "field_description": "Elige un nuevo nombre para tu lista",
-        "submit": "Renombrar Lista"
+        "title": "Renombrar Playlist",
+        "description": "Ingresa un nuevo nombre para esta playlist.",
+        "placeholder": "Nombre de la playlist",
+        "field_label": "Nombre de la Playlist",
+        "field_description": "Elige un nuevo nombre para tu playlist",
+        "submit": "Renombrar Playlist"
       },
       "delete": {
-        "title": "Eliminar Lista",
+        "title": "Eliminar Playlist",
         "description": "¿Estás seguro de que deseas eliminar \"{{name}}\"? Las canciones exclusivas de esta playlist también se eliminarán de tu biblioteca.",
-        "warning": "¿Estás seguro de que deseas eliminar esta lista? Esta acción no se puede deshacer.",
-        "submit": "Eliminar Lista"
+        "warning": "¿Estás seguro de que deseas eliminar esta playlist? Esta acción no se puede deshacer.",
+        "submit": "Eliminar Playlist"
       },
       "delete_song": {
         "title_library": "Eliminar canción \"{{name}}\"",
         "title_playlist": "Quitar canción \"{{name}}\"",
         "desc_library": "¿Estás seguro de que deseas eliminar esta canción? Esta acción no se puede deshacer y borrará permanentemente el archivo de audio de tu biblioteca.",
-        "desc_playlist": "¿Estás seguro de que deseas quitar esta canción de la lista? Si no pertenece a ninguna otra lista, también se eliminará de tu biblioteca.",
+        "desc_playlist": "¿Estás seguro de que deseas quitar esta canción de la playlist? Si no pertenece a ninguna otra playlist, también se eliminará de tu biblioteca.",
         "action_library": "Eliminar",
         "action_playlist": "Quitar"
       },
       "move_song": {
         "title": "Mover canción \"{{name}}\"",
-        "description": "Elige la lista de reproducción de destino a la que mover esta canción.",
-        "select_placeholder": "Seleccionar lista de destino",
-        "no_other_playlists": "No hay otras listas disponibles. Crea otra lista primero para mover esta canción.",
+        "description": "Elige la playlist de destino a la que mover esta canción.",
+        "select_placeholder": "Seleccionar playlist de destino",
+        "no_other_playlists": "No hay otras playlists disponibles. Crea otra playlist primero para mover esta canción.",
         "submit": "Mover"
       }
     },
@@ -350,27 +352,27 @@
       "move_to": "Mover a...",
       "move_dialog_title": "Mover {{count}} canción",
       "move_dialog_title_plural": "Mover {{count}} canciones",
-      "move_dialog_desc": "Elige la lista de reproducción de destino a la que mover esta canción.",
-      "move_dialog_desc_plural": "Elige la lista de reproducción de destino a la que mover estas canciones.",
-      "select_target_placeholder": "Seleccionar lista de destino",
-      "no_other_playlists": "No hay otras listas disponibles. Crea otra lista primero para mover canciones.",
+      "move_dialog_desc": "Elige la playlist de destino a la que mover esta canción.",
+      "move_dialog_desc_plural": "Elige la playlist de destino a la que mover estas canciones.",
+      "select_target_placeholder": "Seleccionar playlist de destino",
+      "no_other_playlists": "No hay otras playlists disponibles. Crea otra playlist primero para mover canciones.",
       "current_playlist_suffix": "{{name}} (Actual)",
       "delete_dialog_title": "Eliminar {{count}} canción",
       "delete_dialog_title_plural": "Eliminar {{count}} canciones",
-      "delete_dialog_desc": "¿Estás seguro de que deseas eliminar esta canción? Esta acción no se puede deshacer y borrará permanentemente los archivos de tu equipo.",
-      "delete_dialog_desc_plural": "¿Estás seguro de que deseas eliminar estas canciones? Esta acción no se puede deshacer y borrará permanentemente los archivos de tu equipo."
+      "delete_dialog_desc": "¿Estás seguro de que deseas eliminar esta canción? Esta acción no se puede deshacer y borrará permanentemente los archivos de tu dispositivo.",
+      "delete_dialog_desc_plural": "¿Estás seguro de que deseas eliminar estas canciones? Esta acción no se puede deshacer y borrará permanentemente los archivos de tu dispositivo."
     },
     "actions": {
       "open": "Abrir",
-      "play": "Reproducir Lista",
+      "play": "Reproducir Playlist",
       "rename": "Renombrar",
       "delete": "Eliminar",
       "open_folder": "Abrir Carpeta",
-      "move_to": "Mover a Lista",
-      "remove_from_playlist": "Quitar de la Lista",
+      "move_to": "Mover a Playlist",
+      "remove_from_playlist": "Quitar de la Playlist",
       "copy_title": "Copiar Título",
       "import_songs": "Importar canciones",
-      "import_songs_tooltip": "Importar archivos de audio del equipo (.mp3, .m4a, .ogg, .flac)"
+      "import_songs_tooltip": "Importar archivos de audio del dispositivo (.mp3, .m4a, .ogg, .flac)"
     }
   },
   "library": {
@@ -386,7 +388,7 @@
     "search_command_heading": "Buscar canciones de la biblioteca",
     "stats": {
       "tracks": "Canciones",
-      "playlists": "Listas"
+      "playlists": "Playlists"
     },
     "columns": {
       "cover": "Port.",
@@ -398,11 +400,11 @@
     },
     "empty": {
       "title": "Tu biblioteca está vacía",
-      "description": "Importa música local o busca en YouTube para descargar temas a tu biblioteca."
+      "description": "Importa música local o busca en YouTube para descargar canciones a tu biblioteca."
     },
     "error": {
       "title": "Error al cargar la biblioteca",
-      "failed": "Error al cargar pistas de la biblioteca."
+      "failed": "Error al cargar canciones de la biblioteca."
     }
   },
   "youtube_search": {
@@ -427,20 +429,20 @@
     },
     "offline": {
       "title": "Sin conexión a internet",
-      "description": "Comprueba tu conexión de red para buscar canciones en YouTube."
+      "description": "Verifica tu conexión de red para buscar canciones en YouTube."
     },
-    "loading": "Buscando temas...",
+    "loading": "Buscando canciones...",
     "results_count": "{{count}} resultado encontrado",
     "results_count_plural": "{{count}} resultados encontrados",
     "active_track": {
-      "no_active_track": "Sin pista activa",
+      "no_active_track": "Sin canción activa",
       "no_active_track_desc": "Selecciona cualquier canción de la búsqueda para ver detalles y escuchar.",
       "stream": "Transmitir",
       "playing": "Reproduciendo",
       "loading_stream": "Cargando audio",
-      "fetching_audio": "Obteniendo fuente de audio de YouTube...",
+      "fetching_audio": "Obteniendo audio de YouTube...",
       "now_streaming": "Transmitiendo",
-      "live_active": "Reproducción de audio en directo activa"
+      "live_active": "Reproducción de audio en vivo activa"
     },
     "tools_missing": {
       "title": "Herramientas Necesarias",
@@ -486,21 +488,21 @@
     "queue_title": "Cola de Reproducción",
     "now_playing": "Reproduciendo Ahora",
     "empty_queue": "La cola está vacía",
-    "empty_queue_desc": "Reproduce una pista de tu biblioteca o listas para comenzar a llenar la cola.",
-    "tracks_count": "{{count}} pista",
-    "tracks_count_plural": "{{count}} pistas",
+    "empty_queue_desc": "Reproduce una canción de tu biblioteca o playlists para comenzar a llenar la cola.",
+    "tracks_count": "{{count}} canción",
+    "tracks_count_plural": "{{count}} canciones",
     "shuffle": "Aleatorio",
     "shuffle_disable": "Desactivar aleatorio",
     "repeat": "Repetir",
     "repeat_disable": "Desactivar repetición",
     "previous": "Anterior",
-    "previous_track": "Pista anterior",
+    "previous_track": "Canción anterior",
     "next": "Siguiente",
-    "next_track": "Siguiente pista",
+    "next_track": "Siguiente canción",
     "play": "Reproducir",
     "pause": "Pausar",
     "mute": "Silenciar",
-    "unmute": "Reactivar Sonido",
+    "unmute": "Desmutear",
     "volume": "Volumen",
     "volume_settings": "Ajustes de volumen",
     "seek": "Buscar posición",
@@ -516,20 +518,20 @@
       "select_dir_error": "No se pudo seleccionar el directorio"
     },
     "playlists": {
-      "created_success": "Lista de reproducción creada con éxito",
-      "already_exists": "Ya existe una lista de reproducción con este nombre",
-      "invalid_name": "Nombre de lista no válido",
-      "renamed_success": "Lista de reproducción renombrada con éxito",
-      "name_unchanged": "El nombre de la lista no ha cambiado",
-      "deleted_success": "Lista de reproducción eliminada con éxito",
-      "delete_error": "Ocurrió un error al eliminar la lista de reproducción",
-      "rename_error": "Ocurrió un error al renombrar la lista de reproducción",
-      "create_error": "Ocurrió un error al crear la lista de reproducción"
+      "created_success": "Playlist creada con éxito",
+      "already_exists": "Ya existe una playlist con este nombre",
+      "invalid_name": "Nombre de playlist no válido",
+      "renamed_success": "Playlist renombrada con éxito",
+      "name_unchanged": "El nombre de la playlist no ha cambiado",
+      "deleted_success": "Playlist eliminada con éxito",
+      "delete_error": "Ocurrió un error al eliminar la playlist",
+      "rename_error": "Ocurrió un error al renombrar la playlist",
+      "create_error": "Ocurrió un error al crear la playlist"
     },
     "songs": {
       "moved_success": "Canción movida con éxito",
-      "same_playlist": "La canción ya está en esta lista de reproducción",
-      "already_in_playlist": "Ya existe una canción con este título en la lista de destino",
+      "same_playlist": "La canción ya está en esta playlist",
+      "already_in_playlist": "Ya existe una canción con este título en la playlist de destino",
       "file_locked": "El archivo de audio está en uso. Detén la reproducción e intenta de nuevo.",
       "move_error": "Ocurrió un error al mover la canción",
       "deleted_success": "Canción eliminada con éxito",
@@ -537,15 +539,15 @@
       "copied_title": "Título de la canción copiado al portapapeles",
       "copy_error": "No se pudo copiar el título de la canción al portapapeles",
       "playback_error": "Ocurrió un error al reproducir la canción",
-      "media_offline": "El servidor de medios está desconectado. No se pueden reproducir pistas locales.",
+      "media_offline": "El servidor de medios está desconectado. No se pueden reproducir canciones locales.",
       "opened_folder": "Carpeta abierta para \"{{name}}\"",
-      "open_folder_error": "Error al abrir la carpeta de la lista",
-      "importing_progress": "Importando canciones: {{current}}/{{total}} ({{imported}} añadidas)...",
+      "open_folder_error": "Error al abrir la carpeta de la playlist",
+      "importing_progress": "Importando canciones: {{current}}/{{total}} ({{imported}} agregadas)...",
       "imported_success": "Se importó 1 canción con éxito",
       "imported_success_plural": "Se importaron {{count}} canciones con éxito",
       "import_error": "Ocurrió un error al importar canciones",
-      "batch_deleted": "{{count}} canción quitada de la lista",
-      "batch_deleted_plural": "{{count}} canciones quitadas de la lista",
+      "batch_deleted": "{{count}} canción quitada de la playlist",
+      "batch_deleted_plural": "{{count}} canciones quitadas de la playlist",
       "batch_deleted_library": "{{count}} canción eliminada con éxito",
       "batch_deleted_library_plural": "{{count}} canciones eliminadas con éxito",
       "batch_delete_error": "No se pudieron eliminar {{count}} canción(es)",
@@ -554,14 +556,14 @@
       "batch_move_error": "No se pudieron mover {{count}} canción(es)",
       "already_in_target": "Las canciones seleccionadas ya están en \"{{target}}\"",
       "stream_load_error": "No se pudo cargar el streaming de audio.",
-      "playback_stopped_multiple": "Reproducción detenida. No se pudieron cargar varias pistas.",
+      "playback_stopped_multiple": "Reproducción detenida. No se pudieron cargar varias canciones.",
       "cannot_play_song": "No se puede reproducir \"{{name}}\"",
       "song_file_not_found": "No se encontró el archivo de audio para \"{{name}}\"",
-      "song_decode_error": "No se puede decodificar \"{{name}}\". El archivo podría estar corrupto o no ser compatible",
+      "song_decode_error": "No se puede decodificar \"{{name}}\". El archivo podría estar dañado o no ser compatible",
       "song_permission_denied": "Permiso denegado para leer \"{{name}}\"",
       "audio_device_error": "El dispositivo de salida de audio se desconectó o no está disponible",
       "open_browser_error": "No se pudo abrir el navegador para YouTube",
-      "stream_expired": "No se pudo reproducir el audio de YouTube. Es posible que el enlace haya caducado."
+      "stream_expired": "No se pudo reproducir el audio de YouTube. Es posible que el enlace haya expirado."
     },
     "tools": {
       "installed_success": "Herramientas instaladas con éxito (yt-dlp y ffmpeg)",
@@ -569,11 +571,11 @@
       "open_folder_error": "No se pudo abrir la carpeta de binarios"
     },
     "downloads": {
-      "added_single_for_playlist": "\"{{title}}\" añadida a la cola de descargas para \"{{playlist}}\"",
-      "added_for_playlist": "Se añadió {{count}} canción a la cola de descargas para \"{{playlist}}\"",
-      "added_for_playlist_plural": "Se añadieron {{count}} canciones a la cola de descargas para \"{{playlist}}\"",
-      "added_to_queue": "Se añadió {{count}} canción a la cola de descargas",
-      "added_to_queue_plural": "Se añadieron {{count}} canciones a la cola de descargas",
+      "added_single_for_playlist": "\"{{title}}\" agregada a la cola de descargas para \"{{playlist}}\"",
+      "added_for_playlist": "Se agregó {{count}} canción a la cola de descargas para \"{{playlist}}\"",
+      "added_for_playlist_plural": "Se agregaron {{count}} canciones a la cola de descargas para \"{{playlist}}\"",
+      "added_to_queue": "Se agregó {{count}} canción a la cola de descargas",
+      "added_to_queue_plural": "Se agregaron {{count}} canciones a la cola de descargas",
       "saved_success": "\"{{title}}\" guardada en {{playlist}}",
       "download_failed": "Error en la descarga"
     },

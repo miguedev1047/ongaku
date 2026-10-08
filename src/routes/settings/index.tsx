@@ -3,14 +3,20 @@ import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import { updatesQueryOpts } from '@/shared/queries/updates'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import { RouteSection } from '@/components/ui/route-section'
-import { RoutePendingState, RouteErrorState } from '@/components/compounds/route-ui-state'
+import {
+  RoutePendingState,
+  RouteErrorState,
+} from '@/components/compounds/route-ui-state'
 import {
   SettingsHeader,
   ServerHealthCard,
   DirectoriesStatusCard,
   BinariesStatusCard,
   AppUpdatesCard,
-  AppearanceCard,
+  ThemeSelection,
+  PlayerPositionOptions,
+  FolderColorOptions,
+  AppBackgroundsSelection,
   LanguageSelection,
   SystemTabTrigger,
 } from '@/features/settings/components'
@@ -86,7 +92,10 @@ function RouteComponent() {
             className='flex flex-col gap-4 pt-2'
           >
             <Suspense fallback={<SettingsTabLoadingState />}>
-              <AppearanceCard />
+              <ThemeSelection />
+              <PlayerPositionOptions />
+              <FolderColorOptions />
+              <AppBackgroundsSelection />
             </Suspense>
           </TabsContent>
 

@@ -1,5 +1,10 @@
 import { create } from "zustand"
 import { platformService } from "@/infrastructure/platform"
+import {
+  DEFAULT_PLAYER_VOLUME,
+  registerVolumeSubscriber,
+  syncPlayerVolume,
+} from "./volume-sync"
 import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
 
 export type StreamingPlayerState = "idle" | "loading" | "playing" | "paused"
@@ -34,7 +39,7 @@ export const useStreamingPlayerStore = create<StreamingPlayerStore>(
     hasEnded: false,
     duration: 0,
     progress: 0,
-    volume: 80,
+    volume: DEFAULT_PLAYER_VOLUME,
 
     setCurrentTrack: (track) =>
       set({
@@ -50,10 +55,7 @@ export const useStreamingPlayerStore = create<StreamingPlayerStore>(
     setDuration: (duration) => set({ duration }),
     setProgress: (progress) => set({ progress }),
     setVolume: (volume) => {
-      set({ volume })
-      platformService
-        .invoke("streaming_audio_set_volume", { volume: volume / 100 })
-        .catch(() => {})
+      syncPlayerVolume(volume)
     },
 
     play: () => {
@@ -137,3 +139,10 @@ export const useStreamingPlayerStore = create<StreamingPlayerStore>(
     },
   })
 )
+
+registerVolumeSubscriber((vol) => {
+  if (useStreamingPlayerStore.getState().volume !== vol) {
+    useStreamingPlayerStore.setState({ volume: vol })
+  }
+})
+

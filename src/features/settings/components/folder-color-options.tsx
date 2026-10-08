@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { cn } from 'cn'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { FolderIcon } from '@hugeicons/core-free-icons'
+import { FolderIcon, Tick02Icon } from '@hugeicons/core-free-icons'
 import { useQuery } from '@tanstack/react-query'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import { useUpdateConfig } from '@/features/settings/hooks/use-config'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Folder } from '@/components/ui/folder'
+import { Show } from '@/components/utility/show'
 import { FOLDER_COLOR_PRESETS } from '@/constants'
 import { useTranslation } from 'react-i18next'
 
@@ -30,25 +31,27 @@ export function FolderColorOptions() {
   }
 
   return (
-    <div className='space-y-3 pt-2 border-t border-border/30'>
+    <div className='p-4 rounded-md border border-border/50 bg-card/60 backdrop-blur-sm space-y-4'>
       <div className='flex items-center justify-between'>
-        <div className='space-y-0.5'>
-          <div className='flex items-center gap-1.5'>
+        <div className='flex items-center gap-2.5'>
+          <div className='size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary'>
             <HugeiconsIcon
               icon={FolderIcon}
-              className='size-3.5 text-muted-foreground'
+              className='size-4'
             />
-            <label className='text-xs font-medium text-foreground'>
+          </div>
+          <div>
+            <h2 className='text-sm font-semibold text-foreground'>
               {t(
                 'settings.tabs.appearance.appearance_and_interface.folder_color.title',
               )}
-            </label>
+            </h2>
+            <p className='text-xs text-muted-foreground'>
+              {t(
+                'settings.tabs.appearance.appearance_and_interface.folder_color.description',
+              )}
+            </p>
           </div>
-          <p className='text-[11px] text-muted-foreground'>
-            {t(
-              'settings.tabs.appearance.appearance_and_interface.folder_color.description',
-            )}
-          </p>
         </div>
 
         <div className='flex items-center gap-2 scale-75 origin-right'>
@@ -62,7 +65,7 @@ export function FolderColorOptions() {
       <RadioGroup
         value={currentColor}
         onValueChange={handleSelectColor}
-        className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2'
+        className='grid grid-cols-4 sm:grid-cols-8 gap-2'
       >
         {FOLDER_COLOR_PRESETS.map((preset) => {
           const isChecked =
@@ -70,29 +73,31 @@ export function FolderColorOptions() {
 
           return (
             <label
-              key={preset.id}
               className={cn(
-                'flex items-center gap-2 p-2 rounded-md border border-border/40 bg-muted/20 cursor-pointer hover:bg-accent/40 transition-colors',
-                isChecked && 'border-accent-foreground/20 bg-primary/5',
+                'relative h-10 rounded-md cursor-pointer flex items-center justify-start transition-all border border-black/10 dark:border-white/10 shadow-xs select-none',
+                isChecked
+                  ? 'border-accent-foreground/40'
+                  : 'hover:opacity-85 hover:scale-102',
               )}
+              style={{ backgroundColor: preset.color }}
             >
               <RadioGroupItem
                 value={preset.color}
                 className='sr-only'
               />
-              <span
-                className='size-3.5 rounded-sm shrink-0 border border-black/10 dark:border-white/10 shadow-xs'
-                style={{ backgroundColor: preset.color }}
-              />
-              <span className='text-xs font-medium truncate'>
-                {t(preset.labelKey)}
-              </span>
+              <Show when={isChecked}>
+                <span className='size-4 rounded-sm bg-black/25 flex items-center justify-center text-white'>
+                  <HugeiconsIcon
+                    icon={Tick02Icon}
+                    className='size-3 stroke-[2.5]'
+                  />
+                </span>
+              </Show>
             </label>
           )
         })}
       </RadioGroup>
 
-      {/* Custom Hex Color Picker */}
       <div className='flex items-center gap-2.5 pt-1'>
         <span className='text-xs text-muted-foreground'>
           {t(

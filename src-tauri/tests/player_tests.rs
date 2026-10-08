@@ -34,7 +34,7 @@ fn test_player_initial_state() {
     let status = player.get_status().expect("get_status should succeed");
     assert!(!status.is_playing, "Player must not be playing initially");
     assert!(!status.is_paused, "Player must not be paused initially");
-    assert_eq!(status.volume, 0.8, "Default volume must be 0.8");
+    assert_eq!(status.volume, 0.4, "Default volume must be 0.4");
     assert_eq!(status.position_secs, 0.0, "Initial position must be 0.0");
     assert!(status.current_path.is_none(), "Initial path must be None");
 }
@@ -45,7 +45,7 @@ fn test_streaming_player_initial_state() {
     let status = player.get_status().expect("get_status should succeed");
     assert!(!status.is_playing, "Streaming player must not be playing initially");
     assert!(!status.is_paused, "Streaming player must not be paused initially");
-    assert_eq!(status.volume, 0.8, "Default volume must be 0.8");
+    assert_eq!(status.volume, 0.4, "Default volume must be 0.4");
     assert_eq!(status.position_secs, 0.0, "Initial position must be 0.0");
     assert!(status.current_path.is_none(), "Initial path must be None");
 }

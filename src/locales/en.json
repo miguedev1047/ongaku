@@ -133,12 +133,14 @@
           "description": "Customize the look, themes, player position, and folder colors of the app",
           "interface_theme": {
             "title": "Interface Theme",
+            "description": "Select your preferred visual theme for the interface",
             "light": "Light",
             "dark": "Dark",
             "system": "System"
           },
           "player_position": {
             "title": "Player Position",
+            "description": "Choose where the audio player bar is positioned in the application",
             "bottom": "Bottom (Default)",
             "top": "Top"
           },

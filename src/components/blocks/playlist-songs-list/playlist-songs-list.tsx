@@ -1,10 +1,4 @@
-import { useState, useEffect, useRef } from "react"
-import {
-  useTable,
-  Subscribe,
-  type RowSelectionState
-} from "@tanstack/react-table"
-import { useVirtualizer } from "@tanstack/react-virtual"
+import { Subscribe } from "@tanstack/react-table"
 import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -14,11 +8,12 @@ import {
   TableRow,
   TableHead
 } from "@/components/ui/table"
-import { usePlaylistBatchStore } from "@/shared/stores/batch-operations"
 import { PlaylistBatchBar } from "@/components/blocks/playlist-songs-list/playlist-batch-bar"
-import { playlistTableFeatures } from "@/components/blocks/playlist-songs-list/playlist-table-features"
-import { playlistSongColumns } from "@/components/blocks/playlist-songs-list/playlist-table-columns"
 import { PlaylistSongTableRow } from "@/components/blocks/playlist-songs-list/playlist-table-row"
+import {
+  usePlaylistBatchSync,
+  usePlaylistList
+} from "@/components/blocks/playlist-songs-list/hooks"
 import { useTranslation } from "react-i18next"
 import { Show } from "@/components/utility/show"
 
@@ -31,50 +26,19 @@ export function PlaylistSongsList({
   data,
   playlistName
 }: PlaylistSongsListProps) {
+  "use no memo"
   const { t } = useTranslation()
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
-  const scrollRef = useRef<HTMLDivElement>(null)
 
-  const table = useTable({
-    features: playlistTableFeatures,
-    columns: playlistSongColumns,
-    data,
-    getRowId: (row) => row.id,
-    state: { rowSelection },
-    onRowSelectionChange: setRowSelection
-  })
+  const {
+    rowSelection,
+    rowVirtualizer,
+    table,
+    scrollRef,
+    rows,
+    setRowSelection
+  } = usePlaylistList({ data })
 
-  // Synchronize table selection with usePlaylistBatchStore
-  useEffect(() => {
-    const selectedMap: Record<string, TPlaylistSong> = {}
-    for (const id in rowSelection) {
-      if (rowSelection[id]) {
-        const song = data.find((s) => s.id === id)
-        if (song) selectedMap[id] = song
-      }
-    }
-    usePlaylistBatchStore.setState({ selectedMap })
-  }, [rowSelection, data])
-
-  // Clear table selection if usePlaylistBatchStore is cleared externally
-  useEffect(() => {
-    const unsub = usePlaylistBatchStore.subscribe((state) => {
-      if (Object.keys(state.selectedMap).length === 0) {
-        setRowSelection((prev) => (Object.keys(prev).length === 0 ? prev : {}))
-      }
-    })
-    return unsub
-  }, [])
-
-  const rows = table.getRowModel().rows
-
-  const rowVirtualizer = useVirtualizer({
-    count: rows.length,
-    getScrollElement: () => scrollRef.current,
-    estimateSize: () => 52,
-    getItemKey: (index) => rows[index]?.id ?? index,
-    overscan: 5
-  })
+  usePlaylistBatchSync({ rowSelection, setRowSelection, data })
 
   return (
     <div className="size-full flex flex-col overflow-hidden">

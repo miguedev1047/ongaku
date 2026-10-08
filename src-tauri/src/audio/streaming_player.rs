@@ -45,7 +45,7 @@ impl StreamingAudioPlayer {
         Self {
             sink: Mutex::new(None),
             player: Mutex::new(None),
-            volume: Mutex::new(0.8),
+            volume: Mutex::new(0.4),
             current_id: Mutex::new(None),
             current_video_id: Mutex::new(None),
             active_pid: Mutex::new(None),

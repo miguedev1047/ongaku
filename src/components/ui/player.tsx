@@ -1,23 +1,23 @@
-import * as React from "react"
-import { useTranslation } from "react-i18next"
-import { cn } from "cn"
-import { Button } from "@/components/ui/button"
-import { Spinner } from "@/components/ui/spinner"
-import { NativeSlider } from "@/components/ui/native-slider"
-import { Slider } from "@/components/ui/slider"
+import * as React from 'react'
+import { useTranslation } from 'react-i18next'
+import { cn } from 'cn'
+import { Button } from '@/components/ui/button'
+import { Spinner } from '@/components/ui/spinner'
+import { NativeSlider } from '@/components/ui/native-slider'
+import { Slider } from '@/components/ui/slider'
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger
-} from "@/components/ui/popover"
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import {
   Tooltip,
   TooltipContent,
-  TooltipTrigger
-} from "@/components/ui/tooltip"
-import { Kbd, KbdGroup } from "@/components/ui/kbd"
-import { formatDuration } from "@/shared/helpers/format-duration"
-import { HugeiconsIcon } from "@hugeicons/react"
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import { Kbd, KbdGroup } from '@/components/ui/kbd'
+import { formatDuration } from '@/shared/helpers/format-duration'
+import { HugeiconsIcon } from '@hugeicons/react'
 import {
   PauseIcon,
   PlayIcon,
@@ -27,90 +27,93 @@ import {
   SkipForward,
   Volume02Icon,
   VolumeLowIcon,
-  VolumeMute02Icon
-} from "@hugeicons/core-free-icons"
+  VolumeMute02Icon,
+} from '@hugeicons/core-free-icons'
+import { DEFAULT_PLAYER_VOLUME } from '@/shared/stores/player'
 
-interface PlayerProps extends React.ComponentProps<"div"> {
-  position?: "bottom" | "top"
+interface PlayerProps extends React.ComponentProps<'div'> {
+  position?: 'bottom' | 'top'
 }
 
-function Player({ className, position = "bottom", ...props }: PlayerProps) {
+function Player({ className, position = 'bottom', ...props }: PlayerProps) {
   return (
     <div
-      data-slot="player"
+      data-slot='player'
       className={cn(
-        "relative w-full h-16 px-4 shrink-0 bg-card/95 backdrop-blur grid grid-cols-[1fr_auto_1fr] items-center gap-2 z-30 select-none",
-        position === "top" ? "border-b border-border" : "border-t border-border",
-        className
+        'relative w-full h-16 px-4 shrink-0 bg-card/95 backdrop-blur grid grid-cols-[1fr_auto_1fr] items-center gap-2 z-30 select-none',
+        position === 'top'
+          ? 'border-b border-border'
+          : 'border-t border-border',
+        className,
       )}
       {...props}
     />
   )
 }
 
-function PlayerMedia({ className, ...props }: React.ComponentProps<"div">) {
+function PlayerMedia({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
-      data-slot="player-media"
+      data-slot='player-media'
       className={cn(
-        "relative size-11 rounded-md overflow-hidden shrink-0 bg-muted flex items-center justify-center border border-border/50 shadow-xs",
-        className
+        'relative size-11 rounded-md overflow-hidden shrink-0 bg-muted flex items-center justify-center border border-border/50 shadow-xs',
+        className,
       )}
       {...props}
     />
   )
 }
 
-function PlayerContent({ className, ...props }: React.ComponentProps<"div">) {
+function PlayerContent({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
-      data-slot="player-content"
-      className={cn("contents", className)}
+      data-slot='player-content'
+      className={cn('contents', className)}
       {...props}
     />
   )
 }
 
-function PlayerHeader({ className, ...props }: React.ComponentProps<"div">) {
+function PlayerHeader({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
-      data-slot="player-header"
-      className={cn("contents", className)}
+      data-slot='player-header'
+      className={cn('contents', className)}
       {...props}
     />
   )
 }
 
-function PlayerControls({ className, ...props }: React.ComponentProps<"div">) {
+function PlayerControls({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
-      data-slot="player-controls"
+      data-slot='player-controls'
       className={cn(
-        "flex items-center justify-center gap-1.5 shrink-0",
-        className
+        'flex items-center justify-center gap-1.5 shrink-0',
+        className,
       )}
       {...props}
     />
   )
 }
 
-function PlayerTrackInfo({ className, ...props }: React.ComponentProps<"div">) {
+function PlayerTrackInfo({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
-      data-slot="player-track-info"
-      className={cn("flex flex-col min-w-0 flex-1 overflow-hidden", className)}
+      data-slot='player-track-info'
+      className={cn('flex flex-col min-w-0 flex-1 overflow-hidden', className)}
       {...props}
     />
   )
 }
 
-function PlayerTitle({ className, ...props }: React.ComponentProps<"span">) {
+function PlayerTitle({ className, ...props }: React.ComponentProps<'span'>) {
   return (
     <span
-      data-slot="player-title"
+      data-slot='player-title'
       className={cn(
-        "text-xs font-semibold line-clamp-1 break-all leading-tight text-foreground",
-        className
+        'text-xs font-semibold line-clamp-1 break-all leading-tight text-foreground',
+        className,
       )}
       {...props}
     />
@@ -120,13 +123,13 @@ function PlayerTitle({ className, ...props }: React.ComponentProps<"span">) {
 function PlayerDescription({
   className,
   ...props
-}: React.ComponentProps<"span">) {
+}: React.ComponentProps<'span'>) {
   return (
     <span
-      data-slot="player-description"
+      data-slot='player-description'
       className={cn(
-        "text-[11px] text-muted-foreground line-clamp-1 break-all leading-tight mt-0.5",
-        className
+        'text-[11px] text-muted-foreground line-clamp-1 break-all leading-tight mt-0.5',
+        className,
       )}
       {...props}
     />
@@ -135,7 +138,7 @@ function PlayerDescription({
 
 interface PlayerPlayButtonProps extends Omit<
   React.ComponentProps<typeof Button>,
-  "children"
+  'children'
 > {
   isPlaying?: boolean
   isLoading?: boolean
@@ -152,26 +155,26 @@ function PlayerPlayButton({
   ...props
 }: PlayerPlayButtonProps) {
   const { t } = useTranslation()
-  const label = tooltip ?? (isPlaying ? t("player.pause") : t("player.play"))
+  const label = tooltip ?? (isPlaying ? t('player.pause') : t('player.play'))
   return (
     <Tooltip>
       <TooltipTrigger
         render={
           <Button
-            data-slot="player-play-button"
-            size="icon"
-            variant="default"
-            className={cn("size-9 rounded-md shadow-xs", className)}
+            data-slot='player-play-button'
+            size='icon'
+            variant='default'
+            className={cn('size-9 rounded-md shadow-xs', className)}
             aria-label={label}
             disabled={isLoading || props.disabled}
             {...props}
           >
             {isLoading ? (
-              <Spinner className="size-4" />
+              <Spinner className='size-4' />
             ) : (
               <HugeiconsIcon
                 icon={isPlaying ? PauseIcon : PlayIcon}
-                className="size-4"
+                className='size-4'
               />
             )}
           </Button>
@@ -187,7 +190,7 @@ function PlayerPlayButton({
 
 interface PlayerPreviousButtonProps extends Omit<
   React.ComponentProps<typeof Button>,
-  "children"
+  'children'
 > {
   tooltip?: string
   shortcut?: React.ReactNode
@@ -200,25 +203,25 @@ function PlayerPreviousButton({
   ...props
 }: PlayerPreviousButtonProps) {
   const { t } = useTranslation()
-  const label = tooltip ?? t("player.previous_track")
+  const label = tooltip ?? t('player.previous_track')
   return (
     <Tooltip>
       <TooltipTrigger
         render={
           <Button
-            data-slot="player-previous-button"
-            size="icon"
-            variant="ghost"
+            data-slot='player-previous-button'
+            size='icon'
+            variant='ghost'
             className={cn(
-              "size-8 rounded-md text-muted-foreground hover:text-foreground",
-              className
+              'size-8 rounded-md text-muted-foreground hover:text-foreground',
+              className,
             )}
             aria-label={label}
             {...props}
           >
             <HugeiconsIcon
               icon={SkipBack}
-              className="size-4"
+              className='size-4'
             />
           </Button>
         }
@@ -233,7 +236,7 @@ function PlayerPreviousButton({
 
 interface PlayerNextButtonProps extends Omit<
   React.ComponentProps<typeof Button>,
-  "children"
+  'children'
 > {
   tooltip?: string
   shortcut?: React.ReactNode
@@ -246,25 +249,25 @@ function PlayerNextButton({
   ...props
 }: PlayerNextButtonProps) {
   const { t } = useTranslation()
-  const label = tooltip ?? t("player.next_track")
+  const label = tooltip ?? t('player.next_track')
   return (
     <Tooltip>
       <TooltipTrigger
         render={
           <Button
-            data-slot="player-next-button"
-            size="icon"
-            variant="ghost"
+            data-slot='player-next-button'
+            size='icon'
+            variant='ghost'
             className={cn(
-              "size-8 rounded-md text-muted-foreground hover:text-foreground",
-              className
+              'size-8 rounded-md text-muted-foreground hover:text-foreground',
+              className,
             )}
             aria-label={label}
             {...props}
           >
             <HugeiconsIcon
               icon={SkipForward}
-              className="size-4"
+              className='size-4'
             />
           </Button>
         }
@@ -279,7 +282,7 @@ function PlayerNextButton({
 
 interface PlayerShuffleButtonProps extends Omit<
   React.ComponentProps<typeof Button>,
-  "children"
+  'children'
 > {
   isShuffle?: boolean
   tooltip?: string
@@ -294,26 +297,27 @@ function PlayerShuffleButton({
   ...props
 }: PlayerShuffleButtonProps) {
   const { t } = useTranslation()
-  const label = tooltip ?? (isShuffle ? t("player.shuffle_disable") : t("player.shuffle"))
+  const label =
+    tooltip ?? (isShuffle ? t('player.shuffle_disable') : t('player.shuffle'))
   return (
     <Tooltip>
       <TooltipTrigger
         render={
           <Button
-            data-slot="player-shuffle-button"
-            size="icon"
-            variant="ghost"
+            data-slot='player-shuffle-button'
+            size='icon'
+            variant='ghost'
             className={cn(
-              "size-8 rounded-md text-muted-foreground hover:text-foreground",
-              isShuffle && "text-primary hover:text-primary bg-primary/10",
-              className
+              'size-8 rounded-md text-muted-foreground hover:text-foreground',
+              isShuffle && 'text-primary hover:text-primary bg-primary/10',
+              className,
             )}
             aria-label={label}
             {...props}
           >
             <HugeiconsIcon
               icon={ShuffleIcon}
-              className="size-4"
+              className='size-4'
             />
           </Button>
         }
@@ -328,7 +332,7 @@ function PlayerShuffleButton({
 
 interface PlayerLoopButtonProps extends Omit<
   React.ComponentProps<typeof Button>,
-  "children"
+  'children'
 > {
   isLoop?: boolean
   tooltip?: string
@@ -343,26 +347,27 @@ function PlayerLoopButton({
   ...props
 }: PlayerLoopButtonProps) {
   const { t } = useTranslation()
-  const label = tooltip ?? (isLoop ? t("player.repeat_disable") : t("player.repeat"))
+  const label =
+    tooltip ?? (isLoop ? t('player.repeat_disable') : t('player.repeat'))
   return (
     <Tooltip>
       <TooltipTrigger
         render={
           <Button
-            data-slot="player-loop-button"
-            size="icon"
-            variant="ghost"
+            data-slot='player-loop-button'
+            size='icon'
+            variant='ghost'
             className={cn(
-              "size-8 rounded-md text-muted-foreground hover:text-foreground",
-              isLoop && "text-primary hover:text-primary bg-primary/10",
-              className
+              'size-8 rounded-md text-muted-foreground hover:text-foreground',
+              isLoop && 'text-primary hover:text-primary bg-primary/10',
+              className,
             )}
             aria-label={label}
             {...props}
           >
             <HugeiconsIcon
               icon={RepeatIcon}
-              className="size-4"
+              className='size-4'
             />
           </Button>
         }
@@ -383,7 +388,7 @@ interface PlayerProgressProps {
   onPointerDown?: () => void
   onPointerUp?: () => void
   className?: string
-  position?: "bottom" | "top"
+  position?: 'bottom' | 'top'
 }
 
 function PlayerProgress({
@@ -394,22 +399,22 @@ function PlayerProgress({
   onPointerDown,
   onPointerUp,
   className,
-  position = "bottom"
+  position = 'bottom',
 }: PlayerProgressProps) {
   const { t } = useTranslation()
   return (
     <div
-      data-slot="player-progress"
+      data-slot='player-progress'
       className={cn(
-        "absolute left-0 right-0 z-30 h-1.5 flex items-center",
-        position === "top" ? "-bottom-0.75" : "-top-0.75",
-        className
+        'absolute left-0 right-0 z-30 h-1.5 flex items-center',
+        position === 'top' ? '-bottom-0.75' : '-top-0.75',
+        className,
       )}
     >
       <Tooltip>
         <TooltipTrigger
           render={
-            <div className="w-full h-full flex items-center">
+            <div className='w-full h-full flex items-center'>
               <NativeSlider
                 min={0}
                 max={duration || 0}
@@ -418,13 +423,13 @@ function PlayerProgress({
                 onPointerDown={onPointerDown}
                 onPointerUp={onPointerUp}
                 disabled={disabled}
-                className="w-full h-full cursor-pointer rounded-none"
+                className='w-full h-full cursor-pointer rounded-none'
               />
             </div>
           }
         />
         <TooltipContent>
-          <span>{t("player.seek")}</span>
+          <span>{t('player.seek')}</span>
           <KbdGroup>
             <Kbd>←</Kbd>
             <Kbd>→</Kbd>
@@ -435,7 +440,7 @@ function PlayerProgress({
   )
 }
 
-interface PlayerTimeProps extends React.ComponentProps<"div"> {
+interface PlayerTimeProps extends React.ComponentProps<'div'> {
   progress: number
   duration: number
 }
@@ -448,10 +453,10 @@ function PlayerTime({
 }: PlayerTimeProps) {
   return (
     <div
-      data-slot="player-time"
+      data-slot='player-time'
       className={cn(
-        "text-xs font-mono text-muted-foreground tabular-nums select-none shrink-0",
-        className
+        'text-xs font-mono text-muted-foreground tabular-nums select-none shrink-0',
+        className,
       )}
       {...props}
     >
@@ -464,18 +469,18 @@ interface PlayerVolumeProps {
   volume: number
   onChange: (val: number) => void
   className?: string
-  position?: "bottom" | "top"
+  position?: 'bottom' | 'top'
 }
 
 function PlayerVolume({
   volume,
   onChange,
   className,
-  position = "bottom"
+  position = 'bottom',
 }: PlayerVolumeProps) {
   const { t } = useTranslation()
   const [lastVolume, setLastVolume] = React.useState<number>(
-    volume > 0 ? volume : 80
+    volume > 0 ? volume : DEFAULT_PLAYER_VOLUME,
   )
   const [popoverOpen, setPopoverOpen] = React.useState(false)
   const [displayVolume, setDisplayVolume] = React.useState<number>(volume)
@@ -502,7 +507,7 @@ function PlayerVolume({
   const handleToggleMute = (e?: React.MouseEvent) => {
     e?.stopPropagation()
     if (displayVolume === 0) {
-      const target = lastVolume > 0 ? lastVolume : 80
+      const target = lastVolume > 0 ? lastVolume : DEFAULT_PLAYER_VOLUME
       setDisplayVolume(target)
       onChange(target)
     } else {
@@ -553,8 +558,8 @@ function PlayerVolume({
 
   return (
     <div
-      data-slot="player-volume"
-      className={cn("shrink-0", className)}
+      data-slot='player-volume'
+      className={cn('shrink-0', className)}
     >
       <Popover
         open={popoverOpen}
@@ -566,14 +571,14 @@ function PlayerVolume({
               <PopoverTrigger
                 render={
                   <Button
-                    size="icon"
-                    variant="ghost"
-                    aria-label={t("player.volume_settings")}
-                    className="size-8 rounded-md text-muted-foreground hover:text-foreground"
+                    size='icon'
+                    variant='ghost'
+                    aria-label={t('player.volume_settings')}
+                    className='size-8 rounded-md text-muted-foreground hover:text-foreground'
                   >
                     <HugeiconsIcon
                       icon={volumeIcon}
-                      className="size-4"
+                      className='size-4'
                     />
                   </Button>
                 }
@@ -581,7 +586,7 @@ function PlayerVolume({
             }
           />
           <TooltipContent>
-            <span>{t("player.volume")}</span>
+            <span>{t('player.volume')}</span>
             <KbdGroup>
               <Kbd>M</Kbd>
               <Kbd>↑</Kbd>
@@ -591,38 +596,40 @@ function PlayerVolume({
         </Tooltip>
 
         <PopoverContent
-          side={position === "top" ? "bottom" : "top"}
-          align="center"
+          side={position === 'top' ? 'bottom' : 'top'}
+          align='center'
           sideOffset={12}
-          className="w-10 px-2 h-70 gap-1 flex flex-col items-center justify-between rounded-lg bg-popover/95 backdrop-blur border border-border shadow-lg"
+          className='w-10 px-2 h-70 gap-1 flex flex-col items-center justify-between rounded-lg bg-popover/95 backdrop-blur border border-border shadow-lg'
         >
-          <span className="text-[10px] font-mono font-medium text-muted-foreground select-none">
+          <span className='text-[10px] font-mono font-medium text-muted-foreground select-none'>
             {displayVolume}%
           </span>
 
-          <div className="flex-1 w-full flex items-center justify-center py-2">
+          <div className='flex-1 w-full flex items-center justify-center py-2'>
             <Slider
-              orientation="vertical"
+              orientation='vertical'
               min={0}
               max={100}
               step={1}
               value={[displayVolume]}
               onValueChange={handleValueChange}
               onValueCommitted={handleValueCommitted}
-              className="h-full"
+              className='h-full'
             />
           </div>
 
           <Button
-            size="icon"
-            variant="ghost"
-            className="size-7 rounded-md text-muted-foreground hover:text-foreground shrink-0"
+            size='icon'
+            variant='ghost'
+            className='size-7 rounded-md text-muted-foreground hover:text-foreground shrink-0'
             onClick={handleToggleMute}
-            aria-label={displayVolume === 0 ? t("player.unmute") : t("player.mute")}
+            aria-label={
+              displayVolume === 0 ? t('player.unmute') : t('player.mute')
+            }
           >
             <HugeiconsIcon
               icon={volumeIcon}
-              className="size-4"
+              className='size-4'
             />
           </Button>
         </PopoverContent>
@@ -647,5 +654,5 @@ export {
   PlayerDescription,
   PlayerProgress,
   PlayerTime,
-  PlayerVolume
+  PlayerVolume,
 }

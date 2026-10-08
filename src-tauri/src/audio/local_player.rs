@@ -38,7 +38,7 @@ impl LocalAudioPlayer {
         Self {
             sink: Mutex::new(None),
             player: Mutex::new(None),
-            volume: Mutex::new(0.8),
+            volume: Mutex::new(0.4),
             current_path: Mutex::new(None),
             generation: AtomicU64::new(0),
         }
@@ -109,6 +109,6 @@ mod tests {
         let status = player.get_status().unwrap();
         assert!(!status.is_playing);
         assert!(!status.is_paused);
-        assert_eq!(status.volume, 0.8);
+        assert_eq!(status.volume, 0.4);
     }
 }

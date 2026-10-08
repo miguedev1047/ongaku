@@ -37,12 +37,28 @@ export function PlayerPositionOptions() {
   }
 
   return (
-    <div className='space-y-2'>
-      <label className='text-xs font-medium text-foreground'>
-        {t(
-          'settings.tabs.appearance.appearance_and_interface.player_position.title',
-        )}
-      </label>
+    <div className='p-4 rounded-md border border-border/50 bg-card/60 backdrop-blur-sm space-y-4'>
+      <div className='flex items-center gap-2.5'>
+        <div className='size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary'>
+          <HugeiconsIcon
+            icon={AlignBoxBottomCenterIcon}
+            className='size-4'
+          />
+        </div>
+        <div>
+          <h2 className='text-sm font-semibold text-foreground'>
+            {t(
+              'settings.tabs.appearance.appearance_and_interface.player_position.title',
+            )}
+          </h2>
+          <p className='text-xs text-muted-foreground'>
+            {t(
+              'settings.tabs.appearance.appearance_and_interface.player_position.description',
+            )}
+          </p>
+        </div>
+      </div>
+
       <div className='grid grid-cols-2 gap-2'>
         {PLAYER_POSITION_OPTIONS.map((opt) => {
           const isSelected = currentPosition === opt.id

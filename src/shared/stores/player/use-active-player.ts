@@ -2,6 +2,11 @@ import { create } from 'zustand'
 import { platformService } from '@/infrastructure/platform'
 import { useLocalPlayerStore } from '@/shared/stores/player/use-local-player'
 import { useStreamingPlayerStore } from '@/shared/stores/player/use-streaming-player'
+import {
+  DEFAULT_PLAYER_VOLUME,
+  registerVolumeSubscriber,
+  syncPlayerVolume,
+} from './volume-sync'
 import type {
   PlaybackContext,
   ActivePlayerType,
@@ -27,6 +32,7 @@ interface ActivePlayerStore {
   togglePlay: () => void
   seek: (deltaSeconds: number) => void
   changeVolume: (delta: number) => void
+  setVolume: (volume: number) => void
   toggleMute: () => void
   resetActivePlayer: () => void
 }
@@ -43,7 +49,7 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => {
   return {
     activePlayer: initialActivePlayer,
     activePlaylist: initialActivePlaylist,
-    lastNonZeroVolume: localInitialState.volume || 80,
+    lastNonZeroVolume: localInitialState.volume || DEFAULT_PLAYER_VOLUME,
 
     setActivePlayer: (type) => set({ activePlayer: type }),
     setActivePlaylist: (playlistName) => set({ activePlaylist: playlistName }),
@@ -148,16 +154,13 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => {
     },
 
     changeVolume: (delta: number) => {
-      const localState = useLocalPlayerStore.getState()
-      const currentVol = localState.volume
+      const currentVol = useLocalPlayerStore.getState().volume
       const newVol = Math.max(0, Math.min(100, currentVol + delta))
+      syncPlayerVolume(newVol)
+    },
 
-      useLocalPlayerStore.getState().setVolume(newVol)
-      useStreamingPlayerStore.getState().setVolume(newVol)
-
-      if (newVol > 0) {
-        set({ lastNonZeroVolume: newVol })
-      }
+    setVolume: (volume: number) => {
+      syncPlayerVolume(volume)
     },
 
     toggleMute: () => {
@@ -166,7 +169,7 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => {
         set({ lastNonZeroVolume: currentVol })
         get().changeVolume(-currentVol)
       } else {
-        const restore = get().lastNonZeroVolume || 80
+        const restore = get().lastNonZeroVolume || DEFAULT_PLAYER_VOLUME
         get().changeVolume(restore)
       }
     },
@@ -178,3 +181,10 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => {
     },
   }
 })
+
+registerVolumeSubscriber((vol) => {
+  if (vol > 0) {
+    useActivePlayerStore.setState({ lastNonZeroVolume: vol })
+  }
+})
+

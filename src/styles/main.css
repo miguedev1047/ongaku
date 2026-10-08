@@ -137,11 +137,12 @@
 
 @layer components {
   .native-slider {
-    @apply h-1.5 w-full cursor-pointer appearance-none rounded-md bg-muted outline-hidden;
+    @apply h-1.5 w-full cursor-pointer appearance-none rounded-md bg-muted outline-hidden p-0 m-0 border-0;
     --slider-progress: 0%;
+    --slider-fill: var(--slider-progress);
     background-image: linear-gradient(var(--primary), var(--primary));
     background-repeat: no-repeat;
-    background-size: var(--slider-progress) 100%;
+    background-size: var(--slider-fill, var(--slider-progress)) 100%;
   }
 
   .native-slider:disabled {

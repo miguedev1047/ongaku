@@ -22,22 +22,12 @@ export function useAppStatus(): AppStatusResult {
 
   const errorReasons: string[] = []
 
-  // Check 1: Auxiliary binaries
-  if (health) {
-    if (!health.ytdlpInstalled) {
-      errorReasons.push('yt-dlp is not installed')
-    }
-    if (!health.ffmpegInstalled) {
-      errorReasons.push('ffmpeg is not installed')
-    }
-  }
-
-  // Check 2: Server health
+  // Check 1: Server health
   if (health && !health.serverHealthy) {
     errorReasons.push('Internal audio streaming server is offline')
   }
 
-  // Check 3: Directory permissions and existence
+  // Check 2: Directory permissions and existence
   if (health?.directories) {
     for (const dir of health.directories) {
       if (!dir.exists) {

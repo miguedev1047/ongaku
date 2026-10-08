@@ -1,6 +1,11 @@
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 import { platformService } from "@/infrastructure/platform"
+import {
+  DEFAULT_PLAYER_VOLUME,
+  registerVolumeSubscriber,
+  syncPlayerVolume,
+} from "./volume-sync"
 import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
 import type { LocalPlayerState, PlaybackContext } from "./types"
 
@@ -56,7 +61,7 @@ export const useLocalPlayerStore = create<LocalPlayerStore>()(
   isSeeking: false,
   duration: 0,
   progress: 0,
-  volume: 80,
+  volume: DEFAULT_PLAYER_VOLUME,
   setCurrentSong: (song, queueOrContext, context) =>
     set((state) => {
       let resolvedQueue: readonly TPlaylistSong[] | undefined
@@ -142,8 +147,7 @@ export const useLocalPlayerStore = create<LocalPlayerStore>()(
   setDuration: (duration) => set({ duration }),
   setProgress: (progress) => set({ progress }),
   setVolume: (volume) => {
-    set({ volume })
-    platformService.invoke("local_audio_set_volume", { volume: volume / 100 }).catch(() => {})
+    syncPlayerVolume(volume)
   },
   play: () => {
     const { playerState, currentSong, volume, progress } = get()
@@ -234,8 +238,22 @@ export const useLocalPlayerStore = create<LocalPlayerStore>()(
         if (state.duration > 0 && state.progress >= state.duration - 1) {
           state.setProgress(0)
         }
+
+        // Initialize and sync both players and audio backends with persisted volume
+        const initialVol =
+          typeof state.volume === "number" && !isNaN(state.volume)
+            ? state.volume
+            : DEFAULT_PLAYER_VOLUME
+        syncPlayerVolume(initialVol)
       },
     },
   ),
 )
+
+registerVolumeSubscriber((vol) => {
+  if (useLocalPlayerStore.getState().volume !== vol) {
+    useLocalPlayerStore.setState({ volume: vol })
+  }
+})
+
 
