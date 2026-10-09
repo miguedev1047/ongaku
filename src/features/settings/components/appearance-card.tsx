@@ -1,7 +1,7 @@
 import { ThemeSelection } from '@/features/settings/components/theme-selection'
 import { FolderColorOptions } from '@/features/settings/components/folder-color-options'
 import { PlayerPositionOptions } from '@/features/settings/components/player-position-options'
-import { AppBackgroundsSelection } from '@/features/settings/components/app-backgrounds-selection'
+import { AppWallpapersSelection } from '@/features/settings/components/app-wallpapers-selection'
 
 export function AppearanceCard() {
   return (
@@ -9,7 +9,7 @@ export function AppearanceCard() {
       <ThemeSelection />
       <PlayerPositionOptions />
       <FolderColorOptions />
-      <AppBackgroundsSelection />
+      <AppWallpapersSelection />
     </>
   )
 }

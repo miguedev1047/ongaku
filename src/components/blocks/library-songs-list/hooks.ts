@@ -1,10 +1,10 @@
 import { usePlaylistBatchStore } from "@/shared/stores/batch-operations"
 import { TPlaylistSong } from "@/shared/types/playlist-songs.types"
-import { RowSelectionState, useTable } from "@tanstack/react-table"
-import { useEffect, useRef, useState } from "react"
+import { RowSelectionState } from "@tanstack/react-table"
+import { useEffect } from "react"
 import { libraryTableFeatures } from "@/components/blocks/library-songs-list/library-table-features"
 import { librarySongColumns } from "@/components/blocks/library-songs-list/library-table-columns"
-import { useVirtualizer } from "@tanstack/react-virtual"
+
 
 interface UseLibraryBatchActions {
   rowSelection: RowSelectionState
@@ -39,39 +39,16 @@ export function useLibraryBatchActions({
   }, [])
 }
 
+import { useTableSongsState } from '@/components/compounds/table-songs-list'
+
 interface UseLibraryListProps {
   data: TPlaylistSong[]
 }
 export function useLibraryList({ data }: UseLibraryListProps) {
-  "use no memo"
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
-  const scrollRef = useRef<HTMLDivElement>(null)
-
-  const table = useTable({
-    features: libraryTableFeatures,
-    columns: librarySongColumns,
+  return useTableSongsState({
     data,
-    getRowId: (row) => row.id,
-    state: { rowSelection },
-    onRowSelectionChange: setRowSelection
+    columns: librarySongColumns,
+    features: libraryTableFeatures,
   })
-
-  const rows = table.getRowModel().rows
-
-  const rowVirtualizer = useVirtualizer({
-    count: rows.length,
-    getScrollElement: () => scrollRef.current,
-    estimateSize: () => 52,
-    getItemKey: (index) => rows[index]?.id ?? index,
-    overscan: 5
-  })
-
-  return {
-    rowSelection,
-    rowVirtualizer,
-    table,
-    scrollRef,
-    rows,
-    setRowSelection
-  }
 }
+

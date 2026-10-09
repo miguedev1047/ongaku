@@ -106,6 +106,52 @@ pub fn get_streaming_cache_dir() -> PathBuf {
     dir
 }
 
+pub fn clean_streaming_cache_dir() -> std::io::Result<usize> {
+    let streaming_dir = get_streaming_cache_dir();
+    let mut removed = 0;
+    if streaming_dir.exists() {
+        if let Ok(entries) = fs::read_dir(&streaming_dir) {
+            for entry in entries.flatten() {
+                let path = entry.path();
+                if path.is_file() || path.is_symlink() {
+                    if fs::remove_file(&path).is_ok() {
+                        removed += 1;
+                    }
+                } else if path.is_dir() {
+                    if fs::remove_dir_all(&path).is_ok() {
+                        removed += 1;
+                    }
+                }
+            }
+        }
+    }
+    if removed > 0 {
+        println!("[ONGAKU]: Cleaned {} orphan streaming cache file(s)", removed);
+    }
+    Ok(removed)
+}
+
+pub fn spawn_streaming_cache_cleaner() -> std::thread::JoinHandle<()> {
+    std::thread::Builder::new()
+        .name("ongaku-streaming-cleaner".to_string())
+        .spawn(|| {
+            if let Err(err) = clean_streaming_cache_dir() {
+                eprintln!(
+                    "[ONGAKU WARNING]: Background clean of streaming cache failed: {}",
+                    err
+                );
+            }
+        })
+        .unwrap_or_else(|err| {
+            eprintln!(
+                "[ONGAKU WARNING]: Failed to spawn streaming cleaner thread ({err}), falling back to default thread"
+            );
+            std::thread::spawn(|| {
+                let _ = clean_streaming_cache_dir();
+            })
+        })
+}
+
 pub fn get_bin_dir() -> PathBuf {
     get_app_dir().join("bin")
 }

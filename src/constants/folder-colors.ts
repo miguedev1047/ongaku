@@ -2,81 +2,97 @@ export const FOLDER_COLOR_PRESETS = [
   {
     id: 'blue',
     color: '#507dbc',
-    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.classic_blue',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.folder_color.colors.classic_blue',
   },
   {
     id: 'emerald',
     color: '#10b981',
-    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.emerald',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.folder_color.colors.emerald',
   },
   {
     id: 'indigo',
     color: '#6366f1',
-    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.indigo',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.folder_color.colors.indigo',
   },
   {
     id: 'rose',
     color: '#f43f5e',
-    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.rose',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.folder_color.colors.rose',
   },
   {
     id: 'red',
-    color: '#B14242',
-    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.red',
+    color: '#E01B24',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.folder_color.colors.red',
   },
   {
     id: 'amber',
     color: '#f59e0b',
-    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.amber',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.folder_color.colors.amber',
   },
   {
     id: 'slate',
     color: '#64748b',
-    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.slate',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.folder_color.colors.slate',
   },
   {
     id: 'violet',
     color: '#8b5cf6',
-    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.electric_violet',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.folder_color.colors.electric_violet',
   },
   {
     id: 'purple',
     color: '#a855f7',
-    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.deep_purple',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.folder_color.colors.deep_purple',
   },
   {
     id: 'fuchsia',
     color: '#d946ef',
-    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.fuchsia',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.folder_color.colors.fuchsia',
   },
   {
     id: 'teal',
     color: '#14b8a6',
-    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.teal',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.folder_color.colors.teal',
   },
   {
     id: 'cyan',
     color: '#06b6d4',
-    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.cyan',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.folder_color.colors.cyan',
   },
   {
     id: 'sky',
     color: '#0ea5e9',
-    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.sky',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.folder_color.colors.sky',
   },
   {
     id: 'lime',
     color: '#84cc16',
-    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.lime',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.folder_color.colors.lime',
   },
   {
     id: 'orange',
     color: '#f97316',
-    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.sunset_orange',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.folder_color.colors.sunset_orange',
   },
   {
     id: 'zinc',
     color: '#71717a',
-    labelKey: 'settings.tabs.appearance.appearance_and_interface.folder_color.colors.neutral_zinc',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.folder_color.colors.neutral_zinc',
   },
 ] as const

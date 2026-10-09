@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react'
 import { cn } from 'cn'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { FolderIcon, Tick02Icon } from '@hugeicons/core-free-icons'
+import { FolderIcon } from '@hugeicons/core-free-icons'
 import { useQuery } from '@tanstack/react-query'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import { useUpdateConfig } from '@/features/settings/hooks/use-config'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Folder } from '@/components/ui/folder'
-import { Show } from '@/components/utility/show'
 import { FOLDER_COLOR_PRESETS } from '@/constants'
 import { useTranslation } from 'react-i18next'
+
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
 export function FolderColorOptions() {
   const { t } = useTranslation()
@@ -31,7 +32,7 @@ export function FolderColorOptions() {
   }
 
   return (
-    <div className='p-4 rounded-md border border-border/50 bg-card/60 backdrop-blur-sm space-y-4'>
+    <div className='@container/folder-card p-4 rounded-md border border-border/50 bg-card/60 backdrop-blur-sm space-y-4'>
       <div className='flex items-center justify-between'>
         <div className='flex items-center gap-2.5'>
           <div className='size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary'>
@@ -65,35 +66,40 @@ export function FolderColorOptions() {
       <RadioGroup
         value={currentColor}
         onValueChange={handleSelectColor}
-        className='grid grid-cols-4 sm:grid-cols-8 gap-2'
+        className={cn(
+          'grid gap-2',
+          'grid-cols-4 sm:grid-cols-6 lg:grid-cols-8',
+          '@[380px]/folder-card:grid-cols-4 @[520px]/folder-card:grid-cols-6 @[680px]/folder-card:grid-cols-8',
+        )}
       >
         {FOLDER_COLOR_PRESETS.map((preset) => {
           const isChecked =
             currentColor.toLowerCase() === preset.color.toLowerCase()
 
           return (
-            <label
-              className={cn(
-                'relative h-10 rounded-md cursor-pointer flex items-center justify-start transition-all border border-black/10 dark:border-white/10 shadow-xs select-none',
-                isChecked
-                  ? 'border-accent-foreground/40'
-                  : 'hover:opacity-85 hover:scale-102',
-              )}
-              style={{ backgroundColor: preset.color }}
-            >
-              <RadioGroupItem
-                value={preset.color}
-                className='sr-only'
+            <Tooltip key={preset.id}>
+              <TooltipTrigger
+                render={
+                  <label
+                    className={cn(
+                      'relative h-10 rounded-md cursor-pointer transition-all border shadow-xs select-none',
+                      isChecked
+                        ? 'border-transparent ring-2 outline-2 ring-foreground outline-foreground'
+                        : 'border-black/10 dark:border-white/10 hover:opacity-85 hover:scale-102',
+                    )}
+                    style={{ backgroundColor: preset.color }}
+                  >
+                    <RadioGroupItem
+                      value={preset.color}
+                      className='sr-only'
+                    />
+                  </label>
+                }
               />
-              <Show when={isChecked}>
-                <span className='size-4 rounded-sm bg-black/25 flex items-center justify-center text-white'>
-                  <HugeiconsIcon
-                    icon={Tick02Icon}
-                    className='size-3 stroke-[2.5]'
-                  />
-                </span>
-              </Show>
-            </label>
+              <TooltipContent>
+                {t(preset.labelKey)}
+              </TooltipContent>
+            </Tooltip>
           )
         })}
       </RadioGroup>

@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from "react"
-import { RowSelectionState, useTable } from "@tanstack/react-table"
-import { useVirtualizer } from "@tanstack/react-virtual"
+import { useEffect } from "react"
+import { RowSelectionState } from "@tanstack/react-table"
 import { useSearchBatchStore } from "@/shared/stores/batch-operations"
 import { useDownloadQueueStore } from "@/shared/stores/actions"
 import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
@@ -41,44 +40,18 @@ export function useSearchBatchSync({
   }, [])
 }
 
+import { useTableSongsState } from '@/components/compounds/table-songs-list'
+
 interface UseSearchListProps {
   data: TYoutubeSearchResult[]
 }
 
 export function useSearchList({ data }: UseSearchListProps) {
-  "use no memo"
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
-  const scrollRef = useRef<HTMLDivElement>(null)
-
-  const table = useTable({
-    features: searchTableFeatures,
-    columns: searchSongColumns,
+  return useTableSongsState({
     data,
-    getRowId: (row) => row.id,
-    state: {
-      rowSelection
-    },
-    onRowSelectionChange: setRowSelection
+    columns: searchSongColumns,
+    features: searchTableFeatures,
   })
-
-  const rows = table.getRowModel().rows
-
-  const rowVirtualizer = useVirtualizer({
-    count: rows.length,
-    getScrollElement: () => scrollRef.current,
-    estimateSize: () => 52,
-    getItemKey: (index) => rows[index]?.id ?? index,
-    overscan: 5
-  })
-
-  return {
-    rowSelection,
-    rowVirtualizer,
-    table,
-    scrollRef,
-    rows,
-    setRowSelection
-  }
 }
 
 export function useSearchBatchActions() {

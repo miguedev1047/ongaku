@@ -44,3 +44,4 @@ export function AppBackground({ children, className, ...props }: AppBackgroundPr
     </div>
   )
 }
+

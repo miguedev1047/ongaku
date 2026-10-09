@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { useQueryClient } from "@tanstack/react-query"
-import { RowSelectionState, useTable } from "@tanstack/react-table"
-import { useVirtualizer } from "@tanstack/react-virtual"
+import { RowSelectionState } from "@tanstack/react-table"
 import { platformService } from "@/infrastructure/platform"
 import { toast } from "sonner"
 import { usePlaylistBatchStore } from "@/shared/stores/batch-operations"
@@ -47,42 +46,18 @@ export function usePlaylistBatchSync({
   }, [])
 }
 
+import { useTableSongsState } from '@/components/compounds/table-songs-list'
+
 interface UsePlaylistListProps {
   data: TPlaylistSong[]
 }
 
 export function usePlaylistList({ data }: UsePlaylistListProps) {
-  "use no memo"
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
-  const scrollRef = useRef<HTMLDivElement>(null)
-
-  const table = useTable({
-    features: playlistTableFeatures,
-    columns: playlistSongColumns,
+  return useTableSongsState({
     data,
-    getRowId: (row) => row.id,
-    state: { rowSelection },
-    onRowSelectionChange: setRowSelection
+    columns: playlistSongColumns,
+    features: playlistTableFeatures,
   })
-
-  const rows = table.getRowModel().rows
-
-  const rowVirtualizer = useVirtualizer({
-    count: rows.length,
-    getScrollElement: () => scrollRef.current,
-    estimateSize: () => 52,
-    getItemKey: (index) => rows[index]?.id ?? index,
-    overscan: 5
-  })
-
-  return {
-    rowSelection,
-    rowVirtualizer,
-    table,
-    scrollRef,
-    rows,
-    setRowSelection
-  }
 }
 
 export function usePlaylistBatchActions(currentPlaylistName?: string) {

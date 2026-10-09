@@ -3,7 +3,7 @@ import { systemBackgroundsOpts } from '@/shared/queries/backgrounds'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 
-export function useAppBackgrounds() {
+export function useAppWallpapers() {
   const { data: config } = useQuery(systemConfigQueryOpts())
   const { data: backgrounds = [], isLoading: isLoadingBackgrounds } = useQuery(
     systemBackgroundsOpts(),
@@ -15,10 +15,14 @@ export function useAppBackgrounds() {
 
   return {
     config,
+    wallpapers: backgrounds,
     backgrounds,
     health,
     serverPort,
+    currentWallpaper: currentBackground,
     currentBackground,
+    isLoadingWallpapers: isLoadingBackgrounds,
     isLoadingBackgrounds,
   }
 }
+

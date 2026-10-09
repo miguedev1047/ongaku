@@ -6,7 +6,7 @@ import { systemBackgroundsOpts } from '@/shared/queries/backgrounds'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import { useUpdateConfig } from '@/features/settings/hooks/use-config'
 
-export function useAppBackgroundMutations() {
+export function useAppWallpaperMutations() {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
   const updateConfig = useUpdateConfig()
@@ -71,12 +71,12 @@ export function useAppBackgroundMutations() {
     mutationFn: async (id: string) => {
       return platformService.invoke('delete_background', { id })
     },
-    onSuccess: async () => {
+    onSuccess: async (_, id) => {
+      if (currentBackground === id) {
+        await updateConfig.mutateAsync({ key: 'app_background', value: '' })
+      }
       await queryClient.invalidateQueries({
         queryKey: systemBackgroundsOpts().queryKey,
-      })
-      await queryClient.invalidateQueries({
-        queryKey: systemConfigQueryOpts().queryKey,
       })
       toast.success(
         t(
@@ -95,31 +95,40 @@ export function useAppBackgroundMutations() {
     },
   })
 
+  const handleImportFile = () => {
+    importFileMutation.mutate()
+  }
+
+  const handleImportUrl = async (url: string) => {
+    await importUrlMutation.mutateAsync(url)
+  }
+
+  const handleDeleteBackground = (id: string) => {
+    deleteBackgroundMutation.mutate(id)
+  }
+
   const selectBackground = (id: string) => {
-    if (id === currentBackground) return
     updateConfig.mutate({ key: 'app_background', value: id })
   }
 
-  const openFolder = async () => {
-    try {
-      await platformService.invoke('open_backgrounds_folder')
-    } catch (err) {
-      toast.error(String(err))
-    }
+  const openFolder = () => {
+    platformService.invoke('open_backgrounds_folder').catch((err) => {
+      toast.error(typeof err === 'string' ? err : 'Failed to open folder')
+    })
   }
 
   return {
-    importFileMutation,
-    importUrlMutation,
-    deleteBackgroundMutation,
-    handleImportFile: () => importFileMutation.mutate(),
-    handleImportUrl: (url: string) => importUrlMutation.mutateAsync(url),
-    handleDeleteBackground: (id: string) => deleteBackgroundMutation.mutate(id),
+    handleImportFile,
+    handleImportUrl,
+    handleDeleteBackground,
+    handleDeleteWallpaper: handleDeleteBackground,
     selectBackground,
+    selectWallpaper: selectBackground,
     openFolder,
     isImportingFile: importFileMutation.isPending,
     isImportingUrl: importUrlMutation.isPending,
     isDeletingBackground: deleteBackgroundMutation.isPending,
-    isUpdatingBackground: updateConfig.isPending,
+    isDeletingWallpaper: deleteBackgroundMutation.isPending,
   }
 }
+

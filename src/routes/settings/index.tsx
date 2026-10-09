@@ -16,7 +16,7 @@ import {
   ThemeSelection,
   PlayerPositionOptions,
   FolderColorOptions,
-  AppBackgroundsSelection,
+  AppWallpapersSelection,
   LanguageSelection,
   SystemTabTrigger,
 } from '@/features/settings/components'
@@ -95,7 +95,7 @@ function RouteComponent() {
               <ThemeSelection />
               <PlayerPositionOptions />
               <FolderColorOptions />
-              <AppBackgroundsSelection />
+              <AppWallpapersSelection />
             </Suspense>
           </TabsContent>
 

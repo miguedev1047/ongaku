@@ -70,9 +70,10 @@ export function PlayerPositionOptions() {
               size='sm'
               onClick={() => handleSelectPosition(opt.id)}
               className={cn(
-                'h-9 text-xs gap-2 rounded-md font-medium border-border/40',
-                isSelected &&
-                  'border-accent-foreground/20 bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary',
+                'h-9 text-xs gap-2 rounded-md font-medium transition-all shadow-xs cursor-pointer select-none border',
+                isSelected
+                  ? 'border-transparent ring-2 outline-2 ring-foreground outline-foreground'
+                  : 'border-black/10 dark:border-white/10 hover:opacity-85 hover:scale-102',
               )}
             >
               <HugeiconsIcon
