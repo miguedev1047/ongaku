@@ -1,11 +1,12 @@
-import { cn } from "cn"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Spinner } from "@/components/ui/spinner"
-import { Item, ItemActions, ItemContent, ItemMedia } from "@/components/ui/item"
-import { YoutubeIcon } from "@hugeicons/core-free-icons"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { useTranslation } from "react-i18next"
-import { Show } from "@/components/utility/show"
+import { cn } from 'cn'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Spinner } from '@/components/ui/spinner'
+import { Item, ItemActions, ItemContent, ItemMedia } from '@/components/ui/item'
+import { YoutubeIcon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { useTranslation } from 'react-i18next'
+import { Show } from '@/components/utility/show'
+import { RoutePendingState } from '@/components/compounds'
 
 interface YoutubeItemSkeletonProps {
   titleWidth?: string
@@ -15,45 +16,45 @@ interface YoutubeItemSkeletonProps {
 }
 
 export function YoutubeItemSkeleton({
-  titleWidth = "w-3/5",
-  channelWidth = "w-28",
-  durationWidth = "w-8",
-  className
+  titleWidth = 'w-3/5',
+  channelWidth = 'w-28',
+  durationWidth = 'w-8',
+  className,
 }: YoutubeItemSkeletonProps) {
   return (
     <Item
       className={cn(
-        "pointer-events-none select-none opacity-80 border-transparent",
-        className
+        'pointer-events-none select-none opacity-80 border-transparent',
+        className,
       )}
     >
       <ItemMedia
-        variant="image"
-        className="bg-muted"
+        variant='image'
+        className='bg-muted'
       >
-        <Skeleton className="size-full rounded-sm" />
+        <Skeleton className='size-full rounded-sm' />
       </ItemMedia>
-      <ItemContent className="gap-1.5">
-        <Skeleton className={cn("h-3.5 rounded-sm", titleWidth)} />
-        <Skeleton className={cn("h-3 rounded-sm opacity-60", channelWidth)} />
+      <ItemContent className='gap-1.5'>
+        <Skeleton className={cn('h-3.5 rounded-sm', titleWidth)} />
+        <Skeleton className={cn('h-3 rounded-sm opacity-60', channelWidth)} />
       </ItemContent>
-      <ItemActions className="gap-2">
-        <Skeleton className={cn("h-3 rounded-sm opacity-50", durationWidth)} />
-        <Skeleton className="size-7 rounded-md opacity-60" />
+      <ItemActions className='gap-2'>
+        <Skeleton className={cn('h-3 rounded-sm opacity-50', durationWidth)} />
+        <Skeleton className='size-7 rounded-md opacity-60' />
       </ItemActions>
     </Item>
   )
 }
 
 const DEFAULT_SKELETON_ITEMS = [
-  { titleWidth: "w-3/5", channelWidth: "w-28", durationWidth: "w-8" },
-  { titleWidth: "w-4/5", channelWidth: "w-36", durationWidth: "w-10" },
-  { titleWidth: "w-1/2", channelWidth: "w-24", durationWidth: "w-7" },
-  { titleWidth: "w-3/4", channelWidth: "w-32", durationWidth: "w-9" },
-  { titleWidth: "w-2/3", channelWidth: "w-20", durationWidth: "w-8" },
-  { titleWidth: "w-5/6", channelWidth: "w-28", durationWidth: "w-10" },
-  { titleWidth: "w-3/5", channelWidth: "w-32", durationWidth: "w-8" },
-  { titleWidth: "w-1/2", channelWidth: "w-24", durationWidth: "w-9" }
+  { titleWidth: 'w-3/5', channelWidth: 'w-28', durationWidth: 'w-8' },
+  { titleWidth: 'w-4/5', channelWidth: 'w-36', durationWidth: 'w-10' },
+  { titleWidth: 'w-1/2', channelWidth: 'w-24', durationWidth: 'w-7' },
+  { titleWidth: 'w-3/4', channelWidth: 'w-32', durationWidth: 'w-9' },
+  { titleWidth: 'w-2/3', channelWidth: 'w-20', durationWidth: 'w-8' },
+  { titleWidth: 'w-5/6', channelWidth: 'w-28', durationWidth: 'w-10' },
+  { titleWidth: 'w-3/5', channelWidth: 'w-32', durationWidth: 'w-8' },
+  { titleWidth: 'w-1/2', channelWidth: 'w-24', durationWidth: 'w-9' },
 ]
 
 export interface YoutubeSearchSkeletonProps {
@@ -63,15 +64,15 @@ export interface YoutubeSearchSkeletonProps {
 
 export function YoutubeSearchSkeleton({
   count = 8,
-  className
+  className,
 }: YoutubeSearchSkeletonProps) {
   const { t } = useTranslation()
 
   return (
     <ul
-      className={cn("space-y-1 w-full", className)}
-      aria-label={t("youtube_search.loading")}
-      aria-busy="true"
+      className={cn('space-y-1 w-full', className)}
+      aria-label={t('youtube_search.loading')}
+      aria-busy='true'
     >
       {Array.from({ length: count }).map((_, index) => {
         const item =
@@ -99,35 +100,35 @@ export interface YoutubeLoadingSpinnerProps {
 export function YoutubeLoadingSpinner({
   message,
   submessage,
-  className
+  className,
 }: YoutubeLoadingSpinnerProps) {
   const { t } = useTranslation()
-  const displayMessage = message ?? t("youtube_search.loading")
-  const displaySubmessage = submessage ?? t("youtube_search.fetching_metadata")
+  const displayMessage = message ?? t('youtube_search.loading')
+  const displaySubmessage = submessage ?? t('youtube_search.fetching_metadata')
 
   return (
     <div
       className={cn(
-        "relative w-full h-full min-h-65 flex flex-col items-center justify-center p-8 text-center gap-4",
-        className
+        'relative w-full h-full min-h-65 flex flex-col items-center justify-center p-8 text-center gap-4',
+        className,
       )}
-      role="status"
-      aria-live="polite"
+      role='status'
+      aria-live='polite'
     >
-      <div className="relative flex items-center justify-center size-12  bg-muted/60 border border-border/50 shadow-xs">
+      <div className='relative flex items-center justify-center size-12  bg-muted/60 border border-border/50 shadow-xs'>
         <HugeiconsIcon
           icon={YoutubeIcon}
-          className="size-5 text-muted-foreground/70"
+          className='size-5 text-muted-foreground/70'
         />
-        <Spinner className="absolute inset-0 size-full text-primary/80" />
+        <Spinner className='absolute inset-0 size-full text-primary/80' />
       </div>
 
-      <div className="flex flex-col items-center gap-1">
-        <p className="text-sm font-medium tracking-tight text-foreground">
+      <div className='flex flex-col items-center gap-1'>
+        <p className='text-sm font-medium tracking-tight text-foreground'>
           {displayMessage}
         </p>
         <Show when={Boolean(displaySubmessage)}>
-          <p className="text-xs text-muted-foreground animate-pulse">
+          <p className='text-xs text-muted-foreground animate-pulse'>
             {displaySubmessage}
           </p>
         </Show>
@@ -140,25 +141,25 @@ export function YoutubeSongInfoSkeleton({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "flex flex-col gap-3 p-4 border rounded-xl bg-card/60 backdrop-blur-sm shadow-sm h-full",
-        className
+        'flex flex-col gap-3 p-4 border rounded-xl bg-card/60 backdrop-blur-sm shadow-sm h-full',
+        className,
       )}
     >
-      <Skeleton className="relative aspect-video w-full rounded-lg" />
-      <div className="flex flex-col gap-2 min-w-0 pt-1">
-        <Skeleton className="h-4 w-4/5 rounded-sm" />
-        <Skeleton className="h-3 w-1/2 rounded-sm opacity-70" />
+      <Skeleton className='relative aspect-video w-full rounded-lg' />
+      <div className='flex flex-col gap-2 min-w-0 pt-1'>
+        <Skeleton className='h-4 w-4/5 rounded-sm' />
+        <Skeleton className='h-3 w-1/2 rounded-sm opacity-70' />
       </div>
-      <div className="flex items-center gap-2 pt-3 border-t border-border/50 mt-auto">
-        <Skeleton className="h-8 flex-1 rounded-md" />
-        <Skeleton className="size-8 rounded-md" />
+      <div className='flex items-center gap-2 pt-3 border-t border-border/50 mt-auto'>
+        <Skeleton className='h-8 flex-1 rounded-md' />
+        <Skeleton className='size-8 rounded-md' />
       </div>
     </div>
   )
 }
 
 export interface YoutubeLoadingProps {
-  variant?: "skeleton" | "spinner"
+  variant?: 'skeleton' | 'spinner'
   count?: number
   message?: string
   submessage?: string
@@ -166,13 +167,13 @@ export interface YoutubeLoadingProps {
 }
 
 export function YoutubeLoading({
-  variant = "skeleton",
+  variant = 'skeleton',
   count = 8,
   message,
   submessage,
-  className
+  className,
 }: YoutubeLoadingProps) {
-  if (variant === "spinner") {
+  if (variant === 'spinner') {
     return (
       <YoutubeLoadingSpinner
         message={message}
@@ -186,6 +187,16 @@ export function YoutubeLoading({
     <YoutubeSearchSkeleton
       count={count}
       className={className}
+    />
+  )
+}
+
+export function SearchPending() {
+  const { t } = useTranslation()
+  return (
+    <RoutePendingState
+      title={t('routes.search.pending_title')}
+      message={t('routes.search.pending_message')}
     />
   )
 }
