@@ -1,5 +1,4 @@
 import {
-  Card,
   CardDescription,
   CardHeader,
   CardTitle,

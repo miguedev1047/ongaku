@@ -52,7 +52,7 @@ rodio = { version = "0.22", default-features = false, features = [
     "mp4",
 ] }
 thiserror = "2"
-tauri-plugin-clipboard-manager = "2"
+tauri-plugin-clipboard-manager = "2.4"
 
 # Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration
 [profile.release]
