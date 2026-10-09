@@ -1,6 +1,3 @@
-import { useCallback, useEffect, useState } from 'react'
-import { useNavigate } from '@tanstack/react-router'
-import { useHotkey } from '@tanstack/react-hotkeys'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
   Search01Icon,
@@ -20,7 +17,7 @@ import {
 } from '@/components/ui/command'
 import { Kbd } from '@/components/ui/kbd'
 import { Show } from '@/components/utility/show'
-import { useYoutubeSearchStore } from '@/shared/stores/actions'
+import { useYoutubeSearchBar } from '@/features/youtube-search/hooks'
 import { cn } from 'cn'
 import { useTranslation } from 'react-i18next'
 
@@ -30,66 +27,21 @@ interface YoutubeSearchBarProps {
 
 export function YoutubeSearchBar({ initialQuery = '' }: YoutubeSearchBarProps) {
   const { t } = useTranslation()
-  const [isOpen, setIsOpen] = useState(false)
-  const [queryInput, setQueryInput] = useState(initialQuery)
-  const navigate = useNavigate()
-
-  const history = useYoutubeSearchStore((state) => state.history)
-  const addSearch = useYoutubeSearchStore((state) => state.addSearch)
-  const removeSearch = useYoutubeSearchStore((state) => state.removeSearch)
-  const clearHistory = useYoutubeSearchStore((state) => state.clearHistory)
-  const setLastQuery = useYoutubeSearchStore((state) => state.setLastQuery)
-
-  const handleOpenChange = useCallback(
-    (open: boolean) => {
-      setIsOpen(open)
-      if (open) {
-        setQueryInput(initialQuery)
-      }
-    },
-    [initialQuery],
-  )
-
-  useHotkey('Control+K', () => {
-    setIsOpen((prev) => {
-      const next = !prev
-      if (next) {
-        setQueryInput(initialQuery)
-      }
-      return next
-    })
-  })
-
-  useEffect(() => {
-    setQueryInput(initialQuery)
-    if (initialQuery.trim()) {
-      setLastQuery(initialQuery)
-    }
-  }, [initialQuery, setLastQuery])
-
-  const handleSearch = useCallback(
-    (searchQuery: string) => {
-      const trimmed = searchQuery.trim()
-      if (!trimmed) return
-
-      addSearch(trimmed)
-      setIsOpen(false)
-      navigate({
-        to: '/search-youtube',
-        search: { q: trimmed },
-      })
-    },
-    [addSearch, navigate],
-  )
-
-  const filteredHistory = history.filter((item) => {
-    if (!queryInput.trim()) return true
-    return item.toLowerCase().includes(queryInput.trim().toLowerCase())
-  })
-
-  const hasTypedQuery = Boolean(queryInput.trim())
-  const hasHistory = filteredHistory.length > 0
-  const hasDisplayQuery = Boolean(initialQuery.trim())
+  const {
+    isOpen,
+    queryInput,
+    filteredHistory,
+    hasTypedQuery,
+    hasHistory,
+    hasAnyHistory,
+    hasDisplayQuery,
+    setQueryInput,
+    handleOpenChange,
+    handleSearch,
+    handleKeyDown,
+    handleRemoveHistory,
+    handleClearHistory,
+  } = useYoutubeSearchBar({ initialQuery })
 
   return (
     <div className='ml-auto flex items-center gap-2'>
@@ -132,19 +84,14 @@ export function YoutubeSearchBar({ initialQuery = '' }: YoutubeSearchBarProps) {
             value={queryInput}
             onValueChange={setQueryInput}
             placeholder={t('youtube_search.placeholder')}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && hasTypedQuery) {
-                e.preventDefault()
-                handleSearch(queryInput)
-              }
-            }}
+            onKeyDown={handleKeyDown}
           />
 
           <CommandList className='max-h-80 overflow-y-auto no-scrollbar p-1'>
             <Show when={hasTypedQuery}>
               <CommandGroup heading={t('youtube_search.search_action')}>
                 <CommandItem
-                  value={queryInput}
+                  value={`search-action-${queryInput}`}
                   onSelect={() => handleSearch(queryInput)}
                   className='gap-2.5 font-medium'
                 >
@@ -164,7 +111,7 @@ export function YoutubeSearchBar({ initialQuery = '' }: YoutubeSearchBarProps) {
                 {filteredHistory.map((item) => (
                   <CommandItem
                     key={item}
-                    value={item}
+                    value={`history-item-${item}`}
                     onSelect={() => handleSearch(item)}
                     className='group/history flex items-center justify-between'
                   >
@@ -179,10 +126,7 @@ export function YoutubeSearchBar({ initialQuery = '' }: YoutubeSearchBarProps) {
                       variant='ghost'
                       size='icon'
                       className='size-5 opacity-0 group-hover/history:opacity-100 rounded-sm hover:bg-destructive/10 hover:text-destructive'
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        removeSearch(item)
-                      }}
+                      onClick={(e) => handleRemoveHistory(e, item)}
                     >
                       <HugeiconsIcon
                         icon={Cancel01Icon}
@@ -200,7 +144,7 @@ export function YoutubeSearchBar({ initialQuery = '' }: YoutubeSearchBarProps) {
               </CommandEmpty>
             </Show>
 
-            <Show when={history.length > 0}>
+            <Show when={hasAnyHistory}>
               <div className='p-1 border-t border-border/40 flex justify-end'>
                 <Button
                   variant='ghost'
@@ -208,7 +152,7 @@ export function YoutubeSearchBar({ initialQuery = '' }: YoutubeSearchBarProps) {
                   className={cn(
                     'h-6 text-[11px] text-muted-foreground hover:text-destructive gap-1 px-2 rounded-sm',
                   )}
-                  onClick={clearHistory}
+                  onClick={handleClearHistory}
                 >
                   <HugeiconsIcon
                     icon={Delete02Icon}

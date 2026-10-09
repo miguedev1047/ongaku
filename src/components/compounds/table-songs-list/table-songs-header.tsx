@@ -3,6 +3,7 @@ import { TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { TABLE_SONGS_SLOTS } from '@/components/compounds/table-songs-list/table-songs-constants'
 import { useTableSongsContext } from '@/components/compounds/table-songs-list/table-songs-context'
 import { Subscribe } from '@tanstack/react-table'
+import { Show } from '@/components/utility/show'
 import { cn } from 'cn'
 import { useTranslation } from 'react-i18next'
 
@@ -81,15 +82,22 @@ export function TableSongsHeaderCover({
 
 export function TableSongsHeaderTitle({
   title,
+  countLabel,
   className,
 }: {
   title?: string
+  countLabel?: string
   className?: string
 }) {
   const { t } = useTranslation()
   return (
     <TableHead className={cn(TABLE_SONGS_SLOTS.titleHead, className)}>
       <span>{title ?? t('library.columns.title')}</span>
+      <Show when={Boolean(countLabel)}>
+        <span className='ml-1 text-xs text-muted-foreground font-normal'>
+          ({countLabel})
+        </span>
+      </Show>
     </TableHead>
   )
 }

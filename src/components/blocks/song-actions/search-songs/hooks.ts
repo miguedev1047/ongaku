@@ -23,7 +23,19 @@ export function useSearchSongActions({ item }: UseSearchSongActionsProps) {
   }
 
   const handleSelectPlaylist = (playlistName: string) => {
-    enqueue([{ item, playlistName }])
+    enqueue([
+      {
+        item: {
+          id: item.id,
+          url: item.url,
+          title: item.title,
+          artist: item.channel,
+          thumbnail: item.thumbnail,
+          duration: item.duration,
+        },
+        playlistName,
+      },
+    ])
   }
 
   return {

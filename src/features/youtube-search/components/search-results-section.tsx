@@ -34,7 +34,10 @@ export function SearchResultsSection({ query }: SearchResultsSectionProps) {
         }
       >
         <Suspense fallback={<YoutubeLoading />}>
-          <SearchYoutubeList />
+          <SearchYoutubeList
+            key={query.trim()}
+            query={query.trim()}
+          />
         </Suspense>
       </Show>
     </Show>

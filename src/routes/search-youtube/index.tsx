@@ -25,7 +25,6 @@ export const Route = createFileRoute('/search-youtube/')({
   pendingComponent: SearchPending,
   errorComponent: RouteErrorState,
   validateSearch: youtubeSearchSchema,
-  loaderDeps: ({ search: { q } }) => ({ q }),
 })
 
 function RouteComponent() {

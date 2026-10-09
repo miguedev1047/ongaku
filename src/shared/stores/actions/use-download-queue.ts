@@ -1,8 +1,11 @@
 import { create } from 'zustand'
 import { platformService } from '@/infrastructure/platform'
-import type { TYoutubeSearchResult } from '@/shared/types/youtube.types'
-import type { TPlaylistSong } from '@/shared/types/playlist-songs.types'
-import type { DownloadProgressPayload } from '@/shared/types/download.types'
+import type {
+  DownloadItem,
+  DownloadProgressPayload,
+  DownloadTask,
+  DownloadTaskStatus,
+} from '@/shared/types/download.types'
 import { queryClient } from '@/lib/query'
 import { playlistSongsQueryOpts } from '@/shared/queries/playlist-songs'
 import { playlistsQueryOpts } from '@/shared/queries/playlists'
@@ -10,28 +13,11 @@ import { librarySongsQueryOpts } from '@/shared/queries/library'
 import { toast } from 'sonner'
 import i18n from '@/lib/i18n'
 
-export type DownloadTaskStatus =
-  | 'queued'
-  | 'downloading'
-  | 'network-error'
-  | 'error'
-  | 'on-saved'
-  | 'retry'
-  | 'cancelled'
-
-export type { DownloadProgressPayload }
-
-export interface DownloadTask {
-  id: string
-  item: TYoutubeSearchResult
-  playlistName: string
-  status: DownloadTaskStatus
-  progress: number
-  downloadedBytes: number
-  totalBytes: number
-  error?: string
-  resultSong?: TPlaylistSong
-  queuedAt: number
+export type {
+  DownloadItem,
+  DownloadProgressPayload,
+  DownloadTask,
+  DownloadTaskStatus,
 }
 
 export interface DownloadQueueStore {
@@ -42,9 +28,7 @@ export interface DownloadQueueStore {
 
   // Actions
   toggleDialog: (open?: boolean) => void
-  enqueue: (
-    items: { item: TYoutubeSearchResult; playlistName: string }[],
-  ) => void
+  enqueue: (items: { item: DownloadItem; playlistName: string }[]) => void
   cancelTask: (id: string) => Promise<void>
   retryTask: (id: string) => void
   removeTask: (id: string) => void
@@ -58,7 +42,7 @@ export interface DownloadQueueStore {
 function isNetworkError(errMessage: string): boolean {
   const lower = errMessage.toLowerCase()
   return (
-    typeof navigator !== 'undefined' && !navigator.onLine ||
+    (typeof navigator !== 'undefined' && !navigator.onLine) ||
     lower.includes('network') ||
     lower.includes('connection') ||
     lower.includes('timeout') ||
@@ -248,7 +232,12 @@ export const useDownloadQueueStore = create<DownloadQueueStore>((set, get) => ({
     set((state) => {
       const activeIds = state.taskOrder.filter((id) => {
         const t = state.tasks[id]
-        return t && (t.status === 'downloading' || t.status === 'queued' || t.status === 'retry')
+        return (
+          t &&
+          (t.status === 'downloading' ||
+            t.status === 'queued' ||
+            t.status === 'retry')
+        )
       })
       const activeTasks: Record<string, DownloadTask> = {}
       for (const id of activeIds) {

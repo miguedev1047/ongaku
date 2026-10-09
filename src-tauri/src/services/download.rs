@@ -8,13 +8,9 @@ use tokio::io::{AsyncBufReadExt, BufReader};
 use tokio::process::Command;
 use tokio::sync::Mutex;
 
-use crate::helpers::{
-    clean_youtube_url, created_time, extract_song_id, extract_song_metadata, extract_song_name,
-    get_bin_dir, get_library_dir, get_staging_dir,
-};
+use crate::helpers::{clean_youtube_url, extract_song_id, get_bin_dir, get_staging_dir};
 use crate::services::binaries::{ensure_binaries, get_ytdlp_path};
 use crate::services::errors::ServiceError;
-use crate::services::playlist::PlaylistSong;
 
 #[derive(Default, Clone)]
 pub struct DownloadManagerState {
@@ -86,6 +82,8 @@ pub fn parse_progress_line(line: &str) -> Option<(f64, u64, u64)> {
     None
 }
 
+/// Pure downloader function that fetches an audio resource, emits progress events,
+/// and returns the path to the downloaded file. It does not touch database tables or playlists.
 pub async fn download_song_from_url<F>(
     id: &str,
     url: &str,
@@ -109,21 +107,32 @@ where
         })?;
     }
 
-    // Clean URL: strip playlist and radio params
-    let clean_url = clean_youtube_url(url);
+    // Clean URL: strip playlist and radio params if from YouTube
+    let is_youtube = url.contains("youtube.com") || url.contains("youtu.be");
+    let clean_url = if is_youtube {
+        clean_youtube_url(url)
+    } else {
+        url.to_string()
+    };
 
     let output_template = format!(
         "{}/%(title)s [%(id)s].%(ext)s",
         staging_task_dir.to_string_lossy().replace('\\', "/")
     );
 
-    let args = vec![
+    let mut args = vec![
         "--ffmpeg-location".to_string(),
         bin_dir.to_string_lossy().to_string(),
         "--encoding".to_string(),
         "utf-8".to_string(),
-        "--extractor-args".to_string(),
-        "youtube:player_client=android,ios,mweb".to_string(),
+    ];
+
+    if is_youtube {
+        args.push("--extractor-args".to_string());
+        args.push("youtube:player_client=android,ios,mweb".to_string());
+    }
+
+    args.extend([
         "-x".to_string(),
         "--audio-format".to_string(),
         "mp3".to_string(),
@@ -140,7 +149,7 @@ where
         "-o".to_string(),
         output_template,
         clean_url,
-    ];
+    ]);
 
     let mut cmd = Command::new(&ytdlp_path);
     cmd.args(&args);
@@ -206,9 +215,7 @@ where
                 done: true,
             },
         );
-        return Err(ServiceError::Execution(
-            "yt-dlp download failed or was cancelled".to_string(),
-        ));
+        return Err(ServiceError::Execution("yt-dlp download failed or was cancelled".to_string()));
     }
 
     // Locate the resulting mp3 in staging_task_dir
@@ -248,9 +255,7 @@ where
         Some(path) => path,
         None => {
             let _ = fs::remove_dir_all(&staging_task_dir);
-            return Err(ServiceError::Execution(
-                "Downloaded mp3 was not found in staging directory".to_string(),
-            ));
+            return Err(ServiceError::Execution("Downloaded mp3 was not found in staging directory".to_string()));
         }
     };
 
@@ -258,15 +263,13 @@ where
         Some(name) => name.to_os_string(),
         None => {
             let _ = fs::remove_dir_all(&staging_task_dir);
-            return Err(ServiceError::Execution(
-                "Invalid file name from downloaded file".to_string(),
-            ));
+            return Err(ServiceError::Execution("Invalid file name from downloaded file".to_string()));
         }
     };
 
     let dest_file = target_dir.join(&file_name);
 
-    // Atomic move from staging to playlist destination (fallback to copy + delete)
+    // Atomic move from staging to target destination (fallback to copy + delete)
     if fs::rename(&src_file, &dest_file).is_err() {
         if let Err(copy_err) = fs::copy(&src_file, &dest_file) {
             let _ = fs::remove_dir_all(&staging_task_dir);
@@ -294,149 +297,4 @@ where
     );
 
     Ok(dest_file)
-}
-
-pub async fn execute_download_workflow(
-    id: String,
-    url: String,
-    playlist_name: String,
-    state: &DownloadManagerState,
-    db: &crate::db::DbPool,
-    app: AppHandle,
-) -> Result<PlaylistSong, ServiceError> {
-    let target_dir = get_library_dir();
-
-    if !target_dir.exists() {
-        fs::create_dir_all(&target_dir).map_err(|err| {
-            ServiceError::Execution(format!("Failed to create library directory: {}", err))
-        })?;
-    }
-
-    // Check if song already exists in library
-    if let Ok(conn) = db.get() {
-        type ExistingSongTuple = (
-            String,
-            String,
-            Option<f64>,
-            Option<String>,
-            Option<String>,
-            i64,
-        );
-        let existing_song: Option<ExistingSongTuple> = conn
-            .query_row(
-                "SELECT title, path, duration, artist, album, created_at FROM songs WHERE id = ?1",
-                rusqlite::params![&id],
-                |row| {
-                    Ok((
-                        row.get(0)?,
-                        row.get(1)?,
-                        row.get(2)?,
-                        row.get(3)?,
-                        row.get(4)?,
-                        row.get(5)?,
-                    ))
-                },
-            )
-            .ok();
-
-        if let Some((title, path, duration, artist, album, created_at)) = existing_song {
-            if !playlist_name.trim().is_empty() {
-                let _ = crate::db::queries::add_song_to_playlist(&conn, &playlist_name, &id);
-            }
-            return Ok(PlaylistSong {
-                name: title,
-                id,
-                playlist_name,
-                path,
-                created: created_at as u64,
-                metadata: crate::helpers::SongMetadata {
-                    duration,
-                    artist,
-                    album,
-                },
-            });
-        }
-    }
-
-    let state_clone = state.clone();
-    let task_id = id.clone();
-
-    let download_result = download_song_from_url(&id, &url, &target_dir, app, move |pid| {
-        let s = state_clone;
-        let tid = task_id;
-        tokio::spawn(async move {
-            s.register(&tid, pid).await;
-        });
-    })
-    .await;
-
-    state.unregister(&id).await;
-
-    let file_path = download_result?;
-
-    let file_name = file_path
-        .file_name()
-        .map(|f| f.to_string_lossy().to_string())
-        .ok_or_else(|| ServiceError::Execution("Invalid downloaded song filename".to_string()))?;
-
-    let song_id = extract_song_id(&file_name);
-    let resolved_id = if song_id.is_empty() {
-        id.clone()
-    } else {
-        song_id
-    };
-    let metadata = extract_song_metadata(&file_path);
-    let created = created_time(file_path.metadata());
-
-    let song = PlaylistSong {
-        name: extract_song_name(&file_name),
-        id: resolved_id.clone(),
-        playlist_name: playlist_name.clone(),
-        path: file_path.to_string_lossy().to_string(),
-        created,
-        metadata,
-    };
-
-    let mtime = file_path
-        .metadata()
-        .ok()
-        .and_then(|m| m.modified().ok())
-        .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok())
-        .map(|d| d.as_millis() as i64)
-        .unwrap_or(0);
-    let file_size = file_path.metadata().map(|m| m.len() as i64).unwrap_or(0);
-
-    if let Ok(conn) = db.get() {
-        let _ = conn.execute(
-            "INSERT INTO songs (id, path, file_name, title, artist, album, duration, file_size, mtime, created_at)
-             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)
-             ON CONFLICT(id) DO UPDATE SET
-                 path = excluded.path,
-                 file_name = excluded.file_name,
-                 title = excluded.title,
-                 artist = excluded.artist,
-                 album = excluded.album,
-                 duration = excluded.duration,
-                 file_size = excluded.file_size,
-                 mtime = excluded.mtime",
-            rusqlite::params![
-                song.id,
-                song.path,
-                file_name,
-                song.name,
-                song.metadata.artist,
-                song.metadata.album,
-                song.metadata.duration,
-                file_size,
-                mtime,
-                song.created as i64,
-            ],
-        );
-
-        if !playlist_name.trim().is_empty() {
-            let _ = crate::db::queries::add_song_to_playlist(&conn, &playlist_name, &song.id);
-        }
-    }
-
-    Ok(song)
 }
