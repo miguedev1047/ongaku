@@ -47,11 +47,11 @@ Bienvenido a la documentación oficial de **Ongaku** (`音楽`), un reproductor 
 
 ## 🗺️ Hoja de Ruta (Roadmap)
 
-Las siguientes funciones están planeadas para futuras versiones de Ongaku:
+Estado y funciones de las versiones de Ongaku:
 
-- **Soporte Multilenguaje (i18n)**: Integración de traducciones completas de la interfaz (Español, Inglés, etc.) con selector de idioma en ajustes.
-- **Más Temas & Creador de Temas (Theme Maker)**: Nuevas paletas de colores integradas y una herramienta visual para diseñar, personalizar y guardar tus propios temas.
-- **Fondos Personalizados de la Aplicación**: Posibilidad de elegir imágenes de fondo personalizadas o activar efectos ambientales con desenfoque (*blur*) basados en la carátula de la canción en reproducción.
+- [x] **Soporte Multilenguaje (i18n)**: Integración de traducciones completas de la interfaz (Español e Inglés) con selector reactivo de idioma en ajustes.
+- [x] **Fondos Personalizados de la Aplicación**: Posibilidad de importar y gestionar imágenes de fondo locales o mediante URL, con optimización WebP, miniaturas ligeras en caché y catálogo visual.
+- [ ] **Más Temas & Creador de Temas (Theme Maker)**: Nuevas paletas de colores integradas y una herramienta visual para diseñar, personalizar y guardar tus propios temas.
 
 ---
 

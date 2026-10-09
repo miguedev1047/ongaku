@@ -46,12 +46,12 @@ Welcome to the official documentation for **Ongaku** (`音楽`), a lightweight, 
 ---
 
 ## 🗺️ Project Roadmap
+ 
+Status and planned features for Ongaku releases:
 
-The following features and improvements are planned for upcoming releases:
-
-- **Internationalization (i18n)**: Full multi-language support (English, Spanish, and more) with an interactive language selector in Settings.
-- **More Themes & Custom Theme Maker**: New aesthetic color palettes and an interactive tool to design, customize, and export your own themes.
-- **Custom App Wallpapers & Backgrounds**: Option to set custom background images or enable dynamic ambient blur effects sampled from the currently playing album art.
+- [x] **Internationalization (i18n)**: Full multi-language support (English and Spanish) with a reactive language selector in Settings.
+- [x] **Custom App Wallpapers & Backgrounds**: Import and manage wallpapers from local files or remote URLs, featuring WebP compression, lightweight thumbnail caching, and a visual picker.
+- [ ] **More Themes & Custom Theme Maker**: New aesthetic color palettes and an interactive tool to design, customize, and export your own themes.
 
 ---
 
