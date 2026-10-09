@@ -170,3 +170,254 @@ pub async fn get_youtube_stream_url(video_id: String) -> Result<String, ServiceE
 
     Ok(stream_url)
 }
+
+/// Resolves single video or audio metadata without downloading the file.
+pub async fn resolve_url_info(url: &str) -> Result<YoutubeSearchResult, ServiceError> {
+    let clean_url = url.trim();
+    if clean_url.is_empty() {
+        return Err(ServiceError::Validation("URL cannot be empty".to_string()));
+    }
+
+    crate::services::binaries::ensure_binaries().await?;
+    let ytdlp_path = get_ytdlp_path();
+
+    let mut cmd = Command::new(&ytdlp_path);
+    cmd.args([
+        "--dump-json",
+        "--no-warnings",
+        "--no-playlist",
+        clean_url,
+    ]);
+    cmd.stdout(Stdio::piped());
+    cmd.stderr(Stdio::piped());
+
+    #[cfg(target_os = "windows")]
+    cmd.creation_flags(0x08000000); // CREATE_NO_WINDOW
+
+    let output = cmd
+        .output()
+        .await
+        .map_err(|err| ServiceError::Execution(format!("Failed to execute yt-dlp: {err}")))?;
+
+    if !output.status.success() {
+        let err = String::from_utf8_lossy(&output.stderr);
+        let lower = err.to_lowercase();
+        if lower.contains("video unavailable") || lower.contains("not found") || lower.contains("404") {
+            return Err(ServiceError::NotFound(
+                "The requested audio or video is unavailable or was not found".to_string(),
+            ));
+        }
+        if lower.contains("private video") || lower.contains("sign in to confirm") {
+            return Err(ServiceError::NotFound(
+                "The requested video is private or restricted".to_string(),
+            ));
+        }
+        if lower.contains("temporary failure in name resolution")
+            || lower.contains("unreachable")
+            || lower.contains("connection")
+            || lower.contains("timed out")
+        {
+            return Err(ServiceError::Execution(
+                "Network connection failed. Please check your internet connection.".to_string(),
+            ));
+        }
+        return Err(ServiceError::Execution(format!("Failed to resolve media: {err}")));
+    }
+
+    let stdout_str = String::from_utf8_lossy(&output.stdout);
+    let json: serde_json::Value = serde_json::from_str(&stdout_str)
+        .map_err(|err| ServiceError::Execution(format!("Failed to parse metadata response: {err}")))?;
+
+    let id = json.get("id").and_then(|v| v.as_str()).unwrap_or("").to_string();
+    let title = json.get("title").and_then(|v| v.as_str()).unwrap_or("Unknown Title").to_string();
+    let channel = json
+        .get("uploader")
+        .and_then(|v| v.as_str())
+        .or_else(|| json.get("channel").and_then(|v| v.as_str()))
+        .unwrap_or("Unknown")
+        .to_string();
+    let duration = json.get("duration").and_then(|v| v.as_f64());
+    let thumbnail = resolve_youtube_thumbnail(
+        json.get("thumbnail").and_then(|v| v.as_str()),
+        &id,
+    );
+    let resolved_url = json
+        .get("webpage_url")
+        .and_then(|v| v.as_str())
+        .unwrap_or(clean_url)
+        .to_string();
+
+    Ok(YoutubeSearchResult {
+        id,
+        title,
+        channel,
+        duration: validate_youtube_duration(duration),
+        thumbnail,
+        url: resolved_url,
+    })
+}
+
+/// Resolves playlist items as a flat array of YoutubeSearchResult without downloading files.
+pub async fn resolve_playlist_info(url: &str) -> Result<Vec<YoutubeSearchResult>, ServiceError> {
+    let clean_url = url.trim();
+    if clean_url.is_empty() {
+        return Err(ServiceError::Validation("URL cannot be empty".to_string()));
+    }
+
+    crate::services::binaries::ensure_binaries().await?;
+    let ytdlp_path = get_ytdlp_path();
+
+    let mut cmd = Command::new(&ytdlp_path);
+    cmd.args([
+        "--flat-playlist",
+        "-J",
+        "--no-warnings",
+        "--extractor-args",
+        "youtube:player_client=android,web",
+        clean_url,
+    ]);
+    cmd.stdout(Stdio::piped());
+    cmd.stderr(Stdio::piped());
+
+    #[cfg(target_os = "windows")]
+    cmd.creation_flags(0x08000000); // CREATE_NO_WINDOW
+
+    let output = cmd
+        .output()
+        .await
+        .map_err(|err| ServiceError::Execution(format!("Failed to execute yt-dlp: {err}")))?;
+
+    if !output.status.success() {
+        let err = String::from_utf8_lossy(&output.stderr);
+        let lower = err.to_lowercase();
+        if lower.contains("playlist does not exist")
+            || lower.contains("video unavailable")
+            || lower.contains("not found")
+            || lower.contains("404")
+        {
+            return Err(ServiceError::NotFound(
+                "The requested media was not found or is unavailable".to_string(),
+            ));
+        }
+        if lower.contains("private playlist")
+            || lower.contains("private video")
+            || lower.contains("sign in to confirm")
+        {
+            return Err(ServiceError::NotFound(
+                "The requested media is private or restricted".to_string(),
+            ));
+        }
+        if lower.contains("temporary failure in name resolution")
+            || lower.contains("unreachable")
+            || lower.contains("connection")
+            || lower.contains("timed out")
+        {
+            return Err(ServiceError::Execution(
+                "Network connection failed. Please check your internet connection.".to_string(),
+            ));
+        }
+        return Err(ServiceError::Execution(format!("Failed to resolve URL: {err}")));
+    }
+
+    let stdout_str = String::from_utf8_lossy(&output.stdout);
+    let json: serde_json::Value = serde_json::from_str(&stdout_str)
+        .map_err(|err| ServiceError::Execution(format!("Failed to parse playlist response: {err}")))?;
+
+    let mut results = Vec::new();
+
+    if let Some(entries) = json.get("entries").and_then(|v| v.as_array()) {
+        for entry in entries {
+            let title = entry.get("title").and_then(|v| v.as_str()).unwrap_or("");
+            if title.is_empty() || title == "[Private video]" || title == "[Deleted video]" {
+                continue;
+            }
+
+            let id = entry.get("id").and_then(|v| v.as_str()).unwrap_or("").to_string();
+            if id.is_empty() {
+                continue;
+            }
+
+            let channel = entry
+                .get("uploader")
+                .and_then(|v| v.as_str())
+                .or_else(|| entry.get("channel").and_then(|v| v.as_str()))
+                .unwrap_or("Unknown")
+                .to_string();
+
+            let duration = entry.get("duration").and_then(|v| v.as_f64());
+
+            let thumb = entry.get("thumbnail").and_then(|v| v.as_str()).or_else(|| {
+                entry
+                    .get("thumbnails")
+                    .and_then(|t| t.as_array())
+                    .and_then(|arr| {
+                        arr.last().and_then(|thumb_obj| {
+                            thumb_obj.get("url").and_then(|u| u.as_str())
+                        })
+                    })
+            });
+
+            let thumbnail = resolve_youtube_thumbnail(thumb, &id);
+            let item_url = entry
+                .get("url")
+                .and_then(|v| v.as_str())
+                .map(|u| {
+                    if u.starts_with("http://") || u.starts_with("https://") {
+                        u.to_string()
+                    } else {
+                        format!("https://www.youtube.com/watch?v={id}")
+                    }
+                })
+                .unwrap_or_else(|| format!("https://www.youtube.com/watch?v={id}"));
+
+            results.push(YoutubeSearchResult {
+                id,
+                title: title.to_string(),
+                channel,
+                duration: validate_youtube_duration(duration),
+                thumbnail,
+                url: item_url,
+            });
+        }
+    } else {
+        // Fallback if the URL was a single video URL passed in playlist mode
+        let id = json.get("id").and_then(|v| v.as_str()).unwrap_or("").to_string();
+        if !id.is_empty() {
+            let title = json.get("title").and_then(|v| v.as_str()).unwrap_or("Unknown").to_string();
+            let channel = json
+                .get("uploader")
+                .and_then(|v| v.as_str())
+                .or_else(|| json.get("channel").and_then(|v| v.as_str()))
+                .unwrap_or("Unknown")
+                .to_string();
+            let duration = json.get("duration").and_then(|v| v.as_f64());
+            let thumbnail = resolve_youtube_thumbnail(
+                json.get("thumbnail").and_then(|v| v.as_str()),
+                &id,
+            );
+            let item_url = json
+                .get("webpage_url")
+                .and_then(|v| v.as_str())
+                .unwrap_or(clean_url)
+                .to_string();
+
+            results.push(YoutubeSearchResult {
+                id,
+                title,
+                channel,
+                duration: validate_youtube_duration(duration),
+                thumbnail,
+                url: item_url,
+            });
+        }
+    }
+
+    if results.is_empty() {
+        return Err(ServiceError::NotFound(
+            "URL is empty or contains no downloadable tracks".to_string(),
+        ));
+    }
+
+    Ok(results)
+}
+

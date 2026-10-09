@@ -1,20 +1,22 @@
-import { useStreamingPlayerStore } from "@/shared/stores/player"
-import { PlayerProgress } from "@/components/ui/player"
+import { useStreamingPlayerStore } from '@/shared/stores/player'
+import { PlayerProgress } from '@/components/ui/player'
 
 interface StreamingPlayerProgressbarProps {
-  position?: "bottom" | "top"
+  position?: 'bottom' | 'top'
 }
 
 export function StreamingPlayerProgressbar({
-  position = "bottom",
+  position = 'bottom',
 }: StreamingPlayerProgressbarProps) {
-  const duration = useStreamingPlayerStore((s) => s.duration)
-  const progress = useStreamingPlayerStore((s) => s.progress)
-  const isLoading = useStreamingPlayerStore((s) => s.playerState === "loading")
+  const duration = useStreamingPlayerStore((state) => state.duration)
+  const progress = useStreamingPlayerStore((state) => state.progress)
+  const isLoading = useStreamingPlayerStore(
+    (state) => state.playerState === 'loading',
+  )
 
-  const setProgress = useStreamingPlayerStore((s) => s.setProgress)
-  const setIsSeeking = useStreamingPlayerStore((s) => s.setIsSeeking)
-  const seekTo = useStreamingPlayerStore((s) => s.seekTo)
+  const setProgress = useStreamingPlayerStore((state) => state.setProgress)
+  const setIsSeeking = useStreamingPlayerStore((state) => state.setIsSeeking)
+  const seekTo = useStreamingPlayerStore((state) => state.seekTo)
 
   const handleSeek = (event: React.ChangeEvent<HTMLInputElement>) => {
     const target = event.target as HTMLInputElement

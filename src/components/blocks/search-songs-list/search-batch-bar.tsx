@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 import { Spinner } from "@/components/ui/spinner"
-import { PlaylistMenuGroup } from "@/features/youtube-search/components/playlist-menu-group"
+import { PlaylistMenuGroup } from "@/features/download-queue/components"
 import { useSearchBatchActions } from "@/components/blocks/search-songs-list/hooks"
 import { useActivePlayerStore } from "@/shared/stores/player"
 import { HugeiconsIcon } from "@hugeicons/react"

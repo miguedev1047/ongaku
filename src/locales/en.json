@@ -25,6 +25,7 @@
     "library": "Library",
     "playlists": "Playlists",
     "search": "YouTube Search",
+    "download_songs": "Download Songs",
     "settings": "Settings",
     "navigation": {
       "label": "Navigation",
@@ -32,6 +33,7 @@
         "library": "Library",
         "playlists": "Playlists",
         "search": "YouTube Search",
+        "downloads": "Download Songs",
         "settings": "Settings"
       }
     }
@@ -40,6 +42,10 @@
     "library": {
       "pending_title": "Loading library",
       "pending_message": "Fetching your tracks and statistics"
+    },
+    "downloads": {
+      "pending_title": "Loading Downloader",
+      "pending_message": "Preparing download services and collections"
     },
     "playlists": {
       "pending_title": "Loading playlists",
@@ -453,6 +459,58 @@
     "actions": {
       "open_youtube": "Open on YouTube",
       "download_on": "Download on"
+    }
+  },
+  "download_songs": {
+    "title": "Download Media from URL",
+    "description": "Paste a YouTube link (song, album, or playlist) to preview tracks and download on demand.",
+    "form": {
+      "url_label": "Media URL",
+      "url_placeholder": "https://www.youtube.com/watch?v=... or playlist URL",
+      "submit": "Find Tracks",
+      "resolving": "Fetching tracks...",
+      "paste": "Paste",
+      "paste_error": "Failed to read from clipboard",
+      "paste_empty": "Clipboard is empty",
+      "clear": "Clear",
+      "errors": {
+        "url_required": "URL is required",
+        "url_invalid": "Please enter a valid URL (e.g. https://...)"
+      }
+    },
+    "results": {
+      "playlist_count": "{{count}} track found",
+      "playlist_count_plural": "{{count}} tracks found",
+      "clear_results": "Clear Results"
+    },
+    "preview": {
+      "loading": "Loading stream...",
+      "streaming": "Streaming",
+      "paused": "Paused",
+      "stop": "Stop preview"
+    },
+    "empty": {
+      "title": "Ready to download",
+      "description": "Paste a YouTube video or playlist link above to start downloading or browsing tracks."
+    },
+    "tools_missing": {
+      "title": "Tools Required",
+      "description": "Downloading audio requires yt-dlp and ffmpeg auxiliary binaries. Please install them to proceed.",
+      "install_button": "Install Tools",
+      "installing": "Installing tools..."
+    },
+    "offline": {
+      "title": "No internet connection",
+      "description": "An active internet connection is required to resolve links and download songs."
+    },
+    "toasts": {
+      "found_single_track": "Found \"{{title}}\"",
+      "found_multiple_tracks": "Found {{count}} tracks",
+      "song_enqueued": "Queued \"{{title}}\" for download",
+      "url_required": "Please provide a valid media URL",
+      "error_resolving": "Could not resolve audio from this URL",
+      "error_network": "Network connection error while fetching URL",
+      "offline_blocked": "Cannot download while offline. Please reconnect."
     }
   },
   "download_queue": {

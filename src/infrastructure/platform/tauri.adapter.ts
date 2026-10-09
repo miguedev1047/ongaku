@@ -4,6 +4,10 @@ import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow'
 import { openUrl as tauriOpenUrl } from '@tauri-apps/plugin-opener'
 import { relaunch as tauriRelaunch } from '@tauri-apps/plugin-process'
 import { check as tauriCheckUpdate } from '@tauri-apps/plugin-updater'
+import {
+  readText as tauriReadText,
+  writeText as tauriWriteText,
+} from '@tauri-apps/plugin-clipboard-manager'
 import type {
   AppUpdate,
   CommandMap,
@@ -68,6 +72,36 @@ class TauriAdapter implements PlatformService {
 
   async relaunch(): Promise<void> {
     await tauriRelaunch()
+  }
+
+  async readClipboard(): Promise<string> {
+    try {
+      return await tauriReadText()
+    } catch (tauriErr) {
+      console.warn('[ONGAKU PLATFORM]: tauriReadText failed, attempting browser fallback:', tauriErr)
+      try {
+        if (typeof navigator !== 'undefined' && navigator.clipboard?.readText) {
+          return await navigator.clipboard.readText()
+        }
+      } catch (browserErr) {
+        console.warn('[ONGAKU PLATFORM]: browser clipboard read also blocked:', browserErr)
+      }
+      return ''
+    }
+  }
+
+  async writeClipboard(text: string): Promise<void> {
+    try {
+      await tauriWriteText(text)
+    } catch {
+      try {
+        if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(text)
+        }
+      } catch {
+        // Silently ignore if write is blocked
+      }
+    }
   }
 }
 

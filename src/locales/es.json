@@ -25,6 +25,7 @@
     "library": "Biblioteca",
     "playlists": "Playlists",
     "search": "Búsqueda en YouTube",
+    "download_songs": "Descargar Canciones",
     "settings": "Ajustes",
     "navigation": {
       "label": "Navegación",
@@ -32,6 +33,7 @@
         "library": "Biblioteca",
         "playlists": "Playlists",
         "search": "Búsqueda en YouTube",
+        "downloads": "Descargar Canciones",
         "settings": "Ajustes"
       }
     }
@@ -40,6 +42,10 @@
     "library": {
       "pending_title": "Cargando biblioteca",
       "pending_message": "Obteniendo tus canciones y estadísticas"
+    },
+    "downloads": {
+      "pending_title": "Cargando Descargador",
+      "pending_message": "Preparando el servicio de descargas y colecciones"
     },
     "playlists": {
       "pending_title": "Cargando playlists",
@@ -453,6 +459,58 @@
     "actions": {
       "open_youtube": "Abrir en YouTube",
       "download_on": "Descargar en"
+    }
+  },
+  "download_songs": {
+    "title": "Descargar Audio desde URL",
+    "description": "Pega un enlace de YouTube (canción, álbum o playlist) para previsualizar pistas y descargar a demanda.",
+    "form": {
+      "url_label": "URL del Audio",
+      "url_placeholder": "https://www.youtube.com/watch?v=... o enlace de playlist",
+      "submit": "Buscar Canciones",
+      "resolving": "Obteniendo canciones...",
+      "paste": "Pegar",
+      "paste_error": "No se pudo leer del portapapeles",
+      "paste_empty": "El portapapeles está vacío",
+      "clear": "Limpiar",
+      "errors": {
+        "url_required": "La URL es requerida",
+        "url_invalid": "Por favor ingresa una URL válida (ej. https://...)"
+      }
+    },
+    "results": {
+      "playlist_count": "{{count}} canción encontrada",
+      "playlist_count_plural": "{{count}} canciones encontradas",
+      "clear_results": "Limpiar Resultados"
+    },
+    "preview": {
+      "loading": "Cargando audio...",
+      "streaming": "Reproduciendo",
+      "paused": "Pausado",
+      "stop": "Detener previsualización"
+    },
+    "empty": {
+      "title": "Listo para descargar",
+      "description": "Pega un enlace de video o playlist de YouTube arriba para empezar a explorar y descargar canciones."
+    },
+    "tools_missing": {
+      "title": "Herramientas Requeridas",
+      "description": "Descargar audio requiere las herramientas auxiliares yt-dlp y ffmpeg. Por favor, instálalas para continuar.",
+      "install_button": "Instalar Herramientas",
+      "installing": "Instalando herramientas..."
+    },
+    "offline": {
+      "title": "Sin conexión a internet",
+      "description": "Se requiere una conexión a internet activa para resolver enlaces y descargar canciones."
+    },
+    "toasts": {
+      "found_single_track": "Se encontró \"{{title}}\"",
+      "found_multiple_tracks": "Se encontraron {{count}} canciones",
+      "song_enqueued": "Se encoló \"{{title}}\" para descargar",
+      "url_required": "Por favor ingresa una URL válida",
+      "error_resolving": "No se pudo obtener información de este enlace",
+      "error_network": "Error de conexión al obtener el enlace",
+      "offline_blocked": "No puedes descargar mientras estés sin conexión."
     }
   },
   "download_queue": {

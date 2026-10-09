@@ -108,6 +108,14 @@ export interface CommandMap {
     args: { id: string }
     return: void
   }
+  resolve_url_info: {
+    args: { url: string }
+    return: TYoutubeSearchResult
+  }
+  resolve_playlist_info: {
+    args: { url: string }
+    return: TYoutubeSearchResult[]
+  }
   download_binaries: {
     args?: undefined
     return: boolean
@@ -285,4 +293,7 @@ export interface PlatformService {
 
   checkForUpdates(): Promise<AppUpdate | null>
   relaunch(): Promise<void>
+
+  readClipboard(): Promise<string>
+  writeClipboard(text: string): Promise<void>
 }

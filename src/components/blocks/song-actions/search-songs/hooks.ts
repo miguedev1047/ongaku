@@ -1,5 +1,5 @@
 import { useYoutubePlayback } from "@/features/youtube-search/hooks"
-import { useDownloadQueueStore } from "@/shared/stores/actions"
+import { useDownloadToPlaylist } from "@/features/download-queue/hooks"
 import { platformService } from "@/infrastructure/platform"
 import { toast } from "sonner"
 import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
@@ -12,7 +12,7 @@ interface UseSearchSongActionsProps {
 export function useSearchSongActions({ item }: UseSearchSongActionsProps) {
   const { t } = useTranslation()
   const { isPlaying, isLoading, togglePlayback } = useYoutubePlayback(item)
-  const enqueue = useDownloadQueueStore((state) => state.enqueue)
+  const { downloadSong } = useDownloadToPlaylist()
 
   const handleOpenYoutube = async () => {
     try {
@@ -23,19 +23,17 @@ export function useSearchSongActions({ item }: UseSearchSongActionsProps) {
   }
 
   const handleSelectPlaylist = (playlistName: string) => {
-    enqueue([
+    downloadSong(
       {
-        item: {
-          id: item.id,
-          url: item.url,
-          title: item.title,
-          artist: item.channel,
-          thumbnail: item.thumbnail,
-          duration: item.duration,
-        },
-        playlistName,
+        id: item.id,
+        url: item.url,
+        title: item.title,
+        artist: item.channel,
+        thumbnail: item.thumbnail,
+        duration: item.duration,
       },
-    ])
+      playlistName,
+    )
   }
 
   return {
@@ -43,6 +41,6 @@ export function useSearchSongActions({ item }: UseSearchSongActionsProps) {
     isLoading,
     togglePlayback,
     handleOpenYoutube,
-    handleSelectPlaylist
+    handleSelectPlaylist,
   }
 }

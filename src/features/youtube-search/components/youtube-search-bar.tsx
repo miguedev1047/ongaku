@@ -44,7 +44,7 @@ export function YoutubeSearchBar({ initialQuery = '' }: YoutubeSearchBarProps) {
   } = useYoutubeSearchBar({ initialQuery })
 
   return (
-    <div className='ml-auto flex items-center gap-2'>
+    <div className='flex items-center gap-2'>
       <Button
         onClick={() => handleOpenChange(true)}
         variant='outline'

@@ -21,7 +21,7 @@ import {
   YoutubeIcon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { PlaylistContextMenuGroup } from '@/features/youtube-search/components'
+import { PlaylistContextMenuGroup } from '@/features/download-queue/components'
 import { useCopySongTitle } from '@/components/blocks/song-actions/shared/use-copy-song-title'
 import { useSearchSongActions } from '@/components/blocks/song-actions/search-songs/hooks'
 import { Show } from '@/components/utility/show'

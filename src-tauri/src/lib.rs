@@ -31,6 +31,7 @@ pub fn run() {
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_clipboard_manager::init())
         .setup(move |app| {
             setup_app(app)?;
             LocalAudioPlayer::start_playback_ticker(ticker_player, app.handle().clone());
@@ -53,6 +54,8 @@ pub fn run() {
             batch_move_songs,
             download_song,
             cancel_download,
+            resolve_url_info,
+            resolve_playlist_info,
             download_binaries,
             check_binaries,
             get_binaries_info,

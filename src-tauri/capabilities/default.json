@@ -18,6 +18,7 @@
     },
     "core:window:allow-show",
     "core:window:allow-set-focus",
-    "process:default"
+    "process:default",
+    "clipboard-manager:default"
   ]
 }

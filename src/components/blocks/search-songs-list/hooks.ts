@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { RowSelectionState } from "@tanstack/react-table"
 import { useSearchBatchStore } from "@/shared/stores/batch-operations"
-import { useDownloadQueueStore } from "@/shared/stores/actions"
+import { useDownloadToPlaylist } from "@/features/download-queue/hooks"
 import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
 import { searchTableFeatures } from "@/components/blocks/search-songs-list/search-table-features"
 import { searchSongColumns } from "@/components/blocks/search-songs-list/search-table-columns"
@@ -57,7 +57,7 @@ export function useSearchList({ data }: UseSearchListProps) {
 export function useSearchBatchActions() {
   const selectedMap = useSearchBatchStore((s) => s.selectedMap)
   const clearSelection = useSearchBatchStore((s) => s.clear)
-  const enqueue = useDownloadQueueStore((s) => s.enqueue)
+  const { downloadBatch } = useDownloadToPlaylist()
 
   const selectedSongs = Object.values(selectedMap)
   const selectedCount = selectedSongs.length
@@ -65,18 +65,16 @@ export function useSearchBatchActions() {
   const handleBatchDownload = (playlistName: string) => {
     if (selectedSongs.length === 0 || !playlistName) return
 
-    enqueue(
+    downloadBatch(
       selectedSongs.map((item) => ({
-        item: {
-          id: item.id,
-          url: item.url,
-          title: item.title,
-          artist: item.channel,
-          thumbnail: item.thumbnail,
-          duration: item.duration,
-        },
-        playlistName,
-      }))
+        id: item.id,
+        url: item.url,
+        title: item.title,
+        artist: item.channel,
+        thumbnail: item.thumbnail,
+        duration: item.duration,
+      })),
+      playlistName,
     )
 
     clearSelection()

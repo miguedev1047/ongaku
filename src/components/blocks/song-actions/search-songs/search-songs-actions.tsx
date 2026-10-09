@@ -22,7 +22,7 @@ import {
   YoutubeIcon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { PlaylistMenuGroup } from '@/features/youtube-search/components'
+import { PlaylistMenuGroup } from '@/features/download-queue/components'
 import { CopySongMenuItem } from '@/components/blocks/song-actions/shared'
 import { useSearchSongActions } from './hooks'
 import { Show } from '@/components/utility/show'

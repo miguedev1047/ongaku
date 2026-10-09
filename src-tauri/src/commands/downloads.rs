@@ -82,3 +82,22 @@ pub fn check_binaries() -> Result<bool, String> {
 pub fn get_binaries_info() -> Result<BinariesInfo, String> {
     Ok(crate::services::binaries::get_binaries_info())
 }
+
+#[tauri::command]
+pub async fn resolve_url_info(
+    url: String,
+) -> Result<crate::services::youtube::YoutubeSearchResult, String> {
+    crate::services::youtube::resolve_url_info(&url)
+        .await
+        .map_err(|err| err.to_string())
+}
+
+#[tauri::command]
+pub async fn resolve_playlist_info(
+    url: String,
+) -> Result<Vec<crate::services::youtube::YoutubeSearchResult>, String> {
+    crate::services::youtube::resolve_playlist_info(&url)
+        .await
+        .map_err(|err| err.to_string())
+}
+
