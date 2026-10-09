@@ -1,13 +1,31 @@
-use serde::{Deserialize, Serialize};
-use std::fs;
+use std::fs::{self, remove_file};
 use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
 
+use serde::{Deserialize, Serialize};
+use tauri::Emitter;
+
 use crate::db::DbPool;
 use crate::helpers::{
-    extract_song_id, extract_song_name, get_library_dir, is_audio_file, resolve_song_id,
-    validate_name,
+    extract_song_id, extract_song_name, get_cache_pictures_dir, get_library_dir, is_audio_file,
+    resolve_inside, resolve_song_id, validate_name,
 };
+use crate::services::errors::ServiceError;
+
+pub const IMPORT_CHUNK_SIZE: usize = 100;
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct BatchDeleteSongItem {
+    pub path: String,
+    pub id: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct BatchActionResponse {
+    pub success_count: usize,
+    pub failed_count: usize,
+    pub failed_items: Vec<String>,
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct ImportSongsResult {
@@ -16,7 +34,19 @@ pub struct ImportSongsResult {
     pub failed_items: Vec<String>,
 }
 
-pub fn generate_imported_filename(source_path: &Path, _target_dir: &Path) -> Result<String, String> {
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ImportProgressPayload {
+    pub playlist_name: String,
+    pub current: usize,
+    pub total: usize,
+    pub imported_count: usize,
+    pub skipped_count: usize,
+}
+
+pub fn generate_imported_filename(
+    source_path: &Path,
+    _target_dir: &Path,
+) -> Result<String, String> {
     if !source_path.exists() || !source_path.is_file() {
         return Err(format!("Source file does not exist: {:?}", source_path));
     }
@@ -84,34 +114,167 @@ pub fn generate_imported_filename(source_path: &Path, _target_dir: &Path) -> Res
             hasher.finish()
         };
 
-        format!(
-            "{} [{}_{:x}].{}",
-            title_to_use,
-            mtime,
-            hash,
-            extension
-        )
+        format!("{} [{}_{:x}].{}", title_to_use, mtime, hash, extension)
     };
 
     Ok(base_filename)
 }
 
-pub const IMPORT_CHUNK_SIZE: usize = 100;
+pub fn batch_delete_songs(
+    conn: &rusqlite::Connection,
+    items: Vec<BatchDeleteSongItem>,
+    playlist_name: Option<String>,
+) -> Result<BatchActionResponse, ServiceError> {
+    let mut success_count = 0;
+    let mut failed_count = 0;
+    let mut failed_items = Vec::new();
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ImportProgressPayload {
-    pub playlist_name: String,
-    pub current: usize,
-    pub total: usize,
-    pub imported_count: usize,
-    pub skipped_count: usize,
+    // If playlist_name is provided, remove them from the playlist with ref-check
+    if let Some(ref pl_name) = playlist_name {
+        let cache_pictures_dir = get_cache_pictures_dir();
+        for item in items {
+            let song_id = item.id.or_else(|| {
+                Path::new(&item.path)
+                    .file_name()
+                    .and_then(|n| n.to_str())
+                    .map(extract_song_id)
+            });
+
+            if let Some(ref id) = song_id {
+                if let Ok(deleted_path_opt) =
+                    crate::db::queries::remove_song_from_playlist_with_ref_check(conn, pl_name, id)
+                {
+                    if let Some(path) = deleted_path_opt {
+                        let file = Path::new(&path);
+                        if file.exists() {
+                            let _ = remove_file(file);
+                        }
+                        if let Ok(cover_path) =
+                            resolve_inside(&cache_pictures_dir, &format!("{}.webp", id))
+                        {
+                            if cover_path.exists() && cover_path.is_file() {
+                                let _ = remove_file(cover_path);
+                            }
+                        }
+                    }
+                    success_count += 1;
+                    continue;
+                }
+            }
+            failed_count += 1;
+            failed_items.push(item.path);
+        }
+
+        return Ok(BatchActionResponse {
+            success_count,
+            failed_count,
+            failed_items,
+        });
+    }
+
+    // Otherwise, delete from library (physical deletion)
+    let cache_pictures_dir = get_cache_pictures_dir();
+    for item in items {
+        let song_id = item.id.or_else(|| {
+            Path::new(&item.path)
+                .file_name()
+                .and_then(|n| n.to_str())
+                .map(extract_song_id)
+        });
+
+        let file = Path::new(&item.path);
+        if file.exists() {
+            let _ = remove_file(file);
+        }
+
+        if let Some(ref id) = song_id {
+            if let Ok(cover_path) = resolve_inside(&cache_pictures_dir, &format!("{}.webp", id)) {
+                if cover_path.exists() {
+                    let _ = remove_file(cover_path);
+                }
+            }
+            let _ = crate::db::queries::delete_song_from_library(conn, id);
+        }
+
+        success_count += 1;
+    }
+
+    Ok(BatchActionResponse {
+        success_count,
+        failed_count,
+        failed_items,
+    })
+}
+
+pub fn batch_move_songs(
+    conn: &mut rusqlite::Connection,
+    paths: Vec<String>,
+    source_playlist: Option<String>,
+    target_playlist: &str,
+) -> Result<BatchActionResponse, ServiceError> {
+    let safe_target = validate_name(target_playlist).map_err(ServiceError::Validation)?;
+
+    let mut success_count = 0;
+    let mut failed_count = 0;
+    let mut failed_items = Vec::new();
+
+    for path in paths {
+        let song_id = match Path::new(&path).file_name().and_then(|n| n.to_str()) {
+            Some(name) => extract_song_id(name),
+            None => {
+                failed_count += 1;
+                failed_items.push(path);
+                continue;
+            }
+        };
+
+        let src = match source_playlist.as_deref() {
+            Some(s) => s.to_string(),
+            None => {
+                let found: Option<String> = conn
+                    .query_row(
+                        "SELECT p.name FROM playlist_songs ps
+                         JOIN playlists p ON p.id = ps.playlist_id
+                         WHERE ps.song_id = ?1
+                         LIMIT 1",
+                        rusqlite::params![song_id],
+                        |row| row.get(0),
+                    )
+                    .ok();
+                match found {
+                    Some(s) => s,
+                    None => {
+                        let _ =
+                            crate::db::queries::add_song_to_playlist(conn, &safe_target, &song_id);
+                        success_count += 1;
+                        continue;
+                    }
+                }
+            }
+        };
+
+        if crate::db::queries::move_song_between_playlists(conn, &src, &safe_target, &song_id)
+            .is_ok()
+        {
+            success_count += 1;
+        } else {
+            failed_count += 1;
+            failed_items.push(path);
+        }
+    }
+
+    Ok(BatchActionResponse {
+        success_count,
+        failed_count,
+        failed_items,
+    })
 }
 
 pub fn copy_and_import_songs(
     db: &DbPool,
     playlist_name: &str,
     file_paths: &[PathBuf],
-) -> Result<ImportSongsResult, String> {
+) -> Result<ImportSongsResult, ServiceError> {
     copy_and_import_songs_with_app(None, db, playlist_name, file_paths)
 }
 
@@ -120,20 +283,19 @@ pub fn copy_and_import_songs_with_app(
     db: &DbPool,
     playlist_name: &str,
     file_paths: &[PathBuf],
-) -> Result<ImportSongsResult, String> {
-    use tauri::Emitter;
-
-    let clean_playlist_name = validate_name(playlist_name)?;
+) -> Result<ImportSongsResult, ServiceError> {
+    let clean_playlist_name = validate_name(playlist_name).map_err(ServiceError::Validation)?;
     let target_library_dir = get_library_dir();
 
     if !target_library_dir.exists() {
-        fs::create_dir_all(&target_library_dir)
-            .map_err(|err| format!("Failed to create library folder: {}", err))?;
+        fs::create_dir_all(&target_library_dir).map_err(|err| {
+            ServiceError::Execution(format!("Failed to create library folder: {}", err))
+        })?;
     }
 
     let mut conn = db
         .get()
-        .map_err(|err| format!("Failed to acquire DB connection: {}", err))?;
+        .map_err(|err| ServiceError::Pool(format!("Failed to acquire DB connection: {}", err)))?;
 
     // Ensure playlist exists in DB
     let playlist_id: i64 = match conn.query_row(
@@ -143,7 +305,7 @@ pub fn copy_and_import_songs_with_app(
     ) {
         Ok(id) => id,
         Err(_) => crate::db::queries::create_playlist_in_db(&conn, &clean_playlist_name)
-            .map_err(|err| format!("Could not ensure playlist exists: {}", err))?,
+            .map_err(ServiceError::Database)?,
     };
 
     let total_files = file_paths.len();

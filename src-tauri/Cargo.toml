@@ -51,6 +51,7 @@ rodio = { version = "0.22", default-features = false, features = [
     "vorbis",
     "mp4",
 ] }
+thiserror = "2"
 
 # Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration
 [profile.release]

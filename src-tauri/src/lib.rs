@@ -5,6 +5,7 @@ mod constants;
 pub mod db;
 pub mod helpers;
 mod server;
+pub mod services;
 
 use std::sync::Arc;
 

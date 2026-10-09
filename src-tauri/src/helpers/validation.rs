@@ -5,6 +5,9 @@ const RESERVED_NAMES: &[&str] = &[
     "COM9", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9",
 ];
 
+const MAX_CHARACTER_NAME: usize = 50;
+
+/// Validates and cleans a playlist or item name according to OS rules.
 pub fn validate_name(name: &str) -> Result<String, String> {
     let trimmed = name.trim();
 
@@ -12,8 +15,8 @@ pub fn validate_name(name: &str) -> Result<String, String> {
         return Err("The name cannot be empty".to_string());
     }
 
-    if trimmed.len() > 100 {
-        return Err("The name is too long (maximum 100 characters)".to_string());
+    if trimmed.len() > MAX_CHARACTER_NAME {
+        return Err("The name is too long (maximum 50 characters)".to_string());
     }
 
     if trimmed
@@ -33,4 +36,17 @@ pub fn validate_name(name: &str) -> Result<String, String> {
     }
 
     Ok(trimmed.to_string())
+}
+
+/// Cleans a YouTube video URL by stripping unnecessary parameters (&list, &index, etc.).
+pub fn clean_youtube_url(raw_url: &str) -> String {
+    if let Some(idx) = raw_url.find("watch?v=") {
+        let after_v = &raw_url[idx + "watch?v=".len()..];
+        let video_id = match after_v.find('&') {
+            Some(end) => &after_v[..end],
+            None => after_v,
+        };
+        return format!("https://www.youtube.com/watch?v={}", video_id);
+    }
+    raw_url.to_string()
 }

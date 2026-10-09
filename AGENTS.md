@@ -72,3 +72,27 @@
 
 1. **Bun por defecto**
    - Usar otro package manager esta prohibido en este proyecto. Siempre acude a `bun` o `bunx`
+
+---
+
+## 🦀 Arquitectura y Reglas de Rust (`src-tauri`)
+
+### 1. Separación Estricta: Comandos vs Servicios vs Helpers
+- **`commands/` (Controladores IPC delgados)**:
+  - Solo reciben la invocación de Tauri (`#[tauri::command]`), extraen argumentos / `State`, delegan la ejecución a un servicio en `services/` y mapean el resultado.
+  - **Prohibido**: Escribir lógica de negocio pesada, bucles complejos, algoritmos de archivo o consultas SQL directas dentro de `commands/`.
+- **`services/` (Lógica de Dominio y Negocio)**:
+  - Toda la lógica reside en módulos funcionales idiomáticos (`services::playlist`, `services::song`, `services::batch`, `services::download`, etc.).
+  - Las funciones deben recibir parámetros puros (`&Connection`, rutas, opciones) y retornar `Result<T, ServiceError>`.
+- **`helpers/` (Utilidades Puras de Sistema)**:
+  - Exclusivamente para funciones auxiliares sin estado ni lógica de negocio acoplada (`fs`, `media`, `paths`, `setup`, `validation`).
+  - Si un helper interactúa con la base de datos o coordina un flujo de negocio, **debe ser un servicio**, no un helper.
+
+### 2. Manejo de Errores Tipados (`ServiceError`)
+- Usar siempre el enum `ServiceError` (`thiserror`) en la capa de servicios. Evitar strings planos (`Err("mensaje".into())`) dentro de la lógica de dominio.
+- La conversión a `String` para el frontend se realiza únicamente en la frontera de `commands/` mediante `.map_err(|err| err.to_string())`.
+- Evitar `unwrap()` y `expect()` en rutas de ejecución críticas de producción; propagar errores con el operador `?`.
+
+### 3. Integridad del Contrato con TypeScript
+- Al añadir o modificar comandos en `src-tauri/src/commands/`:
+  - Los nombres y firmas registrados en `lib.rs` (`tauri::generate_handler![...]`) deben coincidir exactamente con los tipos de `CommandMap` en `src/infrastructure/platform/platform.types.ts`.

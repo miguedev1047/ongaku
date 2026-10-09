@@ -7,7 +7,7 @@ use lofty::{
     probe::Probe,
     tag::Accessor,
 };
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 use crate::constants::MUSIC_EXTENSION;
 
@@ -24,7 +24,7 @@ pub fn is_audio_file(path: &Path) -> bool {
     })
 }
 
-#[derive(Debug, Clone, Serialize, Default)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct SongMetadata {
     pub duration: Option<f64>,
     pub artist: Option<String>,
@@ -82,14 +82,12 @@ pub fn extract_song_id(file_name: &str) -> String {
 }
 
 pub fn resolve_song_id(song_id: &str) -> bool {
-    let id_ok = song_id
+    song_id
         .chars()
-        .all(|c| c.is_ascii_alphanumeric() || matches!(c, '-' | '_'));
-
-    id_ok
+        .all(|c| c.is_ascii_alphanumeric() || matches!(c, '-' | '_'))
 }
 
-pub fn extract_cover(path: &std::path::Path) -> Option<Vec<u8>> {
+pub fn extract_cover(path: &Path) -> Option<Vec<u8>> {
     let tagged = Probe::open(path).ok()?.read().ok()?;
     let tag = tagged.primary_tag().or_else(|| tagged.first_tag())?;
 
@@ -111,8 +109,7 @@ pub fn encode_webp(bytes: &[u8]) -> Result<Vec<u8>, StatusCode> {
         img = img.resize(800, 800, image::imageops::FilterType::Lanczos3);
     }
 
-    let encoder = webp::Encoder::from_image(&img)
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+    let encoder = webp::Encoder::from_image(&img).map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
     let memory = encoder.encode(80.0);
 

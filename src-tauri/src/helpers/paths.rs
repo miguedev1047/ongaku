@@ -117,16 +117,17 @@ pub fn clean_streaming_cache_dir() -> std::io::Result<usize> {
                     if fs::remove_file(&path).is_ok() {
                         removed += 1;
                     }
-                } else if path.is_dir() {
-                    if fs::remove_dir_all(&path).is_ok() {
-                        removed += 1;
-                    }
+                } else if path.is_dir() && fs::remove_dir_all(&path).is_ok() {
+                    removed += 1;
                 }
             }
         }
     }
     if removed > 0 {
-        println!("[ONGAKU]: Cleaned {} orphan streaming cache file(s)", removed);
+        println!(
+            "[ONGAKU]: Cleaned {} orphan streaming cache file(s)",
+            removed
+        );
     }
     Ok(removed)
 }
@@ -191,8 +192,7 @@ pub fn ensure_paths_config() -> std::io::Result<AppPaths> {
     let paths_file = get_paths_config_path();
     let paths = get_app_paths();
 
-    let json_content = serde_json::to_string_pretty(&paths)
-        .map_err(|err| std::io::Error::other(err))?;
+    let json_content = serde_json::to_string_pretty(&paths).map_err(std::io::Error::other)?;
     fs::write(&paths_file, json_content)?;
 
     Ok(paths)
@@ -239,7 +239,7 @@ pub fn move_app_directory(new_parent_dir: &Path) -> Result<PathBuf, String> {
         .map_err(|e| format!("Failed to create destination directory: {}", e))?;
 
     // Try rename first
-    if let Err(_) = fs::rename(&old_app_dir, &new_app_dir) {
+    if fs::rename(&old_app_dir, &new_app_dir).is_err() {
         // If rename fails (e.g. across drives/devices), perform recursive copy & delete
         copy_dir_all(&old_app_dir, &new_app_dir)
             .map_err(|e| format!("Failed to copy files to new destination: {}", e))?;
