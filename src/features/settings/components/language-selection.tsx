@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { CardWrapper } from '@/components/ui/card-wrapper'
 import { LANGUAGES } from '@/constants/data'
 
 export function LanguageSelection() {
@@ -28,7 +29,7 @@ export function LanguageSelection() {
   }
 
   return (
-    <div className='p-4 rounded-md border border-border/50 bg-card/60 backdrop-blur-sm space-y-4'>
+    <CardWrapper>
       <div className='flex items-center justify-between gap-4'>
         <div className='flex items-center gap-2.5'>
           <div className='size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary'>
@@ -71,6 +72,6 @@ export function LanguageSelection() {
           </SelectContent>
         </Select>
       </div>
-    </div>
+    </CardWrapper>
   )
 }

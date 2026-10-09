@@ -6,6 +6,7 @@ import {
 import { AppWallpaperActionDropdown } from '@/features/settings/components/app-wallpaper-action-dropdown'
 import { AppWallpapersList } from '@/features/settings/components/app-wallpapers-list'
 import { AppWallpaperUrlDialog } from '@/features/settings/components/app-wallpaper-url-dialog'
+import { CardWrapper } from '@/components/ui/card-wrapper'
 import { ImageIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useTranslation } from 'react-i18next'
@@ -26,7 +27,7 @@ export function AppWallpapersSelection() {
   const [isUrlDialogOpen, setIsUrlDialogOpen] = useState(false)
 
   return (
-    <div className='@container/bg-card p-4 rounded-md border border-border/50 bg-card/60 backdrop-blur-sm space-y-4'>
+    <CardWrapper className='@container/bg-card'>
       <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-2.5'>
         <div className='flex items-center gap-2.5'>
           <div className='size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary'>
@@ -73,6 +74,6 @@ export function AppWallpapersSelection() {
         onImport={handleImportUrl}
         isImporting={isImportingUrl}
       />
-    </div>
+    </CardWrapper>
   )
 }

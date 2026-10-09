@@ -14,6 +14,7 @@ import type { TPlaylist } from '@/shared/types/playlist.types'
 import { PlaylistActionsContextMenu } from '@/components/blocks/song-actions/playlists'
 import { Show } from '@/components/utility/show'
 import { useTranslation } from 'react-i18next'
+import { CardWrapper } from '@/components/ui/card-wrapper'
 
 interface PlaylistItemProps {
   playlist: TPlaylist
@@ -42,8 +43,8 @@ export const PlaylistItem = memo(
 
     return (
       <PlaylistActionsContextMenu playlist={playlist}>
-        <div
-          className='group relative flex flex-col items-center justify-between p-4 rounded-xl border border-border/40 bg-card/60 hover:bg-accent/40 hover:border-border transition-colors duration-200 select-none cursor-pointer outline-none focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 ring-0'
+        <CardWrapper
+          className='group relative flex flex-col items-center justify-between rounded-xl border border-border/40 hover:bg-accent/40 hover:border-border transition-colors duration-200 select-none cursor-pointer outline-none focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 ring-0'
           onMouseEnter={handlePreload}
           onFocus={handlePreload}
           onDoubleClick={handleNavigate}
@@ -74,9 +75,13 @@ export const PlaylistItem = memo(
                   <span className='text-xs text-muted-foreground mt-0.5'>
                     <Show
                       when={playlist.tracks === 1}
-                      fallback={t('playlists.card.tracks_count_plural', { count: playlist.tracks })}
+                      fallback={t('playlists.card.tracks_count_plural', {
+                        count: playlist.tracks,
+                      })}
                     >
-                      {t('playlists.card.tracks_count', { count: playlist.tracks })}
+                      {t('playlists.card.tracks_count', {
+                        count: playlist.tracks,
+                      })}
                     </Show>
                   </span>
                 </div>
@@ -86,7 +91,7 @@ export const PlaylistItem = memo(
               <p className='font-medium'>{playlist.name}</p>
             </TooltipContent>
           </Tooltip>
-        </div>
+        </CardWrapper>
       </PlaylistActionsContextMenu>
     )
   },

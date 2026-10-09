@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge"
+import { CardWrapper } from "@/components/ui/card-wrapper"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { CloudServerIcon, CheckmarkCircle02Icon, AlertCircleIcon } from "@hugeicons/core-free-icons"
 import { Show } from "@/components/utility/show"
@@ -16,7 +17,7 @@ export function ServerHealthCard() {
   const url = `http://${host}:${port}`
 
   return (
-    <div className="p-4 rounded-md border border-border/50 bg-card/60 backdrop-blur-sm space-y-3">
+    <CardWrapper spacing='compact'>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <div className="size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary">
@@ -91,6 +92,6 @@ export function ServerHealthCard() {
           </span>
         </div>
       </div>
-    </div>
+    </CardWrapper>
   )
 }

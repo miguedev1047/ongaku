@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { CardWrapper } from "@/components/ui/card-wrapper"
 import { Spinner } from "@/components/ui/spinner"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Download01Icon, FolderIcon, Wrench01Icon } from "@hugeicons/core-free-icons"
@@ -29,11 +30,7 @@ export function BinariesStatusCard() {
   const ffmpegReady = Boolean(binariesInfo?.ffmpeg_installed)
 
   return (
-    <div
-      className={cn(
-        "p-4 rounded-md border border-border/50 bg-card/60 backdrop-blur-sm space-y-3"
-      )}
-    >
+    <CardWrapper spacing='compact'>
       <div className={cn("flex items-center justify-between")}>
         <div className={cn("flex items-center gap-2.5")}>
           <div
@@ -252,6 +249,6 @@ export function BinariesStatusCard() {
           </div>
         </div>
       </Show>
-    </div>
+    </CardWrapper>
   )
 }

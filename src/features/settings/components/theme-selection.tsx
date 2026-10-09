@@ -1,5 +1,6 @@
 import { cn } from 'cn'
 import { Button } from '@/components/ui/button'
+import { CardWrapper } from '@/components/ui/card-wrapper'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Moon, Sun, ComputerIcon, PaintBoardIcon } from '@hugeicons/core-free-icons'
 import { useTheme } from '@/components/compounds/theme-provider'
@@ -38,7 +39,7 @@ export function ThemeSelection() {
   }
 
   return (
-    <div className='p-4 rounded-md border border-border/50 bg-card/60 backdrop-blur-sm space-y-4'>
+    <CardWrapper>
       <div className='flex items-center gap-2.5'>
         <div className='size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary'>
           <HugeiconsIcon
@@ -86,6 +87,6 @@ export function ThemeSelection() {
           )
         })}
       </div>
-    </div>
+    </CardWrapper>
   )
 }

@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import { useUpdateConfig } from '@/features/settings/hooks/use-config'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { CardWrapper } from '@/components/ui/card-wrapper'
 import { Folder } from '@/components/ui/folder'
 import { FOLDER_COLOR_PRESETS } from '@/constants'
 import { useTranslation } from 'react-i18next'
@@ -32,7 +33,7 @@ export function FolderColorOptions() {
   }
 
   return (
-    <div className='@container/folder-card p-4 rounded-md border border-border/50 bg-card/60 backdrop-blur-sm space-y-4'>
+    <CardWrapper className='@container/folder-card'>
       <div className='flex items-center justify-between'>
         <div className='flex items-center gap-2.5'>
           <div className='size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary'>
@@ -131,6 +132,6 @@ export function FolderColorOptions() {
           />
         </div>
       </div>
-    </div>
+    </CardWrapper>
   )
 }

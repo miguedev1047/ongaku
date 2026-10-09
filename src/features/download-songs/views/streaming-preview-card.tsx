@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Show } from '@/components/utility/show'
@@ -16,6 +15,7 @@ import {
   PauseIcon,
   PlayIcon,
 } from '@hugeicons/core-free-icons'
+import { CardWrapper } from '@/components/ui/card-wrapper'
 
 export interface StreamingPreviewCardProps {
   className?: string
@@ -46,10 +46,9 @@ export function StreamingPreviewCard({ className }: StreamingPreviewCardProps) {
           !imageError && track.thumbnail ? track.thumbnail : null
 
         return (
-          <Card
-            size='sm'
+          <CardWrapper
             className={cn(
-              'relative overflow-hidden bg-card/60',
+              'relative overflow-hidden',
               'animate-in fade-in slide-in-from-top-2 duration-200 p-0',
               className,
             )}
@@ -216,7 +215,7 @@ export function StreamingPreviewCard({ className }: StreamingPreviewCardProps) {
                 </Button>
               </div>
             </div>
-          </Card>
+          </CardWrapper>
         )
       }}
     </Show>

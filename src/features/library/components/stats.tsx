@@ -8,6 +8,7 @@ import { useSuspenseQuery } from '@tanstack/react-query'
 import { librarySongsQueryOpts } from '@/shared/queries/library'
 import { playlistsQueryOpts } from '@/shared/queries/playlists'
 import { useTranslation } from 'react-i18next'
+import { CardWrapper } from '@/components/ui/card-wrapper'
 
 export function LibraryStats() {
   const { t } = useTranslation()
@@ -16,22 +17,22 @@ export function LibraryStats() {
 
   return (
     <div className='grid md:grid-cols-2 gap-4'>
-      <Card className='@container/card bg-card/60'>
+      <CardWrapper className='@container/card bg-card/60'>
         <CardHeader>
           <CardDescription>{t('library.stats.tracks')}</CardDescription>
           <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
             {songs.length}
           </CardTitle>
         </CardHeader>
-      </Card>
-      <Card className='@container/card bg-card/60'>
+      </CardWrapper>
+      <CardWrapper className='@container/card bg-card/60'>
         <CardHeader>
           <CardDescription>{t('library.stats.playlists')}</CardDescription>
           <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
             {playlists.length}
           </CardTitle>
         </CardHeader>
-      </Card>
+      </CardWrapper>
     </div>
   )
 }

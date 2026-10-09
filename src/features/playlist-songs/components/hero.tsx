@@ -12,6 +12,7 @@ import { usePlaylistHero } from '@/features/playlist-songs/hooks/use-playlist-he
 import { PlaylistHeroActions } from '@/components/blocks/song-actions/playlists'
 import { PlaylistHeroCover } from '@/features/playlist-songs/components/hero-cover'
 import { useTranslation } from 'react-i18next'
+import { CardWrapper } from '@/components/ui/card-wrapper'
 
 export function PlaylistSongHero() {
   const { t } = useTranslation()
@@ -42,9 +43,9 @@ export function PlaylistSongHero() {
         'flex shrink-0 items-center gap-2 px-4 sm:px-6 pt-4 sm:pt-6',
       )}
     >
-      <div
+      <CardWrapper
         className={cn(
-          'flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 sm:gap-6 w-full bg-card p-4 sm:p-5 rounded-lg border border-border/40 transition-all ease-in-out duration-300 relative overflow-hidden',
+          'flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 sm:gap-6 w-full bg-card p-4 sm:p-5 rounded-lg border-border/40 transition-all ease-in-out duration-300 relative overflow-hidden',
         )}
         style={{ backgroundColor: bgCardColor }}
       >
@@ -107,7 +108,7 @@ export function PlaylistSongHero() {
             </TooltipContent>
           </Tooltip>
         </div>
-      </div>
+      </CardWrapper>
     </div>
   )
 }
