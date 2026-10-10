@@ -59,7 +59,6 @@ export function DirectoriesStatusCard() {
         </div>
       </div>
 
-      {/* Main Base Directory Block */}
       <div className='p-3 rounded-md bg-primary/5 border border-primary/20 space-y-2'>
         <div className='flex items-center justify-between gap-3'>
           <div className='min-w-0 flex-1'>
@@ -68,8 +67,8 @@ export function DirectoriesStatusCard() {
                 {t('settings.tabs.system.directories_status.base_storage')}
               </span>
               <Badge
-                variant='outline'
-                className='text-[9px] h-4 px-1.5 text-primary border-primary/30'
+                variant='outline-primary'
+                size='sm'
               >
                 {t('settings.tabs.system.directories_status.active_root')}
               </Badge>
@@ -89,19 +88,19 @@ export function DirectoriesStatusCard() {
               size='sm'
               onClick={handleSelectDirectory}
               disabled={isChangingDir}
-              className='h-8 px-2.5 text-xs gap-1.5'
             >
               <HugeiconsIcon
                 icon={FolderEditIcon}
                 className='size-3.5'
               />
-              <span>{t('settings.tabs.system.directories_status.change_location')}</span>
+              <span>
+                {t('settings.tabs.system.directories_status.change_location')}
+              </span>
             </Button>
             <Button
               variant='ghost'
               size='sm'
               onClick={() => handleOpen(config.app_dir)}
-              className='h-8 px-2 text-xs gap-1.5 text-muted-foreground hover:text-foreground'
             >
               <HugeiconsIcon
                 icon={FolderIcon}
@@ -113,9 +112,8 @@ export function DirectoriesStatusCard() {
         </div>
       </div>
 
-      {/* Internal Subdirectories */}
       <div className='space-y-2'>
-        <span className='text-[11px] font-medium text-muted-foreground uppercase tracking-wider'>
+        <span className='text-xs font-medium text-muted-foreground uppercase tracking-wider'>
           {t('settings.tabs.system.directories_status.managed_directories')}
         </span>
         <div className='space-y-2'>
@@ -135,17 +133,21 @@ export function DirectoriesStatusCard() {
                     fallback={
                       <Badge
                         variant='destructive'
-                        className='text-[9px] h-4 px-1.5'
+                        size='sm'
                       >
-                        {t('settings.tabs.system.directories_status.status.missing')}
+                        {t(
+                          'settings.tabs.system.directories_status.status.missing',
+                        )}
                       </Badge>
                     }
                   >
                     <Badge
-                      variant='outline'
-                      className='text-[9px] h-4 px-1.5 text-emerald-500 border-emerald-500/30'
+                      variant='success'
+                      size='sm'
                     >
-                      {t('settings.tabs.system.directories_status.status.exists')}
+                      {t(
+                        'settings.tabs.system.directories_status.status.exists',
+                      )}
                     </Badge>
                   </Show>
 
@@ -154,23 +156,27 @@ export function DirectoriesStatusCard() {
                     fallback={
                       <Badge
                         variant='destructive'
-                        className='text-[9px] h-4 px-1.5'
+                        size='sm'
                       >
-                        {t('settings.tabs.system.directories_status.status.readonly')}
+                        {t(
+                          'settings.tabs.system.directories_status.status.readonly',
+                        )}
                       </Badge>
                     }
                   >
                     <Badge
                       variant='outline'
-                      className='text-[9px] h-4 px-1.5 text-muted-foreground border-border/40'
+                      size='sm'
                     >
-                      {t('settings.tabs.system.directories_status.status.writable')}
+                      {t(
+                        'settings.tabs.system.directories_status.status.writable',
+                      )}
                     </Badge>
                   </Show>
                 </div>
 
                 <p
-                  className='font-mono text-[10px] text-muted-foreground truncate mt-0.5 cursor-pointer hover:text-foreground transition-colors'
+                  className='font-mono text-2xs text-muted-foreground truncate mt-0.5 cursor-pointer hover:text-foreground transition-colors'
                   onClick={() => handleOpen(dir.path)}
                   title={dir.path}
                 >
@@ -179,10 +185,10 @@ export function DirectoriesStatusCard() {
               </div>
 
               <Button
-                variant='ghost'
+                variant='ghost-muted'
                 size='sm'
                 onClick={() => handleOpen(dir.path)}
-                className='h-7 px-2 text-xs gap-1.5 text-muted-foreground hover:text-foreground shrink-0'
+                className='h-7 gap-1.5 shrink-0'
               >
                 <HugeiconsIcon
                   icon={FolderIcon}
@@ -195,18 +201,15 @@ export function DirectoriesStatusCard() {
         </div>
       </div>
 
-      <Alert
-        variant='destructive'
-        className='bg-muted/40 border-border/40 text-destructive!'
-      >
+      <Alert variant='destructive-muted'>
         <HugeiconsIcon
           icon={AlertCircleIcon}
           className='size-4'
         />
-        <AlertTitle className='text-xs font-semibold'>
+        <AlertTitle>
           {t('settings.tabs.system.directories_status.notice.title')}
         </AlertTitle>
-        <AlertDescription className='text-[11px]'>
+        <AlertDescription>
           {t('settings.tabs.system.directories_status.notice.description')}
         </AlertDescription>
       </Alert>
@@ -219,10 +222,14 @@ export function DirectoriesStatusCard() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {t('settings.tabs.system.directories_status.confirm_dialog.title')}
+              {t(
+                'settings.tabs.system.directories_status.confirm_dialog.title',
+              )}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              {t('settings.tabs.system.directories_status.confirm_dialog.description')}
+              {t(
+                'settings.tabs.system.directories_status.confirm_dialog.description',
+              )}
             </AlertDialogDescription>
           </AlertDialogHeader>
 
@@ -231,12 +238,16 @@ export function DirectoriesStatusCard() {
           </div>
 
           <p className='text-xs text-muted-foreground'>
-            {t('settings.tabs.system.directories_status.confirm_dialog.warning')}
+            {t(
+              'settings.tabs.system.directories_status.confirm_dialog.warning',
+            )}
           </p>
 
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isChangingDir}>
-              {t('settings.tabs.system.directories_status.confirm_dialog.cancel')}
+              {t(
+                'settings.tabs.system.directories_status.confirm_dialog.cancel',
+              )}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirmMove}
@@ -246,7 +257,11 @@ export function DirectoriesStatusCard() {
               <Show when={isChangingDir}>
                 <Spinner className='size-3.5' />
               </Show>
-              <span>{t('settings.tabs.system.directories_status.confirm_dialog.confirm')}</span>
+              <span>
+                {t(
+                  'settings.tabs.system.directories_status.confirm_dialog.confirm',
+                )}
+              </span>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -36,10 +36,10 @@ export function PlaylistResultsHeader({
 
       <Button
         type='button'
-        variant='ghost'
+        variant='ghost-muted'
         size='sm'
         onClick={onClear}
-        className='h-7 text-xs gap-1.5 text-muted-foreground hover:text-foreground'
+        className='gap-1.5'
       >
         <HugeiconsIcon
           icon={Cancel01Icon}

@@ -40,7 +40,7 @@ export function ImportSongsButton({
             size={size}
             onClick={() => importSongs()}
             disabled={isImporting}
-            className={cn('gap-1.5 text-xs cursor-pointer', className)}
+            className={cn('gap-1.5 cursor-pointer', className)}
             aria-label={t('playlists.actions.import_songs')}
           >
             <Show

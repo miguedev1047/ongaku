@@ -40,7 +40,7 @@ function BinaryStatusIcon({ isPending, isInstalled }: StatusProps) {
         fallback={
           <HugeiconsIcon
             icon={Download01Icon}
-            className={cn("size-4 shrink-0 text-amber-500 animate-pulse")}
+            className={cn("size-4 shrink-0 text-warning animate-pulse")}
           />
         }
       >
@@ -58,17 +58,13 @@ function BinaryMenuBadge({ isPending, isInstalled }: StatusProps) {
     <Show
       when={!isPending}
       fallback={
-        <SidebarMenuBadge className={cn("text-[10px]")}>
+        <SidebarMenuBadge>
           <Spinner className={cn("size-3")} />
         </SidebarMenuBadge>
       }
     >
       <Show when={!isInstalled}>
-        <SidebarMenuBadge
-          className={cn(
-            "bg-amber-500/10 text-amber-500 font-medium text-[10px]"
-          )}
-        >
+        <SidebarMenuBadge variant="warning">
           Missing
         </SidebarMenuBadge>
       </Show>
@@ -81,10 +77,7 @@ function BinaryOverallBadge({ isPending, isInstalled }: StatusProps) {
     <Show
       when={!isPending}
       fallback={
-        <Badge
-          variant="outline"
-          className={cn("text-[10px] h-5 gap-1")}
-        >
+        <Badge variant="outline">
           <Spinner className={cn("size-2.5")} /> Installing
         </Badge>
       }
@@ -92,20 +85,12 @@ function BinaryOverallBadge({ isPending, isInstalled }: StatusProps) {
       <Show
         when={isInstalled}
         fallback={
-          <Badge
-            variant="destructive"
-            className={cn("text-[10px] h-5")}
-          >
+          <Badge variant="destructive">
             Missing
           </Badge>
         }
       >
-        <Badge
-          variant="secondary"
-          className={cn(
-            "text-[10px] h-5 bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
-          )}
-        >
+        <Badge variant="success">
           Installed
         </Badge>
       </Show>
@@ -119,16 +104,16 @@ function BinaryItemBadge({ isReady }: { isReady: boolean }) {
       when={isReady}
       fallback={
         <Badge
-          variant="outline"
-          className={cn("text-[10px] h-5 text-amber-500 border-amber-500/30")}
+          variant="warning"
+          className={cn("text-2xs h-5")}
         >
           Missing
         </Badge>
       }
     >
       <Badge
-        variant="outline"
-        className={cn("text-[10px] h-5 text-emerald-500 border-emerald-500/30")}
+        variant="success"
+        className={cn("text-2xs h-5")}
       >
         Ready
       </Badge>
@@ -152,7 +137,7 @@ function BinaryActionSection({
         <Button
           disabled
           size="sm"
-          className={cn("w-full text-xs gap-1.5")}
+          className={cn("w-full gap-1.5")}
         >
           <Spinner className={cn("size-3.5")} />
           <span className={cn("truncate")}>Installing tools...</span>
@@ -163,7 +148,7 @@ function BinaryActionSection({
         <Button
           onClick={onInstall}
           size="sm"
-          className={cn("w-full text-xs gap-1.5")}
+          className={cn("w-full gap-1.5")}
         >
           <HugeiconsIcon
             icon={Download01Icon}
@@ -221,9 +206,7 @@ export function CheckBinaries() {
         />
         <PopoverContent
           sideOffset={8}
-          className={cn(
-            "w-100 p-3.5 space-y-3 bg-popover/95 backdrop-blur border border-border shadow-lg rounded-md"
-          )}
+          className={cn("w-100 p-3.5 gap-3")}
         >
           {/* Header */}
           <div
@@ -246,7 +229,7 @@ export function CheckBinaries() {
                 <h4 className={cn("text-xs font-semibold text-foreground")}>
                   Auxiliary Binaries
                 </h4>
-                <p className={cn("text-[11px] text-muted-foreground")}>
+                <p className={cn("text-xs text-muted-foreground")}>
                   Dependencies for YouTube & audio
                 </p>
               </div>
@@ -270,7 +253,7 @@ export function CheckBinaries() {
                 >
                   yt-dlp
                 </span>
-                <span className={cn("text-[10px] text-muted-foreground")}>
+                <span className={cn("text-2xs text-muted-foreground")}>
                   Stream extraction & metadata
                 </span>
               </div>
@@ -290,7 +273,7 @@ export function CheckBinaries() {
                 >
                   ffmpeg
                 </span>
-                <span className={cn("text-[10px] text-muted-foreground")}>
+                <span className={cn("text-2xs text-muted-foreground")}>
                   Audio transcoding & ID3 tagging
                 </span>
               </div>
@@ -304,7 +287,7 @@ export function CheckBinaries() {
           <div className={cn("space-y-1")}>
             <div
               className={cn(
-                "flex items-center justify-between text-[11px] text-muted-foreground"
+                "flex items-center justify-between text-xs text-muted-foreground"
               )}
             >
               <span>Binaries location:</span>
@@ -312,9 +295,6 @@ export function CheckBinaries() {
                 variant="ghost"
                 size="sm"
                 onClick={handleOpenFolder}
-                className={cn(
-                  "h-6 px-1.5 text-[11px] gap-1 text-primary hover:text-primary rounded-md"
-                )}
               >
                 <HugeiconsIcon
                   icon={FolderIcon}
@@ -326,7 +306,7 @@ export function CheckBinaries() {
             <div
               onClick={handleOpenFolder}
               className={cn(
-                "font-mono text-[10px] text-muted-foreground bg-muted/40 border border-border/40 rounded-md px-2 py-1 truncate cursor-pointer hover:border-border hover:text-foreground transition-colors"
+                "font-mono text-2xs text-muted-foreground bg-muted/40 border border-border/40 rounded-md px-2 py-1 truncate cursor-pointer hover:border-border hover:text-foreground transition-colors"
               )}
               title={binariesInfo?.bin_dir}
             >

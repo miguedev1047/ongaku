@@ -71,10 +71,8 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
 
   return (
     <Card
-      className={cn(
-        'flex flex-col gap-3 p-4 border bg-card/60 backdrop-blur-sm shadow-sm h-full',
-        className,
-      )}
+      variant='glass'
+      className={cn('flex flex-col gap-3 p-4 h-full', className)}
     >
       <div className='relative aspect-video rounded-lg overflow-hidden bg-muted border border-border/50 shadow-sm shrink-0'>
         <Show
@@ -100,8 +98,8 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
 
         <div className='absolute top-2 left-2 flex items-center gap-1.5'>
           <Badge
-            variant='destructive'
-            className='text-[10px] px-1.5 py-0.5 bg-red-600/90 text-white flex items-center gap-1 shadow'
+            variant='destructive-solid'
+            size='sm'
           >
             <HugeiconsIcon
               icon={YoutubeIcon}
@@ -112,10 +110,8 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
 
           <Show when={isPlaying}>
             <Badge
-              variant='outline'
-              className={cn(
-                'text-[10px] px-1.5 py-0.5 border-primary/60 text-primary bg-background/80 backdrop-blur-xs flex items-center gap-1.5 shadow',
-              )}
+              variant='outline-primary'
+              size='sm'
             >
               <DotmSquare18
                 size={12}
@@ -130,7 +126,7 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
 
         <Show when={currentTrack.duration}>
           {(duration) => (
-            <span className='absolute bottom-2 right-2 text-[10px] bg-black/80 text-white font-mono px-1.5 py-0.5 rounded leading-none shadow'>
+            <span className='absolute bottom-2 right-2 text-2xs bg-black/80 text-white font-mono px-1.5 py-0.5 rounded-sm leading-none shadow'>
               {formatDuration(duration)}
             </span>
           )}
@@ -191,7 +187,7 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
               <span className='font-medium text-foreground text-xs leading-none truncate'>
                 {t('youtube_search.active_track.loading_stream')}
               </span>
-              <span className='text-[10px] text-muted-foreground mt-1 leading-none truncate'>
+              <span className='text-2xs text-muted-foreground mt-1 leading-none truncate'>
                 {t('youtube_search.active_track.fetching_audio')}
               </span>
             </div>
@@ -215,7 +211,7 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
               <span className='font-medium text-foreground text-xs leading-none truncate'>
                 {t('youtube_search.active_track.now_streaming')}
               </span>
-              <span className='text-[10px] text-muted-foreground mt-1 leading-none truncate'>
+              <span className='text-2xs text-muted-foreground mt-1 leading-none truncate'>
                 {t('youtube_search.active_track.live_active')}
               </span>
             </div>

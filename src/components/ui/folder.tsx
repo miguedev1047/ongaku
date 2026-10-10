@@ -1,4 +1,5 @@
 import React, { memo, useMemo, useState } from "react"
+import { cn } from "cn"
 
 interface FolderProps {
   color?: string
@@ -114,7 +115,10 @@ const Folder = memo(function Folder({
       className={className}
     >
       <div
-        className={`group relative transition-all duration-200 ease-in cursor-pointer outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 ring-0 ${!open ? "hover:-translate-y-2" : ""}`}
+        className={cn(
+          "group relative transition-all duration-200 ease-in cursor-pointer outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 ring-0",
+          !open && "hover:-translate-y-2"
+        )}
         style={{
           ...folderStyle,
           transform: open ? "translateY(-8px)" : undefined
@@ -132,12 +136,12 @@ const Folder = memo(function Folder({
         aria-label={open ? "Close folder" : "Open folder"}
       >
         <div
-          className="relative w-25 h-20 rounded-tl-0 rounded-tr-[10px] rounded-br-[10px] rounded-bl-[10px]"
-          style={{ backgroundColor: folderBackColor }}
+          className="relative w-25 h-20"
+          style={{ backgroundColor: folderBackColor, borderRadius: "0 10px 10px 10px" }}
         >
           <span
-            className="absolute z-0 bottom-[98%] left-0 w-7.5 h-2.5 rounded-tl-[5px] rounded-tr-[5px] rounded-bl-0 rounded-br-0"
-            style={{ backgroundColor: folderBackColor }}
+            className="absolute z-0 left-0 w-7.5 h-2.5"
+            style={{ backgroundColor: folderBackColor, bottom: "98%", borderRadius: "5px 5px 0 0" }}
           ></span>
           {papers.map((item, i) => {
             let sizeClasses = ""
@@ -157,15 +161,18 @@ const Folder = memo(function Folder({
                 key={i}
                 onMouseMove={(e) => handlePaperMouseMove(e, i)}
                 onMouseLeave={(e) => handlePaperMouseLeave(e, i)}
-                className={`absolute z-20 bottom-[10%] left-1/2 transition-all duration-300 ease-in-out ${
+                className={cn(
+                  "absolute z-20 left-1/2 transition-all duration-300 ease-in-out",
                   !open
-                    ? "transform -translate-x-1/2 translate-y-[10%] group-hover:translate-y-0"
-                    : "hover:scale-110"
-                } ${sizeClasses}`}
+                    ? "-translate-x-1/2 translate-y-2 group-hover:translate-y-0"
+                    : "hover:scale-110",
+                  sizeClasses
+                )}
                 style={{
                   ...(!open ? {} : { transform: transformStyle }),
                   backgroundColor: i === 0 ? paper1 : i === 1 ? paper2 : paper3,
-                  borderRadius: "10px"
+                  borderRadius: "10px",
+                  bottom: "10%"
                 }}
               >
                 {item}
@@ -173,7 +180,10 @@ const Folder = memo(function Folder({
             )
           })}
           <div
-            className={`absolute z-30 w-full h-full origin-bottom transition-all duration-300 ease-in-out ${!open ? "group-hover:transform-[skew(15deg)_scaleY(0.6)]" : ""}`}
+            className={cn(
+              "absolute z-30 w-full h-full origin-bottom transition-all duration-300 ease-in-out",
+              !open && "group-hover:folder-skew-left"
+            )}
             style={{
               backgroundColor: color,
               borderRadius: "5px 10px 10px 10px",
@@ -181,7 +191,10 @@ const Folder = memo(function Folder({
             }}
           ></div>
           <div
-            className={`absolute z-30 w-full h-full origin-bottom transition-all duration-300 ease-in-out ${!open ? "group-hover:transform-[skew(-15deg)_scaleY(0.6)]" : ""}`}
+            className={cn(
+              "absolute z-30 w-full h-full origin-bottom transition-all duration-300 ease-in-out",
+              !open && "group-hover:folder-skew-right"
+            )}
             style={{
               backgroundColor: color,
               borderRadius: "5px 10px 10px 10px",

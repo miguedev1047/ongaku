@@ -49,21 +49,20 @@ export function SearchYoutubeItem({ item }: YoutubeCardProps) {
 
   return (
     <Item
-      onClick={(e) => handlePlayToggle(e)}
+      variant="interactive"
+      onClick={handlePlayToggle}
       data-active-track={isCurrentTrack}
-      className="data-[active-track=true]:bg-accent hover:bg-accent cursor-pointer"
     >
-      <ItemMedia
-        variant="image"
-        className="bg-accent"
-      >
+      <ItemMedia variant="image">
         <Show
           when={thumbnailSrc}
           fallback={
-            <HugeiconsIcon
-              icon={MusicNote01Icon}
-              className="text-muted-foreground"
-            />
+            <div className="size-full flex items-center justify-center bg-accent">
+              <HugeiconsIcon
+                icon={MusicNote01Icon}
+                className="text-muted-foreground"
+              />
+            </div>
           }
         >
           {(src) => (
@@ -78,7 +77,7 @@ export function SearchYoutubeItem({ item }: YoutubeCardProps) {
         </Show>
       </ItemMedia>
       <ItemContent>
-        <ItemTitle className="line-clamp-1">{item.title}</ItemTitle>
+        <ItemTitle>{item.title}</ItemTitle>
         <ItemDescription>{item.channel}</ItemDescription>
       </ItemContent>
       <ItemActions onClick={(e) => e.stopPropagation()}>

@@ -43,11 +43,19 @@ export function PlaylistSongsLoadingState({
     >
       <Table
         variant="flex"
-        className="size-full flex flex-col overflow-hidden rounded-md"
+        rounded
+        className="size-full flex flex-col overflow-hidden"
       >
         {/* Table Header: exactly aligns with PlaylistSongsList */}
-        <TableHeader className="shrink-0 bg-muted/20 border-b border-border/40">
-          <TableRow className="border-b-0 hover:bg-transparent px-3 h-10 gap-3">
+        <TableHeader
+          headerVariant="muted"
+          className="shrink-0"
+        >
+          <TableRow
+            rowVariant="header"
+            padding="table"
+            className="h-10 gap-3"
+          >
             <TableHead className="w-8 shrink-0 justify-center p-0">
               <Skeleton className="size-4 rounded-sm" />
             </TableHead>
@@ -77,7 +85,9 @@ export function PlaylistSongsLoadingState({
             return (
               <TableRow
                 key={i}
-                className="w-full h-14 px-3 gap-3 border-b border-border/20 hover:bg-transparent"
+                rowVariant="ghost"
+                padding="table"
+                className="w-full h-14 gap-3"
               >
                 {/* 1. Selection spacer (32px) */}
                 <TableCell className="w-8 shrink-0 justify-center p-0">

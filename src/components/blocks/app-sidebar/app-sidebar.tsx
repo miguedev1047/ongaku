@@ -9,7 +9,6 @@ import { AppSidebarNav } from '@/components/blocks/app-sidebar/app-sidebar-nav'
 import { AppSidebarFooter } from '@/components/blocks/app-sidebar/app-sidebar-footer'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import { useQuery } from '@tanstack/react-query'
-import { cn } from 'cn'
 
 export function AppSidebar() {
   const { data: config } = useQuery(systemConfigQueryOpts())
@@ -20,7 +19,7 @@ export function AppSidebar() {
   return (
     <Sidebar
       collapsible='icon'
-      className={cn(hasBackground && 'bg-sidebar/40 backdrop-blur-md')}
+      variant={hasBackground ? 'translucent' : 'sidebar'}
     >
       <AppSidebarHeader />
       <SidebarContent>

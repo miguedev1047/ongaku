@@ -90,7 +90,7 @@ export function AppWallpaperUrlDialog({
           </div>
 
           <div className='space-y-1.5 pt-0.5'>
-            <span className='text-[11px] font-medium text-muted-foreground'>
+            <span className='text-xs font-medium text-muted-foreground'>
               {t(
                 'settings.tabs.appearance.appearance_and_interface.app_background.url_dialog.sources_title',
               )}
@@ -103,7 +103,6 @@ export function AppWallpaperUrlDialog({
                   variant='outline'
                   size='sm'
                   onClick={() => platformService.openUrl(source.url)}
-                  className='h-6 text-[11px] px-2 gap-1 rounded-sm border-border/60 hover:bg-accent/60'
                   title={source.description}
                 >
                   <span>{source.name}</span>
@@ -114,7 +113,7 @@ export function AppWallpaperUrlDialog({
                 </Button>
               ))}
             </div>
-            <p className='text-[10px] text-muted-foreground/80 leading-normal'>
+            <p className='text-2xs text-muted-foreground/80 leading-normal'>
               {t(
                 'settings.tabs.appearance.appearance_and_interface.app_background.url_dialog.sources_hint',
               )}
@@ -124,7 +123,7 @@ export function AppWallpaperUrlDialog({
           <Show when={isValidUrl}>
             <div className='space-y-1.5'>
               <div className='flex items-center justify-between'>
-                <span className='text-[11px] font-medium text-muted-foreground'>
+                <span className='text-xs font-medium text-muted-foreground'>
                   {t(
                     'settings.tabs.appearance.appearance_and_interface.app_background.url_dialog.preview',
                   )}
@@ -132,7 +131,7 @@ export function AppWallpaperUrlDialog({
                 <Show when={previewStatus === 'success'}>
                   <Badge
                     variant='secondary'
-                    className='text-[10px] h-4 px-1.5 font-normal rounded-sm shadow-xs'
+                    size='sm'
                   >
                     {t(
                       'settings.tabs.appearance.appearance_and_interface.app_background.url_dialog.preview_ready',
@@ -145,7 +144,7 @@ export function AppWallpaperUrlDialog({
                 <Show when={previewStatus === 'loading'}>
                   <div className='flex flex-col items-center gap-1.5 text-muted-foreground'>
                     <Spinner className='size-4' />
-                    <span className='text-[11px]'>
+                    <span className='text-xs'>
                       {t(
                         'settings.tabs.appearance.appearance_and_interface.app_background.url_dialog.preview_loading',
                       )}
@@ -159,7 +158,7 @@ export function AppWallpaperUrlDialog({
                       icon={ImageNotFound01Icon}
                       className='size-6 text-destructive/80'
                     />
-                    <span className='text-[11px] max-w-70 text-muted-foreground leading-tight'>
+                    <span className='text-xs max-w-70 text-muted-foreground leading-tight'>
                       {t(
                         'settings.tabs.appearance.appearance_and_interface.app_background.url_dialog.preview_error',
                       )}

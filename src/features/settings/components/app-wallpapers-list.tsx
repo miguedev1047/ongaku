@@ -64,9 +64,8 @@ export function AppWallpapersList({
           <Button
             type='button'
             variant='outline'
-            size='sm'
+            size='default'
             onClick={() => setVisibleCount((prev) => prev + 16)}
-            className='h-7 text-xs px-3 rounded-md border-border/60 hover:bg-accent/60'
           >
             {t(
               'settings.tabs.appearance.appearance_and_interface.app_background.show_more',

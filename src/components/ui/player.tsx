@@ -4,7 +4,6 @@ import { cn } from 'cn'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { NativeSlider } from '@/components/ui/native-slider'
-import { Slider } from '@/components/ui/slider'
 import {
   Popover,
   PopoverContent,
@@ -35,12 +34,18 @@ interface PlayerProps extends React.ComponentProps<'div'> {
   position?: 'bottom' | 'top'
 }
 
-function Player({ className, position = 'bottom', ...props }: PlayerProps) {
+function Player({
+  className,
+  position = 'bottom',
+  style,
+  ...props
+}: PlayerProps) {
   return (
     <div
       data-slot='player'
+      style={{ gridTemplateColumns: '1fr auto 1fr', ...style }}
       className={cn(
-        'relative w-full h-16 px-4 shrink-0 bg-card/95 backdrop-blur grid grid-cols-[1fr_auto_1fr] items-center gap-2 z-30 select-none',
+        'relative w-full h-16 px-4 shrink-0 bg-card/95 backdrop-blur grid items-center gap-2 z-30 select-none',
         position === 'top'
           ? 'border-b border-border'
           : 'border-t border-border',
@@ -128,7 +133,7 @@ function PlayerDescription({
     <span
       data-slot='player-description'
       className={cn(
-        'text-[11px] text-muted-foreground line-clamp-1 break-all leading-tight mt-0.5',
+        'text-xs text-muted-foreground line-clamp-1 break-all leading-tight mt-0.5',
         className,
       )}
       {...props}
@@ -483,6 +488,7 @@ function PlayerVolume({
     volume > 0 ? volume : DEFAULT_PLAYER_VOLUME,
   )
   const [popoverOpen, setPopoverOpen] = React.useState(false)
+  const [tooltipOpen, setTooltipOpen] = React.useState(false)
   const [displayVolume, setDisplayVolume] = React.useState<number>(volume)
   const rafRef = React.useRef<number | null>(null)
   const isDraggingRef = React.useRef(false)
@@ -517,8 +523,8 @@ function PlayerVolume({
     }
   }
 
-  const handleValueChange = (val: number | readonly number[]) => {
-    const num = Math.round(Array.isArray(val) ? val[0] : val)
+  const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const num = Math.round(Number(e.target.value))
     isDraggingRef.current = true
     setDisplayVolume(num)
     if (num > 0) {
@@ -535,18 +541,17 @@ function PlayerVolume({
     })
   }
 
-  const handleValueCommitted = (val: number | readonly number[]) => {
-    const num = Math.round(Array.isArray(val) ? val[0] : val)
+  const handlePointerDown = () => {
+    isDraggingRef.current = true
+  }
+
+  const handlePointerUp = () => {
     isDraggingRef.current = false
     if (rafRef.current !== null) {
       cancelAnimationFrame(rafRef.current)
       rafRef.current = null
     }
-    setDisplayVolume(num)
-    if (num > 0) {
-      setLastVolume(num)
-    }
-    onChange(num)
+    onChange(displayVolume)
   }
 
   const volumeIcon =
@@ -565,7 +570,10 @@ function PlayerVolume({
         open={popoverOpen}
         onOpenChange={setPopoverOpen}
       >
-        <Tooltip open={popoverOpen ? false : undefined}>
+        <Tooltip
+          open={tooltipOpen && !popoverOpen}
+          onOpenChange={setTooltipOpen}
+        >
           <TooltipTrigger
             render={
               <PopoverTrigger
@@ -599,39 +607,37 @@ function PlayerVolume({
           side={position === 'top' ? 'bottom' : 'top'}
           align='center'
           sideOffset={12}
-          className='w-10 px-2 h-70 gap-1 flex flex-col items-center justify-between rounded-lg bg-popover/95 backdrop-blur border border-border shadow-lg'
+          className='w-70 px-2 py-1'
         >
-          <span className='text-[10px] font-mono font-medium text-muted-foreground select-none'>
-            {displayVolume}%
-          </span>
+          <div className='gap-1 flex items-center justify-between'>
+            <div className='flex-1 w-full flex items-center justify-center'>
+              <Button
+                size='icon'
+                variant='ghost'
+                className='size-7 rounded-md text-muted-foreground hover:text-foreground shrink-0'
+                onClick={handleToggleMute}
+                aria-label={
+                  displayVolume === 0 ? t('player.unmute') : t('player.mute')
+                }
+              >
+                <HugeiconsIcon
+                  icon={volumeIcon}
+                  className='size-4'
+                />
+              </Button>
 
-          <div className='flex-1 w-full flex items-center justify-center py-2'>
-            <Slider
-              orientation='vertical'
-              min={0}
-              max={100}
-              step={1}
-              value={[displayVolume]}
-              onValueChange={handleValueChange}
-              onValueCommitted={handleValueCommitted}
-              className='h-full'
-            />
+              <NativeSlider
+                min={0}
+                max={100}
+                step={1}
+                value={displayVolume}
+                onChange={handleSliderChange}
+                onPointerDown={handlePointerDown}
+                onPointerUp={handlePointerUp}
+                className='w-full cursor-pointer'
+              />
+            </div>
           </div>
-
-          <Button
-            size='icon'
-            variant='ghost'
-            className='size-7 rounded-md text-muted-foreground hover:text-foreground shrink-0'
-            onClick={handleToggleMute}
-            aria-label={
-              displayVolume === 0 ? t('player.unmute') : t('player.mute')
-            }
-          >
-            <HugeiconsIcon
-              icon={volumeIcon}
-              className='size-4'
-            />
-          </Button>
         </PopoverContent>
       </Popover>
     </div>

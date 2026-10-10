@@ -25,7 +25,11 @@ interface ReleaseNotesLinkProps {
   className?: string
 }
 
-function ReleaseNotesLink({ version, label, className }: ReleaseNotesLinkProps) {
+function ReleaseNotesLink({
+  version,
+  label,
+  className,
+}: ReleaseNotesLinkProps) {
   const handleOpen = () => {
     void openReleaseNotes(version)
   }
@@ -42,7 +46,7 @@ function ReleaseNotesLink({ version, label, className }: ReleaseNotesLinkProps) 
         }
       }}
       className={cn(
-        'inline-flex items-center gap-1 text-[11px] text-muted-foreground cursor-pointer hover:underline hover:text-foreground underline-offset-2 transition-colors focus-visible:outline-none focus-visible:underline focus-visible:text-foreground',
+        'inline-flex items-center gap-1 text-xs text-muted-foreground cursor-pointer hover:underline hover:text-foreground underline-offset-2 transition-colors focus-visible:outline-none focus-visible:underline focus-visible:text-foreground',
         className,
       )}
     >
@@ -98,12 +102,7 @@ export function AppUpdatesCard() {
         <Show
           when={hasUpdate}
           fallback={
-            <Badge
-              variant='secondary'
-              className={cn(
-                'text-[10px] gap-1 bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
-              )}
-            >
+            <Badge variant='success'>
               <HugeiconsIcon
                 icon={CheckmarkCircle02Icon}
                 className={cn('size-3')}
@@ -112,12 +111,7 @@ export function AppUpdatesCard() {
             </Badge>
           }
         >
-          <Badge
-            variant='default'
-            className={cn(
-              'text-[10px] gap-1 bg-primary text-primary-foreground font-semibold',
-            )}
-          >
+          <Badge variant='default'>
             {t('settings.tabs.general.app_and_releases.status.available')}
           </Badge>
         </Show>
@@ -143,16 +137,22 @@ export function AppUpdatesCard() {
             fallback={
               <ReleaseNotesLink
                 version={currentVersion}
-                label={t('settings.tabs.general.app_and_releases.version.link', {
-                  version: `v${currentVersion}`,
-                })}
+                label={t(
+                  'settings.tabs.general.app_and_releases.version.link',
+                  {
+                    version: `v${currentVersion}`,
+                  },
+                )}
               />
             }
           >
             <p className={cn('text-xs text-primary font-medium')}>
-              {t('settings.tabs.general.app_and_releases.version.ready_to_install', {
-                version: `v${update?.version}`,
-              })}
+              {t(
+                'settings.tabs.general.app_and_releases.version.ready_to_install',
+                {
+                  version: `v${update?.version}`,
+                },
+              )}
             </p>
             <ReleaseNotesLink
               version={update?.version}
@@ -169,7 +169,7 @@ export function AppUpdatesCard() {
               size='sm'
               onClick={handleInstallUpdate}
               disabled={isPending}
-              className={cn('h-8 text-xs gap-1.5')}
+              className='h-8 gap-1.5'
             >
               <Show
                 when={!isPending}
@@ -248,7 +248,7 @@ export function AppUpdatesCard() {
               </span>
               <Show when={progress.percentage > 0}>
                 <span
-                  className={cn('font-mono text-[11px] text-primary font-bold')}
+                  className={cn('font-mono text-xs text-primary font-bold')}
                 >
                   {progress.percentage}%
                 </span>
@@ -261,7 +261,9 @@ export function AppUpdatesCard() {
                 )}
               >
                 <div
-                  className={cn('h-full bg-primary transition-all duration-200')}
+                  className={cn(
+                    'h-full bg-primary transition-all duration-200',
+                  )}
                   style={{ width: `${progress.percentage}%` }}
                 />
               </div>
@@ -282,31 +284,31 @@ export function AppUpdatesCard() {
             'pt-2 border-t border-border/30 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 text-xs',
           )}
         >
-          <div className={cn('flex items-center gap-1.5 text-muted-foreground')}>
+          <div
+            className={cn('flex items-center gap-1.5 text-muted-foreground')}
+          >
             <Badge
-              variant='outline'
-              className={cn(
-                'text-[9px] font-mono px-1 py-0 h-4 border-amber-500/40 text-amber-500 bg-amber-500/5',
-              )}
+              variant='warning'
+              size='sm'
             >
               DEV
             </Badge>
-            <span className={cn('text-[11px]')}>
+            <span className={cn('text-xs')}>
               {t('settings.tabs.general.app_and_releases.actions.package')}{' '}
               <span className={cn('font-mono')}>{health.packageType}</span>
             </span>
           </div>
           <div className={cn('flex items-center gap-1.5')}>
             <Button
-              size='sm'
+              size='default'
               variant='outline'
               disabled={isPending}
               onClick={simulateUpdateDemo}
-              className={cn('h-7 text-[11px] px-2.5 gap-1.5')}
+              className='gap-1.5'
             >
               <HugeiconsIcon
                 icon={SparklesIcon}
-                className={cn('size-3 text-amber-500')}
+                className={cn('size-3 text-warning')}
               />
               <span>
                 {t(
@@ -316,12 +318,9 @@ export function AppUpdatesCard() {
             </Button>
             <Show when={status !== 'idle'}>
               <Button
-                size='sm'
-                variant='ghost'
+                size='default'
+                variant='ghost-muted'
                 onClick={reset}
-                className={cn(
-                  'h-7 text-[11px] px-2 text-muted-foreground hover:text-foreground',
-                )}
               >
                 {t('settings.tabs.general.app_and_releases.actions.reset')}
               </Button>

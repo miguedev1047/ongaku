@@ -10,7 +10,6 @@ import {
   TableSongsHeader,
   TableSongsBody,
 } from '@/components/compounds/table-songs-list'
-import { useTranslation } from 'react-i18next'
 
 interface PlaylistSongsListProps {
   data: TPlaylistSong[]
@@ -22,7 +21,6 @@ export function PlaylistSongsList({
   playlistName,
 }: PlaylistSongsListProps) {
   'use no memo'
-  const { t } = useTranslation()
 
   const {
     rowSelection,
@@ -35,11 +33,6 @@ export function PlaylistSongsList({
 
   usePlaylistBatchSync({ rowSelection, setRowSelection, data })
 
-  const songCountLabel =
-    data.length === 1
-      ? t('playlists.card.songs_count', { count: data.length })
-      : t('playlists.card.songs_count_plural', { count: data.length })
-
   return (
     <TableSongsList
       table={table}
@@ -51,7 +44,7 @@ export function PlaylistSongsList({
       <TableSongsHeader>
         <TableSongsHeader.SelectAll />
         <TableSongsHeader.Cover />
-        <TableSongsHeader.Title countLabel={songCountLabel} />
+        <TableSongsHeader.Title />
         <TableSongsHeader.Artist />
         <TableSongsHeader.Album />
         <TableSongsHeader.Duration />

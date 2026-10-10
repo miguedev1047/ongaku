@@ -59,10 +59,13 @@ export function YoutubeToolsMissing({
 
   return (
     <RouteSection className='flex items-center justify-center select-none'>
-      <Empty className='border border-border/40 bg-card/30 max-w-lg w-full'>
+      <Empty
+        variant='card'
+        className='max-w-lg w-full'
+      >
         <EmptyMedia
           variant='icon'
-          className='bg-amber-500/10 text-amber-500'
+          color='warning'
         >
           <HugeiconsIcon
             icon={AlertIcon}

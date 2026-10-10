@@ -30,8 +30,9 @@ export function TableSongsItem({
     <TableRow
       onClick={onClick}
       data-active-track={isActive}
+      padding='table'
       className={cn(
-        'group w-full h-full px-3 gap-3 border-b border-border/20 cursor-pointer select-none',
+        'group w-full h-full gap-3 cursor-pointer select-none',
         className,
       )}
       {...(props as any)}
@@ -196,7 +197,7 @@ export function TableSongsItemTitle({
       <Show when={Boolean(subtitle)}>
         <span
           className={cn(
-            'text-[11px] text-muted-foreground truncate w-full',
+            'text-xs text-muted-foreground truncate w-full',
             subtitleClassName,
           )}
         >

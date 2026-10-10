@@ -27,31 +27,35 @@ export function DownloadQueueTrigger() {
   const bottomClass = activePlayer ? "bottom-24" : "bottom-4"
 
   return createPortal(
-    <Button
-      variant={isDownloading ? "default" : "secondary"}
-      size="sm"
+    <div
       className={cn(
-        "fixed right-4 z-40 shadow-lg gap-2 px-3 h-8 rounded-lg transition-all duration-200",
+        "fixed right-4 z-40 shadow-lg rounded-md transition-all duration-200",
         bottomClass,
         isDialogOpen && "ring-2 ring-primary"
       )}
-      onClick={() => toggleDialog()}
     >
-      <HugeiconsIcon
-        icon={Download01Icon}
-        className={cn("size-4", isDownloading && "animate-pulse")}
-      />
-      <span className="text-xs font-medium hidden sm:inline">
-        {isDownloading ? t("youtube_search.downloading") : t("download_queue.downloads")}
-      </span>
-
-      <Badge
-        variant={isDownloading ? "secondary" : "default"}
-        className="text-[10px] px-1.5 py-0 h-4 min-w-4 flex items-center justify-center font-bold"
+      <Button
+        variant={isDownloading ? "default" : "secondary"}
+        size="lg"
+        className="gap-2"
+        onClick={() => toggleDialog()}
       >
-        {pendingCount > 0 ? pendingCount : completedTasks.length}
-      </Badge>
-    </Button>,
+        <HugeiconsIcon
+          icon={Download01Icon}
+          className={cn("size-4", isDownloading && "animate-pulse")}
+        />
+        <span className="hidden sm:inline">
+          {isDownloading ? t("youtube_search.downloading") : t("download_queue.downloads")}
+        </span>
+
+        <Badge
+          variant={isDownloading ? "secondary" : "default"}
+          size="sm"
+        >
+          {pendingCount > 0 ? pendingCount : completedTasks.length}
+        </Badge>
+      </Button>
+    </div>,
     document.body
   )
 }

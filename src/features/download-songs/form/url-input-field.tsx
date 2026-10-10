@@ -85,7 +85,7 @@ export function UrlInputField({
       </InputGroup>
 
       <Show when={Boolean(displayError)}>
-        <p className='text-[11px] text-destructive'>{displayError}</p>
+        <p className='text-xs text-destructive'>{displayError}</p>
       </Show>
     </div>
   )

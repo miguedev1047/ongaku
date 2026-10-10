@@ -51,12 +51,12 @@ export function SearchSongs() {
       <CommandDialog
         open={isOpen}
         onOpenChange={setIsOpen}
+        size='md'
       >
-        <Command
-          className='max-w-sm rounded-lg border'
-          shouldFilter={false}
-        >
-          <CommandInput placeholder={t('playlists.search_songs_command_placeholder')} />
+        <Command shouldFilter={false}>
+          <CommandInput
+            placeholder={t('playlists.search_songs_command_placeholder')}
+          />
           <CommandVirtualList
             data={songs}
             filter={(song, search) => {
@@ -66,7 +66,8 @@ export function SearchSongs() {
                 Boolean(song.metadata?.artist?.toLowerCase().includes(query))
               )
             }}
-            className='h-[40vh]'
+            estimateSize={47}
+            style={{ maxHeight: '40vh' }}
             heading={t('playlists.search_songs_command_heading')}
           >
             {(song) => {

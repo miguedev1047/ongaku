@@ -62,9 +62,8 @@ export function PlaylistBatchBar({
           </span>
 
           <Button
-            size="icon"
-            variant="ghost"
-            className="size-6 text-muted-foreground hover:text-foreground"
+            size="icon-sm"
+            variant="ghost-muted"
             onClick={clearSelection}
             title={t("playlists.batch.deselect_all")}
           >
@@ -81,7 +80,7 @@ export function PlaylistBatchBar({
           <Button
             size="sm"
             variant="outline"
-            className="gap-1.5 h-8 text-xs font-medium"
+            className="gap-1.5 h-8"
             onClick={() => setIsMoveOpen(true)}
           >
             <HugeiconsIcon
@@ -94,7 +93,7 @@ export function PlaylistBatchBar({
           <Button
             size="sm"
             variant="destructive"
-            className="gap-1.5 h-8 text-xs font-medium"
+            className="gap-1.5 h-8"
             onClick={() => setIsDeleteOpen(true)}
           >
             <HugeiconsIcon

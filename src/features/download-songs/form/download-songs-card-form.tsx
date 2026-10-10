@@ -26,7 +26,7 @@ export function DownloadSongsCardForm({
   const hasResults = items.length > 0
 
   return (
-    <CardWrapper className='w-full space-y-4'>
+    <CardWrapper className='w-full'>
       <CardHeader>
         <CardTitle>{t('download_songs.title')}</CardTitle>
         <CardDescription>{t('download_songs.description')}</CardDescription>
@@ -55,7 +55,7 @@ export function DownloadSongsCardForm({
         </CardContent>
       </form>
 
-      <CardFooter className='flex items-center justify-between border-t border-border/20 pt-3'>
+      <CardFooter className='justify-between'>
         <Show
           when={hasResults}
           fallback={<div />}

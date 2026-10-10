@@ -34,9 +34,8 @@ export function DownloadQueueBadge() {
       <Show when={pendingCount > 0}>
         <Badge
           variant='default'
-          className={cn(
-            'absolute -top-1 -right-1 size-4 p-0 text-[9px] flex items-center justify-center font-bold',
-          )}
+          size='xs'
+          className={cn('absolute -top-1 -right-1')}
         >
           {pendingCount}
         </Badge>

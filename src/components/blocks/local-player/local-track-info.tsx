@@ -22,9 +22,8 @@ export function LocalPlayerTrackInfo() {
       <Show
         when={currentSong.playlist_name}
         fallback={
-          <Link to='/library'>
+          <Link to='/library' className='hover:underline'>
             <PlayerTitle
-              className='hover:underline'
               title={currentSong.name}
             >
               {currentSong.name}
@@ -36,9 +35,9 @@ export function LocalPlayerTrackInfo() {
           <Link
             to='/playlists/$playlistName'
             params={{ playlistName }}
+            className='hover:underline'
           >
             <PlayerTitle
-              className='hover:underline'
               title={currentSong.name}
             >
               {currentSong.name}

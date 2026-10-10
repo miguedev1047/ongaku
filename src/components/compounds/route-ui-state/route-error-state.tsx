@@ -47,10 +47,11 @@ export function RouteErrorState({
         className
       )}
     >
-      <Empty className="w-full border border-dashed py-8">
+      <Empty variant="card" className="w-full py-8">
         <EmptyMedia
           variant="icon"
-          className="bg-destructive/10 text-destructive size-10"
+          color="destructive"
+          className="size-10"
         >
           <HugeiconsIcon
             icon={AlertIcon}
@@ -60,8 +61,10 @@ export function RouteErrorState({
 
         <EmptyHeader>
           <EmptyTitle>{displayTitle}</EmptyTitle>
-          <EmptyDescription className="line-clamp-3 text-xs">
-            {displayMessage}
+          <EmptyDescription>
+            <span className="line-clamp-3">
+              {displayMessage}
+            </span>
           </EmptyDescription>
         </EmptyHeader>
 

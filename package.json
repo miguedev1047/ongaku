@@ -10,7 +10,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "tauri": "tauri",
-    "check:platform": "! grep -rn \"@tauri-apps\" src/ --exclude-dir=infrastructure"
+    "check:platform": "! grep -rn \"@tauri-apps\" src/ --exclude-dir=infrastructure",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",

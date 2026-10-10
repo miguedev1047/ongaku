@@ -1,2 +1,2 @@
-export * from './download-songs-header'
+export * from './header'
 export * from './download-songs-content'

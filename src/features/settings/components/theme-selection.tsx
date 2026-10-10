@@ -1,4 +1,3 @@
-import { cn } from 'cn'
 import { Button } from '@/components/ui/button'
 import { CardWrapper } from '@/components/ui/card-wrapper'
 import { HugeiconsIcon } from '@hugeicons/react'
@@ -68,15 +67,11 @@ export function ThemeSelection() {
           return (
             <Button
               key={opt.id}
-              variant='outline'
+              variant='selectable'
               size='sm'
+              aria-selected={isSelected}
               onClick={() => handleSelectTheme(opt.id)}
-              className={cn(
-                'h-9 text-xs gap-2 rounded-md font-medium transition-all shadow-xs cursor-pointer select-none border',
-                isSelected
-                  ? 'border-transparent ring-2 outline-2 ring-foreground outline-foreground'
-                  : 'border-black/10 dark:border-white/10 hover:opacity-85 hover:scale-102',
-              )}
+              className='h-9'
             >
               <HugeiconsIcon
                 icon={opt.icon}

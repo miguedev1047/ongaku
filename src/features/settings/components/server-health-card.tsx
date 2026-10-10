@@ -39,10 +39,7 @@ export function ServerHealthCard() {
         <Show
           when={isHealthy}
           fallback={
-            <Badge
-              variant="destructive"
-              className="text-[10px] gap-1"
-            >
+            <Badge variant="destructive">
               <HugeiconsIcon
                 icon={AlertCircleIcon}
                 className="size-3"
@@ -51,10 +48,7 @@ export function ServerHealthCard() {
             </Badge>
           }
         >
-          <Badge
-            variant="secondary"
-            className="text-[10px] gap-1 bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
-          >
+          <Badge variant="success">
             <HugeiconsIcon
               icon={CheckmarkCircle02Icon}
               className="size-3"
@@ -66,7 +60,7 @@ export function ServerHealthCard() {
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 text-xs">
         <div className="p-2.5 rounded-md bg-muted/40 border border-border/30">
-          <span className="text-[10px] text-muted-foreground block uppercase tracking-wider font-semibold">
+          <span className="text-2xs text-muted-foreground block uppercase tracking-wider font-semibold">
             {t('settings.tabs.system.server_health.binding_host')}
           </span>
           <span className="font-mono font-medium text-foreground mt-0.5 block">
@@ -75,7 +69,7 @@ export function ServerHealthCard() {
         </div>
 
         <div className="p-2.5 rounded-md bg-muted/40 border border-border/30">
-          <span className="text-[10px] text-muted-foreground block uppercase tracking-wider font-semibold">
+          <span className="text-2xs text-muted-foreground block uppercase tracking-wider font-semibold">
             {t('settings.tabs.system.server_health.allocated_port')}
           </span>
           <span className="font-mono font-medium text-foreground mt-0.5 block">
@@ -84,7 +78,7 @@ export function ServerHealthCard() {
         </div>
 
         <div className="p-2.5 rounded-md bg-muted/40 border border-border/30">
-          <span className="text-[10px] text-muted-foreground block uppercase tracking-wider font-semibold">
+          <span className="text-2xs text-muted-foreground block uppercase tracking-wider font-semibold">
             {t('settings.tabs.system.server_health.base_endpoint')}
           </span>
           <span className="font-mono font-medium text-foreground mt-0.5 block truncate" title={url}>
