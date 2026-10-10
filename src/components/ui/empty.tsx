@@ -1,14 +1,32 @@
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "cn"
 
-function Empty({ className, ...props }: React.ComponentProps<"div">) {
+const emptyVariants = cva(
+  "flex w-full min-w-0 flex-1 flex-col items-center justify-center gap-4 text-center text-balance",
+  {
+    variants: {
+      variant: {
+        default: "rounded-xl border-dashed p-6",
+        card: "rounded-xl border border-border/40 bg-card/30 p-6",
+        outline: "rounded-xl border border-border/40 p-6",
+        plain: "p-4"
+      }
+    },
+    defaultVariants: {
+      variant: "default"
+    }
+  }
+)
+
+export interface EmptyProps
+  extends React.ComponentProps<"div">,
+    VariantProps<typeof emptyVariants> {}
+
+function Empty({ className, variant, ...props }: EmptyProps) {
   return (
     <div
       data-slot="empty"
-      className={cn(
-        "flex w-full min-w-0 flex-1 flex-col items-center justify-center gap-4 rounded-xl border-dashed p-6 text-center text-balance",
-        className
-      )}
+      className={cn(emptyVariants({ variant }), className)}
       {...props}
     />
   )
@@ -30,25 +48,35 @@ const emptyMediaVariants = cva(
     variants: {
       variant: {
         default: "bg-transparent",
-        icon: "flex size-8 shrink-0 items-center justify-center rounded-md bg-muted text-foreground [&_svg:not([class*='size-'])]:size-4",
+        icon: "flex size-8 shrink-0 items-center justify-center rounded-md [&_svg:not([class*='size-'])]:size-4"
       },
+      color: {
+        default: "bg-muted text-foreground",
+        primary: "bg-primary/10 text-primary",
+        destructive: "bg-destructive/10 text-destructive",
+        warning: "bg-warning/10 text-warning",
+        success: "bg-success/10 text-success",
+        info: "bg-info/10 text-info"
+      }
     },
     defaultVariants: {
       variant: "default",
-    },
+      color: "default"
+    }
   }
 )
 
 function EmptyMedia({
   className,
   variant = "default",
+  color = "default",
   ...props
 }: React.ComponentProps<"div"> & VariantProps<typeof emptyMediaVariants>) {
   return (
     <div
       data-slot="empty-icon"
       data-variant={variant}
-      className={cn(emptyMediaVariants({ variant, className }))}
+      className={cn(emptyMediaVariants({ variant, color }), className)}
       {...props}
     />
   )
@@ -95,9 +123,11 @@ function EmptyContent({ className, ...props }: React.ComponentProps<"div">) {
 
 export {
   Empty,
+  emptyVariants,
   EmptyHeader,
   EmptyTitle,
   EmptyDescription,
   EmptyContent,
   EmptyMedia,
+  emptyMediaVariants,
 }

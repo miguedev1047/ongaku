@@ -47,9 +47,10 @@ export function StreamingPreviewCard({ className }: StreamingPreviewCardProps) {
 
         return (
           <CardWrapper
+            padding='none'
+            animated={true}
             className={cn(
               'relative overflow-hidden',
-              'animate-in fade-in slide-in-from-top-2 duration-200 p-0',
               className,
             )}
           >
@@ -124,7 +125,7 @@ export function StreamingPreviewCard({ className }: StreamingPreviewCardProps) {
                           fallback={
                             <Badge
                               variant='secondary'
-                              className='text-[10px] h-4.5 px-1.5 py-0 font-medium'
+                              size='sm'
                             >
                               {t('download_songs.preview.paused')}
                             </Badge>
@@ -132,7 +133,7 @@ export function StreamingPreviewCard({ className }: StreamingPreviewCardProps) {
                         >
                           <Badge
                             variant='default'
-                            className='text-[10px] h-4.5 px-1.5 py-0 font-medium bg-primary/90 text-primary-foreground'
+                            size='sm'
                           >
                             {t('download_songs.preview.streaming')}
                           </Badge>
@@ -140,15 +141,15 @@ export function StreamingPreviewCard({ className }: StreamingPreviewCardProps) {
                       }
                     >
                       <Badge
-                        variant='outline'
-                        className='text-[10px] h-4.5 px-1.5 py-0 font-medium border-primary/40 text-primary bg-primary/5'
+                        variant='outline-primary'
+                        size='sm'
                       >
                         {t('download_songs.preview.loading')}
                       </Badge>
                     </Show>
                   </div>
 
-                  <div className='flex items-center gap-2 text-[11px] text-muted-foreground'>
+                  <div className='flex items-center gap-2 text-xs text-muted-foreground'>
                     <span className='truncate max-w-50 sm:max-w-xs'>
                       {track.channel}
                     </span>
@@ -156,7 +157,7 @@ export function StreamingPreviewCard({ className }: StreamingPreviewCardProps) {
                       {(trackDuration) => (
                         <>
                           <span>•</span>
-                          <span className='font-mono text-[10px]'>
+                          <span className='font-mono text-2xs'>
                             {formatDuration(trackDuration)}
                           </span>
                         </>

@@ -50,27 +50,28 @@ function SearchPlaylistItem({ playlist, onSelect }: SearchPlaylistItemProps) {
       onMouseEnter={handlePreload}
       onFocus={handlePreload}
       onSelect={handleNavigate}
-      className='w-full flex! flex-row! justify-between'
     >
-      <HugeiconsIcon icon={Music01Icon} />
-      <span className='truncate'>{playlist.name}</span>
+      <div className='flex w-full'>
+        <HugeiconsIcon icon={Music01Icon} />
+        <span className='truncate'>{playlist.name}</span>
 
-      <CommandShortcut className='flex items-center gap-1'>
-        <p className='ml-auto text-[11px] text-muted-foreground font-mono'>
-          <Show
-            when={playlist.tracks === 1}
-            fallback={
-              <>
-                {t('playlists.card.tracks_count_plural', {
-                  count: playlist.tracks,
-                })}
-              </>
-            }
-          >
-            {t('playlists.card.tracks_count', { count: playlist.tracks })}
-          </Show>
-        </p>
-      </CommandShortcut>
+        <CommandShortcut className='flex items-center ml-auto'>
+          <p className='ml-auto text-xs text-muted-foreground font-mono'>
+            <Show
+              when={playlist.tracks === 1}
+              fallback={
+                <>
+                  {t('playlists.card.tracks_count_plural', {
+                    count: playlist.tracks,
+                  })}
+                </>
+              }
+            >
+              {t('playlists.card.tracks_count', { count: playlist.tracks })}
+            </Show>
+          </p>
+        </CommandShortcut>
+      </div>
     </CommandItem>
   )
 }
@@ -100,11 +101,9 @@ export function SearchPlaylists() {
       <CommandDialog
         open={isOpen}
         onOpenChange={setIsOpen}
+        size='md'
       >
-        <Command
-          className='max-w-sm rounded-lg border'
-          shouldFilter={false}
-        >
+        <Command shouldFilter={false}>
           <CommandInput
             placeholder={t('playlists.search_command_placeholder')}
           />
@@ -116,7 +115,8 @@ export function SearchPlaylists() {
 
               return nameMatch
             }}
-            className='h-[40vh]'
+            estimateSize={31}
+            style={{ maxHeight: '40vh' }}
             heading={t('playlists.search_command_heading')}
           >
             {(playlist) => (

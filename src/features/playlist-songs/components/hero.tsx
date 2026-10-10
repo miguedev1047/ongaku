@@ -44,8 +44,10 @@ export function PlaylistSongHero() {
       )}
     >
       <CardWrapper
+        variant='hero'
+        padding='hero'
         className={cn(
-          'flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 sm:gap-6 w-full bg-card p-4 sm:p-5 rounded-lg border-border/40 transition-all ease-in-out duration-300 relative overflow-hidden',
+          'flex flex-col sm:flex-row items-start sm:items-end justify-between w-full relative overflow-hidden',
         )}
         style={{ backgroundColor: bgCardColor }}
       >
@@ -81,10 +83,7 @@ export function PlaylistSongHero() {
                       ? t('player.pause')
                       : t('playlists.actions.play')
                   }
-                  className={cn(
-                    'size-10 sm:size-12 rounded-lg shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer shrink-0',
-                    isPlaylistPlaying && 'bg-primary text-primary-foreground',
-                  )}
+                  className='size-10 sm:size-12 hover:scale-105 active:scale-95 cursor-pointer shrink-0'
                 >
                   <Show
                     when={isPlaylistPlaying}

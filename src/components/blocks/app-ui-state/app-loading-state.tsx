@@ -22,7 +22,7 @@ export function AppLoadingState({
         <p className="text-xs font-mono text-muted-foreground animate-pulse">
           {message}
         </p>
-        <span className="text-[11px] text-muted-foreground/60">
+        <span className="text-xs text-muted-foreground/60">
           {submessage}
         </span>
       </div>

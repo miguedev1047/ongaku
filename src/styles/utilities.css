@@ -1,0 +1,67 @@
+@utility bg-secondary-hover {
+  background-color: color-mix(in oklch, var(--secondary), var(--foreground) 5%);
+}
+
+@utility rounded-inherit {
+  border-radius: inherit;
+}
+
+@utility max-w-dialog {
+  max-width: calc(100% - 2rem);
+}
+
+@utility grid-cols-auto-1fr {
+  grid-template-columns: auto 1fr;
+}
+
+@utility grid-cols-1fr-auto {
+  grid-template-columns: 1fr auto;
+}
+
+@utility grid-rows-auto-1fr {
+  grid-template-rows: auto 1fr;
+}
+
+@utility grid-rows-auto-auto-1fr {
+  grid-template-rows: auto auto 1fr;
+}
+
+@utility grid-rows-auto-auto {
+  grid-template-rows: auto auto;
+}
+
+@utility card-spacing {
+  --card-spacing: calc(var(--spacing) * 4);
+}
+
+@utility card-spacing-sm {
+  --card-spacing: calc(var(--spacing) * 3);
+}
+
+@utility translate-y-arrow {
+  translate: var(--tw-translate-x, 0) calc(-50% - 2px);
+}
+
+@utility w-sidebar-icon-floating {
+  width: calc(var(--sidebar-width-icon) + var(--spacing) * 4);
+}
+
+@utility w-sidebar-icon-floating-border {
+  width: calc(var(--sidebar-width-icon) + var(--spacing) * 4 + 2px);
+}
+
+@utility -left-sidebar-width {
+  left: calc(var(--sidebar-width) * -1);
+}
+
+@utility -right-sidebar-width {
+  right: calc(var(--sidebar-width) * -1);
+}
+
+@utility folder-skew-left {
+  transform: skew(15deg) scaleY(0.6);
+}
+
+@utility folder-skew-right {
+  transform: skew(-15deg) scaleY(0.6);
+}

@@ -24,7 +24,7 @@ export function QueueBadge({ pendingCount, completedCount }: QueueBadgeProps) {
         </Show>
       }
     >
-      <SidebarMenuBadge className="bg-primary text-primary-foreground font-bold">
+      <SidebarMenuBadge variant="solid">
         {pendingCount}
       </SidebarMenuBadge>
     </Show>

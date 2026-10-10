@@ -34,9 +34,8 @@ export function QueueSheet() {
             <SheetTrigger
               render={
                 <Button
-                  size='icon'
-                  variant='ghost'
-                  className='size-8 rounded-md text-muted-foreground hover:text-foreground'
+                  size='icon-sm'
+                  variant='ghost-muted'
                 >
                   <HugeiconsIcon icon={ListMusicIcon} />
                 </Button>
@@ -51,19 +50,20 @@ export function QueueSheet() {
 
       <SheetContent
         side='right'
-        className='flex flex-col h-full w-full sm:max-w-md p-0 gap-0 bg-background border-l border-border'
+        className='flex flex-col h-full w-full sm:max-w-md p-0 gap-0'
       >
         {/* Header */}
-        <SheetHeader className='flex flex-col gap-1 px-4 py-3.5 border-b border-border bg-card/40'>
-          <div className='flex items-center justify-between pr-6'>
-            <SheetTitle className='text-sm font-semibold tracking-tight'>
-              {t('player.queue_title')}
-            </SheetTitle>
-          </div>
+        <div className='border-b border-border bg-card/40'>
+          <SheetHeader className='flex flex-col gap-1 px-4 py-3.5'>
+            <div className='flex items-center justify-between pr-6'>
+              <SheetTitle>
+                {t('player.queue_title')}
+              </SheetTitle>
+            </div>
 
-          <SheetDescription className='flex items-center gap-1.5 text-xs text-muted-foreground'>
+            <SheetDescription className='flex items-center gap-1.5'>
             <Show when={Boolean(currentPlaylist)}>
-              <span className='font-medium text-foreground truncate max-w-[140px]'>
+              <span className='font-medium text-foreground truncate max-w-35'>
                 {currentPlaylist}
               </span>
               <span>•</span>
@@ -85,6 +85,7 @@ export function QueueSheet() {
             </Show>
           </SheetDescription>
         </SheetHeader>
+        </div>
 
         {/* Virtualized Queue List */}
         <div className='flex-1 min-h-0 flex flex-col overflow-hidden'>

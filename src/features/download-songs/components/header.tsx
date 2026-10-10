@@ -7,16 +7,9 @@ import {
 } from '@/components/ui/breadcrumb'
 import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
-import { YoutubeSearchBar } from '@/features/youtube-search/components'
 import { useTranslation } from 'react-i18next'
 
-interface YoutubeSearchHeaderProps {
-  initialQuery?: string
-}
-
-export function YoutubeSearchHeader({
-  initialQuery = '',
-}: YoutubeSearchHeaderProps) {
+export function DownloadSongsHeader() {
   const { t } = useTranslation()
 
   return (
@@ -30,15 +23,11 @@ export function YoutubeSearchHeader({
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbPage>
-              {t('sidebar.navigation.routes.search')}
+              {t('sidebar.navigation.routes.downloads')}
             </BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-
-      <div className='ml-auto flex items-center gap-2'>
-        <YoutubeSearchBar initialQuery={initialQuery} />
-      </div>
     </RouteHeader>
   )
 }

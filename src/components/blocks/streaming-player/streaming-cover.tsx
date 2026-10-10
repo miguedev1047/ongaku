@@ -47,8 +47,8 @@ export function StreamingCover() {
 
             <div className="absolute top-0.5 left-0.5 pointer-events-none">
               <Badge
-                variant="destructive"
-                className="text-[8px] px-1 py-0 h-3.5 bg-red-600/90 text-white flex items-center gap-0.5 shadow-xs"
+                variant="destructive-solid"
+                size="xs"
               >
                 <HugeiconsIcon
                   icon={YoutubeIcon}

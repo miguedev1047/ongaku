@@ -48,11 +48,9 @@ export function SearchLibrary() {
       <CommandDialog
         open={isOpen}
         onOpenChange={setIsOpen}
+        size='md'
       >
-        <Command
-          className='max-w-md rounded-lg border'
-          shouldFilter={false}
-        >
+        <Command shouldFilter={false}>
           <CommandInput placeholder={t('library.search_command_placeholder')} />
           <CommandVirtualList
             data={songs}
@@ -67,7 +65,7 @@ export function SearchLibrary() {
               )
               return nameMatch || artistMatch || albumMatch
             }}
-            className='h-[40vh]'
+            style={{ height: '40vh' }}
             heading={t('library.search_command_heading')}
           >
             {(song) => {

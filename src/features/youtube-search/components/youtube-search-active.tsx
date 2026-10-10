@@ -13,7 +13,7 @@ export function YoutubeSearchActive({
   const activeTrack = useStreamingPlayerStore((state) => state.currentTrack)
 
   return (
-    <RouteSection className='flex gap-4'>
+    <RouteSection direction='row' gap='md'>
       <div className='flex-1 min-h-0 overflow-hidden'>
         <SearchResultsSection query={initialQuery} />
       </div>

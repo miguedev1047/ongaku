@@ -59,7 +59,12 @@ function RouteComponent() {
         isLoading={isLoading}
         onRefresh={refreshHealth}
       />
-      <RouteSection className='flex-1 overflow-y-auto no-scrollbar pb-12 flex flex-col gap-4'>
+      <RouteSection
+        scrollable
+        direction='col'
+        gap='md'
+        className='pb-12'
+      >
         <Tabs
           defaultValue='general'
           className='w-full'
@@ -74,7 +79,9 @@ function RouteComponent() {
             <TabsTrigger value='appearance'>
               {t('settings.tab_appearance')}
             </TabsTrigger>
-            <SystemTabTrigger />
+            <SystemTabTrigger>
+              {t('settings.tabs.system.title')}
+            </SystemTabTrigger>
           </TabsList>
 
           <TabsContent

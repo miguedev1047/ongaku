@@ -17,8 +17,9 @@ export function TableSongsBody<TRow = any>({
   return (
     <TableBody
       ref={scrollRef}
+      bodyVariant='scrollable'
       className={cn(
-        'flex-1 min-h-0 w-full overflow-y-auto no-scrollbar scroll-fade-y',
+        'flex-1 min-h-0 w-full overflow-y-auto',
         className,
       )}
     >

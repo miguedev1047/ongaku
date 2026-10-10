@@ -16,18 +16,18 @@ export function LibraryStats() {
 
   return (
     <div className='grid md:grid-cols-2 gap-4'>
-      <CardWrapper className='@container/card bg-card/60'>
+      <CardWrapper className='@container/card'>
         <CardHeader>
           <CardDescription>{t('library.stats.tracks')}</CardDescription>
-          <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
+          <CardTitle size='metric'>
             {songs.length}
           </CardTitle>
         </CardHeader>
       </CardWrapper>
-      <CardWrapper className='@container/card bg-card/60'>
+      <CardWrapper className='@container/card'>
         <CardHeader>
           <CardDescription>{t('library.stats.playlists')}</CardDescription>
-          <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
+          <CardTitle size='metric'>
             {playlists.length}
           </CardTitle>
         </CardHeader>

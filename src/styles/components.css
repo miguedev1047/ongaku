@@ -1,0 +1,46 @@
+@layer components {
+  .native-slider {
+    @apply h-1.5 w-full cursor-pointer appearance-none rounded-md outline-hidden p-0 m-0 border-0;
+    --slider-progress: 0%;
+    background: linear-gradient(
+      to right,
+      var(--primary) var(--slider-progress),
+      var(--muted) var(--slider-progress)
+    );
+  }
+
+  .native-slider:disabled {
+    @apply cursor-default opacity-50;
+  }
+
+  .native-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    @apply size-3 rounded-md border border-ring bg-white;
+    margin-top: -0.025rem;
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--ring) 30%, transparent);
+    transition: box-shadow 0.15s;
+  }
+
+  .native-slider:hover::-webkit-slider-thumb,
+  .native-slider:active::-webkit-slider-thumb,
+  .native-slider:focus-visible::-webkit-slider-thumb {
+    outline: none;
+    box-shadow: 0 0 0 2px color-mix(in oklab, var(--ring) 30%, transparent);
+  }
+
+  .native-slider::-moz-range-track {
+    @apply rounded-md bg-muted;
+    height: 0.25rem;
+  }
+
+  .native-slider::-moz-range-progress {
+    height: 0.25rem;
+    border-radius: var(--radius-md);
+    background-color: var(--primary);
+  }
+
+  .native-slider::-moz-range-thumb {
+    @apply size-3 appearance-none rounded-md border border-ring bg-white;
+  }
+}

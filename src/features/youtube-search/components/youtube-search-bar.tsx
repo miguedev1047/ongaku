@@ -18,7 +18,6 @@ import {
 import { Kbd } from '@/components/ui/kbd'
 import { Show } from '@/components/utility/show'
 import { useYoutubeSearchBar } from '@/features/youtube-search/hooks'
-import { cn } from 'cn'
 import { useTranslation } from 'react-i18next'
 
 interface YoutubeSearchBarProps {
@@ -47,11 +46,9 @@ export function YoutubeSearchBar({ initialQuery = '' }: YoutubeSearchBarProps) {
     <div className='flex items-center gap-2'>
       <Button
         onClick={() => handleOpenChange(true)}
-        variant='outline'
-        className={cn(
-          'w-60 justify-center items-center text-xs font-normal border-border/40 bg-background/50 hover:bg-accent/40',
-        )}
+        variant='search-trigger'
         size='sm'
+        className='w-60'
       >
         <HugeiconsIcon
           icon={Search01Icon}
@@ -77,7 +74,7 @@ export function YoutubeSearchBar({ initialQuery = '' }: YoutubeSearchBarProps) {
         onOpenChange={handleOpenChange}
       >
         <Command
-          className='max-w-md rounded-lg border'
+          className='max-w-md'
           shouldFilter={false}
         >
           <CommandInput
@@ -87,19 +84,19 @@ export function YoutubeSearchBar({ initialQuery = '' }: YoutubeSearchBarProps) {
             onKeyDown={handleKeyDown}
           />
 
-          <CommandList className='max-h-80 overflow-y-auto no-scrollbar p-1'>
+          <CommandList className='max-h-80'>
             <Show when={hasTypedQuery}>
               <CommandGroup heading={t('youtube_search.search_action')}>
                 <CommandItem
                   value={`search-action-${queryInput}`}
                   onSelect={() => handleSearch(queryInput)}
-                  className='gap-2.5 font-medium'
+                  className='gap-2.5'
                 >
                   <HugeiconsIcon
                     icon={Search01Icon}
                     className='size-3.5 text-primary shrink-0'
                   />
-                  <span className='truncate'>
+                  <span className='truncate font-medium'>
                     {t('youtube_search.search_for', { query: queryInput })}
                   </span>
                 </CommandItem>
@@ -122,17 +119,18 @@ export function YoutubeSearchBar({ initialQuery = '' }: YoutubeSearchBarProps) {
                       />
                       <span className='truncate'>{item}</span>
                     </div>
-                    <Button
-                      variant='ghost'
-                      size='icon'
-                      className='size-5 opacity-0 group-hover/history:opacity-100 rounded-sm hover:bg-destructive/10 hover:text-destructive'
-                      onClick={(e) => handleRemoveHistory(e, item)}
-                    >
-                      <HugeiconsIcon
-                        icon={Cancel01Icon}
-                        className='size-3'
-                      />
-                    </Button>
+                    <span className='opacity-0 group-hover/history:opacity-100'>
+                      <Button
+                        variant='destructive-ghost'
+                        size='icon-xs'
+                        onClick={(e) => handleRemoveHistory(e, item)}
+                      >
+                        <HugeiconsIcon
+                          icon={Cancel01Icon}
+                          className='size-3'
+                        />
+                      </Button>
+                    </span>
                   </CommandItem>
                 ))}
               </CommandGroup>
@@ -147,11 +145,8 @@ export function YoutubeSearchBar({ initialQuery = '' }: YoutubeSearchBarProps) {
             <Show when={hasAnyHistory}>
               <div className='p-1 border-t border-border/40 flex justify-end'>
                 <Button
-                  variant='ghost'
+                  variant='destructive-ghost'
                   size='sm'
-                  className={cn(
-                    'h-6 text-[11px] text-muted-foreground hover:text-destructive gap-1 px-2 rounded-sm',
-                  )}
                   onClick={handleClearHistory}
                 >
                   <HugeiconsIcon

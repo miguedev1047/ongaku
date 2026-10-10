@@ -1,4 +1,4 @@
-export * from './settings-header'
+export * from './header'
 export * from './server-health-card'
 export * from './directories-status-card'
 export * from './binaries-status-card'

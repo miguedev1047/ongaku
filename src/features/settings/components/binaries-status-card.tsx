@@ -58,17 +58,15 @@ export function BinariesStatusCard() {
           fallback={
             <Badge
               variant="destructive"
-              className={cn("text-[10px]")}
+              className={cn("text-2xs")}
             >
               {t('settings.tabs.system.binaries_status.status.missing')}
             </Badge>
           }
         >
           <Badge
-            variant="secondary"
-            className={cn(
-              "text-[10px] bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
-            )}
+            variant="success"
+            className={cn("text-2xs")}
           >
             {t('settings.tabs.system.binaries_status.status.installed')}
           </Badge>
@@ -86,7 +84,7 @@ export function BinariesStatusCard() {
               yt-dlp
             </span>
             <span
-              className={cn("text-[10px] text-muted-foreground block mt-0.5")}
+              className={cn("text-2xs text-muted-foreground block mt-0.5")}
             >
               {t('settings.tabs.system.binaries_status.ytdlp_desc')}
             </span>
@@ -96,20 +94,16 @@ export function BinariesStatusCard() {
             when={ytdlpReady}
             fallback={
               <Badge
-                variant="outline"
-                className={cn(
-                  "text-[9px] h-4 px-1.5 text-amber-500 border-amber-500/30"
-                )}
+                variant="warning"
+                size="sm"
               >
                 {t('settings.tabs.system.binaries_status.status.missing')}
               </Badge>
             }
           >
             <Badge
-              variant="outline"
-              className={cn(
-                "text-[9px] h-4 px-1.5 text-emerald-500 border-emerald-500/30"
-              )}
+              variant="success"
+              size="sm"
             >
               {t('settings.tabs.system.binaries_status.status.installed')}
             </Badge>
@@ -126,7 +120,7 @@ export function BinariesStatusCard() {
               ffmpeg
             </span>
             <span
-              className={cn("text-[10px] text-muted-foreground block mt-0.5")}
+              className={cn("text-2xs text-muted-foreground block mt-0.5")}
             >
               {t('settings.tabs.system.binaries_status.ffmpeg_desc')}
             </span>
@@ -136,20 +130,16 @@ export function BinariesStatusCard() {
             when={ffmpegReady}
             fallback={
               <Badge
-                variant="outline"
-                className={cn(
-                  "text-[9px] h-4 px-1.5 text-amber-500 border-amber-500/30"
-                )}
+                variant="warning"
+                size="sm"
               >
                 {t('settings.tabs.system.binaries_status.status.missing')}
               </Badge>
             }
           >
             <Badge
-              variant="outline"
-              className={cn(
-                "text-[9px] h-4 px-1.5 text-emerald-500 border-emerald-500/30"
-              )}
+              variant="success"
+              size="sm"
             >
               {t('settings.tabs.system.binaries_status.status.installed')}
             </Badge>
@@ -165,7 +155,7 @@ export function BinariesStatusCard() {
         <div
           onClick={handleOpenFolder}
           className={cn(
-            "font-mono text-[10px] text-muted-foreground bg-muted/40 border border-border/30 rounded-md px-2.5 py-1.5 truncate cursor-pointer hover:border-border hover:text-foreground transition-colors flex-1"
+            "font-mono text-2xs text-muted-foreground bg-muted/40 border border-border/30 rounded-md px-2.5 py-1.5 truncate cursor-pointer hover:border-border hover:text-foreground transition-colors flex-1"
           )}
           title={binariesInfo?.bin_dir}
         >
@@ -177,13 +167,11 @@ export function BinariesStatusCard() {
             variant="outline"
             size="sm"
             onClick={handleOpenFolder}
-            className={cn(
-              "h-8 text-xs gap-1.5 text-muted-foreground hover:text-foreground"
-            )}
+            className="h-8 gap-1.5"
           >
             <HugeiconsIcon
               icon={FolderIcon}
-              className={cn("size-3.5")}
+              className="size-3.5"
             />
             <span>{t('settings.tabs.system.binaries_status.open_folder')}</span>
           </Button>
@@ -192,7 +180,7 @@ export function BinariesStatusCard() {
             size="sm"
             onClick={installBinaries}
             disabled={isPending}
-            className={cn("h-8 text-xs gap-1.5")}
+            className="h-8 gap-1.5"
           >
             <Show
               when={!isPending}
@@ -243,7 +231,7 @@ export function BinariesStatusCard() {
             <p className={cn("text-xs font-semibold text-foreground")}>
               {t('settings.tabs.system.binaries_status.installing_title')}
             </p>
-            <p className={cn("text-[11px] text-muted-foreground truncate")}>
+            <p className={cn("text-xs text-muted-foreground truncate")}>
               {t('settings.tabs.system.binaries_status.installing_desc')}
             </p>
           </div>

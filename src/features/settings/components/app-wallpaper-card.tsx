@@ -92,7 +92,8 @@ export function AppWallpaperCard({
       <Show when={isSelected}>
         <Badge
           variant='default'
-          className='absolute bottom-1.5 left-1.5 h-4 px-1.5 text-[9px] font-medium rounded-sm shadow-xs'
+          size='sm'
+          className='absolute bottom-1.5 left-1.5'
         >
           <HugeiconsIcon
             icon={Tick02Icon}

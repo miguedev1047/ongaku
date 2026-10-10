@@ -24,14 +24,11 @@ export function YoutubeItemSkeleton({
   return (
     <Item
       className={cn(
-        'pointer-events-none select-none opacity-80 border-transparent',
+        'pointer-events-none select-none',
         className,
       )}
     >
-      <ItemMedia
-        variant='image'
-        className='bg-muted'
-      >
+      <ItemMedia variant='image'>
         <Skeleton className='size-full rounded-sm' />
       </ItemMedia>
       <ItemContent className='gap-1.5'>

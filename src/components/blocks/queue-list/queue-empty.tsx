@@ -11,7 +11,7 @@ export function QueueEmpty() {
         <HugeiconsIcon icon={ListMusicIcon} className='size-6' />
       </div>
       <p className='text-xs font-medium text-foreground'>{t('player.empty_queue')}</p>
-      <p className='text-[11px] text-muted-foreground mt-1 max-w-[220px]'>
+      <p className='text-xs text-muted-foreground mt-1 max-w-55'>
         {t('player.empty_queue_desc')}
       </p>
     </div>

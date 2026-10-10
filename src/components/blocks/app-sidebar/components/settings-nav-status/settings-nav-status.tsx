@@ -49,12 +49,12 @@ export function StatusBadge({
       <Show
         when={status === 'error'}
         fallback={
-          <SidebarMenuBadge className='bg-primary/15 text-primary border border-primary/20 font-semibold text-[10px]'>
+          <SidebarMenuBadge variant='primary'>
             {badgeText}
           </SidebarMenuBadge>
         }
       >
-        <SidebarMenuBadge className='bg-destructive/15 text-destructive border border-destructive/20 font-semibold text-[10px]'>
+        <SidebarMenuBadge variant='destructive'>
           {badgeText}
         </SidebarMenuBadge>
       </Show>

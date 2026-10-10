@@ -31,13 +31,13 @@ export const QueueItem = memo(function QueueItem({
     <div
       onClick={() => onPlay(song)}
       className={cn(
-        'group relative flex items-center gap-3 px-2.5 h-[50px] rounded-md cursor-pointer transition-colors text-xs select-none',
+        'group relative flex items-center gap-3 px-2.5 h-12.5 rounded-md cursor-pointer transition-colors text-xs select-none',
         'hover:bg-muted/60',
         isActive ? 'bg-muted/80 text-foreground font-medium' : 'text-foreground'
       )}
     >
       {/* Index / Active indicator */}
-      <div className='flex items-center justify-center w-5 shrink-0 text-center font-mono text-[11px] text-muted-foreground'>
+      <div className='flex items-center justify-center w-5 shrink-0 text-center font-mono text-xs text-muted-foreground'>
         <Show
           when={isActive}
           fallback={
@@ -76,14 +76,14 @@ export const QueueItem = memo(function QueueItem({
         >
           {songName}
         </p>
-        <p className='truncate text-[11px] text-muted-foreground'>
+        <p className='truncate text-xs text-muted-foreground'>
           {artistName}
         </p>
       </div>
 
       {/* Duration */}
       <div className='flex items-center shrink-0'>
-        <span className='text-[11px] font-mono text-muted-foreground'>
+        <span className='text-xs font-mono text-muted-foreground'>
           {duration}
         </span>
       </div>

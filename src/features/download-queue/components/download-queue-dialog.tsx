@@ -54,10 +54,13 @@ export function DownloadQueueDialog() {
       open={isDialogOpen}
       onOpenChange={(open) => toggleDialog(open)}
     >
-      <DialogContent className="sm:max-w-xl max-h-[80vh] flex flex-col p-4 gap-3">
+      <DialogContent
+        className="sm:max-w-xl flex flex-col p-4 gap-3"
+        style={{ maxHeight: "80vh" }}
+      >
         {/* Header - Clean & minimal */}
-        <DialogHeader className="flex flex-row items-center justify-between pb-2 border-b border-border/50 shrink-0 pr-6">
-          <DialogTitle className="flex items-center gap-1.5 font-semibold text-sm">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-1.5">
             <HugeiconsIcon
               icon={Download01Icon}
               className="size-4 text-primary"
@@ -71,7 +74,10 @@ export function DownloadQueueDialog() {
         </DialogDescription>
 
         {/* Task List */}
-        <div className="flex-1 overflow-y-auto min-h-0 pr-1 space-y-2 no-scrollbar max-h-[55vh]">
+        <div
+          className="flex-1 overflow-y-auto min-h-0 pr-1 space-y-2 no-scrollbar"
+          style={{ maxHeight: "55vh" }}
+        >
           <Show
             when={hasTasks}
             fallback={
@@ -121,16 +127,16 @@ export function DownloadQueueDialog() {
                         </span>
                         <Badge
                           variant="outline"
-                          className="text-[10px] shrink-0"
+                          className="text-2xs shrink-0"
                         >
                           {task.playlistName}
                         </Badge>
                       </div>
 
                       <Button
-                        size="sm"
-                        variant="ghost"
-                        className="size-6 text-muted-foreground hover:text-destructive shrink-0"
+                        size="icon-sm"
+                        variant="destructive-ghost"
+                        className="shrink-0"
                         onClick={() => cancelTask(task.id)}
                         title={t("download_queue.cancel_download")}
                       >
@@ -146,7 +152,7 @@ export function DownloadQueueDialog() {
                       className="h-1.5"
                     />
 
-                    <div className="flex items-center justify-between text-[10px] text-muted-foreground font-mono">
+                    <div className="flex items-center justify-between text-2xs text-muted-foreground font-mono">
                       <span>{progressLabel}</span>
                       <Show when={hasDownloadedBytes}>
                         <span>{sizeLabel}</span>
@@ -174,7 +180,7 @@ export function DownloadQueueDialog() {
                           />
                         }
                       >
-                        <Spinner className="size-3.5 text-amber-500 shrink-0" />
+                        <Spinner className="size-3.5 text-warning shrink-0" />
                       </Show>
                       <span
                         className="truncate text-foreground/80"
@@ -184,21 +190,21 @@ export function DownloadQueueDialog() {
                       </span>
                       <Badge
                         variant="secondary"
-                        className="text-[10px] text-muted-foreground shrink-0"
+                        className="text-2xs text-muted-foreground shrink-0"
                       >
                         {isRetrying
                           ? t("download_queue.status.retry")
                           : t("download_queue.status.queued")}
                       </Badge>
-                      <span className="text-[10px] text-muted-foreground truncate">
+                      <span className="text-2xs text-muted-foreground truncate">
                         → {task.playlistName}
                       </span>
                     </div>
 
                     <Button
-                      size="sm"
-                      variant="ghost"
-                      className="size-6 text-muted-foreground hover:text-destructive shrink-0"
+                      size="icon-sm"
+                      variant="destructive-ghost"
+                      className="shrink-0"
                       onClick={() => cancelTask(task.id)}
                       title={t("download_queue.remove_from_queue")}
                     >
@@ -216,12 +222,12 @@ export function DownloadQueueDialog() {
                 return (
                   <div
                     key={task.id}
-                    className="p-2 rounded-lg bg-emerald-500/5 border border-emerald-500/20 flex items-center justify-between gap-2 text-xs"
+                    className="p-2 rounded-lg bg-success/5 border border-success/20 flex items-center justify-between gap-2 text-xs"
                   >
                     <div className="flex items-center gap-2 min-w-0">
                       <HugeiconsIcon
                         icon={CheckmarkCircle02Icon}
-                        className="size-3.5 text-emerald-500 shrink-0"
+                        className="size-3.5 text-success shrink-0"
                       />
                       <span
                         className="truncate font-medium text-foreground"
@@ -229,7 +235,7 @@ export function DownloadQueueDialog() {
                       >
                         {task.item.title}
                       </span>
-                      <div className="flex items-center gap-1 text-[11px] text-muted-foreground shrink-0">
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground shrink-0">
                         <HugeiconsIcon
                           icon={FolderIcon}
                           className="size-3"
@@ -248,9 +254,9 @@ export function DownloadQueueDialog() {
                     </div>
 
                     <Button
-                      size="sm"
-                      variant="ghost"
-                      className="size-6 text-muted-foreground hover:text-foreground shrink-0"
+                      size="icon-sm"
+                      variant="ghost-muted"
+                      className="shrink-0"
                       onClick={() => removeTask(task.id)}
                       title={t("common.remove")}
                     >
@@ -268,12 +274,12 @@ export function DownloadQueueDialog() {
                 return (
                   <div
                     key={task.id}
-                    className="p-2 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-between gap-2 text-xs"
+                    className="p-2 rounded-lg bg-warning/10 border border-warning/20 flex items-center justify-between gap-2 text-xs"
                   >
                     <div className="flex items-center gap-2 min-w-0">
                       <HugeiconsIcon
                         icon={WifiOff01Icon}
-                        className="size-3.5 text-amber-500 shrink-0"
+                        className="size-3.5 text-warning shrink-0"
                       />
                       <div className="flex flex-col gap-0.5 min-w-0">
                         <span
@@ -282,7 +288,7 @@ export function DownloadQueueDialog() {
                         >
                           {task.item.title}
                         </span>
-                        <span className="text-[11px] text-amber-600 dark:text-amber-400 truncate">
+                        <span className="text-xs text-warning truncate">
                           {task.error || t("download_queue.status.network_error")}
                         </span>
                       </div>
@@ -291,8 +297,7 @@ export function DownloadQueueDialog() {
                     <div className="flex items-center gap-1 shrink-0">
                       <Button
                         size="sm"
-                        variant="outline"
-                        className="h-6 text-[11px] px-2 gap-1 border-amber-500/30 text-amber-700 dark:text-amber-300 hover:bg-amber-500/10"
+                        variant="warning"
                         onClick={() => retryTask(task.id)}
                       >
                         <HugeiconsIcon
@@ -303,9 +308,8 @@ export function DownloadQueueDialog() {
                       </Button>
 
                       <Button
-                        size="sm"
-                        variant="ghost"
-                        className="size-6 text-muted-foreground hover:text-foreground"
+                        size="icon-sm"
+                        variant="ghost-muted"
                         onClick={() => removeTask(task.id)}
                         title={t("common.remove")}
                       >
@@ -342,7 +346,7 @@ export function DownloadQueueDialog() {
                       >
                         {task.item.title}
                       </span>
-                      <span className="text-[11px] text-destructive truncate">
+                      <span className="text-xs text-destructive truncate">
                         {errorMessage}
                       </span>
                     </div>
@@ -352,7 +356,6 @@ export function DownloadQueueDialog() {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="h-6 text-[11px] px-2 gap-1"
                       onClick={() => retryTask(task.id)}
                     >
                       <HugeiconsIcon
@@ -363,9 +366,8 @@ export function DownloadQueueDialog() {
                     </Button>
 
                     <Button
-                      size="sm"
-                      variant="ghost"
-                      className="size-6 text-muted-foreground hover:text-foreground"
+                      size="icon-sm"
+                      variant="ghost-muted"
                       onClick={() => removeTask(task.id)}
                       title={t("common.remove")}
                     >
@@ -382,13 +384,13 @@ export function DownloadQueueDialog() {
         </div>
 
         {/* Footer with Badges and Clear Action */}
-        <DialogFooter className="mt-auto pt-3 border-t border-border/40">
+        <DialogFooter className="mt-auto">
           <div className="flex items-center justify-between w-full gap-2">
             <div className="flex items-center gap-1.5 flex-wrap">
               <Show when={hasActiveTasks}>
                 <Badge
+                  size="sm"
                   variant="default"
-                  className="text-[10px] px-1.5 py-0"
                 >
                   {t("download_queue.active_count", {
                     count: activeTasks.length,
@@ -397,8 +399,8 @@ export function DownloadQueueDialog() {
               </Show>
               <Show when={hasQueuedTasks}>
                 <Badge
+                  size="sm"
                   variant="secondary"
-                  className="text-[10px] px-1.5 py-0"
                 >
                   {t("download_queue.queued_count", {
                     count: queuedTasks.length,
@@ -407,8 +409,8 @@ export function DownloadQueueDialog() {
               </Show>
               <Show when={hasCompletedTasks}>
                 <Badge
-                  variant="outline"
-                  className="text-[10px] px-1.5 py-0 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
+                  size="sm"
+                  variant="success"
                 >
                   {t("download_queue.completed_count", {
                     count: completedTasks.length,
@@ -417,8 +419,8 @@ export function DownloadQueueDialog() {
               </Show>
               <Show when={hasFailedTasks}>
                 <Badge
+                  size="sm"
                   variant="destructive"
-                  className="text-[10px] px-1.5 py-0"
                 >
                   {t("download_queue.failed_count", {
                     count: failedTasks.length,
@@ -430,8 +432,8 @@ export function DownloadQueueDialog() {
             <Show when={hasFinishedTasks}>
               <Button
                 size="sm"
-                variant="ghost"
-                className="text-xs h-7 px-2 text-muted-foreground hover:text-foreground shrink-0"
+                variant="ghost-muted"
+                className="shrink-0"
                 onClick={clearFinished}
               >
                 {t("download_queue.clear_completed")}

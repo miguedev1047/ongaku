@@ -1,4 +1,5 @@
 import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "cn"
 import { Button } from "@/components/ui/button"
 import { HugeiconsIcon } from "@hugeicons/react"
@@ -17,12 +18,14 @@ const TableContext = React.createContext<{ variant: TableVariant }>({
 export interface TableProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: TableVariant
   containerClassName?: string
+  rounded?: boolean
 }
 
 function Table({
   className,
   containerClassName,
   variant = "table",
+  rounded = false,
   children,
   ...props
 }: TableProps) {
@@ -31,7 +34,11 @@ function Table({
       {variant === "table" ? (
         <div
           data-slot="table-container"
-          className={cn("relative w-full overflow-x-auto", containerClassName)}
+          className={cn(
+            "relative w-full overflow-x-auto",
+            rounded && "rounded-md",
+            containerClassName
+          )}
         >
           <table
             data-slot="table"
@@ -47,6 +54,7 @@ function Table({
           role="table"
           className={cn(
             "relative w-full flex flex-col text-xs text-left",
+            rounded && "rounded-md",
             containerClassName,
             className
           )}
@@ -62,16 +70,25 @@ function Table({
 function TableHeader({
   className,
   variant: propVariant,
+  headerVariant = "default",
   ...props
-}: React.HTMLAttributes<HTMLElement> & { variant?: TableVariant }) {
+}: React.HTMLAttributes<HTMLElement> & {
+  variant?: TableVariant
+  headerVariant?: "default" | "muted"
+}) {
   const context = React.useContext(TableContext)
   const variant = propVariant ?? context.variant
+  const headerClass = headerVariant === "muted" ? "bg-muted/20" : ""
 
   if (variant === "table") {
     return (
       <thead
         data-slot="table-header"
-        className={cn("[&_tr]:border-b border-border/40 select-none", className)}
+        className={cn(
+          "[&_tr]:border-b border-border/40 select-none",
+          headerClass,
+          className
+        )}
         {...(props as React.ComponentProps<"thead">)}
       />
     )
@@ -82,6 +99,7 @@ function TableHeader({
       role="rowgroup"
       className={cn(
         "shrink-0 w-full flex flex-col border-b border-border/40 select-none",
+        headerClass,
         className
       )}
       {...props}
@@ -92,21 +110,24 @@ function TableHeader({
 function TableBody({
   className,
   variant: propVariant,
+  bodyVariant = "default",
   ref,
   ...props
 }: React.HTMLAttributes<HTMLElement> & {
   variant?: TableVariant
+  bodyVariant?: "default" | "scrollable"
   ref?: React.Ref<any>
 }) {
   const context = React.useContext(TableContext)
   const variant = propVariant ?? context.variant
+  const bodyClass = bodyVariant === "scrollable" ? "no-scrollbar scroll-fade-y" : ""
 
   if (variant === "table") {
     return (
       <tbody
         ref={ref}
         data-slot="table-body"
-        className={cn("[&_tr:last-child]:border-0", className)}
+        className={cn("[&_tr:last-child]:border-0", bodyClass, className)}
         {...(props as React.ComponentProps<"tbody">)}
       />
     )
@@ -118,6 +139,7 @@ function TableBody({
       role="rowgroup"
       className={cn(
         "w-full flex flex-col [&_[data-slot=table-row]:last-child]:border-0",
+        bodyClass,
         className
       )}
       {...props}
@@ -158,16 +180,45 @@ function TableFooter({
   )
 }
 
+const tableRowVariants = cva("transition-colors", {
+  variants: {
+    rowVariant: {
+      default:
+        "border-b border-border/20 hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted data-[active-track=true]:bg-accent",
+      header: "border-b-0 hover:bg-transparent text-muted-foreground",
+      ghost: "border-b border-border/20 hover:bg-transparent",
+      none: ""
+    },
+    padding: {
+      default: "",
+      table: "px-3",
+      compact: "px-2"
+    }
+  },
+  defaultVariants: {
+    rowVariant: "default",
+    padding: "default"
+  }
+})
+
+export interface TableRowProps
+  extends React.HTMLAttributes<HTMLElement>,
+    VariantProps<typeof tableRowVariants> {
+  variant?: TableVariant
+}
+
 function TableRow({
   className,
   variant: propVariant,
+  rowVariant = "default",
+  padding = "default",
   ...props
-}: React.HTMLAttributes<HTMLElement> & { variant?: TableVariant }) {
+}: TableRowProps) {
   const context = React.useContext(TableContext)
   const variant = propVariant ?? context.variant
 
   const sharedClass = cn(
-    "border-b border-border/20 transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted data-[active-track=true]:bg-accent",
+    tableRowVariants({ rowVariant, padding }),
     className
   )
   if (variant === "table") {
@@ -325,5 +376,6 @@ export {
   TableRow,
   TableCell,
   TableCaption,
-  TableColumnHeader
+  TableColumnHeader,
+  tableRowVariants
 }

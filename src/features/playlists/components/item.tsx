@@ -36,7 +36,7 @@ export const PlaylistItem = memo(
           key={cover.id}
           src={cover.src}
           alt={cover.name}
-          className='size-full object-cover rounded-[10px]'
+          className='size-full object-cover rounded-md'
         />
       ))
     }, [previewCovers])
@@ -44,7 +44,8 @@ export const PlaylistItem = memo(
     return (
       <PlaylistActionsContextMenu playlist={playlist}>
         <CardWrapper
-          className='group relative flex flex-col items-center justify-between rounded-xl border border-border/40 hover:bg-accent/40 hover:border-border transition-colors duration-200 select-none cursor-pointer outline-none focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 ring-0'
+          variant='interactive'
+          className='group relative flex flex-col items-center justify-between select-none cursor-pointer'
           onMouseEnter={handlePreload}
           onFocus={handlePreload}
           onDoubleClick={handleNavigate}

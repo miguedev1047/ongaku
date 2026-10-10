@@ -12,7 +12,10 @@ export function PlaylistList() {
   }
 
   return (
-    <div className='grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-x-6 gap-y-10 py-6'>
+    <div
+      className='grid gap-x-6 gap-y-10 py-6'
+      style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))' }}
+    >
       {playlists.map((playlist) => (
         <PlaylistItem
           key={playlist.id}

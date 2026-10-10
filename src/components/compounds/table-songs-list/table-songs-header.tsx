@@ -20,16 +20,13 @@ export function TableSongsHeader({
 }: TableSongsHeaderProps) {
   return (
     <TableHeader
-      className={cn(
-        'shrink-0 bg-muted/20 border-b border-border/40',
-        className,
-      )}
+      headerVariant='muted'
+      className={className}
     >
       <TableRow
-        className={cn(
-          'border-b-0 hover:bg-transparent px-3 h-10 gap-3',
-          rowClassName,
-        )}
+        rowVariant='header'
+        padding='table'
+        className={cn('h-10 gap-3', rowClassName)}
       >
         {children}
       </TableRow>

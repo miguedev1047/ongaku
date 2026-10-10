@@ -13,9 +13,10 @@ export function PlaylistsLoadingState({
   return (
     <div
       className={cn(
-        "grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-x-6 gap-y-10 py-6",
+        "grid gap-x-6 gap-y-10 py-6",
         className
       )}
+      style={{ gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))" }}
       aria-label="Loading playlists"
       aria-busy="true"
     >

@@ -39,8 +39,9 @@ export function TableSongsList({
       <div className={cn('size-full flex flex-col overflow-hidden', className)}>
         <Table
           variant='flex'
+          rounded
           className={cn(
-            'size-full flex flex-col overflow-hidden rounded-md',
+            'size-full flex flex-col overflow-hidden',
             tableClassName,
           )}
         >

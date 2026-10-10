@@ -54,7 +54,7 @@ export function PlaylistHeroCover({
       <div className={cn('space-y-1.5 sm:space-y-2 min-w-0 flex-1')}>
         <span
           className={cn(
-            'text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-muted-foreground',
+            'text-2xs sm:text-xs font-semibold uppercase tracking-wider text-muted-foreground',
           )}
         >
           {t('sidebar.navigation.routes.playlists')}
@@ -105,13 +105,13 @@ export function PlaylistHeroCover({
               <div className={cn('flex items-center gap-1.5 min-w-0 text-xs')}>
                 <span
                   className={cn(
-                    'font-semibold text-foreground shrink-0 text-[11px]',
+                    'font-semibold text-foreground shrink-0 text-xs',
                   )}
                 >
                   {t('player.now_playing')}:
                 </span>
                 <span
-                  className={cn('text-[11px] text-muted-foreground truncate')}
+                  className={cn('text-xs text-muted-foreground truncate')}
                   title={song.name}
                 >
                   {song.name}

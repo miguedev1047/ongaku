@@ -38,9 +38,9 @@ export function PlaylistSongItem({ song }: PlaylistSongItemProps) {
 
   return (
     <Item
+      variant="interactive"
       data-active-track={isActiveTrack}
       onClick={handleSelectSong}
-      className="data-[active-track=true]:bg-accent hover:bg-accent"
     >
       <ItemMedia variant="image">
         <CoverImage
@@ -49,8 +49,8 @@ export function PlaylistSongItem({ song }: PlaylistSongItemProps) {
         />
       </ItemMedia>
       <ItemContent>
-        <ItemTitle className="text-xs line-clamp-1">{song.name}</ItemTitle>
-        <ItemDescription className="line-clamp-1">
+        <ItemTitle>{song.name}</ItemTitle>
+        <ItemDescription lines={1}>
           {song.metadata.artist}
         </ItemDescription>
       </ItemContent>

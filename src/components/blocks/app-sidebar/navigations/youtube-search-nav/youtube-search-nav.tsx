@@ -35,7 +35,7 @@ export function YoutubeSearchNav() {
         <SidebarMenuBadge>
           <Badge
             variant='destructive'
-            className='text-[9px] px-1 py-0 h-3.5 leading-none'
+            size='xs'
           >
             {t('common.alpha')}
           </Badge>
