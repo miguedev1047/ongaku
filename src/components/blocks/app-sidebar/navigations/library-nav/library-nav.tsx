@@ -1,4 +1,5 @@
 import { SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
+import { ACTIVE_ROUTE } from '@/constants/styles'
 import { LibraryIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Link } from '@tanstack/react-router'
@@ -15,14 +16,11 @@ export function LibraryNav() {
           <Link
             to='/library'
             activeOptions={{ exact: true }}
-            activeProps={{ className: 'bg-accent' }}
+            activeProps={{ className: ACTIVE_ROUTE }}
           />
         }
       >
-        <HugeiconsIcon
-          icon={LibraryIcon}
-          className='size-4 shrink-0'
-        />
+        <HugeiconsIcon icon={LibraryIcon} className='size-4 shrink-0' />
         <span className='truncate'>{t('sidebar.library')}</span>
       </SidebarMenuButton>
     </SidebarMenuItem>

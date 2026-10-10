@@ -8,6 +8,7 @@ import {
   CollapsedIndicator,
 } from '@/components/blocks/app-sidebar/components/settings-nav-status'
 import { useTranslation } from 'react-i18next'
+import { ACTIVE_ROUTE } from '@/constants/styles'
 
 export function SettingsNav() {
   const { t } = useTranslation()
@@ -21,7 +22,7 @@ export function SettingsNav() {
           <Link
             to='/settings'
             activeOptions={{ exact: false }}
-            activeProps={{ className: 'bg-accent text-accent-foreground' }}
+            activeProps={{ className: ACTIVE_ROUTE }}
           />
         }
         className={cn(
@@ -32,10 +33,7 @@ export function SettingsNav() {
       >
         <StatusIcon status={status} />
         <span className='truncate'>{t('sidebar.settings')}</span>
-        <StatusBadge
-          status={status}
-          badgeText={badgeText}
-        />
+        <StatusBadge status={status} badgeText={badgeText} />
         <CollapsedIndicator status={status} />
       </SidebarMenuButton>
     </SidebarMenuItem>

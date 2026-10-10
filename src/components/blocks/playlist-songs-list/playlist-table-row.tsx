@@ -57,18 +57,9 @@ export const PlaylistSongTableRow = memo(function PlaylistSongTableRow({
 
   return (
     <PlaylistSongContextMenu song={song}>
-      <TableSongItem
-        isActive={isActiveTrack}
-        onClick={handleRowClick}
-      >
-        <TableSongItem.Select
-          row={row}
-          label={song.name}
-        />
-        <TableSongItem.Cover
-          src={coverUrl}
-          alt={song.name}
-        />
+      <TableSongItem isActive={isActiveTrack} onClick={handleRowClick}>
+        <TableSongItem.Select row={row} label={song.name} />
+        <TableSongItem.Cover src={coverUrl} alt={song.name} />
         <TableSongItem.Title title={song.name} />
         <TableSongItem.Artist name={artistName} />
         <TableSongItem.Album name={albumName} />

@@ -1,0 +1,85 @@
+/* --- Zedative Theme (Light & Dark Variants) --- */
+
+[data-theme="zedative"] {
+  --background: #f4f4f2;
+  --foreground: #000000;
+  --card: #fafafa;
+  --card-foreground: #000000;
+  --popover: #fafafa;
+  --popover-foreground: #000000;
+  --primary: #1348dc;
+  --primary-foreground: #ffffff;
+  --secondary: #ebebec;
+  --secondary-foreground: #393d45;
+  --muted: #ebebec;
+  --muted-foreground: #727a89;
+  --accent: #dcdcdd;
+  --accent-foreground: #000000;
+  --destructive: #d3604f;
+  --destructive-foreground: #ffffff;
+  --info: #1348dc;
+  --info-foreground: #ffffff;
+  --warning: #d49936;
+  --warning-foreground: #000000;
+  --success: #649f57;
+  --success-foreground: #ffffff;
+  --border: #cbcfd4;
+  --input: #cbcfd4;
+  --ring: #1348dc;
+  --chart-1: #1348dc;
+  --chart-2: #649f57;
+  --chart-3: #d49936;
+  --chart-4: #d3604f;
+  --chart-5: #a449ab;
+  --sidebar: #f4f4f2;
+  --sidebar-foreground: #000000;
+  --sidebar-primary: #1348dc;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #ebebec;
+  --sidebar-accent-foreground: #000000;
+  --sidebar-border: #cbcfd4;
+  --sidebar-ring: #1348dc;
+  --radius: 0.125rem;
+}
+
+[data-theme="zedative"].dark {
+  --background: #17181c;
+  --foreground: #f4f4f2;
+  --card: #1f2026;
+  --card-foreground: #f4f4f2;
+  --popover: #1f2026;
+  --popover-foreground: #f4f4f2;
+  --primary: #4f7cf7;
+  --primary-foreground: #ffffff;
+  --secondary: #262830;
+  --secondary-foreground: #d2d5dc;
+  --muted: #262830;
+  --muted-foreground: #8a909d;
+  --accent: #2e303a;
+  --accent-foreground: #ffffff;
+  --destructive: #e06c5d;
+  --destructive-foreground: #ffffff;
+  --info: #4f7cf7;
+  --info-foreground: #ffffff;
+  --warning: #e5ab48;
+  --warning-foreground: #17181c;
+  --success: #74b366;
+  --success-foreground: #ffffff;
+  --border: #32353e;
+  --input: #32353e;
+  --ring: #4f7cf7;
+  --chart-1: #4f7cf7;
+  --chart-2: #74b366;
+  --chart-3: #e5ab48;
+  --chart-4: #e06c5d;
+  --chart-5: #b95ec2;
+  --sidebar: #17181c;
+  --sidebar-foreground: #f4f4f2;
+  --sidebar-primary: #4f7cf7;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #262830;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #32353e;
+  --sidebar-ring: #4f7cf7;
+  --radius: 0.125rem;
+}

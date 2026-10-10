@@ -138,11 +138,41 @@
           "title": "Appearance & Interface",
           "description": "Customize the look, themes, player position, and folder colors of the app",
           "interface_theme": {
-            "title": "Interface Theme",
-            "description": "Select your preferred visual theme for the interface",
+            "title": "Appearance & Theme",
+            "description": "Choose your preferred color mode and visual theme palette",
+            "color_mode": "Color Mode",
+            "color_mode_desc": "Select light, dark, or follow system preferences",
+            "theme_family": "Theme Palette",
+            "theme_family_desc": "Select visual palette and accent styling",
             "light": "Light",
             "dark": "Dark",
-            "system": "System"
+            "system": "System",
+            "themes": {
+              "default": {
+                "name": "Ongaku",
+                "description": "Default minimalist aesthetic for Ongaku"
+              },
+              "zedative": {
+                "name": "Zedative",
+                "description": "Technical engineering notebook with cobalt accents"
+              },
+              "catppuccin": {
+                "name": "Catppuccin",
+                "description": "Soothing pastel palette with vibrant purple primary"
+              },
+              "vintage-paper": {
+                "name": "Vintage Paper",
+                "description": "Warm parchment tones inspired by classical literature"
+              },
+              "sakura": {
+                "name": "Sakura",
+                "description": "Delicate cherry blossom aesthetic with soft crimson accents"
+              },
+              "spotify": {
+                "name": "Spotify",
+                "description": "Vibrant streaming music green with dark contrast"
+              }
+            }
           },
           "player_position": {
             "title": "Player Position",
@@ -169,7 +199,15 @@
               "sky": "Sky",
               "lime": "Lime",
               "sunset_orange": "Sunset Orange",
-              "neutral_zinc": "Neutral Zinc"
+              "neutral_zinc": "Neutral Zinc",
+              "pastel_lavender": "Pastel Lavender",
+              "pastel_rosewater": "Pastel Rosewater",
+              "pastel_peach": "Pastel Peach",
+              "pastel_mint": "Pastel Mint",
+              "pastel_sky": "Pastel Sky",
+              "pastel_mauve": "Pastel Mauve",
+              "pastel_butter": "Pastel Butter",
+              "pastel_coral": "Pastel Coral"
             },
             "custom_hex": "Custom HEX:"
           },

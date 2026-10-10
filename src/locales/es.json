@@ -138,11 +138,41 @@
           "title": "Apariencia e Interfaz",
           "description": "Personaliza el aspecto, temas, posición del reproductor y colores de carpetas",
           "interface_theme": {
-            "title": "Tema de la Interfaz",
-            "description": "Selecciona el tema visual de tu preferencia para la interfaz",
+            "title": "Apariencia y Tema",
+            "description": "Elige tu modo de color y paleta de tema visual preferidos",
+            "color_mode": "Modo de Color",
+            "color_mode_desc": "Selecciona claro, oscuro o sigue las preferencias del sistema",
+            "theme_family": "Paleta de Tema",
+            "theme_family_desc": "Selecciona la paleta visual y estilo de acento",
             "light": "Claro",
             "dark": "Oscuro",
-            "system": "Sistema"
+            "system": "Sistema",
+            "themes": {
+              "default": {
+                "name": "Ongaku",
+                "description": "Estética minimalista predeterminada para Ongaku"
+              },
+              "zedative": {
+                "name": "Zedative",
+                "description": "Libreta técnica de ingeniería con acentos cobalto"
+              },
+              "catppuccin": {
+                "name": "Catppuccin",
+                "description": "Paleta pastel relajante con primario púrpura vibrante"
+              },
+              "vintage-paper": {
+                "name": "Vintage Paper",
+                "description": "Tonos pergamino cálidos inspirados en literatura clásica"
+              },
+              "sakura": {
+                "name": "Sakura",
+                "description": "Delicada estética flor de cerezo con suaves acentos carmesí"
+              },
+              "spotify": {
+                "name": "Spotify",
+                "description": "Verde vibrante de música en streaming con contraste oscuro"
+              }
+            }
           },
           "player_position": {
             "title": "Posición del Reproductor",
@@ -169,7 +199,15 @@
               "sky": "Cielo",
               "lime": "Lima",
               "sunset_orange": "Naranja Atardecer",
-              "neutral_zinc": "Zinc Neutral"
+              "neutral_zinc": "Zinc Neutral",
+              "pastel_lavender": "Lavanda Pastel",
+              "pastel_rosewater": "Agua de Rosas Pastel",
+              "pastel_peach": "Melocotón Pastel",
+              "pastel_mint": "Menta Pastel",
+              "pastel_sky": "Cielo Pastel",
+              "pastel_mauve": "Malva Pastel",
+              "pastel_butter": "Mantequilla Pastel",
+              "pastel_coral": "Coral Pastel"
             },
             "custom_hex": "HEX Personalizado:"
           },

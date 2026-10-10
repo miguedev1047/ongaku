@@ -1,18 +1,18 @@
-import * as React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
-import { cn } from "cn"
-import { Button } from "@/components/ui/button"
-import { HugeiconsIcon } from "@hugeicons/react"
+import * as React from 'react'
+import { cva, type VariantProps } from 'class-variance-authority'
+import { cn } from 'cn'
+import { Button } from '@/components/ui/button'
+import { HugeiconsIcon } from '@hugeicons/react'
 import {
   ArrowUpDownIcon,
   ArrowUp01Icon,
-  ArrowDown01Icon
-} from "@hugeicons/core-free-icons"
+  ArrowDown01Icon,
+} from '@hugeicons/core-free-icons'
 
-export type TableVariant = "table" | "flex"
+export type TableVariant = 'table' | 'flex'
 
 const TableContext = React.createContext<{ variant: TableVariant }>({
-  variant: "table"
+  variant: 'table',
 })
 
 export interface TableProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -24,39 +24,39 @@ export interface TableProps extends React.HTMLAttributes<HTMLDivElement> {
 function Table({
   className,
   containerClassName,
-  variant = "table",
+  variant = 'table',
   rounded = false,
   children,
   ...props
 }: TableProps) {
   return (
     <TableContext.Provider value={{ variant }}>
-      {variant === "table" ? (
+      {variant === 'table' ? (
         <div
-          data-slot="table-container"
+          data-slot='table-container'
           className={cn(
-            "relative w-full overflow-x-auto",
-            rounded && "rounded-md",
-            containerClassName
+            'relative w-full overflow-x-auto',
+            rounded && 'rounded-md',
+            containerClassName,
           )}
         >
           <table
-            data-slot="table"
-            className={cn("w-full caption-bottom text-xs text-left", className)}
-            {...(props as React.ComponentProps<"table">)}
+            data-slot='table'
+            className={cn('w-full caption-bottom text-xs text-left', className)}
+            {...(props as React.ComponentProps<'table'>)}
           >
             {children}
           </table>
         </div>
       ) : (
         <div
-          data-slot="table-container"
-          role="table"
+          data-slot='table-container'
+          role='table'
           className={cn(
-            "relative w-full flex flex-col text-xs text-left",
-            rounded && "rounded-md",
+            'relative w-full flex flex-col text-xs text-left',
+            rounded && 'rounded-md',
             containerClassName,
-            className
+            className,
           )}
           {...props}
         >
@@ -70,37 +70,37 @@ function Table({
 function TableHeader({
   className,
   variant: propVariant,
-  headerVariant = "default",
+  headerVariant = 'default',
   ...props
 }: React.HTMLAttributes<HTMLElement> & {
   variant?: TableVariant
-  headerVariant?: "default" | "muted"
+  headerVariant?: 'default' | 'muted'
 }) {
   const context = React.useContext(TableContext)
   const variant = propVariant ?? context.variant
-  const headerClass = headerVariant === "muted" ? "bg-muted/20" : ""
+  const headerClass = headerVariant === 'muted' ? 'bg-muted/20' : ''
 
-  if (variant === "table") {
+  if (variant === 'table') {
     return (
       <thead
-        data-slot="table-header"
+        data-slot='table-header'
         className={cn(
-          "[&_tr]:border-b border-border/40 select-none",
+          '[&_tr]:border-b border-border/40 select-none',
           headerClass,
-          className
+          className,
         )}
-        {...(props as React.ComponentProps<"thead">)}
+        {...(props as React.ComponentProps<'thead'>)}
       />
     )
   }
   return (
     <div
-      data-slot="table-header"
-      role="rowgroup"
+      data-slot='table-header'
+      role='rowgroup'
       className={cn(
-        "shrink-0 w-full flex flex-col border-b border-border/40 select-none",
+        'shrink-0 w-full flex flex-col border-b border-border/40 select-none',
         headerClass,
-        className
+        className,
       )}
       {...props}
     />
@@ -110,37 +110,38 @@ function TableHeader({
 function TableBody({
   className,
   variant: propVariant,
-  bodyVariant = "default",
+  bodyVariant = 'default',
   ref,
   ...props
 }: React.HTMLAttributes<HTMLElement> & {
   variant?: TableVariant
-  bodyVariant?: "default" | "scrollable"
+  bodyVariant?: 'default' | 'scrollable'
   ref?: React.Ref<any>
 }) {
   const context = React.useContext(TableContext)
   const variant = propVariant ?? context.variant
-  const bodyClass = bodyVariant === "scrollable" ? "no-scrollbar scroll-fade-y" : ""
+  const bodyClass =
+    bodyVariant === 'scrollable' ? 'no-scrollbar scroll-fade-y' : ''
 
-  if (variant === "table") {
+  if (variant === 'table') {
     return (
       <tbody
         ref={ref}
-        data-slot="table-body"
-        className={cn("[&_tr:last-child]:border-0", bodyClass, className)}
-        {...(props as React.ComponentProps<"tbody">)}
+        data-slot='table-body'
+        className={cn('[&_tr:last-child]:border-0', bodyClass, className)}
+        {...(props as React.ComponentProps<'tbody'>)}
       />
     )
   }
   return (
     <div
       ref={ref}
-      data-slot="table-body"
-      role="rowgroup"
+      data-slot='table-body'
+      role='rowgroup'
       className={cn(
-        "w-full flex flex-col [&_[data-slot=table-row]:last-child]:border-0",
+        'w-full flex flex-col [&_[data-slot=table-row]:last-child]:border-0',
         bodyClass,
-        className
+        className,
       )}
       {...props}
     />
@@ -155,54 +156,55 @@ function TableFooter({
   const context = React.useContext(TableContext)
   const variant = propVariant ?? context.variant
 
-  if (variant === "table") {
+  if (variant === 'table') {
     return (
       <tfoot
-        data-slot="table-footer"
+        data-slot='table-footer'
         className={cn(
-          "border-t border-border/40 bg-muted/50 font-medium [&>tr]:last:border-b-0",
-          className
+          'border-t border-border/40 bg-muted/50 font-medium [&>tr]:last:border-b-0',
+          className,
         )}
-        {...(props as React.ComponentProps<"tfoot">)}
+        {...(props as React.ComponentProps<'tfoot'>)}
       />
     )
   }
   return (
     <div
-      data-slot="table-footer"
-      role="rowgroup"
+      data-slot='table-footer'
+      role='rowgroup'
       className={cn(
-        "border-t border-border/40 bg-muted/50 font-medium",
-        className
+        'border-t border-border/40 bg-muted/50 font-medium',
+        className,
       )}
       {...props}
     />
   )
 }
 
-const tableRowVariants = cva("transition-colors", {
+const tableRowVariants = cva('transition-colors', {
   variants: {
     rowVariant: {
       default:
-        "border-b border-border/20 hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted data-[active-track=true]:bg-accent",
-      header: "border-b-0 hover:bg-transparent text-muted-foreground",
-      ghost: "border-b border-border/20 hover:bg-transparent",
-      none: ""
+        'border-b rounded-md border-border/20 hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted data-[active-track=true]:bg-accent data-[active-track=true]:**:text-accent-foreground',
+      header: 'border-b-0 hover:bg-transparent text-muted-foreground',
+      ghost: 'border-b border-border/20 hover:bg-transparent',
+      none: '',
     },
     padding: {
-      default: "",
-      table: "px-3",
-      compact: "px-2"
-    }
+      default: '',
+      table: 'px-3',
+      compact: 'px-2',
+    },
   },
   defaultVariants: {
-    rowVariant: "default",
-    padding: "default"
-  }
+    rowVariant: 'default',
+    padding: 'default',
+  },
 })
 
 export interface TableRowProps
-  extends React.HTMLAttributes<HTMLElement>,
+  extends
+    React.HTMLAttributes<HTMLElement>,
     VariantProps<typeof tableRowVariants> {
   variant?: TableVariant
 }
@@ -210,31 +212,28 @@ export interface TableRowProps
 function TableRow({
   className,
   variant: propVariant,
-  rowVariant = "default",
-  padding = "default",
+  rowVariant = 'default',
+  padding = 'default',
   ...props
 }: TableRowProps) {
   const context = React.useContext(TableContext)
   const variant = propVariant ?? context.variant
 
-  const sharedClass = cn(
-    tableRowVariants({ rowVariant, padding }),
-    className
-  )
-  if (variant === "table") {
+  const sharedClass = cn(tableRowVariants({ rowVariant, padding }), className)
+  if (variant === 'table') {
     return (
       <tr
-        data-slot="table-row"
+        data-slot='table-row'
         className={sharedClass}
-        {...(props as React.ComponentProps<"tr">)}
+        {...(props as React.ComponentProps<'tr'>)}
       />
     )
   }
   return (
     <div
-      data-slot="table-row"
-      role="row"
-      className={cn("w-full flex items-center", sharedClass)}
+      data-slot='table-row'
+      role='row'
+      className={cn('w-full flex items-center', sharedClass)}
       {...props}
     />
   )
@@ -249,23 +248,23 @@ function TableHead({
   const variant = propVariant ?? context.variant
 
   const sharedClass = cn(
-    "h-10 px-3 text-left align-middle font-medium whitespace-nowrap text-muted-foreground [&:has([role=checkbox])]:pr-0",
-    className
+    'h-10 px-3 text-left align-middle font-medium whitespace-nowrap text-muted-foreground [&:has([role=checkbox])]:pr-0',
+    className,
   )
-  if (variant === "table") {
+  if (variant === 'table') {
     return (
       <th
-        data-slot="table-head"
+        data-slot='table-head'
         className={sharedClass}
-        {...(props as React.ComponentProps<"th">)}
+        {...(props as React.ComponentProps<'th'>)}
       />
     )
   }
   return (
     <div
-      data-slot="table-head"
-      role="columnheader"
-      className={cn("flex items-center", sharedClass)}
+      data-slot='table-head'
+      role='columnheader'
+      className={cn('flex items-center', sharedClass)}
       {...props}
     />
   )
@@ -280,23 +279,23 @@ function TableCell({
   const variant = propVariant ?? context.variant
 
   const sharedClass = cn(
-    "p-3 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0",
-    className
+    'p-3 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0',
+    className,
   )
-  if (variant === "table") {
+  if (variant === 'table') {
     return (
       <td
-        data-slot="table-cell"
+        data-slot='table-cell'
         className={sharedClass}
-        {...(props as React.ComponentProps<"td">)}
+        {...(props as React.ComponentProps<'td'>)}
       />
     )
   }
   return (
     <div
-      data-slot="table-cell"
-      role="cell"
-      className={cn("flex items-center", sharedClass)}
+      data-slot='table-cell'
+      role='cell'
+      className={cn('flex items-center', sharedClass)}
       {...props}
     />
   )
@@ -305,20 +304,19 @@ function TableCell({
 function TableCaption({
   className,
   ...props
-}: React.ComponentProps<"caption">) {
+}: React.ComponentProps<'caption'>) {
   return (
     <caption
-      data-slot="table-caption"
-      className={cn("mt-4 text-xs text-muted-foreground", className)}
+      data-slot='table-caption'
+      className={cn('mt-4 text-xs text-muted-foreground', className)}
       {...props}
     />
   )
 }
 
-export interface TableColumnHeaderProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+export interface TableColumnHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   title: string
-  isSorted?: false | "asc" | "desc"
+  isSorted?: false | 'asc' | 'desc'
   onToggleSorting?: (event: unknown) => void
 }
 
@@ -333,7 +331,10 @@ function TableColumnHeader({
   if (!onToggleSorting) {
     return (
       <div
-        className={cn("flex items-center gap-1.5 font-medium text-xs text-muted-foreground", className)}
+        className={cn(
+          'flex items-center gap-1.5 font-medium text-xs text-muted-foreground',
+          className,
+        )}
         {...props}
       >
         <span>{title}</span>
@@ -343,23 +344,29 @@ function TableColumnHeader({
   }
 
   return (
-    <div
-      className={cn("flex items-center gap-1.5", className)}
-      {...props}
-    >
+    <div className={cn('flex items-center gap-1.5', className)} {...props}>
       <Button
-        variant="ghost"
-        size="xs"
-        className="-ml-2 h-7 px-2 text-xs font-medium text-muted-foreground hover:text-foreground data-[state=open]:bg-accent transition-colors"
+        variant='ghost'
+        size='xs'
+        className='-ml-2 h-7 px-2 text-xs font-medium text-muted-foreground hover:text-foreground data-[state=open]:bg-accent transition-colors'
         onClick={onToggleSorting}
       >
         <span>{title}</span>
-        {isSorted === "desc" ? (
-          <HugeiconsIcon icon={ArrowDown01Icon} className="ml-1 size-3 text-foreground" />
-        ) : isSorted === "asc" ? (
-          <HugeiconsIcon icon={ArrowUp01Icon} className="ml-1 size-3 text-foreground" />
+        {isSorted === 'desc' ? (
+          <HugeiconsIcon
+            icon={ArrowDown01Icon}
+            className='ml-1 size-3 text-foreground'
+          />
+        ) : isSorted === 'asc' ? (
+          <HugeiconsIcon
+            icon={ArrowUp01Icon}
+            className='ml-1 size-3 text-foreground'
+          />
         ) : (
-          <HugeiconsIcon icon={ArrowUpDownIcon} className="ml-1 size-3 opacity-50" />
+          <HugeiconsIcon
+            icon={ArrowUpDownIcon}
+            className='ml-1 size-3 opacity-50'
+          />
         )}
       </Button>
       {children}
@@ -377,5 +384,5 @@ export {
   TableCell,
   TableCaption,
   TableColumnHeader,
-  tableRowVariants
+  tableRowVariants,
 }

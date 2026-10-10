@@ -95,4 +95,53 @@ export const FOLDER_COLOR_PRESETS = [
     labelKey:
       'settings.tabs.appearance.appearance_and_interface.folder_color.colors.neutral_zinc',
   },
+  /* --- Pastel Tones --- */
+  {
+    id: 'pastel_lavender',
+    color: '#b4befe',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.folder_color.colors.pastel_lavender',
+  },
+  {
+    id: 'pastel_rosewater',
+    color: '#f5e0dc',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.folder_color.colors.pastel_rosewater',
+  },
+  {
+    id: 'pastel_peach',
+    color: '#fab387',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.folder_color.colors.pastel_peach',
+  },
+  {
+    id: 'pastel_mint',
+    color: '#a6e3a1',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.folder_color.colors.pastel_mint',
+  },
+  {
+    id: 'pastel_sky',
+    color: '#89dceb',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.folder_color.colors.pastel_sky',
+  },
+  {
+    id: 'pastel_mauve',
+    color: '#cba6f7',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.folder_color.colors.pastel_mauve',
+  },
+  {
+    id: 'pastel_butter',
+    color: '#f9e2af',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.folder_color.colors.pastel_butter',
+  },
+  {
+    id: 'pastel_coral',
+    color: '#f38ba8',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.folder_color.colors.pastel_coral',
+  },
 ] as const

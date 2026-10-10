@@ -19,6 +19,7 @@ use crate::{
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppConfig {
     pub theme: String,
+    pub theme_family: String,
     pub folder_colors: String,
     pub app_dir: String,
     pub player_position: String,
@@ -41,7 +42,11 @@ pub fn get_app_config(db: State<'_, DbPool>) -> Result<AppConfig, String> {
         theme: all
             .get("theme")
             .cloned()
-            .unwrap_or_else(|| "system".to_string()),
+            .unwrap_or_else(|| "dark".to_string()),
+        theme_family: all
+            .get("theme_family")
+            .cloned()
+            .unwrap_or_else(|| "default".to_string()),
         folder_colors: all
             .get("folder_colors")
             .cloned()
@@ -140,6 +145,10 @@ pub fn change_app_dir(db: State<'_, DbPool>, new_parent_dir: String) -> Result<A
 
     Ok(AppConfig {
         theme: all.get("theme").cloned().unwrap_or(theme),
+        theme_family: all
+            .get("theme_family")
+            .cloned()
+            .unwrap_or_else(|| "default".to_string()),
         folder_colors: all.get("folder_colors").cloned().unwrap_or(folder_colors),
         app_dir: new_app_dir_str,
         player_position: all

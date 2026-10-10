@@ -55,24 +55,10 @@ function RouteComponent() {
 
   return (
     <div className='size-full flex flex-col overflow-hidden'>
-      <SettingsHeader
-        isLoading={isLoading}
-        onRefresh={refreshHealth}
-      />
-      <RouteSection
-        scrollable
-        direction='col'
-        gap='md'
-        className='pb-12'
-      >
-        <Tabs
-          defaultValue='general'
-          className='w-full'
-        >
-          <TabsList
-            variant='default'
-            className='grid grid-cols-3 max-w-md'
-          >
+      <SettingsHeader isLoading={isLoading} onRefresh={refreshHealth} />
+      <RouteSection scrollable direction='col' gap='md' className='pb-12'>
+        <Tabs defaultValue='general' className='w-full'>
+          <TabsList variant='default' className='grid grid-cols-3 max-w-md'>
             <TabsTrigger value='general'>
               {t('settings.tab_general')}
             </TabsTrigger>
@@ -84,32 +70,23 @@ function RouteComponent() {
             </SystemTabTrigger>
           </TabsList>
 
-          <TabsContent
-            value='general'
-            className='flex flex-col gap-4 pt-2'
-          >
+          <TabsContent value='general' className='flex flex-col gap-4 pt-2'>
             <Suspense fallback={<SettingsTabLoadingState />}>
               <LanguageSelection />
               <AppUpdatesCard />
             </Suspense>
           </TabsContent>
 
-          <TabsContent
-            value='appearance'
-            className='flex flex-col gap-4 pt-2'
-          >
+          <TabsContent value='appearance' className='flex flex-col gap-4 pt-2'>
             <Suspense fallback={<SettingsTabLoadingState />}>
-              <ThemeSelection />
               <PlayerPositionOptions />
+              <ThemeSelection />
               <FolderColorOptions />
               <AppWallpapersSelection />
             </Suspense>
           </TabsContent>
 
-          <TabsContent
-            value='system'
-            className='flex flex-col gap-4 pt-2'
-          >
+          <TabsContent value='system' className='flex flex-col gap-4 pt-2'>
             <Suspense fallback={<SettingsTabLoadingState />}>
               <ServerHealthCard />
               <BinariesStatusCard />

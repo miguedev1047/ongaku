@@ -1,8 +1,10 @@
 import { queryOptions } from '@tanstack/react-query'
 import { platformService } from '@/infrastructure/platform'
+import type { ThemeMode } from '@/constants/themes'
 
 export interface TAppConfig {
-  theme: 'light' | 'dark' | 'system'
+  theme: ThemeMode
+  theme_family: string
   folder_colors: string
   app_dir: string
   player_position: 'bottom' | 'top'

@@ -69,14 +69,8 @@ export function YoutubeSearchBar({ initialQuery = '' }: YoutubeSearchBarProps) {
         <Kbd className='ml-auto'>⌘K</Kbd>
       </Button>
 
-      <CommandDialog
-        open={isOpen}
-        onOpenChange={handleOpenChange}
-      >
-        <Command
-          className='max-w-md'
-          shouldFilter={false}
-        >
+      <CommandDialog open={isOpen} onOpenChange={handleOpenChange} size='md'>
+        <Command shouldFilter={false}>
           <CommandInput
             value={queryInput}
             onValueChange={setQueryInput}
@@ -125,10 +119,7 @@ export function YoutubeSearchBar({ initialQuery = '' }: YoutubeSearchBarProps) {
                         size='icon-xs'
                         onClick={(e) => handleRemoveHistory(e, item)}
                       >
-                        <HugeiconsIcon
-                          icon={Cancel01Icon}
-                          className='size-3'
-                        />
+                        <HugeiconsIcon icon={Cancel01Icon} className='size-3' />
                       </Button>
                     </span>
                   </CommandItem>
@@ -149,10 +140,7 @@ export function YoutubeSearchBar({ initialQuery = '' }: YoutubeSearchBarProps) {
                   size='sm'
                   onClick={handleClearHistory}
                 >
-                  <HugeiconsIcon
-                    icon={Delete02Icon}
-                    className='size-3'
-                  />
+                  <HugeiconsIcon icon={Delete02Icon} className='size-3' />
                   <span>{t('youtube_search.clear_history')}</span>
                 </Button>
               </div>

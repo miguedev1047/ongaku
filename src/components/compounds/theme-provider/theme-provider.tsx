@@ -1,59 +1,77 @@
 import { createContext, useContext, useEffect, useState } from "react"
-
-type Theme = "dark" | "light" | "system"
+import {
+  DEFAULT_THEME_ID,
+  DEFAULT_THEME_MODE,
+  type ThemeMode,
+} from "@/constants/themes"
 
 type ThemeProviderProps = {
   children: React.ReactNode
-  defaultTheme?: Theme
-  storageKey?: string
+  defaultMode?: ThemeMode
+  defaultTheme?: string
+  modeStorageKey?: string
+  themeStorageKey?: string
 }
 
 type ThemeProviderState = {
-  theme: Theme
-  setTheme: (theme: Theme) => void
+  mode: ThemeMode
+  setMode: (mode: ThemeMode) => void
+  theme: string
+  setTheme: (theme: string) => void
 }
 
 const initialState: ThemeProviderState = {
-  theme: "system",
-  setTheme: () => null
+  mode: DEFAULT_THEME_MODE,
+  setMode: () => null,
+  theme: DEFAULT_THEME_ID,
+  setTheme: () => null,
 }
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
 export function ThemeProvider({
   children,
-  defaultTheme = "system",
-  storageKey = "vite-ui-theme",
+  defaultMode = DEFAULT_THEME_MODE,
+  defaultTheme = DEFAULT_THEME_ID,
+  modeStorageKey = "ongaku-mode",
+  themeStorageKey = "ongaku-theme",
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
+  const [mode, setModeState] = useState<ThemeMode>(
+    () => (localStorage.getItem(modeStorageKey) as ThemeMode) || defaultMode
+  )
+
+  const [theme, setThemeState] = useState<string>(
+    () => localStorage.getItem(themeStorageKey) || defaultTheme
   )
 
   useEffect(() => {
     const root = window.document.documentElement
 
+    const isDark = mode === "dark"
+
     root.classList.remove("light", "dark")
+    root.classList.add(isDark ? "dark" : "light")
 
-    if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-        .matches
-        ? "dark"
-        : "light"
-
-      root.classList.add(systemTheme)
-      return
+    // 2. Set or clear data-theme attribute for theme family
+    if (theme && theme !== "default") {
+      root.setAttribute("data-theme", theme)
+    } else {
+      root.removeAttribute("data-theme")
     }
-
-    root.classList.add(theme)
-  }, [theme])
+  }, [mode, theme])
 
   const value = {
+    mode,
+    setMode: (newMode: ThemeMode) => {
+      localStorage.setItem(modeStorageKey, newMode)
+      setModeState(newMode)
+    },
     theme,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme)
-      setTheme(theme)
-    }
+    setTheme: (newTheme: string) => {
+      localStorage.setItem(themeStorageKey, newTheme)
+      setThemeState(newTheme)
+    },
   }
 
   return (

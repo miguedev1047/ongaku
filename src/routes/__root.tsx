@@ -14,10 +14,12 @@ import { AppSidebar, AppSidebarProvider } from '@/components/blocks/app-sidebar'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import { useQuery } from '@tanstack/react-query'
+import { useTheme } from '@/components/compounds/theme-provider'
 import { Show } from '@/components/utility/show'
 import i18n from '@/lib/i18n'
 import { AppBackground } from '@/components/blocks/app-background'
 import { cn } from 'cn'
+import { useEffect } from 'react'
 
 interface RouteContext {
   queryClient: QueryClient
@@ -52,6 +54,17 @@ function RootComponent() {
   usePlayerShortcuts()
 
   const { data: config } = useQuery(systemConfigQueryOpts())
+  const { mode, setMode, theme, setTheme } = useTheme()
+
+  useEffect(() => {
+    if (config?.theme && config.theme !== mode) {
+      setMode(config.theme)
+    }
+    if (config?.theme_family && config.theme_family !== theme) {
+      setTheme(config.theme_family)
+    }
+  }, [config?.theme, config?.theme_family, mode, theme, setMode, setTheme])
+
   const isPlayerTop = config?.player_position === 'top'
   const hasBackground = Boolean(
     config?.app_background && config.app_background.trim().length > 0,
