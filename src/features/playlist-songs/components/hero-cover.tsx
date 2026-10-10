@@ -34,7 +34,7 @@ export function PlaylistHeroCover({
   return (
     <div
       className={cn(
-        'flex items-center sm:items-end gap-3.5 sm:gap-5 min-w-0 flex-1',
+        'flex items-center sm:items-end gap-3.5 sm:gap-5 min-w-0 flex-1 mb-0',
       )}
     >
       <Show when={hasShowCover && coverUrl}>
@@ -75,7 +75,9 @@ export function PlaylistHeroCover({
           <p>
             <Show
               when={tracksCount === 1}
-              fallback={t('playlists.card.tracks_count_plural', { count: tracksCount })}
+              fallback={t('playlists.card.tracks_count_plural', {
+                count: tracksCount,
+              })}
             >
               {t('playlists.card.tracks_count', { count: tracksCount })}
             </Show>
