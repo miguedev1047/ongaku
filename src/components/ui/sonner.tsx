@@ -11,12 +11,20 @@ import {
 } from '@hugeicons/core-free-icons'
 
 const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme = 'system' } = useTheme()
+  const { mode } = useTheme()
 
   return (
     <Sonner
-      theme={theme as ToasterProps['theme']}
-      className='toaster group'
+      theme={mode as ToasterProps['theme']}
+      className='toaster group font-mono!'
+      style={
+        {
+          '--normal-bg': 'var(--card)',
+          '--normal-text': 'var(--card-foreground)',
+          '--normal-border': 'var(--border)',
+          '--border-radius': 'var(--radius-md)',
+        } as React.CSSProperties
+      }
       icons={{
         success: (
           <HugeiconsIcon

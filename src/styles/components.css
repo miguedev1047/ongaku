@@ -43,4 +43,43 @@
   .native-slider::-moz-range-thumb {
     @apply size-3 appearance-none rounded-md border border-ring bg-white;
   }
+
+  [data-sonner-toaster] {
+    --normal-bg: var(--card);
+    --normal-text: var(--card-foreground);
+    --normal-border: var(--border);
+    --border-radius: var(--radius-md);
+    font-family: inherit;
+  }
+
+  [data-sonner-toaster] [data-sonner-toast] {
+    background-color: var(--card) !important;
+    color: var(--card-foreground) !important;
+    border-color: var(--border) !important;
+    border-radius: var(--radius-md) !important;
+    font-family: inherit !important;
+    box-shadow: 0 4px 12px 0 color-mix(in srgb, black 15%, transparent) !important;
+  }
+
+  [data-sonner-toaster] [data-sonner-toast] [data-description] {
+    color: var(--muted-foreground) !important;
+  }
+
+  [data-sonner-toaster] [data-sonner-toast] [data-button] {
+    background-color: var(--primary) !important;
+    color: var(--primary-foreground) !important;
+    border-radius: var(--radius-sm) !important;
+  }
+
+  [data-sonner-toaster] [data-sonner-toast] [data-cancel] {
+    background-color: var(--muted) !important;
+    color: var(--muted-foreground) !important;
+    border-radius: var(--radius-sm) !important;
+  }
+
+  [data-sonner-toaster] [data-sonner-toast] [data-close-button] {
+    background-color: var(--card) !important;
+    border-color: var(--border) !important;
+    color: var(--foreground) !important;
+  }
 }
