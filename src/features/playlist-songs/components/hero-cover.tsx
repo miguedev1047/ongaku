@@ -1,5 +1,4 @@
 import { CoverImage } from '@/components/ui/cover-image'
-import { DotmSquare18 } from '@/components/ui/loaders/dotm-square-18'
 import { Show } from '@/components/utility/show'
 import { cn } from 'cn'
 import type { TPlaylistSong } from '@/features/playlist-songs/types'
@@ -17,6 +16,8 @@ export interface PlaylistHeroCoverProps {
 }
 
 import { useTranslation } from 'react-i18next'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { Music3Icon } from '@hugeicons/core-free-icons'
 
 export function PlaylistHeroCover({
   coverUrl,
@@ -98,7 +99,7 @@ export function PlaylistHeroCover({
                   'shrink-0 flex items-center justify-center size-5 rounded-sm bg-primary/10 text-primary',
                 )}
               >
-                <DotmSquare18 size={14} dotSize={2.5} speed={1.4} />
+                <HugeiconsIcon icon={Music3Icon} className='size-2.5' />
               </div>
               <div className={cn('flex items-center gap-1.5 min-w-0 text-xs')}>
                 <span

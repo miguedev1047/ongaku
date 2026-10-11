@@ -4,7 +4,6 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Show } from '@/components/utility/show'
 import { cn } from 'cn'
-import { DotmSquare10, DotmSquare18 } from '@/components/ui/loaders'
 import { useStreamingPlayerStore } from '@/features/player/stores'
 import { formatDuration } from '@/shared/helpers/format-duration'
 import { SearchSongActions } from '@/features/youtube-search/components/song-actions'
@@ -12,10 +11,12 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import {
   Cancel01Icon,
   Music01Icon,
+  Music3Icon,
   PauseIcon,
   PlayIcon,
 } from '@hugeicons/core-free-icons'
 import { CardWrapper } from '@/components/ui/card-wrapper'
+import { Spinner } from '@/components/ui/spinner'
 
 export interface StreamingPreviewCardProps {
   className?: string
@@ -49,15 +50,12 @@ export function StreamingPreviewCard({ className }: StreamingPreviewCardProps) {
           <CardWrapper
             padding='none'
             animated={true}
-            className={cn(
-              'relative overflow-hidden',
-              className,
-            )}
+            className={cn('relative overflow-hidden', className)}
           >
             <div className='flex items-center justify-between gap-3 px-3 py-2.5'>
               <div className='flex items-center gap-3 min-w-0 flex-1'>
                 <div
-                  className='shrink-0 flex items-center justify-center size-9 rounded-md bg-primary/10 border border-primary/20 text-primary'
+                  className='shrink-0 flex items-center justify-center size-7 rounded-md bg-primary/10 border border-primary/20 text-primary'
                   title={
                     isLoading
                       ? t('download_songs.preview.loading')
@@ -67,19 +65,10 @@ export function StreamingPreviewCard({ className }: StreamingPreviewCardProps) {
                   <Show
                     when={isLoading}
                     fallback={
-                      <DotmSquare18
-                        size={22}
-                        dotSize={3}
-                        speed={1.35}
-                        animated={isPlaying}
-                      />
+                      <HugeiconsIcon icon={Music3Icon} className='size-4' />
                     }
                   >
-                    <DotmSquare10
-                      size={22}
-                      dotSize={3}
-                      speed={1.2}
-                    />
+                    <Spinner />
                   </Show>
                 </div>
 
@@ -88,10 +77,7 @@ export function StreamingPreviewCard({ className }: StreamingPreviewCardProps) {
                     when={thumbnailSrc}
                     fallback={
                       <div className='size-full flex items-center justify-center bg-accent text-muted-foreground'>
-                        <HugeiconsIcon
-                          icon={Music01Icon}
-                          className='size-4'
-                        />
+                        <HugeiconsIcon icon={Music01Icon} className='size-4' />
                       </div>
                     }
                   >
@@ -121,27 +107,18 @@ export function StreamingPreviewCard({ className }: StreamingPreviewCardProps) {
                         <Show
                           when={isPlaying}
                           fallback={
-                            <Badge
-                              variant='secondary'
-                              size='sm'
-                            >
+                            <Badge variant='secondary' size='sm'>
                               {t('download_songs.preview.paused')}
                             </Badge>
                           }
                         >
-                          <Badge
-                            variant='default'
-                            size='sm'
-                          >
+                          <Badge variant='default' size='sm'>
                             {t('download_songs.preview.streaming')}
                           </Badge>
                         </Show>
                       }
                     >
-                      <Badge
-                        variant='outline-primary'
-                        size='sm'
-                      >
+                      <Badge variant='outline-primary' size='sm'>
                         {t('download_songs.preview.loading')}
                       </Badge>
                     </Show>
@@ -177,27 +154,17 @@ export function StreamingPreviewCard({ className }: StreamingPreviewCardProps) {
                     when={isPlaying}
                     fallback={
                       <>
-                        <HugeiconsIcon
-                          icon={PlayIcon}
-                          className='size-3.5'
-                        />
+                        <HugeiconsIcon icon={PlayIcon} className='size-3.5' />
                         <span>{t('player.play')}</span>
                       </>
                     }
                   >
-                    <HugeiconsIcon
-                      icon={PauseIcon}
-                      className='size-3.5'
-                    />
+                    <HugeiconsIcon icon={PauseIcon} className='size-3.5' />
                     <span>{t('player.pause')}</span>
                   </Show>
                 </Button>
 
-                <SearchSongActions
-                  item={track}
-                  size='sm'
-                  variant='ghost'
-                />
+                <SearchSongActions item={track} size='sm' variant='ghost' />
 
                 <Button
                   type='button'
@@ -207,10 +174,7 @@ export function StreamingPreviewCard({ className }: StreamingPreviewCardProps) {
                   title={t('download_songs.preview.stop')}
                   aria-label={t('download_songs.preview.stop')}
                 >
-                  <HugeiconsIcon
-                    icon={Cancel01Icon}
-                    className='size-3.5'
-                  />
+                  <HugeiconsIcon icon={Cancel01Icon} className='size-3.5' />
                 </Button>
               </div>
             </div>

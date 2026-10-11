@@ -12,17 +12,17 @@ export function StreamingControls() {
   const { t } = useTranslation()
   const isLoading = useStreamingPlayerStore((s) => s.playerState === "loading")
   const isPlaying = useStreamingPlayerStore((s) => s.playerState == "playing")
-  const progress = useStreamingPlayerStore((s) => s.progress)
-
   const togglePlay = useStreamingPlayerStore((s) => s.togglePlay)
   const seekTo = useStreamingPlayerStore((s) => s.seekTo)
 
   const handlePrevious = () => {
-    seekTo(Math.max(0, progress - 10))
+    const currentProgress = useStreamingPlayerStore.getState().progress
+    seekTo(Math.max(0, currentProgress - 10))
   }
 
   const handleNext = () => {
-    seekTo(progress + 10)
+    const currentProgress = useStreamingPlayerStore.getState().progress
+    seekTo(currentProgress + 10)
   }
 
   return (

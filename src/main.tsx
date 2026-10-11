@@ -8,6 +8,7 @@ import {
   RouteErrorState,
 } from '@/components/feedback/route-ui-state'
 import { AppProvider } from '@/providers/app-provider'
+import { scan } from 'react-scan'
 import {
   RouterProvider,
   createHashHistory,
@@ -16,6 +17,10 @@ import {
 
 // Import the generated route tree
 import { routeTree } from './routeTree.gen'
+
+if (import.meta.env.DEV) {
+  scan({ enabled: import.meta.env.DEV })
+}
 
 const hashMemory = createHashHistory()
 const router = createRouter({

@@ -12,12 +12,14 @@ interface UsePlaylistSongActionsProps {
 
 export function usePlaylistSongActions({ song }: UsePlaylistSongActionsProps) {
   const { t } = useTranslation()
-  const currentSong = useLocalPlayerStore((state) => state.currentSong)
-  const playerState = useLocalPlayerStore((state) => state.playerState)
+  const isCurrentSong = useLocalPlayerStore(
+    (state) => state.currentSong?.id === song.id,
+  )
+  const isPlaying = useLocalPlayerStore(
+    (state) =>
+      state.currentSong?.id === song.id && state.playerState === "playing",
+  )
   const playSong = useActivePlayerStore((state) => state.playSong)
-
-  const isCurrentSong = currentSong?.id === song.id
-  const isPlaying = isCurrentSong && playerState === "playing"
 
   const handleTogglePlayback = () => {
     if (isCurrentSong) {

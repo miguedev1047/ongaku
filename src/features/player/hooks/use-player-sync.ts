@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import throttle from 'lodash/throttle'
 import { platformService } from '@/infrastructure/platform'
 import {
   useLocalPlayerStore,
@@ -13,13 +14,35 @@ export function usePlayerSync() {
     let isMounted = true
     const unlistenFns: Array<() => void> = []
 
-    // 1. Local Player Time Update
-    platformService
-      .on<{ currentTime: number }>('local-player://time-update', ({ currentTime }) => {
+    const throttledSetLocalProgress = throttle(
+      (currentTime: number) => {
         const state = useLocalPlayerStore.getState()
         if (!state.isSeeking && state.playerState === 'playing') {
           state.setProgress(currentTime)
         }
+      },
+      1000,
+      { leading: true, trailing: true },
+    )
+
+    const throttledSetStreamingProgress = throttle(
+      (currentTime: number) => {
+        const state = useStreamingPlayerStore.getState()
+        if (!state.isSeeking && state.playerState === 'playing') {
+          state.setProgress(currentTime)
+          if (state.hasEnded) {
+            useStreamingPlayerStore.setState({ hasEnded: false })
+          }
+        }
+      },
+      1000,
+      { leading: true, trailing: true },
+    )
+
+    // 1. Local Player Time Update
+    platformService
+      .on<{ currentTime: number }>('local-player://time-update', ({ currentTime }) => {
+        throttledSetLocalProgress(currentTime)
       })
       .then((fn) => {
         if (!isMounted) fn()
@@ -30,6 +53,7 @@ export function usePlayerSync() {
     // 2. Local Player Track Completion & Loop Handling
     platformService
       .on('local-player://ended', () => {
+        throttledSetLocalProgress.cancel()
         const { isLoop, currentSong, volume, setProgress, queue, isShuffle } =
           useLocalPlayerStore.getState()
 
@@ -72,13 +96,7 @@ export function usePlayerSync() {
     // 3. Streaming Player Time Update
     platformService
       .on<{ currentTime: number }>('streaming-player://time-update', ({ currentTime }) => {
-        const state = useStreamingPlayerStore.getState()
-        if (!state.isSeeking && state.playerState === 'playing') {
-          state.setProgress(currentTime)
-          if (state.hasEnded) {
-            useStreamingPlayerStore.setState({ hasEnded: false })
-          }
-        }
+        throttledSetStreamingProgress(currentTime)
       })
       .then((fn) => {
         if (!isMounted) fn()
@@ -89,6 +107,7 @@ export function usePlayerSync() {
     // 4. Streaming Player Track Completion
     platformService
       .on('streaming-player://ended', () => {
+        throttledSetStreamingProgress.cancel()
         const state = useStreamingPlayerStore.getState()
         state.setPlayerState('paused')
         state.setProgress(0)
@@ -102,6 +121,8 @@ export function usePlayerSync() {
 
     return () => {
       isMounted = false
+      throttledSetLocalProgress.cancel()
+      throttledSetStreamingProgress.cancel()
       for (const fn of unlistenFns) {
         fn()
       }

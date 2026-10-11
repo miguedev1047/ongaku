@@ -2,12 +2,6 @@ import { CoverImage } from "@/components/ui/cover-image"
 import { useSongUtils } from "@/hooks/use-song-utils"
 import { useLocalPlayerStore } from "@/features/player/stores"
 import { PlayerMedia } from "@/components/ui/player"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger
-} from "@/components/ui/tooltip"
-
 export function LocalPlayerCover() {
   const currentSong = useLocalPlayerStore((state) => state.currentSong)
   const { getCoverUrl } = useSongUtils()
@@ -17,22 +11,13 @@ export function LocalPlayerCover() {
   const coverUrl = getCoverUrl({ song: currentSong })
 
   return (
-    <Tooltip>
-      <TooltipTrigger
-        render={
-          <PlayerMedia>
-            <CoverImage
-              key={currentSong.id}
-              src={coverUrl}
-              alt={currentSong.name}
-              className="size-full object-cover"
-            />
-          </PlayerMedia>
-        }
+    <PlayerMedia>
+      <CoverImage
+        key={currentSong.id}
+        src={coverUrl}
+        alt={currentSong.name}
+        className="size-full object-cover"
       />
-      <TooltipContent className="max-w-xs">
-        <p>{currentSong.name}</p>
-      </TooltipContent>
-    </Tooltip>
+    </PlayerMedia>
   )
 }

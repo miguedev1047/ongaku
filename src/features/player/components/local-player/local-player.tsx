@@ -6,7 +6,6 @@ import { LocalPlayerVolume } from './local-volume'
 import { LocalPlayerProgressbar } from './local-progressbar'
 import { LocalPlayerTime } from './local-time'
 import { Player } from '@/components/ui/player'
-import { TooltipProvider } from '@/components/ui/tooltip'
 import { useLocalPlayerStore } from '@/features/player/stores'
 import { useQuery } from '@tanstack/react-query'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
@@ -23,28 +22,26 @@ export function LocalPlayer({ position = 'bottom' }: LocalPlayerProps) {
   if (!currentSong || (health && !health.serverHealthy)) return null
 
   return (
-    <TooltipProvider delay={300}>
-      <Player position={position}>
-        <LocalPlayerProgressbar position={position} />
+    <Player position={position}>
+      <LocalPlayerProgressbar position={position} />
 
-        {/* Column 1 (Left): Cover & Track Info side by side */}
-        <div className='flex items-center gap-3 min-w-0 overflow-hidden pr-2'>
-          <LocalPlayerCover />
-          <LocalPlayerTrackInfo />
-        </div>
+      {/* Column 1 (Left): Cover & Track Info side by side */}
+      <div className='flex items-center gap-3 min-w-0 overflow-hidden pr-2'>
+        <LocalPlayerCover />
+        <LocalPlayerTrackInfo />
+      </div>
 
-        {/* Column 2 (Center): Playback Controls */}
-        <Suspense>
-          <LocalPlayerControls />
-        </Suspense>
+      {/* Column 2 (Center): Playback Controls */}
+      <Suspense>
+        <LocalPlayerControls />
+      </Suspense>
 
-        {/* Column 3 (Right): Time & Volume */}
-        <div className='flex items-center justify-end gap-3 min-w-0 pl-2'>
-          <LocalPlayerTime />
-          <LocalPlayerVolume position={position} />
-          <QueueSheet />
-        </div>
-      </Player>
-    </TooltipProvider>
+      {/* Column 3 (Right): Time & Volume */}
+      <div className='flex items-center justify-end gap-3 min-w-0 pl-2'>
+        <LocalPlayerTime />
+        <LocalPlayerVolume position={position} />
+        <QueueSheet />
+      </div>
+    </Player>
   )
 }

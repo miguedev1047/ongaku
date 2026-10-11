@@ -60,7 +60,6 @@ export function SearchLibrary() {
                     key={song.id}
                     value={song.id}
                     onSelect={handleSelectSong}
-                    className='gap-2.5'
                   >
                     <figure className='size-8 shrink-0 rounded-md overflow-hidden bg-muted'>
                       <CoverImage

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useStreamingPlayerStore } from '@/features/player/stores'
 import {
   Music01Icon,
+  Music3Icon,
   PauseIcon,
   PlayIcon,
   YoutubeIcon,
@@ -21,7 +22,6 @@ import { formatDuration } from '@/shared/helpers/format-duration'
 import { Show } from '@/components/utility/show'
 import { SearchSongActions } from '@/features/youtube-search/components/song-actions'
 import { cn } from 'cn'
-import { DotmSquare1, DotmSquare18 } from '@/components/ui/loaders'
 import { useTranslation } from 'react-i18next'
 
 interface YoutubeSongInfoProps {
@@ -53,7 +53,9 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
             <EmptyMedia variant='icon'>
               <HugeiconsIcon icon={Music01Icon} />
             </EmptyMedia>
-            <EmptyTitle>{t('youtube_search.active_track.no_active_track')}</EmptyTitle>
+            <EmptyTitle>
+              {t('youtube_search.active_track.no_active_track')}
+            </EmptyTitle>
             <EmptyDescription>
               {t('youtube_search.active_track.no_active_track_desc')}
             </EmptyDescription>
@@ -97,27 +99,14 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
         </Show>
 
         <div className='absolute top-2 left-2 flex items-center gap-1.5'>
-          <Badge
-            variant='destructive-solid'
-            size='sm'
-          >
-            <HugeiconsIcon
-              icon={YoutubeIcon}
-              className='size-2.5'
-            />
+          <Badge variant='destructive-solid' size='sm'>
+            <HugeiconsIcon icon={YoutubeIcon} className='size-2.5' />
             <span>{t('youtube_search.active_track.stream')}</span>
           </Badge>
 
           <Show when={isPlaying}>
-            <Badge
-              variant='outline-primary'
-              size='sm'
-            >
-              <DotmSquare18
-                size={12}
-                dotSize={1.8}
-                speed={1.5}
-              />
+            <Badge variant='outline-primary' size='sm'>
+              <HugeiconsIcon icon={Music3Icon} className='size-4' />
               <span>{t('youtube_search.active_track.playing')}</span>
             </Badge>
           </Show>
@@ -157,10 +146,7 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
           className='flex-1 gap-1.5'
           disabled={isLoading}
         >
-          <HugeiconsIcon
-            icon={playButtonIcon}
-            className='size-3.5'
-          />
+          <HugeiconsIcon icon={playButtonIcon} className='size-3.5' />
           <span>{playButtonLabel}</span>
         </Button>
 
@@ -176,11 +162,7 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
             )}
           >
             <div className='shrink-0 flex items-center justify-center size-7 rounded-sm bg-primary/10 text-primary'>
-              <DotmSquare1
-                size={20}
-                dotSize={3}
-                speed={1.2}
-              />
+              <HugeiconsIcon icon={Music3Icon} className='size-4' />
             </div>
             <div className='flex flex-col min-w-0'>
               <span className='font-medium text-foreground text-xs leading-none truncate'>
@@ -200,11 +182,7 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
             )}
           >
             <div className='shrink-0 flex items-center justify-center size-7 rounded-sm bg-primary/10 text-primary'>
-              <DotmSquare18
-                size={20}
-                dotSize={3}
-                speed={1.4}
-              />
+              <HugeiconsIcon icon={Music3Icon} className='size-4' />
             </div>
             <div className='flex flex-col min-w-0'>
               <span className='font-medium text-foreground text-xs leading-none truncate'>

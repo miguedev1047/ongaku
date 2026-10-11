@@ -2,14 +2,19 @@ import { useStreamingPlayerStore, useActivePlayerStore } from "@/features/player
 import type { TYoutubeSearchResult } from "@/features/youtube-search/types"
 
 export function useYoutubePlayback(item: TYoutubeSearchResult) {
-  const currentTrack = useStreamingPlayerStore((state) => state.currentTrack)
-  const playerState = useStreamingPlayerStore((state) => state.playerState)
+  const isCurrentTrack = useStreamingPlayerStore(
+    (state) => state.currentTrack?.id === item.id,
+  )
+  const isPlaying = useStreamingPlayerStore(
+    (state) =>
+      state.currentTrack?.id === item.id && state.playerState === "playing",
+  )
+  const isLoading = useStreamingPlayerStore(
+    (state) =>
+      state.currentTrack?.id === item.id && state.playerState === "loading",
+  )
   const togglePlay = useStreamingPlayerStore((state) => state.togglePlay)
   const playStream = useActivePlayerStore((state) => state.playStream)
-
-  const isCurrentTrack = currentTrack?.id === item.id
-  const isPlaying = isCurrentTrack && playerState === "playing"
-  const isLoading = isCurrentTrack && playerState === "loading"
 
   const togglePlayback = () => {
     if (isCurrentTrack) {

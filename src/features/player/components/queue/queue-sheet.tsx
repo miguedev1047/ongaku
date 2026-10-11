@@ -14,7 +14,6 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import { Show } from '@/components/utility/show'
 import { QueueList } from './queue-list'
 import type { TPlaylistSong } from '@/features/playlist-songs/types'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useTranslation } from 'react-i18next'
 
 export function QueueSheet() {
@@ -28,25 +27,17 @@ export function QueueSheet() {
 
   return (
     <Sheet>
-      <Tooltip>
-        <TooltipTrigger
-          render={
-            <SheetTrigger
-              render={
-                <Button
-                  size='icon-sm'
-                  variant='ghost-muted'
-                >
-                  <HugeiconsIcon icon={ListMusicIcon} />
-                </Button>
-              }
-            />
-          }
-        />
-        <TooltipContent side='top'>
-          <p>{t('player.queue_title')}</p>
-        </TooltipContent>
-      </Tooltip>
+      <SheetTrigger
+        render={
+          <Button
+            size='icon-sm'
+            variant='ghost-muted'
+            aria-label={t('player.queue_title')}
+          >
+            <HugeiconsIcon icon={ListMusicIcon} />
+          </Button>
+        }
+      />
 
       <SheetContent
         side='right'

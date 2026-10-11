@@ -21,12 +21,14 @@ export function useLibrarySongActions({ song }: UseLibrarySongActionsProps) {
   const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false)
   const { data: health } = useQuery(systemHealthQueryOpts())
 
-  const currentSong = useLocalPlayerStore((state) => state.currentSong)
-  const playerState = useLocalPlayerStore((state) => state.playerState)
+  const isCurrentSong = useLocalPlayerStore(
+    (state) => state.currentSong?.id === song.id,
+  )
+  const isPlaying = useLocalPlayerStore(
+    (state) =>
+      state.currentSong?.id === song.id && state.playerState === 'playing',
+  )
   const playSong = useActivePlayerStore((state) => state.playSong)
-
-  const isCurrentSong = currentSong?.id === song.id
-  const isPlaying = isCurrentSong && playerState === 'playing'
 
   const handleTogglePlayback = () => {
     if (health && !health.serverHealthy) {

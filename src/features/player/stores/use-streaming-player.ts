@@ -42,18 +42,27 @@ export const useStreamingPlayerStore = create<StreamingPlayerStore>(
     volume: DEFAULT_PLAYER_VOLUME,
 
     setCurrentTrack: (track) =>
-      set({
-        currentTrack: track,
-        duration: track?.duration ?? 0,
-        progress: 0,
-        hasEnded: false,
-        playerState: track ? "loading" : "idle",
+      set((prev) => {
+        if (prev.currentTrack?.id === track?.id && prev.currentTrack !== null) {
+          return prev
+        }
+        return {
+          currentTrack: track,
+          duration: track?.duration ?? 0,
+          progress: 0,
+          hasEnded: false,
+          playerState: track ? "loading" : "idle",
+        }
       }),
 
-    setPlayerState: (state) => set({ playerState: state }),
-    setIsSeeking: (isSeeking) => set({ isSeeking }),
-    setDuration: (duration) => set({ duration }),
-    setProgress: (progress) => set({ progress }),
+    setPlayerState: (state) =>
+      set((prev) => (prev.playerState === state ? prev : { playerState: state })),
+    setIsSeeking: (isSeeking) =>
+      set((prev) => (prev.isSeeking === isSeeking ? prev : { isSeeking })),
+    setDuration: (duration) =>
+      set((prev) => (prev.duration === duration ? prev : { duration })),
+    setProgress: (progress) =>
+      set((prev) => (prev.progress === progress ? prev : { progress })),
     setVolume: (volume) => {
       syncPlayerVolume(volume)
     },
