@@ -98,11 +98,7 @@ export function PlaylistHeroCover({
                   'shrink-0 flex items-center justify-center size-5 rounded-sm bg-primary/10 text-primary',
                 )}
               >
-                <DotmSquare18
-                  size={14}
-                  dotSize={2.5}
-                  speed={1.4}
-                />
+                <DotmSquare18 size={14} dotSize={2.5} speed={1.4} />
               </div>
               <div className={cn('flex items-center gap-1.5 min-w-0 text-xs')}>
                 <span

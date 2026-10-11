@@ -19,7 +19,8 @@
     "unknown_album": "Unknown Album",
     "select_all_songs": "Select all songs",
     "please_wait": "Please wait a moment",
-    "error_loading_songs": "Error loading songs"
+    "error_loading_songs": "Error loading songs",
+    "no_results": "No results found"
   },
   "sidebar": {
     "library": "Library",
@@ -323,9 +324,11 @@
     "search_placeholder": "Search playlists...",
     "search_command_placeholder": "Type a playlist...",
     "search_command_heading": "Search playlists",
+    "search_command_empty": "No playlists found",
     "search_songs_placeholder": "Search songs...",
     "search_songs_command_placeholder": "Type a song...",
     "search_songs_command_heading": "Search songs",
+    "search_songs_command_empty": "No songs found",
     "card": {
       "songs_count": "{{count}} song",
       "songs_count_plural": "{{count}} songs",
@@ -430,6 +433,7 @@
     "refresh_library": "Refresh library",
     "search_command_placeholder": "Type a song, artist, or album...",
     "search_command_heading": "Search library songs",
+    "search_command_empty": "No songs found",
     "stats": {
       "tracks": "Tracks",
       "playlists": "Playlists"
@@ -501,7 +505,7 @@
   },
   "download_songs": {
     "title": "Download Media from URL",
-    "description": "Paste a YouTube link (song, album, or playlist) to preview tracks and download on demand.",
+    "description": "Paste a YouTube link (song, album, or playlist) to preview tracks and download.",
     "form": {
       "url_label": "Media URL",
       "url_placeholder": "https://www.youtube.com/watch?v=... or playlist URL",

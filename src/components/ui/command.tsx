@@ -1,8 +1,6 @@
 import * as React from 'react'
 import { Command as CommandPrimitive, useCommandState } from 'cmdk'
 import { cn } from 'cn'
-import { useVirtualizer } from '@tanstack/react-virtual'
-import { Show } from '@/components/utility/show'
 import { cva, type VariantProps } from 'class-variance-authority'
 import {
   Dialog,
@@ -128,147 +126,6 @@ function CommandList({
   )
 }
 
-interface CommandVirtualListProps<T = unknown> extends Omit<
-  React.ComponentProps<typeof CommandPrimitive.List>,
-  'children'
-> {
-  data?: ArrayLike<T>
-  children: React.ReactNode | ((item: T, index: number) => React.ReactElement)
-  heading?: React.ReactNode
-  empty?: React.ReactNode
-  filter?: (item: T, search: string, index: number) => boolean
-  vlistClassName?: string
-  overscan?: number
-  estimateSize?: number
-}
-
-function CommandVirtualList<T = unknown>({
-  className,
-  data,
-  children,
-  heading,
-  empty,
-  filter,
-  vlistClassName,
-  overscan = 5,
-  estimateSize = 40,
-  ...props
-}: CommandVirtualListProps<T>) {
-  const search = useCommandState((state) => state.search)
-  const parentRef = React.useRef<HTMLDivElement>(null)
-
-  const items = React.useMemo(() => {
-    if (!data) return []
-    const arr = Array.from(data)
-    if (!filter || !search.trim()) return arr
-    return arr.filter((item, index) => filter(item, search.trim(), index))
-  }, [data, filter, search])
-
-  const resolvedEstimateSize = estimateSize
-  const resolvedOverscan = overscan
-
-  const rowVirtualizer = useVirtualizer({
-    count: items.length,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => resolvedEstimateSize,
-    overscan: resolvedOverscan,
-    getItemKey: (index) =>
-      (items[index] as { id?: string | number })?.id ?? index,
-  })
-
-  React.useEffect(() => {
-    rowVirtualizer.scrollToOffset(0)
-  }, [search, rowVirtualizer])
-
-  const isEmpty = data
-    ? items.length === 0
-    : React.Children.count(children) === 0
-
-  return (
-    <CommandPrimitive.List
-      data-slot='command-virtual-list'
-      className={cn(
-        'no-scrollbar flex flex-col overflow-hidden outline-none **:[[cmdk-list-sizer]]:size-full **:[[cmdk-list-sizer]]:flex **:[[cmdk-list-sizer]]:flex-col **:[[cmdk-list-sizer]]:min-h-0',
-        className,
-      )}
-      {...props}
-    >
-      <Show
-        when={isEmpty}
-        fallback={
-          <div className='flex flex-col size-full overflow-hidden'>
-            <Show when={Boolean(heading)}>
-              <div className='shrink-0 px-2.5 py-1.5 text-xs font-medium text-muted-foreground'>
-                {heading}
-              </div>
-            </Show>
-            <div
-              ref={parentRef}
-              className={cn(
-                'size-full flex-1 min-h-0 overflow-y-auto no-scrollbar p-1',
-                vlistClassName,
-              )}
-            >
-              <div
-                style={{
-                  height: `${rowVirtualizer.getTotalSize()}px`,
-                  width: '100%',
-                  position: 'relative',
-                }}
-              >
-                {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-                  const item = items[virtualRow.index]
-                  if (!item && typeof children === 'function') return null
-
-                  return (
-                    <div
-                      key={virtualRow.key}
-                      data-index={virtualRow.index}
-                      ref={rowVirtualizer.measureElement}
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: `${virtualRow.size}px`,
-                        transform: `translateY(${virtualRow.start}px)`,
-                      }}
-                    >
-                      <Show
-                        when={typeof children === 'function' && Boolean(data)}
-                        fallback={children as React.ReactNode}
-                      >
-                        {(
-                          children as (
-                            item: T,
-                            index: number,
-                          ) => React.ReactElement
-                        )(item, virtualRow.index)}
-                      </Show>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-          </div>
-        }
-      >
-        <Show
-          when={Boolean(empty)}
-          fallback={<CommandEmpty>No results found.</CommandEmpty>}
-        >
-          <Show
-            when={typeof empty === 'string'}
-            fallback={<>{empty}</>}
-          >
-            <CommandEmpty>{empty as string}</CommandEmpty>
-          </Show>
-        </Show>
-      </Show>
-    </CommandPrimitive.List>
-  )
-}
-
 function CommandEmpty({
   className,
   ...props
@@ -356,7 +213,6 @@ export {
   CommandDialog,
   CommandInput,
   CommandList,
-  CommandVirtualList,
   CommandEmpty,
   CommandGroup,
   CommandItem,
@@ -364,5 +220,3 @@ export {
   CommandSeparator,
   useCommandState,
 }
-
-export type { CommandVirtualListProps }

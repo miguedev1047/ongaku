@@ -2,9 +2,11 @@ import { useState } from 'react'
 import {
   Command,
   CommandDialog,
+  CommandEmpty,
+  CommandGroup,
   CommandInput,
   CommandItem,
-  CommandVirtualList,
+  CommandList,
 } from '@/components/ui/command'
 import { Button } from '@/components/ui/button'
 import { HugeiconsIcon } from '@hugeicons/react'
@@ -37,69 +39,49 @@ export function SearchLibrary() {
         className='w-52'
         size='sm'
       >
-        <HugeiconsIcon
-          icon={Search01Icon}
-          className='size-4'
-        />
-        {t('playlists.search_songs_placeholder')}
+        <HugeiconsIcon icon={Search01Icon} className='size-4' />
+        {t('library.header.search_placeholder')}
         <Kbd className='ml-auto'>⌘K</Kbd>
       </Button>
-
-      <CommandDialog
-        open={isOpen}
-        onOpenChange={setIsOpen}
-        size='md'
-      >
-        <Command shouldFilter={false}>
+      <CommandDialog open={isOpen} onOpenChange={setIsOpen} size='md'>
+        <Command>
           <CommandInput placeholder={t('library.search_command_placeholder')} />
-          <CommandVirtualList
-            data={songs}
-            filter={(song, search) => {
-              const query = search.toLowerCase()
-              const nameMatch = song.name.toLowerCase().includes(query)
-              const artistMatch = Boolean(
-                song.metadata?.artist?.toLowerCase().includes(query),
-              )
-              const albumMatch = Boolean(
-                song.metadata?.album?.toLowerCase().includes(query),
-              )
-              return nameMatch || artistMatch || albumMatch
-            }}
-            style={{ height: '40vh' }}
-            heading={t('library.search_command_heading')}
-          >
-            {(song) => {
-              const handleSelectSong = () => {
-                setIsOpen(false)
-                playSong(song, songs, { type: 'library' })
-              }
+          <CommandList>
+            <CommandEmpty>{t('library.search_command_empty')}</CommandEmpty>
+            <CommandGroup>
+              {songs.map((song) => {
+                const handleSelectSong = () => {
+                  setIsOpen(false)
+                  playSong(song, songs, { type: 'library' })
+                }
 
-              return (
-                <CommandItem
-                  key={song.id}
-                  value={song.id}
-                  onSelect={handleSelectSong}
-                  className='gap-2.5'
-                >
-                  <figure className='size-8 shrink-0 rounded-md overflow-hidden bg-muted'>
-                    <CoverImage
-                      src={getCoverUrl({ song })}
-                      alt={song.name}
-                      className='size-full object-cover'
-                    />
-                  </figure>
-                  <div className='flex-1 min-w-0'>
-                    <h2 className='line-clamp-1 text-sm font-medium'>
-                      {song.name}
-                    </h2>
-                    <p className='text-xs text-muted-foreground line-clamp-1'>
-                      {song.metadata.artist || t('common.unknown_artist')}
-                    </p>
-                  </div>
-                </CommandItem>
-              )
-            }}
-          </CommandVirtualList>
+                return (
+                  <CommandItem
+                    key={song.id}
+                    value={song.id}
+                    onSelect={handleSelectSong}
+                    className='gap-2.5'
+                  >
+                    <figure className='size-8 shrink-0 rounded-md overflow-hidden bg-muted'>
+                      <CoverImage
+                        src={getCoverUrl({ song })}
+                        alt={song.name}
+                        className='size-full object-cover'
+                      />
+                    </figure>
+                    <div className='flex-1 min-w-0'>
+                      <h2 className='line-clamp-1 text-sm font-medium'>
+                        {song.name}
+                      </h2>
+                      <p className='text-xs text-muted-foreground line-clamp-1'>
+                        {song.metadata.artist || t('common.unknown_artist')}
+                      </p>
+                    </div>
+                  </CommandItem>
+                )
+              })}
+            </CommandGroup>
+          </CommandList>
         </Command>
       </CommandDialog>
     </div>

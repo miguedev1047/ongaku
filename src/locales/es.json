@@ -19,7 +19,8 @@
     "unknown_album": "Álbum desconocido",
     "select_all_songs": "Seleccionar todas las canciones",
     "please_wait": "Por favor espera un momento",
-    "error_loading_songs": "Error al cargar canciones"
+    "error_loading_songs": "Error al cargar canciones",
+    "no_results": "No se encontraron resultados"
   },
   "sidebar": {
     "library": "Biblioteca",
@@ -323,9 +324,11 @@
     "search_placeholder": "Buscar playlists...",
     "search_command_placeholder": "Escribe una playlist...",
     "search_command_heading": "Buscar playlists",
+    "search_command_empty": "No se encontraron playlists",
     "search_songs_placeholder": "Buscar canciones...",
     "search_songs_command_placeholder": "Escribe una canción...",
     "search_songs_command_heading": "Buscar canciones",
+    "search_songs_command_empty": "No se encontraron canciones",
     "card": {
       "songs_count": "{{count}} canción",
       "songs_count_plural": "{{count}} canciones",
@@ -430,6 +433,7 @@
     "refresh_library": "Actualizar biblioteca",
     "search_command_placeholder": "Escribe una canción, artista o álbum...",
     "search_command_heading": "Buscar canciones de la biblioteca",
+    "search_command_empty": "No se encontraron canciones",
     "stats": {
       "tracks": "Canciones",
       "playlists": "Playlists"
@@ -501,7 +505,7 @@
   },
   "download_songs": {
     "title": "Descargar Audio desde URL",
-    "description": "Pega un enlace de YouTube (canción, álbum o playlist) para previsualizar pistas y descargar a demanda.",
+    "description": "Pega un enlace de YouTube (canción, álbum o playlist) para previsualizar canciones y descargar.",
     "form": {
       "url_label": "URL del Audio",
       "url_placeholder": "https://www.youtube.com/watch?v=... o enlace de playlist",

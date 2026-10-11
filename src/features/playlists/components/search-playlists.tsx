@@ -1,10 +1,12 @@
 import {
   Command,
   CommandDialog,
+  CommandEmpty,
+  CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
   CommandShortcut,
-  CommandVirtualList,
 } from '@/components/ui/command'
 import { Button } from '@/components/ui/button'
 import { HugeiconsIcon } from '@hugeicons/react'
@@ -51,10 +53,11 @@ function SearchPlaylistItem({ playlist, onSelect }: SearchPlaylistItemProps) {
       onFocus={handlePreload}
       onSelect={handleNavigate}
     >
-      <div className='flex w-full'>
-        <HugeiconsIcon icon={Music01Icon} />
+      <div className='flex items-center gap-2 w-full'>
+        <div className='p-2 bg-accent rounded-md'>
+          <HugeiconsIcon icon={Music01Icon} />
+        </div>
         <span className='truncate'>{playlist.name}</span>
-
         <CommandShortcut className='flex items-center ml-auto'>
           <p className='ml-auto text-xs text-muted-foreground font-mono'>
             <Show
@@ -85,48 +88,28 @@ export function SearchPlaylists() {
 
   return (
     <div className='ml-auto flex items-center gap-2'>
-      <Button
-        onClick={() => setIsOpen(true)}
-        variant='outline'
-        size='sm'
-      >
-        <HugeiconsIcon
-          icon={Search01Icon}
-          className='size-4'
-        />
+      <Button onClick={() => setIsOpen(true)} variant='outline' size='sm'>
+        <HugeiconsIcon icon={Search01Icon} className='size-4' />
         {t('playlists.search_placeholder')}
         <Kbd className='ml-auto'>⌘K</Kbd>
       </Button>
-
-      <CommandDialog
-        open={isOpen}
-        onOpenChange={setIsOpen}
-        size='md'
-      >
-        <Command shouldFilter={false}>
+      <CommandDialog open={isOpen} onOpenChange={setIsOpen} size='md'>
+        <Command>
           <CommandInput
             placeholder={t('playlists.search_command_placeholder')}
           />
-          <CommandVirtualList
-            data={playlists}
-            filter={(playlist, search) => {
-              const query = search.toLowerCase()
-              const nameMatch = playlist.name.toLowerCase().includes(query)
-
-              return nameMatch
-            }}
-            estimateSize={31}
-            style={{ maxHeight: '40vh' }}
-            heading={t('playlists.search_command_heading')}
-          >
-            {(playlist) => (
-              <SearchPlaylistItem
-                key={playlist.id}
-                playlist={playlist}
-                onSelect={() => setIsOpen(false)}
-              />
-            )}
-          </CommandVirtualList>
+          <CommandList>
+            <CommandEmpty>{t('playlists.search_command_empty')}</CommandEmpty>
+            <CommandGroup>
+              {playlists.map((playlist) => (
+                <SearchPlaylistItem
+                  key={playlist.id}
+                  playlist={playlist}
+                  onSelect={() => setIsOpen(false)}
+                />
+              ))}
+            </CommandGroup>
+          </CommandList>
         </Command>
       </CommandDialog>
     </div>

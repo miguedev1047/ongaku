@@ -1,9 +1,11 @@
 import {
   Command,
   CommandDialog,
+  CommandEmpty,
+  CommandGroup,
   CommandInput,
   CommandItem,
-  CommandVirtualList,
+  CommandList,
 } from '@/components/ui/command'
 import { Button } from '@/components/ui/button'
 import { HugeiconsIcon } from '@hugeicons/react'
@@ -40,68 +42,52 @@ export function SearchSongs() {
         className='w-52'
         size='sm'
       >
-        <HugeiconsIcon
-          icon={Search01Icon}
-          className='size-4'
-        />
+        <HugeiconsIcon icon={Search01Icon} className='size-4' />
         {t('playlists.search_songs_placeholder')}
         <Kbd className='ml-auto'>⌘K</Kbd>
       </Button>
-
-      <CommandDialog
-        open={isOpen}
-        onOpenChange={setIsOpen}
-        size='md'
-      >
-        <Command shouldFilter={false}>
+      <CommandDialog open={isOpen} onOpenChange={setIsOpen} size='md'>
+        <Command>
           <CommandInput
             placeholder={t('playlists.search_songs_command_placeholder')}
           />
-          <CommandVirtualList
-            data={songs}
-            filter={(song, search) => {
-              const query = search.toLowerCase()
-              return (
-                song.name.toLowerCase().includes(query) ||
-                Boolean(song.metadata?.artist?.toLowerCase().includes(query))
-              )
-            }}
-            estimateSize={47}
-            style={{ maxHeight: '40vh' }}
-            heading={t('playlists.search_songs_command_heading')}
-          >
-            {(song) => {
-              const handleSelectSong = () => {
-                setIsOpen(false)
-                playSong(song, songs, {
-                  type: 'playlist',
-                  playlistName: playlistName || song.playlist_name || '',
-                })
-              }
+          <CommandList>
+            <CommandEmpty>{t('playlists.search_songs_command_empty')}</CommandEmpty>
+            <CommandGroup>
+              {songs.map((song) => {
+                const handleSelectSong = () => {
+                  setIsOpen(false)
 
-              return (
-                <CommandItem
-                  key={song.id}
-                  value={song.id}
-                  onSelect={handleSelectSong}
-                >
-                  <figure className='size-8 shrink-0'>
-                    <CoverImage
-                      src={getCoverUrl({ song })}
-                      alt={song.name}
-                      className='size-full object-cover'
-                    />
-                  </figure>
-                  <div>
-                    <h2 className='line-clamp-1 text-sm'>{song.name}</h2>
-                    <p className='text-xs text-muted-foreground line-clamp-1'>
-                      {song.metadata.artist || t('common.unknown_artist')}
-                    </p>
-                  </div>
-                </CommandItem>
-              )
-            }}
-          </CommandVirtualList>
+                  playSong(song, songs, {
+                    type: 'playlist',
+                    playlistName: playlistName || song.playlist_name || '',
+                  })
+                }
+
+                return (
+                  <CommandItem
+                    key={song.id}
+                    value={song.name}
+                    onSelect={handleSelectSong}
+                  >
+                    <figure className='size-8 shrink-0'>
+                      <CoverImage
+                        src={getCoverUrl({ song })}
+                        alt={song.name}
+                        className='size-full object-cover'
+                      />
+                    </figure>
+                    <div>
+                      <h2 className='line-clamp-1 text-sm'>{song.name}</h2>
+                      <p className='text-xs text-muted-foreground line-clamp-1'>
+                        {song.metadata.artist || t('common.unknown_artist')}
+                      </p>
+                    </div>
+                  </CommandItem>
+                )
+              })}
+            </CommandGroup>
+          </CommandList>
         </Command>
       </CommandDialog>
     </div>
