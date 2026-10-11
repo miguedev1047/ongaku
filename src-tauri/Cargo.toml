@@ -1,6 +1,6 @@
 [package]
 name = "ongaku"
-version = "0.1.30"
+version = "0.1.31"
 description = "A lightweight and simple mp3 player"
 authors = ["miguedev1047"]
 edition = "2021"
