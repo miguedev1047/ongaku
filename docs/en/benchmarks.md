@@ -54,10 +54,12 @@ graph TD
 ## 🧩 2. Core Technical Components
 
 ### A. Frontend (React 19, TanStack Ecosystem & PlatformService)
-- **TanStack Router**: File-based routing (`/playlists/$playlistName`, `/library`, `/settings/`, `/search-youtube`). Route loaders prewarm query caches with `.query()` to guarantee flicker-free transitions.
+- **TanStack Router**: File-based routing (`/playlists/$playlistName`, `/library`, `/settings/`, `/search-youtube`, `/download-songs`). Route loaders prewarm query caches with `.query()` to guarantee flicker-free transitions.
+- **Domain-Driven Feature Architecture**: Strictly structured into isolated domain packages (`src/features/<domain>/` for `player`, `library`, `playlists`, `playlist-songs`, `youtube-search`, `download-songs`, `download-queue`, `settings`) ensuring high cohesion, clear boundaries, and clean maintenance.
 - **TanStack React Query & Suspense**: Declarative asynchronous state and in-memory caching. The UI relies on `useSuspenseQuery` for system health, audio libraries, and configuration.
-- **Zustand Action Stores**: Global state persistence across navigation for long-running workflows (audio download progress, binary installation status, persisted player state).
-- **Virtualized Tables**: Powered by TanStack Table / Virtual, rendering only visible DOM elements for smooth 60+ FPS scrolling across thousands of tracks.
+- **Zustand Action Stores**: Global state persistence across navigation for long-running workflows (audio download progress, binary installation status, persisted player state, queue sheet).
+- **Virtualized Tables**: Powered by TanStack Table / Virtual, rendering only visible DOM elements for smooth 60+ FPS scrolling across thousands of tracks in primary collections.
+- **Native Command Palettes (⌘K)**: Instant keyboard-driven modal search powered by `cmdk` native in-memory fuzzy filtering without layout thrashing, ensuring zero input latency.
 - **PlatformService Layer**: Runtime abstraction isolating the React UI from direct Tauri API calls, enabling modularity and seamless cross-platform adaptability.
 
 ### B. Native Rust Audio Engine (Rodio, Symphonia & CPAL)

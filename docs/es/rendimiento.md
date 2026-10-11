@@ -54,10 +54,12 @@ graph TD
 ## 🧩 2. Componentes Técnicos Clave
 
 ### A. Frontend (React 19, Ecosistema TanStack & PlatformService)
-- **TanStack Router**: Enrutamiento estricto basado en archivos (`/playlists/$playlistName`, `/library`, `/settings/`, `/search-youtube`). Los *loaders* de ruta precargan los datos mediante `.query()` para una navegación fluida sin parpadeos.
+- **TanStack Router**: Enrutamiento estricto basado en archivos (`/playlists/$playlistName`, `/library`, `/settings/`, `/search-youtube`, `/download-songs`). Los *loaders* de ruta precargan los datos mediante `.query()` para una navegación fluida sin parpadeos.
+- **Arquitectura Modular por Dominios (Domain-Driven)**: Estructuración estricta en carpetas de características (`src/features/<dominio>/` para `player`, `library`, `playlists`, `playlist-songs`, `youtube-search`, `download-songs`, `download-queue`, `settings`), asegurando alta cohesión, límites claros y mantenimiento limpio.
 - **TanStack React Query & Suspense**: Manejo declarativo del estado asíncrono y caché en memoria. La UI utiliza `useSuspenseQuery` para consumir datos precalentados de salud del sistema, bibliotecas y configuración.
-- **Zustand Action Stores**: Persistencia del estado global para operaciones largas (progreso de descargas de audio, instalación de binarios y estado del reproductor persistido).
-- **Tablas Virtualizadas**: Renderizado virtualizado mediante TanStack Table / Virtual, calculando y montando en el DOM únicamente los elementos visibles en pantalla (manteniendo 60+ FPS estables con miles de canciones).
+- **Zustand Action Stores**: Persistencia del estado global para operaciones largas (progreso de descargas de audio, instalación de binarios, estado del reproductor persistido y panel de cola).
+- **Tablas Virtualizadas**: Renderizado virtualizado mediante TanStack Table / Virtual, calculando y montando en el DOM únicamente los elementos visibles en pantalla (manteniendo 60+ FPS estables con miles de canciones en colecciones principales).
+- **Paletas de Comandos Nativas (⌘K)**: Búsqueda rápida por teclado mediante `cmdk` con filtrado en memoria sin sobrecarga de virtualización ni layout thrashing, garantizando latencia cero al teclear.
 - **Capa PlatformService**: Abstracción del runtime que desacopla la interfaz React de las llamadas directas de Tauri, facilitando la modularidad y pruebas del frontend.
 
 ### B. Motor de Audio Nativo en Rust (Rodio, Symphonia & CPAL)
