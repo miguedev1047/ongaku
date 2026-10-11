@@ -9,13 +9,13 @@ import {
   SparklesIcon,
   ArrowUpRight01Icon,
 } from '@hugeicons/core-free-icons'
-import { useUpdater } from '@/hooks/use-updater'
+import { useUpdater } from '@/features/settings/hooks/use-updater'
 import { Show } from '@/components/utility/show'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
-import { updatesQueryOpts } from '@/shared/queries/updates'
+import { updatesQueryOpts } from '@/features/settings/queries/updates'
 import { openReleaseNotes } from '@/shared/helpers/open-release-notes'
-import { DotmSquare10 } from '@/components/generic/loaders/dotm-square-10'
+import { DotmSquare10 } from '@/components/ui/loaders/dotm-square-10'
 import { useTranslation } from 'react-i18next'
 import { cn } from 'cn'
 

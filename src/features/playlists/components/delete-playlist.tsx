@@ -9,7 +9,7 @@ import {
   DialogTitle
 } from "@/components/ui/dialog"
 import { Spinner } from "@/components/ui/spinner"
-import type { TPlaylist } from "@/shared/types/playlist.types"
+import type { TPlaylist } from "@/features/playlists/types"
 import { useDeletePlaylist } from "@/features/playlists/hooks"
 import { Show } from "@/components/utility/show"
 

@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
-import { playlistsQueryOpts } from '@/shared/queries/playlists'
+import { playlistsQueryOpts } from '@/features/playlists/queries'
 import { PlaylistItem } from '@/features/playlists/components/item'
 import { PlaylistsEmptyState } from '@/features/playlists/ui-state'
 import { NewPlaylistCard } from '@/features/playlists/components'

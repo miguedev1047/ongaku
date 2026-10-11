@@ -244,7 +244,10 @@ fn test_config_table_and_queries() {
 
     // Default seeded rows
     let theme = get_config(&conn, "theme").unwrap();
-    assert_eq!(theme, Some("system".to_string()));
+    assert_eq!(theme, Some("dark".to_string()));
+
+    let theme_family = get_config(&conn, "theme_family").unwrap();
+    assert_eq!(theme_family, Some("default".to_string()));
 
     let folder_colors = get_config(&conn, "folder_colors").unwrap();
     assert_eq!(folder_colors, Some("#507dbc".to_string()));
@@ -259,7 +262,11 @@ fn test_config_table_and_queries() {
     assert_eq!(lang, Some("en".to_string()));
 
     let all_configs = get_all_config(&conn).unwrap();
-    assert_eq!(all_configs.get("theme").map(String::as_str), Some("system"));
+    assert_eq!(all_configs.get("theme").map(String::as_str), Some("dark"));
+    assert_eq!(
+        all_configs.get("theme_family").map(String::as_str),
+        Some("default")
+    );
     assert_eq!(
         all_configs.get("folder_colors").map(String::as_str),
         Some("#507dbc")
@@ -272,9 +279,9 @@ fn test_config_table_and_queries() {
     assert_eq!(all_configs.get("lang").map(String::as_str), Some("en"));
 
     // Update config
-    set_config(&conn, "theme", "dark").unwrap();
+    set_config(&conn, "theme", "light").unwrap();
     let theme_updated = get_config(&conn, "theme").unwrap();
-    assert_eq!(theme_updated, Some("dark".to_string()));
+    assert_eq!(theme_updated, Some("light".to_string()));
 
     set_config(&conn, "lang", "es").unwrap();
     let lang_updated = get_config(&conn, "lang").unwrap();

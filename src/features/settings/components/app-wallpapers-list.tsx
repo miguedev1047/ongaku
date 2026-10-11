@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Show } from '@/components/utility/show'
 import { AppWallpaperCard } from '@/features/settings/components/app-wallpaper-card'
 import { getBackgroundUrl } from '@/lib/song-utils'
-import type { TBackgroundItem } from '@/shared/queries/backgrounds'
+import type { TBackgroundItem } from '@/features/settings/queries/backgrounds'
 import { useTranslation } from 'react-i18next'
 
 export interface AppWallpapersListProps {

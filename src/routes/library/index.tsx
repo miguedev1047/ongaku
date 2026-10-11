@@ -10,9 +10,9 @@ import {
   LibraryStatsSkeleton,
 } from '@/features/library/ui-state'
 import { RouteSection } from '@/components/ui/route-section'
-import { RouteErrorState } from '@/components/compounds/route-ui-state'
+import { RouteErrorState } from '@/components/feedback/route-ui-state'
 import { createFileRoute } from '@tanstack/react-router'
-import { librarySongsQueryOpts } from '@/shared/queries/library'
+import { librarySongsQueryOpts } from '@/features/library/queries'
 
 export const Route = createFileRoute('/library/')({
   pendingComponent: LibraryPending,

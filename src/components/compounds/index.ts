@@ -1,6 +1,0 @@
-export * from "@/components/compounds/search"
-export * from "@/components/compounds/theme-provider"
-export * from "@/components/compounds/route-ui-state"
-export * from "@/components/compounds/updater-button"
-export * from "@/components/compounds/tanstack-devtools"
-export * from "@/components/compounds/table-songs-list"

@@ -1,6 +1,5 @@
-import { useStreamingPlayerStore } from "@/shared/stores/player"
-import { useActivePlayerStore } from "@/shared/stores/player"
-import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
+import { useStreamingPlayerStore, useActivePlayerStore } from "@/features/player/stores"
+import type { TYoutubeSearchResult } from "@/features/youtube-search/types"
 
 export function useYoutubePlayback(item: TYoutubeSearchResult) {
   const currentTrack = useStreamingPlayerStore((state) => state.currentTrack)

@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { TYoutubeSearchResult } from '@/shared/types/youtube.types'
+import type { TYoutubeSearchResult } from '@/features/youtube-search/types'
 
 export interface DownloadSongsState {
   url: string

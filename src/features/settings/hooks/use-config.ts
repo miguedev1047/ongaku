@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { platformService } from '@/infrastructure/platform'
 import { systemConfigQueryOpts, type TAppConfig } from '@/shared/queries/config'
-import { useActivePlayerStore } from '@/shared/stores/player/use-active-player'
+import { useActivePlayerStore } from '@/features/player/stores'
 import { toast } from 'sonner'
 
 import i18n from '@/lib/i18n'

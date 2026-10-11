@@ -1,4 +1,4 @@
-import { TPlaylistSong } from "@/shared/types/playlist-songs.types"
+import type { TPlaylistSong } from "@/features/playlist-songs/types"
 import {
   Item,
   ItemActions,
@@ -7,11 +7,10 @@ import {
   ItemMedia,
   ItemTitle
 } from "@/components/ui/item"
-import { CoverImage } from "@/components/generic/cover-image"
+import { CoverImage } from "@/components/ui/cover-image"
 import { useSongUtils } from "@/hooks/use-song-utils"
 import { formatDuration } from "@/shared/helpers/format-duration"
-import { useLocalPlayerStore } from "@/shared/stores/player"
-import { useActivePlayerStore } from "@/shared/stores/player"
+import { useLocalPlayerStore, useActivePlayerStore } from "@/features/player/stores"
 import { PlaylistSongActions } from "@/features/playlist-songs/components"
 import { isItemAction } from "@/shared/helpers/is-item-action"
 

@@ -2,10 +2,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
 import { platformService } from "@/infrastructure/platform"
 import { toast } from "sonner"
-import { playlistsQueryOpts } from "@/shared/queries/playlists"
-import { useLocalPlayerStore } from "@/shared/stores/player"
-import type { TDeletePlaylistSchema } from "@/shared/schemas/playlists"
-import type { TPlaylist } from "@/shared/types/playlist.types"
+import { playlistsQueryOpts } from "@/features/playlists/queries"
+import { useLocalPlayerStore } from "@/features/player/stores"
+import type { TDeletePlaylistSchema } from "@/features/playlists/schemas"
+import type { TPlaylist } from "@/features/playlists/types"
 
 interface UseDeletePlaylistProps {
   playlist: TPlaylist

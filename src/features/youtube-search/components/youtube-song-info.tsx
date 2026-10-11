@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useStreamingPlayerStore } from '@/shared/stores/player'
+import { useStreamingPlayerStore } from '@/features/player/stores'
 import {
   Music01Icon,
   PauseIcon,
@@ -19,9 +19,9 @@ import {
 } from '@/components/ui/empty'
 import { formatDuration } from '@/shared/helpers/format-duration'
 import { Show } from '@/components/utility/show'
-import { SearchSongActions } from '@/components/blocks/song-actions/search-songs'
+import { SearchSongActions } from '@/features/youtube-search/components/song-actions'
 import { cn } from 'cn'
-import { DotmSquare1, DotmSquare18 } from '@/components/generic/loaders'
+import { DotmSquare1, DotmSquare18 } from '@/components/ui/loaders'
 import { useTranslation } from 'react-i18next'
 
 interface YoutubeSongInfoProps {
@@ -117,7 +117,6 @@ export function YoutubeSongInfo({ className }: YoutubeSongInfoProps) {
                 size={12}
                 dotSize={1.8}
                 speed={1.5}
-                className='text-primary'
               />
               <span>{t('youtube_search.active_track.playing')}</span>
             </Badge>

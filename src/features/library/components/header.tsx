@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Suspense } from "react"
-import { SearchLibrary } from "@/components/compounds/search"
+import { SearchLibrary } from "@/features/library/components/search-library"
 import { LibraryReloadList } from "@/features/library/components"
 import { useTranslation } from "react-i18next"
 

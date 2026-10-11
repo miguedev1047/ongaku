@@ -1,5 +1,5 @@
 import { create } from "zustand"
-import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
+import type { TPlaylistSong } from "@/features/playlist-songs/types"
 
 export interface PlaylistBatchState {
   selectedMap: Record<string, TPlaylistSong>

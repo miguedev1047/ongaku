@@ -1,9 +1,8 @@
-import { useLocalPlayerStore } from "@/shared/stores/player"
-import { useActivePlayerStore } from "@/shared/stores/player"
+import { useLocalPlayerStore, useActivePlayerStore } from "@/features/player/stores"
 import { getPlaylistPath } from "@/shared/helpers/get-playlist-helper"
 import { openFolder } from "@/shared/helpers/open-folder"
 import { toast } from "sonner"
-import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
+import type { TPlaylistSong } from "@/features/playlist-songs/types"
 
 import { useTranslation } from "react-i18next"
 

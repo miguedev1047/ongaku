@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
-import { librarySongsQueryOpts } from '@/shared/queries/library'
-import { LibrarySongsList } from '@/components/blocks/library-songs-list'
+import { librarySongsQueryOpts } from '@/features/library/queries'
+import { LibrarySongsList } from '@/features/library/components/library-songs-list'
 import { LibraryEmptyState } from '@/features/library/ui-state'
 import { Show } from '@/components/utility/show'
 

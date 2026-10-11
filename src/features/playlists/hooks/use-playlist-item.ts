@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 import { useSongUtils } from "@/hooks/use-song-utils";
-import type { TPlaylist } from "@/shared/types/playlist.types";
+import type { TPlaylist } from "@/features/playlists/types";
 
 interface UsePlaylistItemProps {
   playlist: TPlaylist;

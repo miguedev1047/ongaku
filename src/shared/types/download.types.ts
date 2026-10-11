@@ -1,4 +1,4 @@
-import type { TPlaylistSong } from '@/shared/types/playlist-songs.types'
+import type { TPlaylistSong } from '@/features/playlist-songs/types'
 
 export interface DownloadProgressPayload {
   id: string

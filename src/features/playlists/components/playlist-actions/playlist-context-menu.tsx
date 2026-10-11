@@ -1,0 +1,82 @@
+import * as React from 'react'
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuGroup,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from '@/components/ui/context-menu'
+import type { TPlaylist } from '@/features/playlists/types'
+import { Show } from '@/components/utility/show'
+import { DeletePlaylist, RenamePlaylist } from '@/features/playlists/components'
+import { usePlaylistItem } from '@/features/playlists/hooks'
+import { HugeiconsIcon } from '@hugeicons/react'
+import {
+  DeleteIcon,
+  Music01Icon,
+  PencilEdit01Icon,
+} from '@hugeicons/core-free-icons'
+import { cn } from 'cn'
+import { CONTEXT_ACTIONS_MENU_WIDTH } from '@/constants/styles'
+
+import { useTranslation } from 'react-i18next'
+
+interface PlaylistContextMenuProps {
+  playlist: TPlaylist
+  children: React.ReactNode
+}
+export function PlaylistActionsContextMenu({
+  playlist,
+  children,
+}: PlaylistContextMenuProps) {
+  const { t } = useTranslation()
+  const {
+    isRenameOpen,
+    setIsRenameOpen,
+    isDeleteOpen,
+    setIsDeleteOpen,
+    handleNavigate,
+  } = usePlaylistItem({ playlist })
+
+  return (
+    <>
+      <ContextMenu>
+        <ContextMenuTrigger render={children as React.ReactElement} />
+        <ContextMenuContent className={cn(CONTEXT_ACTIONS_MENU_WIDTH)}>
+          <ContextMenuGroup>
+            <ContextMenuItem onClick={handleNavigate}>
+              <HugeiconsIcon icon={Music01Icon} />
+              <span>{t('playlists.actions.open')}</span>
+            </ContextMenuItem>
+            <ContextMenuItem onClick={() => setIsRenameOpen(true)}>
+              <HugeiconsIcon icon={PencilEdit01Icon} />
+              <span>{t('playlists.actions.rename')}</span>
+            </ContextMenuItem>
+            <ContextMenuItem
+              variant='destructive'
+              onClick={() => setIsDeleteOpen(true)}
+            >
+              <HugeiconsIcon icon={DeleteIcon} />
+              <span>{t('playlists.actions.delete')}</span>
+            </ContextMenuItem>
+          </ContextMenuGroup>
+        </ContextMenuContent>
+      </ContextMenu>
+
+      <Show when={isRenameOpen}>
+        <RenamePlaylist
+          playlist={playlist}
+          open={isRenameOpen}
+          onOpenChange={setIsRenameOpen}
+        />
+      </Show>
+      <Show when={isDeleteOpen}>
+        <DeletePlaylist
+          playlist={playlist}
+          open={isDeleteOpen}
+          onOpenChange={setIsDeleteOpen}
+        />
+      </Show>
+    </>
+  )
+}

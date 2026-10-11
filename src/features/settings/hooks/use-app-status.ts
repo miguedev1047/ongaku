@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { updatesQueryOpts } from '@/shared/queries/updates'
+import { updatesQueryOpts } from '@/features/settings/queries/updates'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import { useTranslation } from 'react-i18next'
 

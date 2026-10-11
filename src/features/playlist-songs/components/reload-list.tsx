@@ -6,7 +6,7 @@ import {
   TooltipTrigger
 } from "@/components/ui/tooltip"
 import { Show } from "@/components/utility/show"
-import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs"
+import { playlistSongsQueryOpts } from "@/features/playlist-songs/queries"
 import { ReloadIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useQuery } from "@tanstack/react-query"

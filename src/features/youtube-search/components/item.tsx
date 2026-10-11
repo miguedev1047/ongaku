@@ -2,10 +2,9 @@ import { useState, Suspense } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { MusicNote01Icon } from "@hugeicons/core-free-icons"
 import { formatDuration } from "@/shared/helpers/format-duration"
-import { useStreamingPlayerStore } from "@/shared/stores/player"
-import { useActivePlayerStore } from "@/shared/stores/player"
-import type { TYoutubeSearchResult } from "@/shared/types/youtube.types"
-import { SearchSongActions } from "@/components/blocks/song-actions/search-songs"
+import { useStreamingPlayerStore, useActivePlayerStore } from "@/features/player/stores"
+import type { TYoutubeSearchResult } from "@/features/youtube-search/types"
+import { SearchSongActions } from "@/features/youtube-search/components/song-actions"
 import {
   Item,
   ItemActions,

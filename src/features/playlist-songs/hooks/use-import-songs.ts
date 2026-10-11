@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { platformService } from '@/infrastructure/platform'
 import { toast } from 'sonner'
-import { playlistSongsQueryOpts } from '@/shared/queries/playlist-songs'
-import { playlistsQueryOpts } from '@/shared/queries/playlists'
+import { playlistSongsQueryOpts } from '@/features/playlist-songs/queries'
+import { playlistsQueryOpts } from '@/features/playlists/queries'
 import type { ImportSongsResult, ImportProgressPayload } from '@/shared/types/import.types'
 
 export type { ImportSongsResult, ImportProgressPayload }

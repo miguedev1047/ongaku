@@ -1,6 +1,6 @@
 import { Show } from '@/components/utility/show'
 import { YoutubeSongInfo } from '@/features/youtube-search/components/youtube-song-info'
-import type { TYoutubeSearchResult } from '@/shared/types/youtube.types'
+import type { TYoutubeSearchResult } from '@/features/youtube-search/types'
 
 interface ActiveTrackSidebarProps {
   track: TYoutubeSearchResult | null

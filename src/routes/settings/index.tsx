@@ -1,12 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
-import { updatesQueryOpts } from '@/shared/queries/updates'
+import { updatesQueryOpts } from '@/features/settings/queries/updates'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import { RouteSection } from '@/components/ui/route-section'
 import {
   RoutePendingState,
   RouteErrorState,
-} from '@/components/compounds/route-ui-state'
+} from '@/components/feedback/route-ui-state'
 import {
   SettingsHeader,
   ServerHealthCard,
@@ -25,7 +25,7 @@ import { useSystemHealth } from '@/features/settings/hooks'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
-import { systemBackgroundsOpts } from '@/shared/queries/backgrounds'
+import { systemBackgroundsOpts } from '@/features/settings/queries/backgrounds'
 
 function SettingsPending() {
   const { t } = useTranslation()

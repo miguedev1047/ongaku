@@ -1,17 +1,16 @@
-import type { TPlaylist } from '@/shared/types/playlist.types'
+import type { TPlaylist, TPlaylistAction } from '@/features/playlists/types'
 import type {
   TPlaylistSong,
   TLibrarySong,
-} from '@/shared/types/playlist-songs.types'
+} from '@/features/playlist-songs/types'
 import type {
   TSongAction,
   BatchDeleteSongItem,
   BatchActionResponse,
 } from '@/shared/types/song-actions'
-import type { TPlaylistAction } from '@/shared/types/playlist-actions'
-import type { TYoutubeSearchResult } from '@/shared/types/youtube.types'
+import type { TYoutubeSearchResult } from '@/features/youtube-search/types'
 import type { TAppConfig } from '@/shared/queries/config'
-import type { TBackgroundItem } from '@/shared/queries/backgrounds'
+import type { TBackgroundItem } from '@/features/settings/queries/backgrounds'
 import type { TSystemHealthInfo } from '@/shared/queries/system-health'
 import type { TBinariesInfo } from '@/shared/types/binaries.types'
 import type { TSyncStats } from '@/shared/types/sync.types'

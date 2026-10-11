@@ -1,4 +1,4 @@
-import { ThemeProvider } from '@/components/compounds/theme-provider'
+import { ThemeProvider } from '@/providers/theme-provider'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { HotkeysProvider } from '@tanstack/react-hotkeys'
 

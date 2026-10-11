@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { youtubeSearchSchema } from '@/shared/schemas/youtube-search'
+import { youtubeSearchSchema } from '@/features/youtube-search/schemas'
 import {
   YoutubeSearchHeader,
   YoutubeSearchActive,
@@ -10,7 +10,7 @@ import {
 } from '@/features/youtube-search/ui-states'
 import { useBinaries } from '@/features/download-queue/hooks'
 import { Show } from '@/components/utility/show'
-import { RouteErrorState } from '@/components/compounds/route-ui-state'
+import { RouteErrorState } from '@/components/feedback/route-ui-state'
 
 export const Route = createFileRoute('/search-youtube/')({
   component: RouteComponent,

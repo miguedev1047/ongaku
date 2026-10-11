@@ -1,6 +1,6 @@
 import { useState, Suspense } from "react"
 import { useSuspenseQuery } from "@tanstack/react-query"
-import { playlistsQueryOpts } from "@/shared/queries/playlists"
+import { playlistsQueryOpts } from "@/features/playlists/queries"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/select"
 import { Spinner } from "@/components/ui/spinner"
 import { Skeleton } from "@/components/ui/skeleton"
-import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
+import type { TPlaylistSong } from "@/features/playlist-songs/types"
 import { useMoveSong } from "@/features/playlist-songs/hooks"
 import { Show } from "@/components/utility/show"
 

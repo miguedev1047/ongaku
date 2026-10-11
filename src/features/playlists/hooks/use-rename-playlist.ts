@@ -4,16 +4,16 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useLocation } from '@tanstack/react-router'
 import { platformService } from '@/infrastructure/platform'
 import { toast } from 'sonner'
-import { playlistsQueryOpts } from '@/shared/queries/playlists'
+import { playlistsQueryOpts } from '@/features/playlists/queries'
 import {
   useLocalPlayerStore,
   useActivePlayerStore,
-} from '@/shared/stores/player'
+} from '@/features/player/stores'
 import {
   renamePlaylistSchema,
   type TRenamePlaylistSchema,
-} from '@/shared/schemas/playlists'
-import type { TPlaylist } from '@/shared/types/playlist.types'
+} from '@/features/playlists/schemas'
+import type { TPlaylist } from '@/features/playlists/types'
 
 import { useTranslation } from 'react-i18next'
 

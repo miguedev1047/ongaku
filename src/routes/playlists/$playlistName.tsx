@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs";
+import { playlistSongsQueryOpts } from "@/features/playlist-songs/queries";
 import { Suspense } from "react";
 import {
   PlaylistSongHeader,
@@ -11,7 +11,7 @@ import { RouteSection } from "@/components/ui/route-section";
 import {
   RoutePendingState,
   RouteErrorState,
-} from "@/components/compounds/route-ui-state";
+} from "@/components/feedback/route-ui-state";
 import { useTranslation } from "react-i18next";
 
 function PlaylistSongPending() {

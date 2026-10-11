@@ -1,6 +1,7 @@
-export * from '@/features/download-queue/components/check-binaries'
-export * from '@/features/download-queue/components/download-queue-badge'
-export * from '@/features/download-queue/components/download-queue-trigger'
-export * from '@/features/download-queue/components/download-queue-dialog'
-export * from '@/features/download-queue/components/playlist-menu-group'
-export * from '@/features/download-queue/components/playlist-context-menu-group'
+export * from './check-binaries'
+export * from './download-queue-badge'
+export * from './download-queue-trigger'
+export * from './download-queue-dialog'
+export * from './playlist-menu-group'
+export * from './playlist-context-menu-group'
+

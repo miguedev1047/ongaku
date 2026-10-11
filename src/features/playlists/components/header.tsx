@@ -5,7 +5,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage
 } from "@/components/ui/breadcrumb"
-import { SearchPlaylists } from "@/components/compounds/search"
+import { SearchPlaylists } from "@/features/playlists/components/search-playlists"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Skeleton } from "@/components/ui/skeleton"

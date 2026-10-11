@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge'
 import { Show } from '@/components/utility/show'
-import type { TBackgroundItem } from '@/shared/queries/backgrounds'
+import type { TBackgroundItem } from '@/features/settings/queries/backgrounds'
 import {
   Delete02Icon,
   ImageNotFound01Icon,

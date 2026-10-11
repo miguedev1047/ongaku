@@ -4,10 +4,10 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Show } from '@/components/utility/show'
 import { cn } from 'cn'
-import { DotmSquare10, DotmSquare18 } from '@/components/generic/loaders'
-import { useStreamingPlayerStore } from '@/shared/stores/player'
+import { DotmSquare10, DotmSquare18 } from '@/components/ui/loaders'
+import { useStreamingPlayerStore } from '@/features/player/stores'
 import { formatDuration } from '@/shared/helpers/format-duration'
-import { SearchSongActions } from '@/components/blocks/song-actions/search-songs'
+import { SearchSongActions } from '@/features/youtube-search/components/song-actions'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
   Cancel01Icon,
@@ -72,7 +72,6 @@ export function StreamingPreviewCard({ className }: StreamingPreviewCardProps) {
                         dotSize={3}
                         speed={1.35}
                         animated={isPlaying}
-                        className='text-primary'
                       />
                     }
                   >
@@ -80,7 +79,6 @@ export function StreamingPreviewCard({ className }: StreamingPreviewCardProps) {
                       size={22}
                       dotSize={3}
                       speed={1.2}
-                      className='text-primary'
                     />
                   </Show>
                 </div>

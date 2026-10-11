@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { platformService } from '@/infrastructure/platform'
-import { systemBackgroundsOpts } from '@/shared/queries/backgrounds'
+import { systemBackgroundsOpts } from '@/features/settings/queries/backgrounds'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import { useUpdateConfig } from '@/features/settings/hooks/use-config'
 

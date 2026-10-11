@@ -7,9 +7,9 @@ import type {
   DownloadTaskStatus,
 } from '@/shared/types/download.types'
 import { queryClient } from '@/lib/query'
-import { playlistSongsQueryOpts } from '@/shared/queries/playlist-songs'
-import { playlistsQueryOpts } from '@/shared/queries/playlists'
-import { librarySongsQueryOpts } from '@/shared/queries/library'
+import { playlistSongsQueryOpts } from '@/features/playlist-songs/queries'
+import { playlistsQueryOpts } from '@/features/playlists/queries'
+import { librarySongsQueryOpts } from '@/features/library/queries'
 import { toast } from 'sonner'
 import i18n from '@/lib/i18n'
 

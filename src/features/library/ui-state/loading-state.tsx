@@ -1,4 +1,4 @@
-import { RoutePendingState } from '@/components/compounds'
+import { RoutePendingState } from '@/components/feedback/route-ui-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   Table,

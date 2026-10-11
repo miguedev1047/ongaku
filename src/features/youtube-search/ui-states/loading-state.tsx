@@ -6,7 +6,7 @@ import { YoutubeIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useTranslation } from 'react-i18next'
 import { Show } from '@/components/utility/show'
-import { RoutePendingState } from '@/components/compounds'
+import { RoutePendingState } from '@/components/feedback/route-ui-state'
 
 interface YoutubeItemSkeletonProps {
   titleWidth?: string

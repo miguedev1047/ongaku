@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { playlistsQueryOpts } from '@/shared/queries/playlists'
+import { playlistsQueryOpts } from '@/features/playlists/queries'
 import {
   DownloadSongsHeader,
   DownloadSongsContent,
@@ -12,7 +12,7 @@ import {
 import { useBinaries } from '@/features/download-queue/hooks'
 import { useNetworkState } from '@/hooks/use-network-state'
 import { Show } from '@/components/utility/show'
-import { RouteErrorState } from '@/components/compounds/route-ui-state'
+import { RouteErrorState } from '@/components/feedback/route-ui-state'
 
 export const Route = createFileRoute('/download-songs/')({
   component: RouteComponent,

@@ -5,7 +5,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu'
-import { playlistsQueryOpts } from '@/shared/queries/playlists'
+import { playlistsQueryOpts } from '@/features/playlists/queries'
 import { FolderIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'

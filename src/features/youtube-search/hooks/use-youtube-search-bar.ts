@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { useHotkey } from '@tanstack/react-hotkeys'
-import { useYoutubeSearchStore } from '@/shared/stores/actions'
+import { useYoutubeSearchStore } from '@/features/youtube-search/stores/use-youtube-search'
 
 export interface UseYoutubeSearchBarOptions {
   initialQuery?: string

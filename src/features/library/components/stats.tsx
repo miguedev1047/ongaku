@@ -4,8 +4,8 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { useSuspenseQuery } from '@tanstack/react-query'
-import { librarySongsQueryOpts } from '@/shared/queries/library'
-import { playlistsQueryOpts } from '@/shared/queries/playlists'
+import { librarySongsQueryOpts } from '@/features/library/queries'
+import { playlistsQueryOpts } from '@/features/playlists/queries'
 import { useTranslation } from 'react-i18next'
 import { CardWrapper } from '@/components/ui/card-wrapper'
 

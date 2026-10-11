@@ -7,11 +7,11 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { CoverImage } from '@/components/generic/cover-image'
+import { CoverImage } from '@/components/ui/cover-image'
 import { usePlaylistItem } from '@/features/playlists/hooks'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
-import type { TPlaylist } from '@/shared/types/playlist.types'
-import { PlaylistActionsContextMenu } from '@/components/blocks/song-actions/playlists'
+import type { TPlaylist } from '@/features/playlists/types'
+import { PlaylistActionsContextMenu } from '@/features/playlists/components/playlist-actions'
 import { Show } from '@/components/utility/show'
 import { useTranslation } from 'react-i18next'
 import { CardWrapper } from '@/components/ui/card-wrapper'
@@ -36,7 +36,7 @@ export const PlaylistItem = memo(
           key={cover.id}
           src={cover.src}
           alt={cover.name}
-          className='size-full object-cover rounded-md'
+          rounded='md'
         />
       ))
     }, [previewCovers])

@@ -5,11 +5,11 @@ import { useQuery } from '@tanstack/react-query'
 import { extractColors } from 'extract-colors'
 import { useSongUtils } from '@/hooks/use-song-utils'
 import { formatPlaylistDuration } from '@/shared/helpers/total-tracks-hours'
-import { playlistSongsQueryOpts } from '@/shared/queries/playlist-songs'
+import { playlistSongsQueryOpts } from '@/features/playlist-songs/queries'
 import {
   useActivePlayerStore,
   useLocalPlayerStore,
-} from '@/shared/stores/player'
+} from '@/features/player/stores'
 
 import { useTranslation } from 'react-i18next'
 

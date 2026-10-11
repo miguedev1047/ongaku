@@ -1,5 +1,5 @@
 import { useRouteContext } from "@tanstack/react-router"
-import { TPlaylistSong } from "@/shared/types/playlist-songs.types"
+import type { TPlaylistSong } from "@/features/playlist-songs/types"
 import {
   getCoverUrl as getBaseCoverUrl,
   getSongUrl as getBaseSongUrl

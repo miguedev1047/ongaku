@@ -1,4 +1,4 @@
-import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
+import type { TPlaylistSong } from "@/features/playlist-songs/types"
 
 /**
  * Calcula el total de horas decimales a partir de una lista de canciones (en segundos).

@@ -2,6 +2,7 @@ import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { cn } from 'cn'
 import { Button } from '@/components/ui/button'
+import { Show } from '@/components/utility/show'
 import { Spinner } from '@/components/ui/spinner'
 import { NativeSlider } from '@/components/ui/native-slider'
 import {
@@ -28,7 +29,7 @@ import {
   VolumeLowIcon,
   VolumeMute02Icon,
 } from '@hugeicons/core-free-icons'
-import { DEFAULT_PLAYER_VOLUME } from '@/shared/stores/player'
+import { DEFAULT_PLAYER_VOLUME } from '@/features/player/stores'
 
 interface PlayerProps extends React.ComponentProps<'div'> {
   position?: 'bottom' | 'top'
@@ -174,14 +175,17 @@ function PlayerPlayButton({
             disabled={isLoading || props.disabled}
             {...props}
           >
-            {isLoading ? (
+            <Show
+              when={isLoading}
+              fallback={
+                <HugeiconsIcon
+                  icon={isPlaying ? PauseIcon : PlayIcon}
+                  className='size-4'
+                />
+              }
+            >
               <Spinner className='size-4' />
-            ) : (
-              <HugeiconsIcon
-                icon={isPlaying ? PauseIcon : PlayIcon}
-                className='size-4'
-              />
-            )}
+            </Show>
           </Button>
         }
       />

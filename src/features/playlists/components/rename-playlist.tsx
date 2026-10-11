@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Spinner } from "@/components/ui/spinner"
-import type { TPlaylist } from "@/shared/types/playlist.types"
+import type { TPlaylist } from "@/features/playlists/types"
 import { useRenamePlaylist } from "@/features/playlists/hooks"
 import { Show } from "@/components/utility/show"
 

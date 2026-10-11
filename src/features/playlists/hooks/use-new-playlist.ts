@@ -2,11 +2,11 @@ import { useForm } from "@tanstack/react-form"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { platformService } from "@/infrastructure/platform"
 import { toast } from "sonner"
-import { playlistsQueryOpts } from "@/shared/queries/playlists"
+import { playlistsQueryOpts } from "@/features/playlists/queries"
 import {
   newPlaylistSchema,
   type TNewPlaylistSchema
-} from "@/shared/schemas/playlists"
+} from "@/features/playlists/schemas"
 
 interface UseNewPlaylistProps {
   onSuccess?: () => void

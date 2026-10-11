@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { systemBackgroundsOpts } from '@/shared/queries/backgrounds'
+import { systemBackgroundsOpts } from '@/features/settings/queries/backgrounds'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 

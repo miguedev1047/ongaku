@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { platformService } from "@/infrastructure/platform"
 import { toast } from "sonner"
-import { useLocalPlayerStore } from "@/shared/stores/player"
-import { playlistSongsQueryOpts } from "@/shared/queries/playlist-songs"
-import { playlistsQueryOpts } from "@/shared/queries/playlists"
-import type { TPlaylistSong } from "@/shared/types/playlist-songs.types"
+import { useLocalPlayerStore } from "@/features/player/stores"
+import { playlistSongsQueryOpts } from "@/features/playlist-songs/queries"
+import { playlistsQueryOpts } from "@/features/playlists/queries"
+import type { TPlaylistSong } from "@/features/playlist-songs/types"
 
 interface UseDeleteSongProps {
   song: TPlaylistSong

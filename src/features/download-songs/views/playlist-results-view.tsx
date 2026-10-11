@@ -1,5 +1,5 @@
-import { SearchSongsList } from '@/components/blocks/search-songs-list'
-import type { TYoutubeSearchResult } from '@/shared/types/youtube.types'
+import { SearchSongsList } from '@/features/youtube-search/components/search-songs-list'
+import type { TYoutubeSearchResult } from '@/features/youtube-search/types'
 import { PlaylistResultsHeader } from '@/features/download-songs/views/playlist-results-header'
 import { StreamingPreviewCard } from '@/features/download-songs/views/streaming-preview-card'
 
