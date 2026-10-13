@@ -48,7 +48,7 @@ function SearchPlaylistItem({ playlist, onSelect }: SearchPlaylistItemProps) {
 
   return (
     <CommandItem
-      value={playlist.id}
+      value={playlist.name}
       onMouseEnter={handlePreload}
       onFocus={handlePreload}
       onSelect={handleNavigate}
