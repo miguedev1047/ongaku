@@ -82,4 +82,73 @@
     border-color: var(--border) !important;
     color: var(--foreground) !important;
   }
+
+  .color-picker-popover-content {
+    width: var(--color-picker-content-width);
+    max-width: calc(100vw - 1rem);
+    --color-picker-content-width: var(--spacing-72, 18rem);
+  }
+
+  .color-picker-popover-content[data-has-alpha="true"] {
+    --color-picker-content-width: var(--spacing-96, 24rem);
+  }
+
+  @media (min-width: 768px) {
+    .color-picker-popover-content[data-has-alpha="true"] {
+      --color-picker-content-width: var(--spacing-84, 21rem);
+    }
+  }
+
+  .color-picker-thumb {
+    width: var(--color-picker-thumb-size);
+    height: var(--color-picker-thumb-size);
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 0.12), 0 1px 3px rgb(0 0 0 / 0.3);
+    transition: box-shadow 0.15s;
+  }
+
+  .color-picker-control {
+    --color-picker-thumb-size: calc(var(--spacing) * 4);
+  }
+
+  .color-picker-wheel {
+    --color-picker-wheel-thickness: calc(var(--spacing) * 5);
+  }
+
+  .color-picker-wheel-inner {
+    inset: calc(50% - (50% - var(--color-picker-wheel-thickness)) * 0.7071 + var(--spacing) * 1.5);
+  }
+
+  .color-picker-field-hex {
+    flex: 1 1 calc(5.8ch + 0.75rem);
+  }
+
+  .color-picker-field-alpha {
+    flex: 1 1 calc(4.8ch + 0.75rem);
+  }
+
+  .color-picker-field-short {
+    flex: 1 1 calc(3.25ch + 0.75rem);
+  }
+
+  .color-picker-field-lightness {
+    flex: 1 1 calc(3.7ch + 0.75rem);
+  }
+
+  .color-picker-field-channel {
+    flex: 1 1 calc(4.7ch + 0.75rem);
+  }
+
+  .color-picker-format-addon {
+    padding-right: 0.225rem;
+  }
+
+  .color-picker-swatches {
+    --color-picker-swatch-size: calc(var(--spacing) * 6);
+    grid-template-columns: repeat(auto-fill, var(--color-picker-swatch-size));
+  }
+
+  .color-picker-swatch-item {
+    transition: transform 0.15s, scale 0.15s;
+  }
 }
+

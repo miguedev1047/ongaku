@@ -210,7 +210,8 @@
               "pastel_butter": "Pastel Butter",
               "pastel_coral": "Pastel Coral"
             },
-            "custom_hex": "Custom HEX:"
+            "custom_hex": "Custom HEX:",
+            "custom_hex_description": "Used for playlist folders and cards styling across the app."
           },
           "app_background": {
             "title": "App Wallpaper",
@@ -222,6 +223,8 @@
             "open_folder": "Open Folder",
             "delete": "Delete Wallpaper",
             "delete_confirm": "Are you sure you want to delete this wallpaper?",
+            "list_title": "Wallpaper Selection",
+            "list_description": "Choose a background image or keep the default backdrop",
             "blur_title": "Wallpaper Blur",
             "blur_description": "Adjust the background blur intensity applied to the wallpaper",
             "blur_sm": "Subtle (sm)",

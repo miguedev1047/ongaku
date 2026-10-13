@@ -210,7 +210,8 @@
               "pastel_butter": "Mantequilla Pastel",
               "pastel_coral": "Coral Pastel"
             },
-            "custom_hex": "HEX Personalizado:"
+            "custom_hex": "HEX Personalizado:",
+            "custom_hex_description": "Se utiliza para las carpetas de playlists y tarjetas en la app."
           },
           "app_background": {
             "title": "Wallpaper de la App",
@@ -222,6 +223,8 @@
             "open_folder": "Abrir carpeta",
             "delete": "Eliminar wallpaper",
             "delete_confirm": "¿Estás seguro de que deseas eliminar este wallpaper?",
+            "list_title": "Selección de Wallpaper",
+            "list_description": "Elige una imagen de fondo o mantén el aspecto predeterminado",
             "blur_title": "Desenfoque del Wallpaper",
             "blur_description": "Ajusta la intensidad del desenfoque aplicado al wallpaper",
             "blur_sm": "Sutil (sm)",

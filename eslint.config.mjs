@@ -257,8 +257,26 @@ export default defineConfig([
               allow: ['layout', 'truncate', 'line-clamp-*'],
             },
             {
-              pattern: '^InputGroup(Input|Addon)?$',
-              allow: ['layout', 'w-full', 'text-*'],
+              pattern: '^InputGroup(Input|Addon|Button)?$',
+              allow: [
+                'layout',
+                'w-*',
+                'text-*',
+                'pr-*',
+                'pl-*',
+                'tabular-nums',
+                'uppercase',
+                'font-*',
+                'gap-*',
+                'flex-*',
+                'h-*',
+                'self-*',
+                'min-w-*',
+              ],
+            },
+            {
+              pattern: '^ColorPicker.*$',
+              allow: ['layout', 'w-*', 'max-w-*', 'gap-*'],
             },
           ],
         },
@@ -266,7 +284,7 @@ export default defineConfig([
     },
   },
   {
-    files: ['src/components/ui/**'],
+    files: ['src/components/ui/**', 'src/components/reui/**'],
     rules: {
       'shadcn/no-restyle': 'off',
     },

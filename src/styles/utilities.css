@@ -65,3 +65,32 @@
 @utility folder-skew-right {
   transform: skew(-15deg) scaleY(0.6);
 }
+
+@utility shadow-picker-thumb {
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.12), 0 1px 3px rgb(0 0 0 / 0.3);
+}
+
+@utility transition-box-shadow {
+  transition-property: box-shadow;
+  transition-timing-function: var(--default-transition-timing-function, cubic-bezier(0.4, 0, 0.2, 1));
+  transition-duration: var(--default-transition-duration, 150ms);
+}
+
+@utility transition-scale {
+  transition-property: scale, transform;
+  transition-timing-function: var(--default-transition-timing-function, cubic-bezier(0.4, 0, 0.2, 1));
+  transition-duration: var(--default-transition-duration, 150ms);
+}
+
+@utility bg-area-gradient {
+  background-image: linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, transparent);
+}
+
+@utility bg-hue-wheel {
+  background-image: conic-gradient(#f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00);
+}
+
+@utility mask-hue-wheel {
+  mask-image: radial-gradient(farthest-side, transparent calc(100% - var(--color-picker-wheel-thickness)), #000 calc(100% - var(--color-picker-wheel-thickness) + 1px));
+}
+

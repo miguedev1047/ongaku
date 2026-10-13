@@ -10,8 +10,14 @@ import { CardWrapper } from '@/components/ui/card-wrapper'
 import { Folder } from '@/components/ui/folder'
 import { FOLDER_COLOR_PRESETS } from '@/constants'
 import { useTranslation } from 'react-i18next'
-
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { useDebouncedCallback } from '@tanstack/react-pacer'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import { Field, FieldDescription, FieldLabel } from '@/components/ui/field'
+import { ColorPicker } from '@/components/reui/color-picker'
 
 export function FolderColorOptions() {
   const { t } = useTranslation()
@@ -32,15 +38,19 @@ export function FolderColorOptions() {
     updateConfig.mutate({ key: 'folder_colors', value: color })
   }
 
+  const handleSaveHexColor = useDebouncedCallback(
+    (color: string) => {
+      updateConfig.mutate({ key: 'folder_colors', value: color })
+    },
+    { wait: 500 },
+  )
+
   return (
     <CardWrapper className='@container/folder-card'>
       <div className='flex items-center justify-between'>
         <div className='flex items-center gap-2.5'>
           <div className='size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary'>
-            <HugeiconsIcon
-              icon={FolderIcon}
-              className='size-4'
-            />
+            <HugeiconsIcon icon={FolderIcon} className='size-4' />
           </div>
           <div>
             <h2 className='text-sm font-semibold text-foreground'>
@@ -57,10 +67,7 @@ export function FolderColorOptions() {
         </div>
 
         <div className='flex items-center gap-2 scale-75 origin-right'>
-          <Folder
-            items={[]}
-            color={currentColor}
-          />
+          <Folder items={[]} color={currentColor} />
         </div>
       </div>
 
@@ -90,47 +97,42 @@ export function FolderColorOptions() {
                     )}
                     style={{ backgroundColor: preset.color }}
                   >
-                    <RadioGroupItem
-                      value={preset.color}
-                      className='sr-only'
-                    />
+                    <RadioGroupItem value={preset.color} className='sr-only' />
                   </label>
                 }
               />
-              <TooltipContent>
-                {t(preset.labelKey)}
-              </TooltipContent>
+              <TooltipContent>{t(preset.labelKey)}</TooltipContent>
             </Tooltip>
           )
         })}
       </RadioGroup>
 
-      <div className='flex items-center gap-2.5 pt-1'>
-        <span className='text-xs text-muted-foreground'>
-          {t(
-            'settings.tabs.appearance.appearance_and_interface.folder_color.custom_hex',
-          )}
-        </span>
-        <div className='flex items-center gap-2'>
-          <input
-            type='color'
+      <div className='w-full max-w-md'>
+        <Field>
+          <FieldLabel id='accent-color-label' htmlFor='accent-color'>
+            {t(
+              'settings.tabs.appearance.appearance_and_interface.folder_color.custom_hex',
+            )}
+          </FieldLabel>
+
+          <ColorPicker
+            id='accent-color'
             value={customColor}
-            onChange={(e) => handleSelectColor(e.target.value)}
-            className='size-7 rounded-sm border border-border/40 bg-background cursor-pointer p-0.5'
-          />
-          <input
-            type='text'
-            value={customColor}
-            onChange={(e) => setCustomColor(e.target.value)}
-            onBlur={() => {
-              if (/^#[0-9A-Fa-f]{6}$/.test(customColor)) {
-                handleSelectColor(customColor)
-              }
+            defaultValue='#0ea5e9'
+            onValueChange={(color) => {
+              if (!color) return
+              handleSaveHexColor(color)
+              setCustomColor(color)
             }}
-            placeholder='#507dbc'
-            className='h-7 w-24 text-xs font-mono px-2 rounded-sm border border-border/40 bg-background/50 uppercase'
+            aria-labelledby='accent-color-label'
+            aria-describedby='accent-color-description'
           />
-        </div>
+          <FieldDescription id='accent-color-description'>
+            {t(
+              'settings.tabs.appearance.appearance_and_interface.folder_color.custom_hex_description',
+            )}
+          </FieldDescription>
+        </Field>
       </div>
     </CardWrapper>
   )
