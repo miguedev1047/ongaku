@@ -44,7 +44,7 @@ Bienvenido a la documentación oficial de **Ongaku** (`音楽`), un reproductor 
   - Procesamiento blindado por lotes (100 canciones por bloque) que no congela tu equipo ni satura la memoria, incluso si importas miles de canciones de golpe.
 - **Sistema de Temas Dinámicos Desacoplados y Carpetas Pastel**:
   - Modos Claro, Oscuro y Sistema con familias de temas sincronizadas.
-  - Paletas de colores pastel para las carpetas de tus playlists (Azul Cielo, Esmeralda, Coral, Lavanda, etc.) junto a un selector de color HEX personalizado.
+  - Paletas de colores pastel para las carpetas de tus playlists (Azul Cielo, Esmeralda, Coral, Lavanda, etc.) junto a un selector de color interactivo con valores HEX personalizados y soporte para canales de color.
   - Posición del reproductor personalizable (barra inferior anclada o diseños flotantes).
 - **Reproductor Minimalista y Panel de Cola de Reproducción**:
   - Barra de progreso interactiva a 60 FPS sin tirones, control de volumen suave y controles intuitivos.
@@ -53,9 +53,10 @@ Bienvenido a la documentación oficial de **Ongaku** (`音楽`), un reproductor 
 - **Paleta de Comandos Universal (⌘K / Ctrl+K)**:
   - Buscador rápido mediante teclado en tu Biblioteca Musical, Playlists y Canciones de Playlists.
   - Filtrado instantáneo por título y artista con respuesta inmediata sin lag.
-- **Fondos Personalizados de la Aplicación**:
-  - Importa y gestiona fondos visuales desde archivos locales o enlaces URL.
+- **Fondos Personalizados y Desenfoque Configurable**:
+  - Entidad de fondos desacoplada con gestión de fondos visuales desde archivos locales o enlaces URL.
   - Redimensionado optimizado con `Lanczos3`, compresión WebP, miniaturas ligeras en caché y catálogo visual.
+  - Selector de intensidad de desenfoque de fondo (`sutil`, `medio`, `intenso`) para garantizar legibilidad y una atmósfera inmersiva.
 - **Playlists y Biblioteca Offline**: Crea tus propias listas de reproducción, organízalas a tu gusto y escucha tu música favorita en cualquier momento sin conexión a internet.
 - **Soporte Multilenguaje Completo (i18n)**: Interfaz bilingüe completa (Inglés y Español) con cambio reactivo e instantáneo desde los ajustes.
 - **Actualizaciones Automáticas y Notas de Parche**:
@@ -69,8 +70,8 @@ Bienvenido a la documentación oficial de **Ongaku** (`音楽`), un reproductor 
 Estado y funciones de las versiones de Ongaku:
 
 - [x] **Soporte Multilenguaje (i18n)**: Integración de traducciones completas de la interfaz (Español e Inglés) con selector reactivo de idioma en ajustes.
-- [x] **Fondos Personalizados de la Aplicación**: Posibilidad de importar y gestionar imágenes de fondo locales o mediante URL, con optimización WebP, miniaturas ligeras en caché y catálogo visual.
-- [x] **Temas Dinámicos Desacoplados y Colores Pastel**: Familias de temas, sincronización claro/oscuro con el sistema, colores pastel para playlists y posición configurable del reproductor.
+- [x] **Fondos Personalizados y Desenfoque Ajustable**: Posibilidad de importar y gestionar fondos locales o mediante URL, con optimización WebP, miniaturas ligeras en caché, selector visual y niveles de desenfoque sutil, medio o intenso.
+- [x] **Temas Dinámicos Desacoplados y Colores Pastel**: Familias de temas, sincronización claro/oscuro con el sistema, colores pastel para playlists con selector HEX interactivo y posición configurable del reproductor.
 - [x] **Resolutor de Enlaces y Previsualización**: Resolución interactiva de canciones, álbumes y playlists de YouTube con tarjeta de escucha previa en streaming.
 - [x] **Panel de Cola de Reproducción (Queue Sheet)**: Panel deslizable para consultar, reordenar y limpiar la cola de pistas.
 - [x] **Paleta de Comandos Universal (⌘K)**: Buscador ultrarrápido por teclado en Biblioteca, Playlists y Canciones.

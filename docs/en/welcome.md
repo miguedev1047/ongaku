@@ -44,7 +44,7 @@ Welcome to the official documentation for **Ongaku** (`音楽`), a lightweight, 
   - Protected chunking pipeline: processes audio in bounded batches (100 songs/batch) so your computer stays smooth and responsive, even when adding thousands of songs.
 - **Decoupled Dynamic Themes & Pastel Presets**:
   - Clean Dark, Light, and System modes with synchronized theme families.
-  - Curated pastel folder color presets for playlists (Sky Blue, Emerald, Sunset Coral, Lavender, etc.) plus an integrated custom HEX color picker.
+  - Curated pastel folder color presets for playlists (Sky Blue, Emerald, Sunset Coral, Lavender, etc.) plus an interactive custom HEX color picker with full color channel controls.
   - Customizable player position (docked bottom or floating layouts).
 - **Minimalist Player & Dedicated Playback Queue Sheet**:
   - Full-width interactive progress bar with decoupled 60 FPS dragging, smooth volume control, and intuitive controls.
@@ -53,9 +53,10 @@ Welcome to the official documentation for **Ongaku** (`音楽`), a lightweight, 
 - **Universal Command Palette (⌘K / Ctrl+K)**:
   - Instant, keyboard-first search modal across your Music Library, Playlists, and Playlist Songs.
   - Fuzzy matching by track title and artist with instant response and zero-lag native rendering.
-- **Custom App Wallpapers & Backgrounds**:
-  - Import and manage custom wallpapers from local files or remote URLs.
-  - Automated `Lanczos3` resizing, WebP compression, lightweight thumbnail caching, and a visual wallpaper picker.
+- **Custom App Wallpapers & Configurable Blur**:
+  - Decoupled background entity managing wallpapers imported from local files or remote URLs.
+  - Automated `Lanczos3` resizing, WebP compression, lightweight thumbnail caching, and an organized visual picker.
+  - Configurable blur intensity levels (`subtle`, `medium`, `intense`) for optimal readability and atmospheric depth.
 - **Offline Library & Custom Playlists**: Create, rename, reorder, and manage playlists, keeping your favorite music accessible offline at any time.
 - **Bilingual Interface (i18n)**: Complete English and Spanish localization with instantaneous reactive switching from Settings.
 - **Automatic Updates & Release Notes**:
@@ -69,8 +70,8 @@ Welcome to the official documentation for **Ongaku** (`音楽`), a lightweight, 
 Status and planned features for Ongaku releases:
 
 - [x] **Internationalization (i18n)**: Full multi-language support (English and Spanish) with a reactive language selector in Settings.
-- [x] **Custom App Wallpapers & Backgrounds**: Import and manage wallpapers from local files or remote URLs, featuring WebP compression, lightweight thumbnail caching, and a visual picker.
-- [x] **Decoupled Dynamic Themes & Pastel Presets**: Theme families, system dark/light switching, pastel folder colors, and configurable player positions.
+- [x] **Custom App Wallpapers & Adjustable Blur**: Import and manage wallpapers from local files or remote URLs, featuring WebP compression, lightweight thumbnail caching, visual gallery, and subtle/medium/intense blur presets.
+- [x] **Decoupled Dynamic Themes & Pastel Presets**: Theme families, system dark/light switching, pastel folder colors with interactive HEX picker, and configurable player positions.
 - [x] **Media URL Resolver & Preview Card**: Interactive URL resolution for YouTube songs, albums, and playlists with in-card audio streaming previews.
 - [x] **Interactive Playback Queue Sheet**: Slide-over queue manager to inspect, reorder, and clear upcoming tracks.
 - [x] **Universal Command Palette (⌘K)**: Instant keyboard-driven fuzzy search across Library, Playlists, and Songs.
