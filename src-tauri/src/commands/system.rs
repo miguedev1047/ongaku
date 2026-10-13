@@ -18,14 +18,11 @@ use crate::{
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppConfig {
-    pub theme: String,
-    pub theme_family: String,
     pub folder_colors: String,
     pub app_dir: String,
     pub player_position: String,
     pub toggle_sidebar: String,
     pub lang: String,
-    pub app_background: String,
 }
 
 #[tauri::command]
@@ -39,14 +36,6 @@ pub fn get_app_config(db: State<'_, DbPool>) -> Result<AppConfig, String> {
     let default_app_dir = get_app_dir().to_string_lossy().to_string();
 
     Ok(AppConfig {
-        theme: all
-            .get("theme")
-            .cloned()
-            .unwrap_or_else(|| "dark".to_string()),
-        theme_family: all
-            .get("theme_family")
-            .cloned()
-            .unwrap_or_else(|| "default".to_string()),
         folder_colors: all
             .get("folder_colors")
             .cloned()
@@ -61,7 +50,6 @@ pub fn get_app_config(db: State<'_, DbPool>) -> Result<AppConfig, String> {
             .cloned()
             .unwrap_or_else(|| "false".to_string()),
         lang: all.get("lang").cloned().unwrap_or_else(|| "en".to_string()),
-        app_background: all.get("app_background").cloned().unwrap_or_default(),
     })
 }
 
@@ -139,16 +127,10 @@ pub fn change_app_dir(db: State<'_, DbPool>, new_parent_dir: String) -> Result<A
     let all = crate::db::queries::get_all_config(&conn)
         .map_err(|err| format!("Failed to read updated configuration: {}", err))?;
 
-    let theme = String::from("theme");
     let folder_colors = String::from("#507dbc");
     let player_position = String::from("bottom");
 
     Ok(AppConfig {
-        theme: all.get("theme").cloned().unwrap_or(theme),
-        theme_family: all
-            .get("theme_family")
-            .cloned()
-            .unwrap_or_else(|| "default".to_string()),
         folder_colors: all.get("folder_colors").cloned().unwrap_or(folder_colors),
         app_dir: new_app_dir_str,
         player_position: all
@@ -160,7 +142,6 @@ pub fn change_app_dir(db: State<'_, DbPool>, new_parent_dir: String) -> Result<A
             .cloned()
             .unwrap_or_else(|| "false".to_string()),
         lang: all.get("lang").cloned().unwrap_or_else(|| "en".to_string()),
-        app_background: all.get("app_background").cloned().unwrap_or_default(),
     })
 }
 
@@ -267,15 +248,12 @@ pub fn delete_background(db: State<DbPool>, id: String) -> Result<(), String> {
         let _ = fs::remove_file(thumb_path);
     }
 
-    // If currently active wallpaper was this one, reset to default
+    // If currently active wallpaper was this one, reset to default in wallpapers table
     if let Ok(conn) = db.get() {
-        if let Ok(Some(current_bg)) = crate::db::queries::get_config(&conn, "app_background") {
-            let bare_id = id.strip_suffix(".webp").unwrap_or(&id);
-            let current_bare = current_bg.strip_suffix(".webp").unwrap_or(&current_bg);
-            if current_bg == id || current_bg == filename || current_bare == bare_id {
-                let _ = crate::db::queries::set_config(&conn, "app_background", "");
-            }
-        }
+        let bare_id = id.strip_suffix(".webp").unwrap_or(&id);
+        let _ = crate::db::queries::wallpaper::reset_selected_background_if_matches(&conn, bare_id);
+        let _ = crate::db::queries::wallpaper::reset_selected_background_if_matches(&conn, &id);
+        let _ = crate::db::queries::wallpaper::reset_selected_background_if_matches(&conn, &filename);
     }
 
     Ok(())

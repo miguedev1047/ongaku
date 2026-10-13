@@ -63,6 +63,14 @@ pub fn init_schema(conn: &Connection) -> Result<()> {
             value TEXT NOT NULL
         );
 
+        CREATE TABLE IF NOT EXISTS wallpapers (
+            id INTEGER PRIMARY KEY CHECK (id = 1),
+            theme TEXT NOT NULL DEFAULT 'dark',
+            theme_family TEXT NOT NULL DEFAULT 'default',
+            selected_background TEXT NOT NULL DEFAULT '',
+            blur TEXT NOT NULL DEFAULT 'sm'
+        );
+
         CREATE INDEX IF NOT EXISTS idx_playlist_songs_playlist_id ON playlist_songs(playlist_id);
         CREATE INDEX IF NOT EXISTS idx_playlist_songs_song_id ON playlist_songs(song_id);
         CREATE INDEX IF NOT EXISTS idx_playlist_songs_position ON playlist_songs(playlist_id, position);
@@ -73,8 +81,13 @@ pub fn init_schema(conn: &Connection) -> Result<()> {
 
     let default_app_dir = crate::helpers::get_app_dir().to_string_lossy().to_string();
     conn.execute(
-        "INSERT OR IGNORE INTO config (key, value) VALUES ('theme', 'dark'), ('theme_family', 'default'), ('folder_colors', '#507dbc'), ('app_dir', ?1), ('player_position', 'bottom'), ('toggle_sidebar', 'false'), ('lang', 'en'), ('app_background', '')",
+        "INSERT OR IGNORE INTO config (key, value) VALUES ('folder_colors', '#507dbc'), ('app_dir', ?1), ('player_position', 'bottom'), ('toggle_sidebar', 'false'), ('lang', 'en')",
         rusqlite::params![default_app_dir],
+    )?;
+
+    conn.execute_batch(
+        "INSERT OR IGNORE INTO wallpapers (id, theme, theme_family, selected_background, blur)
+         VALUES (1, 'dark', 'default', '', 'sm');",
     )?;
 
     Ok(())

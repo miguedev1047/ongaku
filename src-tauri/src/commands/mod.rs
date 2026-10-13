@@ -5,6 +5,7 @@ pub mod library;
 pub mod playlists;
 pub mod songs;
 pub mod system;
+pub mod wallpaper;
 pub mod youtube;
 
 pub use audio::*;
@@ -14,4 +15,5 @@ pub use library::*;
 pub use playlists::*;
 pub use songs::*;
 pub use system::*;
+pub use wallpaper::*;
 pub use youtube::*;

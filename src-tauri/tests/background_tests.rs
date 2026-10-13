@@ -1,7 +1,7 @@
 use std::fs;
 use std::sync::Mutex;
 use tauri_app_lib::commands::get_backgrounds;
-use tauri_app_lib::db::{init_and_sync_db, queries::get_config};
+use tauri_app_lib::db::init_and_sync_db;
 use tauri_app_lib::helpers::{
     encode_background_webp, ensure_background_thumbnail, get_backgrounds_dir,
     get_cache_thumbs_dir, save_background_bytes, set_app_dir,
@@ -63,13 +63,13 @@ fn test_save_and_get_and_delete_background_flow() {
     assert!(!list.is_empty(), "Backgrounds list should not be empty");
     assert_eq!(list[0].id, item.id);
 
-    // 3. Set active background in config
+    // 3. Set active background in wallpaper
     {
         let conn = pool.get().unwrap();
-        tauri_app_lib::db::queries::set_config(&conn, "app_background", &item.id)
-            .expect("Failed to set app_background in config");
-        let active = get_config(&conn, "app_background").unwrap();
-        assert_eq!(active, Some(item.id.clone()));
+        tauri_app_lib::db::queries::update_wallpaper_field(&conn, "selected_background", &item.id)
+            .expect("Failed to set selected_background in wallpaper");
+        let wallpaper = tauri_app_lib::db::queries::get_wallpaper(&conn).unwrap();
+        assert_eq!(wallpaper.selected_background, item.id);
     }
 
     // 4. Delete background
@@ -78,13 +78,13 @@ fn test_save_and_get_and_delete_background_flow() {
     let _ = fs::remove_file(&thumb_file);
     assert!(!thumb_file.exists(), "Thumbnail should be deleted");
 
-    // Reset config
+    // Reset wallpaper
     {
         let conn = pool.get().unwrap();
-        tauri_app_lib::db::queries::set_config(&conn, "app_background", "")
-            .expect("Failed to reset app_background");
-        let active = get_config(&conn, "app_background").unwrap();
-        assert_eq!(active, Some("".to_string()));
+        tauri_app_lib::db::queries::reset_selected_background_if_matches(&conn, &item.id)
+            .expect("Failed to reset selected_background");
+        let wallpaper = tauri_app_lib::db::queries::get_wallpaper(&conn).unwrap();
+        assert_eq!(wallpaper.selected_background, "");
     }
 
     let _ = fs::remove_dir_all(&temp_root);

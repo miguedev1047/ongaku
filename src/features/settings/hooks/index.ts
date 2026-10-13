@@ -5,4 +5,5 @@ export * from './use-directories-status'
 export * from './use-app-wallpapers'
 export * from './use-app-wallpaper-mutations'
 export * from './use-app-wallpaper-url-dialog'
+export * from './use-wallpaper'
 

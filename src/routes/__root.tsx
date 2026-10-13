@@ -12,6 +12,7 @@ import { useDownloadQueueListener } from '@/features/download-queue/hooks'
 import { SidebarInset } from '@/components/ui/sidebar'
 import { AppSidebar, AppSidebarProvider } from '@/components/layout/app-sidebar'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
+import { wallpaperQueryOpts } from '@/features/settings/queries/wallpaper'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import { useQuery } from '@tanstack/react-query'
 import { useTheme } from '@/providers/theme-provider'
@@ -30,9 +31,10 @@ interface RouteContext {
 export const Route = createRootRouteWithContext<RouteContext>()({
   component: RootComponent,
   beforeLoad: async ({ context }) => {
-    const [config, health] = await Promise.all([
+    const [config, health, wallpaper] = await Promise.all([
       context.queryClient.query(systemConfigQueryOpts()),
       context.queryClient.query(systemHealthQueryOpts()),
+      context.queryClient.query(wallpaperQueryOpts()),
     ])
 
     const serverPort = health.serverPort
@@ -44,7 +46,7 @@ export const Route = createRootRouteWithContext<RouteContext>()({
       document.documentElement.setAttribute('lang', config.lang)
     }
 
-    return { serverPort, config, health }
+    return { serverPort, config, health, wallpaper }
   },
 })
 
@@ -56,20 +58,22 @@ function RootComponent() {
   useNavShortcuts()
 
   const { data: config } = useQuery(systemConfigQueryOpts())
+  const { data: wallpaper } = useQuery(wallpaperQueryOpts())
   const { mode, setMode, theme, setTheme } = useTheme()
 
   useEffect(() => {
-    if (config?.theme && config.theme !== mode) {
-      setMode(config.theme)
+    if (wallpaper?.theme && wallpaper.theme !== mode) {
+      setMode(wallpaper.theme)
     }
-    if (config?.theme_family && config.theme_family !== theme) {
-      setTheme(config.theme_family)
+    if (wallpaper?.theme_family && wallpaper.theme_family !== theme) {
+      setTheme(wallpaper.theme_family)
     }
-  }, [config?.theme, config?.theme_family, mode, theme, setMode, setTheme])
+  }, [wallpaper?.theme, wallpaper?.theme_family, mode, theme, setMode, setTheme])
 
   const isPlayerTop = config?.player_position === 'top'
   const hasBackground = Boolean(
-    config?.app_background && config.app_background.trim().length > 0,
+    wallpaper?.selected_background &&
+      wallpaper.selected_background.trim().length > 0,
   )
 
   return (

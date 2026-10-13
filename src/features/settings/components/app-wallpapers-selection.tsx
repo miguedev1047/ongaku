@@ -3,16 +3,14 @@ import {
   useAppWallpapers,
   useAppWallpaperMutations,
 } from '@/features/settings/hooks'
-import { AppWallpaperActionDropdown } from '@/features/settings/components/app-wallpaper-action-dropdown'
 import { AppWallpapersList } from '@/features/settings/components/app-wallpapers-list'
 import { AppWallpaperUrlDialog } from '@/features/settings/components/app-wallpaper-url-dialog'
+import { AppWallpaperBlurSelection } from '@/features/settings/components/app-wallpaper-blur-selection'
 import { CardWrapper } from '@/components/ui/card-wrapper'
-import { ImageIcon } from '@hugeicons/core-free-icons'
-import { HugeiconsIcon } from '@hugeicons/react'
-import { useTranslation } from 'react-i18next'
+import { Separator } from '@/components/ui/separator'
+import { AppWallpaperHeader } from '@/features/settings/components/app-wallpaper-header'
 
 export function AppWallpapersSelection() {
-  const { t } = useTranslation()
   const { wallpapers, serverPort, currentWallpaper } = useAppWallpapers()
   const {
     handleImportFile,
@@ -28,37 +26,16 @@ export function AppWallpapersSelection() {
 
   return (
     <CardWrapper className='@container/bg-card'>
-      <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-2.5'>
-        <div className='flex items-center gap-2.5'>
-          <div className='size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary'>
-            <HugeiconsIcon
-              icon={ImageIcon}
-              className='size-4'
-            />
-          </div>
-          <div>
-            <h2 className='text-sm font-semibold text-foreground'>
-              {t(
-                'settings.tabs.appearance.appearance_and_interface.app_background.title',
-              )}
-            </h2>
-            <p className='text-xs text-muted-foreground'>
-              {t(
-                'settings.tabs.appearance.appearance_and_interface.app_background.description',
-              )}
-            </p>
-          </div>
-        </div>
+      <AppWallpaperHeader
+        handleImportFile={handleImportFile}
+        isImportingFile={isImportingFile}
+        openFolder={openFolder}
+        setIsUrlDialogOpen={setIsUrlDialogOpen}
+      />
 
-        <div className='flex items-center gap-1.5 self-start sm:self-auto'>
-          <AppWallpaperActionDropdown
-            onImportFile={handleImportFile}
-            isImportingFile={isImportingFile}
-            onOpenUrlDialog={() => setIsUrlDialogOpen(true)}
-            onOpenFolder={openFolder}
-          />
-        </div>
-      </div>
+      <AppWallpaperBlurSelection />
+
+      <Separator />
 
       <AppWallpapersList
         wallpapers={wallpapers}

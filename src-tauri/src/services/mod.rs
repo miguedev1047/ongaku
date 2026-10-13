@@ -5,6 +5,7 @@ pub mod download;
 pub mod errors;
 pub mod playlist;
 pub mod song;
+pub mod wallpaper;
 pub mod youtube;
 
 pub use errors::*;

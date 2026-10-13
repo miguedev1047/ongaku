@@ -72,6 +72,8 @@ pub fn run() {
             import_background_from_url,
             delete_background,
             open_backgrounds_folder,
+            get_wallpaper,
+            set_wallpaper_field,
             import_songs_to_playlist,
             import_songs_by_paths,
             local_audio_play,

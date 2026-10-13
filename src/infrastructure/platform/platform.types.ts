@@ -10,6 +10,10 @@ import type {
 } from '@/shared/types/song-actions'
 import type { TYoutubeSearchResult } from '@/features/youtube-search/types'
 import type { TAppConfig } from '@/shared/queries/config'
+import type {
+  TWallpaperConfig,
+  WallpaperBlur,
+} from '@/features/settings/queries/wallpaper'
 import type { TBackgroundItem } from '@/features/settings/queries/backgrounds'
 import type { TSystemHealthInfo } from '@/shared/queries/system-health'
 import type { TBinariesInfo } from '@/shared/types/binaries.types'
@@ -32,6 +36,8 @@ export type {
   ImportProgressPayload,
   DownloadProgressPayload,
   TBinariesInfo,
+  TWallpaperConfig,
+  WallpaperBlur,
 }
 
 export interface CommandMap {
@@ -177,6 +183,14 @@ export interface CommandMap {
   }
   open_backgrounds_folder: {
     args?: undefined
+    return: void
+  }
+  get_wallpaper: {
+    args?: undefined
+    return: TWallpaperConfig
+  }
+  set_wallpaper_field: {
+    args: { field: string; value: string }
     return: void
   }
   import_songs_to_playlist: {

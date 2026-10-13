@@ -222,6 +222,11 @@
             "open_folder": "Open Folder",
             "delete": "Delete Wallpaper",
             "delete_confirm": "Are you sure you want to delete this wallpaper?",
+            "blur_title": "Wallpaper Blur",
+            "blur_description": "Adjust the background blur intensity applied to the wallpaper",
+            "blur_sm": "Subtle (sm)",
+            "blur_md": "Medium (md)",
+            "blur_lg": "Strong (lg)",
             "show_more": "Show more ({{count}} remaining)",
             "show_all": "Show all ({{count}})",
             "url_dialog": {

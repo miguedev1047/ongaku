@@ -3,7 +3,7 @@ import { CardWrapper } from '@/components/ui/card-wrapper'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Moon, Sun, PaintBoardIcon } from '@hugeicons/core-free-icons'
 import { useTheme } from '@/providers/theme-provider'
-import { useUpdateConfig } from '@/features/settings/hooks/use-config'
+import { useUpdateWallpaper } from '@/features/settings/hooks/use-wallpaper'
 import { useTranslation } from 'react-i18next'
 import { REGISTERED_THEMES, type ThemeMode } from '@/constants/themes'
 import { cn } from 'cn'
@@ -26,16 +26,16 @@ export const MODE_OPTIONS = [
 export function ThemeSelection() {
   const { t } = useTranslation()
   const { mode, setMode, theme, setTheme } = useTheme()
-  const updateConfig = useUpdateConfig()
+  const updateWallpaper = useUpdateWallpaper()
 
   const handleSelectMode = (selectedMode: ThemeMode) => {
     setMode(selectedMode)
-    updateConfig.mutate({ key: 'theme', value: selectedMode })
+    updateWallpaper.mutate({ field: 'theme', value: selectedMode })
   }
 
   const handleSelectTheme = (themeId: string) => {
     setTheme(themeId)
-    updateConfig.mutate({ key: 'theme_family', value: themeId })
+    updateWallpaper.mutate({ field: 'theme_family', value: themeId })
   }
 
   return (

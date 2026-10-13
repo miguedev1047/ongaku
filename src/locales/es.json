@@ -222,6 +222,11 @@
             "open_folder": "Abrir carpeta",
             "delete": "Eliminar wallpaper",
             "delete_confirm": "¿Estás seguro de que deseas eliminar este wallpaper?",
+            "blur_title": "Desenfoque del Wallpaper",
+            "blur_description": "Ajusta la intensidad del desenfoque aplicado al wallpaper",
+            "blur_sm": "Sutil (sm)",
+            "blur_md": "Medio (md)",
+            "blur_lg": "Intenso (lg)",
             "show_more": "Mostrar más (quedan {{count}})",
             "show_all": "Mostrar todos ({{count}})",
             "url_dialog": {

@@ -7,13 +7,14 @@ import {
 import { AppSidebarHeader } from '@/components/layout/app-sidebar/app-sidebar-header'
 import { AppSidebarNav } from '@/components/layout/app-sidebar/app-sidebar-nav'
 import { AppSidebarFooter } from '@/components/layout/app-sidebar/app-sidebar-footer'
-import { systemConfigQueryOpts } from '@/shared/queries/config'
+import { wallpaperQueryOpts } from '@/features/settings/queries/wallpaper'
 import { useQuery } from '@tanstack/react-query'
 
 export function AppSidebar() {
-  const { data: config } = useQuery(systemConfigQueryOpts())
+  const { data: wallpaper } = useQuery(wallpaperQueryOpts())
   const hasBackground = Boolean(
-    config?.app_background && config.app_background.trim().length > 0,
+    wallpaper?.selected_background &&
+      wallpaper.selected_background.trim().length > 0,
   )
 
   return (

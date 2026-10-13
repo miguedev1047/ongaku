@@ -11,6 +11,9 @@ function NativeSlider({
   step = 'any',
   value,
   defaultValue,
+  tabIndex = -1,
+  onKeyDown,
+  onPointerUp,
   ...props
 }: NativeSliderProps) {
   const isControlled = value !== undefined
@@ -22,6 +25,31 @@ function NativeSlider({
   const ratio = rangeSize > 0 ? (currentValue - minValue) / rangeSize : 0
   const percentage = Math.min(100, Math.max(0, ratio * 100))
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (
+      [
+        'ArrowLeft',
+        'ArrowRight',
+        'ArrowUp',
+        'ArrowDown',
+        'Home',
+        'End',
+        'PageUp',
+        'PageDown',
+        ' ',
+        'Space',
+      ].includes(e.key)
+    ) {
+      e.preventDefault()
+    }
+    onKeyDown?.(e)
+  }
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLInputElement>) => {
+    onPointerUp?.(e)
+    e.currentTarget.blur()
+  }
+
   return (
     <input
       type='range'
@@ -29,6 +57,7 @@ function NativeSlider({
       min={min}
       max={max}
       step={step}
+      tabIndex={tabIndex}
       {...(isControlled ? { value } : { defaultValue })}
       className={cn('native-slider', className)}
       style={
@@ -37,6 +66,8 @@ function NativeSlider({
           ...style,
         } as React.CSSProperties
       }
+      onKeyDown={handleKeyDown}
+      onPointerUp={handlePointerUp}
       {...props}
     />
   )

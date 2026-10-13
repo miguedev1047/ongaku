@@ -3,16 +3,16 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { platformService } from '@/infrastructure/platform'
 import { systemBackgroundsOpts } from '@/features/settings/queries/backgrounds'
-import { systemConfigQueryOpts } from '@/shared/queries/config'
-import { useUpdateConfig } from '@/features/settings/hooks/use-config'
+import { wallpaperQueryOpts } from '@/features/settings/queries/wallpaper'
+import { useUpdateWallpaper } from '@/features/settings/hooks/use-wallpaper'
 
 export function useAppWallpaperMutations() {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
-  const updateConfig = useUpdateConfig()
+  const updateWallpaper = useUpdateWallpaper()
 
-  const { data: config } = useQuery(systemConfigQueryOpts())
-  const currentBackground = config?.app_background ?? ''
+  const { data: wallpaper } = useQuery(wallpaperQueryOpts())
+  const currentBackground = wallpaper?.selected_background ?? ''
 
   const importFileMutation = useMutation({
     mutationFn: async () => {
@@ -23,7 +23,10 @@ export function useAppWallpaperMutations() {
       await queryClient.invalidateQueries({
         queryKey: systemBackgroundsOpts().queryKey,
       })
-      await updateConfig.mutateAsync({ key: 'app_background', value: item.id })
+      await updateWallpaper.mutateAsync({
+        field: 'selected_background',
+        value: item.id,
+      })
       toast.success(
         t(
           'settings.tabs.appearance.appearance_and_interface.app_background.toasts.imported',
@@ -31,6 +34,8 @@ export function useAppWallpaperMutations() {
       )
     },
     onError: (err) => {
+      console.log(err)
+
       toast.error(
         typeof err === 'string'
           ? err
@@ -49,7 +54,10 @@ export function useAppWallpaperMutations() {
       await queryClient.invalidateQueries({
         queryKey: systemBackgroundsOpts().queryKey,
       })
-      await updateConfig.mutateAsync({ key: 'app_background', value: item.id })
+      await updateWallpaper.mutateAsync({
+        field: 'selected_background',
+        value: item.id,
+      })
       toast.success(
         t(
           'settings.tabs.appearance.appearance_and_interface.app_background.toasts.imported',
@@ -57,6 +65,8 @@ export function useAppWallpaperMutations() {
       )
     },
     onError: (err) => {
+      console.log(err)
+
       toast.error(
         typeof err === 'string'
           ? err
@@ -73,7 +83,10 @@ export function useAppWallpaperMutations() {
     },
     onSuccess: async (_, id) => {
       if (currentBackground === id) {
-        await updateConfig.mutateAsync({ key: 'app_background', value: '' })
+        await updateWallpaper.mutateAsync({
+          field: 'selected_background',
+          value: '',
+        })
       }
       await queryClient.invalidateQueries({
         queryKey: systemBackgroundsOpts().queryKey,
@@ -108,7 +121,11 @@ export function useAppWallpaperMutations() {
   }
 
   const selectBackground = (id: string) => {
-    updateConfig.mutate({ key: 'app_background', value: id })
+    updateWallpaper.mutate({ field: 'selected_background', value: id })
+  }
+
+  const updateBlur = (blur: 'sm' | 'md' | 'lg') => {
+    updateWallpaper.mutate({ field: 'blur', value: blur })
   }
 
   const openFolder = () => {
@@ -124,6 +141,7 @@ export function useAppWallpaperMutations() {
     handleDeleteWallpaper: handleDeleteBackground,
     selectBackground,
     selectWallpaper: selectBackground,
+    updateBlur,
     openFolder,
     isImportingFile: importFileMutation.isPending,
     isImportingUrl: importUrlMutation.isPending,
@@ -131,4 +149,3 @@ export function useAppWallpaperMutations() {
     isDeletingWallpaper: deleteBackgroundMutation.isPending,
   }
 }
-
