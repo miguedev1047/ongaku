@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/command'
 import { Button } from '@/components/ui/button'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Music01Icon, Search01Icon } from '@hugeicons/core-free-icons'
+import { Search01Icon } from '@hugeicons/core-free-icons'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { Kbd } from '@/components/ui/kbd'
 import { useState } from 'react'
@@ -18,6 +18,8 @@ import { useHotkey } from '@tanstack/react-hotkeys'
 import { playlistSongsQueryOpts } from '@/features/playlist-songs/queries'
 import { useActivePlayerStore } from '@/features/player/stores'
 import { useTranslation } from 'react-i18next'
+import { useSongUtils } from '@/hooks/use-song-utils'
+import { CoverImage } from '@/components/ui/cover-image'
 
 export function SearchSongs() {
   const { t } = useTranslation()
@@ -29,6 +31,8 @@ export function SearchSongs() {
   )
 
   const playSong = useActivePlayerStore((state) => state.playSong)
+
+   const { getCoverUrl } = useSongUtils()
 
   useHotkey('Control+K', () => setIsOpen(!isOpen))
 
@@ -71,9 +75,13 @@ export function SearchSongs() {
                     onSelect={handleSelectSong}
                   >
                     <div className='flex items-center gap-2 w-full'>
-                      <div className='p-2 bg-accent rounded-md'>
-                        <HugeiconsIcon icon={Music01Icon} />
-                      </div>
+                      <figure className='size-8 shrink-0 rounded-md overflow-hidden bg-muted'>
+                        <CoverImage
+                          src={getCoverUrl({ song })}
+                          alt={song.name}
+                          className='size-full object-cover'
+                        />
+                      </figure>
                       <div>
                         <h2 className='line-clamp-1 text-sm'>{song.name}</h2>
                         <p className='text-xs text-muted-foreground line-clamp-1'>

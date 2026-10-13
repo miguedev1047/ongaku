@@ -37,6 +37,9 @@ interface ActivePlayerStore {
   resetActivePlayer: () => void
 }
 
+let localSeekTimeout: ReturnType<typeof setTimeout> | null = null
+let streamingSeekTimeout: ReturnType<typeof setTimeout> | null = null
+
 export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => {
   const localInitialState = useLocalPlayerStore.getState()
   const initialActivePlayer = localInitialState.currentSong ? 'local' : null
@@ -78,9 +81,9 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => {
       }
 
       // 3. Set song in local player store with context and queue
-      useLocalPlayerStore
-        .getState()
-        .setCurrentSong(song, resolvedQueue, resolvedContext)
+      const localStore = useLocalPlayerStore.getState()
+      localStore.setCurrentSong(song, resolvedQueue, resolvedContext)
+      localStore.setProgress(0)
 
       // 4. Mark active player as local and record active playlist / source
       const nextPlaylist =
@@ -96,7 +99,8 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => {
       platformService
         .invoke('local_audio_play', {
           path: song.path,
-          volume: useLocalPlayerStore.getState().volume / 100,
+          volume: localStore.volume / 100,
+          startPosSecs: 0,
         })
         .catch((err) => {
           console.error('Failed to play local audio:', err)
@@ -106,11 +110,13 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => {
     playStream: (track) => {
       // 1. Stop local Rodio playback immediately
       useLocalPlayerStore.getState().setPlayerState('paused')
+      useLocalPlayerStore.getState().setProgress(0)
       platformService.invoke('local_audio_stop').catch(() => {})
 
       // 2. Set current track in streaming player store and trigger play
       const streamingStore = useStreamingPlayerStore.getState()
       streamingStore.setCurrentTrack(track)
+      streamingStore.setProgress(0)
       streamingStore.play()
 
       // 3. Mark active player as streaming
@@ -139,17 +145,36 @@ export const useActivePlayerStore = create<ActivePlayerStore>((set, get) => {
             ? Math.min(duration, current + deltaSeconds)
             : current + deltaSeconds,
         )
+        if (localSeekTimeout) clearTimeout(localSeekTimeout)
+        localState.setIsSeeking(true)
         localState.setProgress(target)
         platformService
           .invoke('local_audio_seek', { positionSecs: target })
           .catch((err) => {
             console.error('Failed to seek local audio via rodio:', err)
           })
+        localSeekTimeout = setTimeout(() => {
+          useLocalPlayerStore.getState().setIsSeeking(false)
+          localSeekTimeout = null
+        }, 400)
       } else if (activePlayer === 'streaming') {
         const streamingState = useStreamingPlayerStore.getState()
         if (!streamingState.currentTrack) return
+        const duration = streamingState.duration || 0
         const current = streamingState.progress
-        streamingState.seekTo(current + deltaSeconds)
+        const target = Math.max(
+          0,
+          duration > 0
+            ? Math.min(duration, current + deltaSeconds)
+            : current + deltaSeconds,
+        )
+        if (streamingSeekTimeout) clearTimeout(streamingSeekTimeout)
+        streamingState.setIsSeeking(true)
+        streamingState.seekTo(target)
+        streamingSeekTimeout = setTimeout(() => {
+          useStreamingPlayerStore.getState().setIsSeeking(false)
+          streamingSeekTimeout = null
+        }, 400)
       }
     },
 

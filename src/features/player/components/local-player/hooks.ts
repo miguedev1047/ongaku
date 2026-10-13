@@ -1,4 +1,6 @@
+import { useRef } from "react"
 import { useHotkey } from "@tanstack/react-hotkeys"
+import { platformService } from "@/infrastructure/platform"
 import { getAdjacentSong } from "@/shared/helpers/get-adjacent-song"
 import { getRandomSong } from "@/shared/helpers/get-random-song"
 import { useLocalPlayerStore, useActivePlayerStore } from "@/features/player/stores"
@@ -10,6 +12,9 @@ export function usePlayerProgressbar() {
   const setProgress = useLocalPlayerStore((state) => state.setProgress)
   const setIsSeeking = useLocalPlayerStore((state) => state.setIsSeeking)
 
+  const wasPlayingRef = useRef(false)
+  const seekTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
   const handleSeek = (event: React.ChangeEvent<HTMLInputElement>) => {
     const target = event.target as HTMLInputElement
     const val = parseFloat(target.value)
@@ -17,21 +22,33 @@ export function usePlayerProgressbar() {
   }
 
   const handlePointerDown = () => {
+    if (seekTimeoutRef.current) clearTimeout(seekTimeoutRef.current)
+    const currentState = useLocalPlayerStore.getState()
+    wasPlayingRef.current = currentState.playerState === "playing"
     setIsSeeking(true)
+    if (wasPlayingRef.current) {
+      platformService.invoke("local_audio_pause").catch(() => {})
+    }
   }
 
   const handlePointerUp = () => {
-    setIsSeeking(false)
     const currentProgress = useLocalPlayerStore.getState().progress
     useLocalPlayerStore.getState().seekTo(currentProgress)
+    if (wasPlayingRef.current) {
+      platformService.invoke("local_audio_resume").catch(() => {})
+    }
+    seekTimeoutRef.current = setTimeout(() => {
+      setIsSeeking(false)
+      seekTimeoutRef.current = null
+    }, 300)
   }
 
   const handlePreviusSeekSecs = () => {
-    useLocalPlayerStore.getState().seekTo(progress - 5)
+    useActivePlayerStore.getState().seek(-5)
   }
 
   const handleNextSeekSecs = () => {
-    useLocalPlayerStore.getState().seekTo(progress + 5)
+    useActivePlayerStore.getState().seek(5)
   }
 
   return {

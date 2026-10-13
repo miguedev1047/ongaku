@@ -17,6 +17,7 @@ interface StreamingPlayerStore {
   duration: number
   progress: number
   volume: number
+  trackChangeTimestamp: number
 
   setCurrentTrack: (track: TYoutubeSearchResult | null) => void
   setPlayerState: (state: StreamingPlayerState) => void
@@ -40,6 +41,7 @@ export const useStreamingPlayerStore = create<StreamingPlayerStore>(
     duration: 0,
     progress: 0,
     volume: DEFAULT_PLAYER_VOLUME,
+    trackChangeTimestamp: 0,
 
     setCurrentTrack: (track) =>
       set((prev) => {
@@ -52,6 +54,7 @@ export const useStreamingPlayerStore = create<StreamingPlayerStore>(
           progress: 0,
           hasEnded: false,
           playerState: track ? "loading" : "idle",
+          trackChangeTimestamp: Date.now(),
         }
       }),
 

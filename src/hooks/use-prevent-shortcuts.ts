@@ -18,6 +18,11 @@ export function usePreventWebviewShortcuts() {
         e.preventDefault()
       }
 
+      // Block browser save page dialog (Ctrl+S, Cmd+S)
+      if (isModifier && e.key.toLowerCase() === "s") {
+        e.preventDefault()
+      }
+
       // Block browser keyboard zoom (Ctrl + Plus, Minus, 0, =)
       if (isModifier && ["=", "+", "-", "0"].includes(e.key)) {
         e.preventDefault()

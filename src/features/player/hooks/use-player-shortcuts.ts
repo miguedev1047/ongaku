@@ -1,11 +1,6 @@
 import { useHotkey } from "@tanstack/react-hotkeys"
 import { useActivePlayerStore } from "@/features/player/stores"
-
-function isInputTarget(target: EventTarget | null): boolean {
-  if (!target || !(target instanceof HTMLElement)) return false
-  const tag = target.tagName.toLowerCase()
-  return tag === "input" || tag === "textarea" || target.isContentEditable
-}
+import { isInputTarget } from "@/shared/helpers/is-input-target"
 
 export function usePlayerShortcuts() {
   const togglePlay = useActivePlayerStore((s) => s.togglePlay)

@@ -21,6 +21,7 @@ export interface LocalPlayerStore {
   progress: number
   volume: number
   playerState: LocalPlayerState
+  trackChangeTimestamp: number
 
   setCurrentSong: (
     song: TPlaylistSong | null,
@@ -62,6 +63,7 @@ export const useLocalPlayerStore = create<LocalPlayerStore>()(
   duration: 0,
   progress: 0,
   volume: DEFAULT_PLAYER_VOLUME,
+  trackChangeTimestamp: 0,
   setCurrentSong: (song, queueOrContext, context) =>
     set((state) => {
       let resolvedQueue: readonly TPlaylistSong[] | undefined
@@ -94,6 +96,7 @@ export const useLocalPlayerStore = create<LocalPlayerStore>()(
         currentPlaylist: nextPlaylist,
         duration: song?.metadata.duration ?? 0,
         progress: 0,
+        trackChangeTimestamp: Date.now(),
         playerState: "playing"
       }
     }),

@@ -20,6 +20,7 @@ import i18n from '@/lib/i18n'
 import { AppBackground } from '@/components/layout/app-background'
 import { cn } from 'cn'
 import { useEffect } from 'react'
+import { useNavShortcuts } from '@/shared/hooks/use-nav-shortcuts'
 
 interface RouteContext {
   queryClient: QueryClient
@@ -52,6 +53,7 @@ function RootComponent() {
   useDownloadQueueListener()
   usePreventWebviewShortcuts()
   usePlayerShortcuts()
+  useNavShortcuts()
 
   const { data: config } = useQuery(systemConfigQueryOpts())
   const { mode, setMode, theme, setTheme } = useTheme()
