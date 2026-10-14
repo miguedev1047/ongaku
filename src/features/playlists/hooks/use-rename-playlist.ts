@@ -1,7 +1,8 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useForm } from '@tanstack/react-form'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useLocation } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 import { platformService } from '@/infrastructure/platform'
 import { toast } from 'sonner'
 import { playlistsQueryOpts } from '@/features/playlists/queries'
@@ -10,12 +11,10 @@ import {
   useActivePlayerStore,
 } from '@/features/player/stores'
 import {
-  renamePlaylistSchema,
+  createRenamePlaylistSchema,
   type TRenamePlaylistSchema,
 } from '@/features/playlists/schemas'
 import type { TPlaylist } from '@/features/playlists/types'
-
-import { useTranslation } from 'react-i18next'
 
 interface UseRenamePlaylistProps {
   playlist: TPlaylist
@@ -90,13 +89,15 @@ export function useRenamePlaylist({
     },
   })
 
+  const schema = useMemo(() => createRenamePlaylistSchema(t), [t])
+
   const form = useForm({
     defaultValues: {
       old_name: playlist.name,
       new_name: playlist.name,
     },
     validators: {
-      onSubmit: renamePlaylistSchema,
+      onSubmit: schema,
     },
     onSubmit: ({ value }) => {
       mutation.mutate(value)

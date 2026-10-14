@@ -12,6 +12,7 @@
 @import './themes/vintage-paper.css';
 @import './themes/sakura.css';
 @import './themes/spotify.css';
+@import './themes/crimson.css';
 
 @custom-variant dark (&:is(.dark *));
 

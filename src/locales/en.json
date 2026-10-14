@@ -172,6 +172,10 @@
               "spotify": {
                 "name": "Spotify",
                 "description": "Vibrant streaming music green with dark contrast"
+              },
+              "crimson": {
+                "name": "Crimson",
+                "description": "A crimson thread woven into the quiet pull of fate"
               }
             }
           },
@@ -208,7 +212,8 @@
               "pastel_sky": "Pastel Sky",
               "pastel_mauve": "Pastel Mauve",
               "pastel_butter": "Pastel Butter",
-              "pastel_coral": "Pastel Coral"
+              "pastel_coral": "Pastel Coral",
+              "crimsom": "Crimsom"
             },
             "custom_hex": "Custom HEX:",
             "custom_hex_description": "Used for playlist folders and cards styling across the app."
@@ -428,6 +433,12 @@
       "copy_title": "Copy Title",
       "import_songs": "Import songs",
       "import_songs_tooltip": "Import audio files from computer (.mp3, .m4a, .ogg, .flac)"
+    },
+    "errors": {
+      "name_required": "The playlist name is required",
+      "name_max": "The playlist name cannot exceed 100 characters",
+      "name_invalid_chars": "The playlist name cannot contain invalid characters: < > : \" / \\ | ? *",
+      "name_invalid_ending": "The playlist name cannot end with a dot or space"
     }
   },
   "library": {
@@ -444,7 +455,8 @@
     "search_command_empty": "No songs found",
     "stats": {
       "tracks": "Tracks",
-      "playlists": "Playlists"
+      "playlists": "Playlists",
+      "duration": "Total Duration"
     },
     "columns": {
       "cover": "Cover",

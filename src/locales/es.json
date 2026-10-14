@@ -172,6 +172,10 @@
               "spotify": {
                 "name": "Spotify",
                 "description": "Verde vibrante de música en streaming con contraste oscuro"
+              },
+              "crimson": {
+                "name": "Crimson",
+                "description": "Un hilo carmesí entretejido en el silencioso llamado del destino"
               }
             }
           },
@@ -208,7 +212,8 @@
               "pastel_sky": "Cielo Pastel",
               "pastel_mauve": "Malva Pastel",
               "pastel_butter": "Mantequilla Pastel",
-              "pastel_coral": "Coral Pastel"
+              "pastel_coral": "Coral Pastel",
+              "crimsom": "Carmesí"
             },
             "custom_hex": "HEX Personalizado:",
             "custom_hex_description": "Se utiliza para las carpetas de playlists y tarjetas en la app."
@@ -428,6 +433,12 @@
       "copy_title": "Copiar Título",
       "import_songs": "Importar canciones",
       "import_songs_tooltip": "Importar archivos de audio del dispositivo (.mp3, .m4a, .ogg, .flac)"
+    },
+    "errors": {
+      "name_required": "El nombre de la playlist es requerido",
+      "name_max": "El nombre de la playlist no puede exceder 100 caracteres",
+      "name_invalid_chars": "El nombre de la playlist no puede contener caracteres inválidos: < > : \" / \\ | ? *",
+      "name_invalid_ending": "El nombre de la playlist no puede terminar con un punto o espacio"
     }
   },
   "library": {
@@ -444,7 +455,8 @@
     "search_command_empty": "No se encontraron canciones",
     "stats": {
       "tracks": "Canciones",
-      "playlists": "Playlists"
+      "playlists": "Playlists",
+      "duration": "Duración Total"
     },
     "columns": {
       "cover": "Port.",

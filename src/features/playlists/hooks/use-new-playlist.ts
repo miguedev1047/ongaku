@@ -1,18 +1,18 @@
+import { useMemo } from "react"
 import { useForm } from "@tanstack/react-form"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useTranslation } from "react-i18next"
 import { platformService } from "@/infrastructure/platform"
 import { toast } from "sonner"
 import { playlistsQueryOpts } from "@/features/playlists/queries"
 import {
-  newPlaylistSchema,
+  createNewPlaylistSchema,
   type TNewPlaylistSchema
 } from "@/features/playlists/schemas"
 
 interface UseNewPlaylistProps {
   onSuccess?: () => void
 }
-
-import { useTranslation } from "react-i18next"
 
 export function useNewPlaylist({ onSuccess }: UseNewPlaylistProps = {}) {
   const { t } = useTranslation()
@@ -47,12 +47,14 @@ export function useNewPlaylist({ onSuccess }: UseNewPlaylistProps = {}) {
     }
   })
 
+  const schema = useMemo(() => createNewPlaylistSchema(t), [t])
+
   const form = useForm({
     defaultValues: {
       name: ""
     },
     validators: {
-      onSubmit: newPlaylistSchema
+      onSubmit: schema
     },
     onSubmit: ({ value }) => {
       mutation.mutate(value)

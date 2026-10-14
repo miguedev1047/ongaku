@@ -1,3 +1,4 @@
+import i18n from '@/lib/i18n'
 import { Outlet, createRootRouteWithContext } from '@tanstack/react-router'
 import { type QueryClient } from '@tanstack/react-query'
 import { Suspense } from 'react'
@@ -17,7 +18,6 @@ import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import { useQuery } from '@tanstack/react-query'
 import { useTheme } from '@/providers/theme-provider'
 import { Show } from '@/components/utility/show'
-import i18n from '@/lib/i18n'
 import { AppBackground } from '@/components/layout/app-background'
 import { cn } from 'cn'
 import { useEffect } from 'react'
@@ -68,12 +68,19 @@ function RootComponent() {
     if (wallpaper?.theme_family && wallpaper.theme_family !== theme) {
       setTheme(wallpaper.theme_family)
     }
-  }, [wallpaper?.theme, wallpaper?.theme_family, mode, theme, setMode, setTheme])
+  }, [
+    wallpaper?.theme,
+    wallpaper?.theme_family,
+    mode,
+    theme,
+    setMode,
+    setTheme,
+  ])
 
   const isPlayerTop = config?.player_position === 'top'
   const hasBackground = Boolean(
     wallpaper?.selected_background &&
-      wallpaper.selected_background.trim().length > 0,
+    wallpaper.selected_background.trim().length > 0,
   )
 
   return (
@@ -92,7 +99,7 @@ function RootComponent() {
           <AppSidebar />
           <SidebarInset
             className={cn(
-              'flex-1 min-h-0 min-w-0 overflow-hidden flex flex-col',
+              'flex-1 min-h-0 min-w-0 overflow-hidden flex flex-col mx-auto container',
               hasBackground && 'bg-transparent',
             )}
           >

@@ -24,6 +24,12 @@ export const FOLDER_COLOR_PRESETS = [
       'settings.tabs.appearance.appearance_and_interface.folder_color.colors.rose',
   },
   {
+    id: 'crimsom',
+    color: '#dc143c',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.folder_color.colors.crimsom',
+  },
+  {
     id: 'red',
     color: '#E01B24',
     labelKey:
