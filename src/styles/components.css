@@ -150,5 +150,46 @@
   .color-picker-swatch-item {
     transition: transform 0.15s, scale 0.15s;
   }
+
+  .folder-root {
+    @apply relative h-24 w-32 transition-transform duration-150;
+  }
+
+  .folder-root:active,
+  .group:active .folder-root {
+    transform: scale(0.98);
+  }
+
+  .folder-tab {
+    @apply absolute left-1 top-1 h-7 w-14;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background-color: var(--folder-tab);
+  }
+
+  .dark .folder-tab {
+    background-color: var(--folder-tab-dark);
+  }
+
+  .folder-back {
+    @apply absolute inset-x-0 bottom-0 top-5;
+    border-radius: 14px;
+    background-color: var(--folder-back);
+    box-shadow: 0 14px 24px -16px var(--folder-shadow);
+  }
+
+  .dark .folder-back {
+    background-color: var(--folder-back-dark);
+  }
+
+  .folder-front {
+    @apply absolute inset-x-0 bottom-0 top-9;
+    border-radius: 14px;
+    background-color: var(--folder-front);
+  }
+
+  .dark .folder-front {
+    background-color: var(--folder-front-dark);
+  }
 }
 

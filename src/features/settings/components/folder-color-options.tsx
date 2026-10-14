@@ -67,7 +67,7 @@ export function FolderColorOptions() {
         </div>
 
         <div className='flex items-center gap-2 scale-75 origin-right'>
-          <Folder items={[]} color={currentColor} />
+          <Folder color={currentColor} />
         </div>
       </div>
 
