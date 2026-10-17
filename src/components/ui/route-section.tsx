@@ -2,7 +2,7 @@ import * as React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from 'cn'
 
-const routeSectionVariants = cva('w-full min-h-0', {
+const routeSectionVariants = cva('w-full min-h-0 mx-auto container', {
   variants: {
     padding: {
       default: 'p-4 lg:p-6',

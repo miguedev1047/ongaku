@@ -99,7 +99,7 @@ function RootComponent() {
           <AppSidebar />
           <SidebarInset
             className={cn(
-              'flex-1 min-h-0 min-w-0 overflow-hidden flex flex-col mx-auto container',
+              'flex-1 min-h-0 min-w-0 overflow-hidden flex flex-col',
               hasBackground && 'bg-transparent',
             )}
           >
