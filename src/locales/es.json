@@ -446,7 +446,7 @@
       "title": "Biblioteca Musical",
       "count": "{{count}} canción",
       "count_plural": "{{count}} canciones",
-      "search_placeholder": "Buscar canciones en la biblioteca..."
+      "search_placeholder": "Buscar canciones..."
     },
     "your_library": "Tu biblioteca",
     "refresh_library": "Actualizar biblioteca",
