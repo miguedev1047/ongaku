@@ -1,0 +1,5 @@
+export * from './appearance-tab'
+export * from './components/theme-selection'
+export * from './components/player-position-options'
+export * from './components/folder-color-options'
+export * from './components/wallpapers'

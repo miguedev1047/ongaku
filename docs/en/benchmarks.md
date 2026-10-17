@@ -12,6 +12,7 @@ Ongaku combines a reactive, virtualized frontend with a high-performance Rust ba
 graph TD
     subgraph Frontend ["Frontend (React 19 + TanStack)"]
         UI[UI Components & Virtualized Tables]
+        TABS[Modular Feature Tabs - Settings/Playlists]
         TR[TanStack Router - File Based]
         TQ[TanStack React Query - Cache & Suspense]
         ZS[Zustand Stores - Persistent Action State]
@@ -19,31 +20,34 @@ graph TD
     end
 
     subgraph Backend ["Native Backend (Tauri v2 + Rust)"]
-        CMD[Tauri Commands / IPC Router]
+        CMD[Tauri Commands / IPC Security Guard]
         RODIO[Native Audio Engine - Rodio + Symphonia]
         AXUM[Localhost Axum HTTP Server]
         SQL[SQLite / rusqlite - WAL Mode]
         META[Lofty + Rayon Multithreaded Engine]
-        POOL[Downloader Pool - yt-dlp + ffmpeg]
-        FS[("Local Filesystem\nlibrary/ & cache/")]
+        POOL[Hardened Downloader - yt-dlp + ffmpeg\nFlag Shield & Host Whitelist]
+        FS[("Local Filesystem\nlibrary/, cache/ & staging/")]
     end
 
     subgraph OS ["Operating System & Audio Server"]
         AUDIO[PipeWire / PulseAudio / ALSA]
     end
 
+    UI --> TABS
+    TABS --> TQ
     UI --> TQ
     UI --> ZS
     TR --> TQ
     TQ --> ADAPT
     ZS --> ADAPT
-    ADAPT -->|IPC Invocations & Listeners| CMD
+    ADAPT -->|Validated IPC Invocations & Listeners| CMD
     UI -->|WebP Covers & YouTube Stream| AXUM
     CMD --> RODIO
     CMD --> SQL
     CMD --> META
     CMD --> POOL
     RODIO -->|Direct Disk I/O| FS
+    POOL -->|Isolated Per-Task Staging & Atomic Move| FS
     RODIO -->|Multithreaded PCM Stream| AUDIO
     RODIO -.->|Ticker Events 250ms| CMD
     CMD -.->|time-update & ended| ZS
@@ -55,7 +59,8 @@ graph TD
 
 ### A. Frontend (React 19, TanStack Ecosystem & PlatformService)
 - **TanStack Router**: File-based routing (`/playlists/$playlistName`, `/library`, `/settings/`, `/search-youtube`, `/download-songs`). Route loaders prewarm query caches with `.query()` to guarantee flicker-free transitions.
-- **Domain-Driven Feature Architecture**: Strictly structured into isolated domain packages (`src/features/<domain>/` for `player`, `library`, `playlists`, `playlist-songs`, `youtube-search`, `download-songs`, `download-queue`, `settings`) ensuring high cohesion, clear boundaries, and clean maintenance.
+- **Domain-Driven Feature & Tab Architecture**: Strictly structured into isolated domain packages (`src/features/<domain>/` for `player`, `library`, `playlists`, `playlist-songs`, `youtube-search`, `download-songs`, `download-queue`, `settings`). The `settings` domain is modularized by tabs (`general-tab`, `appearance-tab` with an isolated `wallpapers/` submodule, `system-tab`), ensuring high cohesion, clear boundaries, and clean maintenance.
+- **Reactive Binary Guards & Dynamic Navigation**: Auxiliary binaries (`yt-dlp` and `ffmpeg`) are monitored reactively via `useBinaries` / `systemHealthQueryOpts`. When auxiliary tools are not installed, download and YouTube search routes (`/download-songs`, `/search-youtube`) are gracefully hidden from sidebar navigation, and route boundaries render intuitive 1-click installer fallbacks.
 - **TanStack React Query & Suspense**: Declarative asynchronous state and in-memory caching. The UI relies on `useSuspenseQuery` for system health, audio libraries, and configuration.
 - **Zustand Action Stores**: Global state persistence across navigation for long-running workflows (audio download progress, binary installation status, persisted player state, queue sheet).
 - **Virtualized Tables**: Powered by TanStack Table / Virtual, rendering only visible DOM elements for smooth 60+ FPS scrolling across thousands of tracks in primary collections.
@@ -84,10 +89,14 @@ graph TD
 - **Multithreaded Parsing**: `Rayon` balances metadata extraction (ID3v2, Vorbis, FLAC, MP4) across all available CPU cores.
 - **Bounded Chunk Processing**: Mass file imports are processed in batches of 100 (`IMPORT_CHUNK_SIZE`), executing safe internal file copies, delta synchronization, and bounded SQLite transactions while emitting live progress events (`import-progress`).
 
-### F. Smart Download Queue (yt-dlp + ffmpeg)
-- **Worker Pool**: Queue manager with concurrency limits to prevent CPU throttling and YouTube rate limits (HTTP 429).
-- **URL Sanitizer**: Strips extraneous query parameters, playlist queues, and radio mixes to ensure accurate single-track downloads.
-- **Atomic Cancellation**: Kills the active subprocess and cleans temporary staging files immediately.
+### F. Hardened Download Queue & Security Shield (yt-dlp + ffmpeg)
+- **Rust Backend Ownership**: Process spawns and execution environments are strictly owned and managed by the Rust backend. The webview cannot execute shell processes directly or inject unverified commands.
+- **Strict Domain Whitelist (`ALLOWED_URLS`)**: URLs are validated before process creation against strict domain patterns (`youtube.com`, `*.youtube.com`, `youtu.be`, `music.youtube.com`), preventing arbitrary host fetching, protocol exploits (`file://`), and SSRF.
+- **CLI Flag Injection Prevention**: All invocations to `yt-dlp` inject the standard `--` argument delimiter right before target URLs, completely neutralizing flag injection attacks (such as `--exec` or `--dump-user-opts`). URLs and task IDs are also validated to forbid flags (`-`) and control characters (`\0`).
+- **Isolated Per-Task Staging & Traversal Defense**: Downloads take place in isolated subdirectories (`cache/staging/<task_id>/`) with path traversal verification (`validate_task_id`), moving finished files atomically into the library directory and guaranteeing zero leftover junk on cancellation or errors.
+- **Worker Pool & Concurrency Limiting**: Queue manager with concurrency limits to prevent CPU throttling and YouTube rate limits (HTTP 429).
+- **URL Sanitizer**: Strips extraneous query parameters, playlist queues, and radio mixes to ensure accurate single-track downloads while preserving required playlist IDs for batch resolution.
+- **Atomic Cancellation**: Kills the active OS subprocess immediately via PID tracking (`kill -9` / `taskkill /T /F`) and completely wipes the staging directory.
 
 ---
 

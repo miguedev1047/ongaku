@@ -3,11 +3,11 @@ import {
   useAppWallpapers,
   useAppWallpaperMutations,
 } from '@/features/settings/hooks'
-import { AppWallpapersList } from '@/features/settings/components/app-wallpapers-list'
-import { AppWallpaperUrlDialog } from '@/features/settings/components/app-wallpaper-url-dialog'
-import { AppWallpaperBlurSelection } from '@/features/settings/components/app-wallpaper-blur-selection'
+import { AppWallpapersList } from '@/features/settings/tabs/appearance-tab/components/wallpapers/app-wallpapers-list'
+import { AppWallpaperUrlDialog } from '@/features/settings/tabs/appearance-tab/components/wallpapers/app-wallpaper-url-dialog'
+import { AppWallpaperBlurSelection } from '@/features/settings/tabs/appearance-tab/components/wallpapers/app-wallpaper-blur-selection'
 import { CardWrapper } from '@/components/ui/card-wrapper'
-import { AppWallpaperHeader } from '@/features/settings/components/app-wallpaper-header'
+import { AppWallpaperHeader } from '@/features/settings/tabs/appearance-tab/components/wallpapers/app-wallpaper-header'
 import { useTranslation } from 'react-i18next'
 
 export function AppWallpapersSelection() {

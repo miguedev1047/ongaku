@@ -7,19 +7,13 @@ import {
   RoutePendingState,
   RouteErrorState,
 } from '@/components/feedback/route-ui-state'
+import { SettingsHeader } from '@/features/settings/components'
 import {
-  SettingsHeader,
-  ServerHealthCard,
-  DirectoriesStatusCard,
-  BinariesStatusCard,
-  AppUpdatesCard,
-  ThemeSelection,
-  PlayerPositionOptions,
-  FolderColorOptions,
-  AppWallpapersSelection,
-  LanguageSelection,
+  GeneralTab,
+  AppearanceTab,
+  SystemTab,
   SystemTabTrigger,
-} from '@/features/settings/components'
+} from '@/features/settings/tabs'
 import { SettingsTabLoadingState } from '@/features/settings/ui-state'
 import { useSystemHealth } from '@/features/settings/hooks'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -72,25 +66,19 @@ function RouteComponent() {
 
           <TabsContent value='general' className='flex flex-col gap-4 pt-2'>
             <Suspense fallback={<SettingsTabLoadingState />}>
-              <LanguageSelection />
-              <AppUpdatesCard />
+              <GeneralTab />
             </Suspense>
           </TabsContent>
 
           <TabsContent value='appearance' className='flex flex-col gap-4 pt-2'>
             <Suspense fallback={<SettingsTabLoadingState />}>
-              <PlayerPositionOptions />
-              <ThemeSelection />
-              <FolderColorOptions />
-              <AppWallpapersSelection />
+              <AppearanceTab />
             </Suspense>
           </TabsContent>
 
           <TabsContent value='system' className='flex flex-col gap-4 pt-2'>
             <Suspense fallback={<SettingsTabLoadingState />}>
-              <ServerHealthCard />
-              <BinariesStatusCard />
-              <DirectoriesStatusCard />
+              <SystemTab />
             </Suspense>
           </TabsContent>
         </Tabs>

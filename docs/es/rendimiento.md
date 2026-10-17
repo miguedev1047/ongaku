@@ -12,6 +12,7 @@ Ongaku combina una interfaz reactiva y virtualizada en el frontend con un backen
 graph TD
     subgraph Frontend ["Frontend (React 19 + TanStack)"]
         UI[Componentes UI & Tablas Virtualizadas]
+        TABS[Pestañas Modulares - Configuración/Playlists]
         TR[TanStack Router - File Based]
         TQ[TanStack React Query - Cache & Suspense]
         ZS[Zustand Stores - Estado Persistente]
@@ -19,31 +20,34 @@ graph TD
     end
 
     subgraph Backend ["Backend Nativo (Tauri v2 + Rust)"]
-        CMD[Tauri Commands / IPC Router]
+        CMD[Tauri Commands / Guardia de Seguridad IPC]
         RODIO[Motor de Audio Nativo Rodio + Symphonia]
         AXUM[Servidor HTTP Axum en Localhost]
         SQL[SQLite / rusqlite - Modo WAL]
         META[Motor Lofty + Rayon Multihilo]
-        POOL[Downloader Pool - yt-dlp + ffmpeg]
-        FS[("Sistema de Archivos Local\nlibrary/ & cache/")]
+        POOL[Downloader Blindado - yt-dlp + ffmpeg\nEscudo de Flags & Whitelist de Hosts]
+        FS[("Sistema de Archivos Local\nlibrary/, cache/ & staging/")]
     end
 
     subgraph OS ["Sistema Operativo & Audio"]
         AUDIO[PipeWire / PulseAudio / ALSA]
     end
 
+    UI --> TABS
+    TABS --> TQ
     UI --> TQ
     UI --> ZS
     TR --> TQ
     TQ --> ADAPT
     ZS --> ADAPT
-    ADAPT -->|IPC Invocations & Listeners| CMD
+    ADAPT -->|Invocaciones Validadas IPC & Listeners| CMD
     UI -->|WebP Covers & YouTube Stream| AXUM
     CMD --> RODIO
     CMD --> SQL
     CMD --> META
     CMD --> POOL
     RODIO -->|Lectura Directa de Archivo| FS
+    POOL -->|Staging Aislado por Tarea & Movimiento Atómico| FS
     RODIO -->|PCM Stream Multihilo| AUDIO
     RODIO -.->|Ticker Events 250ms| CMD
     CMD -.->|time-update & ended| ZS
@@ -55,7 +59,8 @@ graph TD
 
 ### A. Frontend (React 19, Ecosistema TanStack & PlatformService)
 - **TanStack Router**: Enrutamiento estricto basado en archivos (`/playlists/$playlistName`, `/library`, `/settings/`, `/search-youtube`, `/download-songs`). Los *loaders* de ruta precargan los datos mediante `.query()` para una navegación fluida sin parpadeos.
-- **Arquitectura Modular por Dominios (Domain-Driven)**: Estructuración estricta en carpetas de características (`src/features/<dominio>/` para `player`, `library`, `playlists`, `playlist-songs`, `youtube-search`, `download-songs`, `download-queue`, `settings`), asegurando alta cohesión, límites claros y mantenimiento limpio.
+- **Arquitectura Modular por Dominios y Pestañas**: Estructuración estricta en carpetas de características (`src/features/<dominio>/` para `player`, `library`, `playlists`, `playlist-songs`, `youtube-search`, `download-songs`, `download-queue`, `settings`). El dominio `settings` está modularizado por pestañas (`general-tab`, `appearance-tab` con submódulo aislado `wallpapers/`, y `system-tab`), asegurando alta cohesión, límites claros y mantenimiento limpio.
+- **Guardias Reactivos de Binarios & Navegación Dinámica**: Los binarios auxiliares (`yt-dlp` y `ffmpeg`) se monitorizan de forma reactiva con `useBinaries` / `systemHealthQueryOpts`. Cuando no están instalados, las rutas de descarga y búsqueda de YouTube (`/download-songs`, `/search-youtube`) se ocultan dinámicamente de la barra lateral, ofreciendo fallbacks claros de instalación en un solo clic dentro de las páginas.
 - **TanStack React Query & Suspense**: Manejo declarativo del estado asíncrono y caché en memoria. La UI utiliza `useSuspenseQuery` para consumir datos precalentados de salud del sistema, bibliotecas y configuración.
 - **Zustand Action Stores**: Persistencia del estado global para operaciones largas (progreso de descargas de audio, instalación de binarios, estado del reproductor persistido y panel de cola).
 - **Tablas Virtualizadas**: Renderizado virtualizado mediante TanStack Table / Virtual, calculando y montando en el DOM únicamente los elementos visibles en pantalla (manteniendo 60+ FPS estables con miles de canciones en colecciones principales).
@@ -84,10 +89,14 @@ graph TD
 - **Procesamiento Multihilo**: `Rayon` distribuye la carga de extracción de metadatos (ID3v2, Vorbis, FLAC, MP4) entre todos los núcleos disponibles de la CPU.
 - **Importación Acotada (Bounded Chunks)**: La importación masiva de archivos se divide en lotes de 100 (`IMPORT_CHUNK_SIZE`), realizando copias seguras al directorio interno, sincronización delta y transacciones SQLite acotadas con emisión de eventos de progreso en tiempo real (`import-progress`).
 
-### F. Cola Inteligente de Descargas (yt-dlp + ffmpeg)
+### F. Cola de Descargas Blindada y Escudo de Seguridad (yt-dlp + ffmpeg)
+- **Control Exclusivo en Rust (Backend Ownership)**: Los procesos y subprocesos son creados y administrados exclusivamente por el backend en Rust. La webview nunca invoca la shell directamente ni ejecuta comandos arbitrarios.
+- **Whitelist Estricta de Dominios (`ALLOWED_URLS`)**: Validación previa de enlaces contra patrones de dominio permitidos (`youtube.com`, `*.youtube.com`, `youtu.be`, `music.youtube.com`), bloqueando peticiones a hosts no autorizados, SSRF y protocolos locales (`file://`).
+- **Prevención de Inyección de Flags CLI**: Todas las llamadas a `yt-dlp` inyectan el delimitador estándar `--` justo antes de la URL objetivo, neutralizando completamente ataques por inyección de opciones (como `--exec` o `--dump-user-opts`). Además, las URLs y los IDs de tarea prohíben caracteres de control (`\0`) o guiones iniciales (`-`).
+- **Aislamiento en Staging por Tarea y Defensa contra Traversal**: Las descargas se realizan en carpetas temporales aisladas (`cache/staging/<task_id>/`) con validación de path traversal (`validate_task_id`), moviendo los archivos descargados de forma atómica a la biblioteca y garantizando la eliminación total de residuos ante cancelaciones o fallos.
 - **Pool Concurrente**: Administrador de tareas con control de concurrencia para evitar saturación de CPU y bloqueos por tasa de peticiones (HTTP 429).
-- **Sanitización de URLs**: Filtra automáticamente listas de reproducción y radios en vivo para descargar exactamente la pista solicitada.
-- **Cancelación Atómica**: Finalización inmediata del subproceso con eliminación de residuos en la carpeta temporal de *staging*.
+- **Sanitización de URLs**: Filtra automáticamente parámetros superfluos de listas de reproducción y radios en vivo para descargar la pista precisa, manteniendo la compatibilidad íntegra con YouTube Music.
+- **Cancelación Atómica**: Finalización inmediata del subproceso en el sistema operativo mediante rastreo de PID (`kill -9` / `taskkill /T /F`) y limpieza instantánea del directorio de *staging*.
 
 ---
 
