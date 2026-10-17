@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::helpers::{
     created_time, extract_song_id, extract_song_metadata, extract_song_name,
-    get_cache_pictures_dir, resolve_inside, validate_name,
+    get_cache_pictures_dir, resolve_inside, validate_name, validate_song_id,
 };
 use crate::services::errors::ServiceError;
 use crate::services::playlist::PlaylistSong;
@@ -21,8 +21,11 @@ pub fn remove_song_from_playlist(
     playlist_name: &str,
     song_id: &str,
 ) -> Result<SongActionResponse, ServiceError> {
+    let safe_playlist_name = validate_name(playlist_name).map_err(ServiceError::Validation)?;
+    let safe_song_id = validate_song_id(song_id)?;
+
     let deleted_path_opt =
-        crate::db::queries::remove_song_from_playlist_with_ref_check(conn, playlist_name, song_id)
+        crate::db::queries::remove_song_from_playlist_with_ref_check(conn, &safe_playlist_name, &safe_song_id)
             .map_err(ServiceError::Database)?;
 
     if let Some(path) = deleted_path_opt {
@@ -32,7 +35,7 @@ pub fn remove_song_from_playlist(
         }
 
         let cache_pictures_dir = get_cache_pictures_dir();
-        if let Ok(cover_path) = resolve_inside(&cache_pictures_dir, &format!("{}.webp", song_id)) {
+        if let Ok(cover_path) = resolve_inside(&cache_pictures_dir, &format!("{}.webp", safe_song_id)) {
             if cover_path.exists() && cover_path.is_file() {
                 let _ = remove_file(cover_path);
             }
@@ -49,11 +52,13 @@ pub fn delete_song_from_library(
     conn: &rusqlite::Connection,
     song_id: &str,
 ) -> Result<SongActionResponse, ServiceError> {
+    let safe_song_id = validate_song_id(song_id)?;
+
     // 1. Fetch song path before removing
     let song_path: Option<String> = conn
         .query_row(
             "SELECT path FROM songs WHERE id = ?1",
-            rusqlite::params![song_id],
+            rusqlite::params![safe_song_id],
             |row| row.get(0),
         )
         .ok();
@@ -81,14 +86,14 @@ pub fn delete_song_from_library(
 
     // 2. Delete cached cover
     let cache_pictures_dir = get_cache_pictures_dir();
-    if let Ok(cover_path) = resolve_inside(&cache_pictures_dir, &format!("{}.webp", song_id)) {
+    if let Ok(cover_path) = resolve_inside(&cache_pictures_dir, &format!("{}.webp", safe_song_id)) {
         if cover_path.exists() && cover_path.is_file() {
             let _ = remove_file(cover_path);
         }
     }
 
     // 3. Delete from DB (cascades to playlist_songs)
-    let _ = crate::db::queries::delete_song_from_library(conn, song_id);
+    let _ = crate::db::queries::delete_song_from_library(conn, &safe_song_id);
 
     Ok(SongActionResponse {
         code: "SUCCESS".into(),
@@ -166,16 +171,39 @@ pub fn move_song(
         },
     };
 
-    let resolved_source = match source_playlist {
-        Some(s) if !s.is_empty() => s.to_string(),
-        _ => {
+    let safe_source_input = match source_playlist {
+        Some(s) if !s.trim().is_empty() => match validate_name(s) {
+            Ok(valid) => Some(valid),
+            Err(err) => {
+                return Ok(SongActionResponse {
+                    code: "ERROR".into(),
+                    message: err,
+                });
+            }
+        },
+        _ => None,
+    };
+
+    let safe_resolved_id = match validate_song_id(&resolved_id) {
+        Ok(valid) => valid,
+        Err(err) => {
+            return Ok(SongActionResponse {
+                code: "ERROR".into(),
+                message: err.to_string(),
+            });
+        }
+    };
+
+    let resolved_source = match safe_source_input {
+        Some(s) => s,
+        None => {
             let found_source: Option<String> = conn
                 .query_row(
                     "SELECT p.name FROM playlist_songs ps
                      JOIN playlists p ON p.id = ps.playlist_id
                      WHERE ps.song_id = ?1
                      LIMIT 1",
-                    rusqlite::params![resolved_id],
+                    rusqlite::params![safe_resolved_id],
                     |row| row.get(0),
                 )
                 .ok();
@@ -184,7 +212,7 @@ pub fn move_song(
                 None => {
                     // Song is in library only, just add to target playlist
                     let _ =
-                        crate::db::queries::add_song_to_playlist(conn, &safe_target, &resolved_id);
+                        crate::db::queries::add_song_to_playlist(conn, &safe_target, &safe_resolved_id);
                     return Ok(SongActionResponse {
                         code: "SUCCESS".into(),
                         message: format!("Song added to '{}'", safe_target),
@@ -205,7 +233,7 @@ pub fn move_song(
         conn,
         &resolved_source,
         &safe_target,
-        &resolved_id,
+        &safe_resolved_id,
     ) {
         Ok(already_in_target) => {
             if already_in_target {

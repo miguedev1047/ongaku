@@ -5,7 +5,7 @@ const RESERVED_NAMES: &[&str] = &[
     "COM9", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9",
 ];
 
-const MAX_CHARACTER_NAME: usize = 50;
+const MAX_CHARACTER_NAME: usize = 100;
 
 /// Validates and cleans a playlist or item name according to OS rules.
 pub fn validate_name(name: &str) -> Result<String, String> {
@@ -16,7 +16,7 @@ pub fn validate_name(name: &str) -> Result<String, String> {
     }
 
     if trimmed.len() > MAX_CHARACTER_NAME {
-        return Err("The name is too long (maximum 50 characters)".to_string());
+        return Err("The name is too long (maximum 100 characters)".to_string());
     }
 
     if trimmed
@@ -189,6 +189,63 @@ pub fn validate_video_id_or_url(input: &str) -> Result<String, crate::services::
     if !is_valid_id {
         return Err(ServiceError::Validation(
             "Video ID contains invalid characters".to_string(),
+        ));
+    }
+
+    Ok(trimmed.to_string())
+}
+
+/// Validates that a song ID is non-empty, contains no path traversal or control characters,
+/// and does not exceed maximum length.
+pub fn validate_song_id(id: &str) -> Result<String, crate::services::errors::ServiceError> {
+    use crate::services::errors::ServiceError;
+
+    let trimmed = id.trim();
+    if trimmed.is_empty() {
+        return Err(ServiceError::Validation("Song ID cannot be empty".to_string()));
+    }
+
+    if trimmed.len() > 256 {
+        return Err(ServiceError::Validation(
+            "Song ID is too long (maximum 256 characters)".to_string(),
+        ));
+    }
+
+    if trimmed.contains('/')
+        || trimmed.contains('\\')
+        || trimmed.contains("..")
+        || trimmed.starts_with('-')
+        || trimmed.chars().any(|c| c.is_control())
+    {
+        return Err(ServiceError::Validation("Invalid song ID format".to_string()));
+    }
+
+    Ok(trimmed.to_string())
+}
+
+/// Validates that a hex color string is in #RGB, #RRGGBB, or #RRGGBBAA format (or empty).
+pub fn validate_hex_color(hex: &str) -> Result<String, crate::services::errors::ServiceError> {
+    use crate::services::errors::ServiceError;
+
+    let trimmed = hex.trim();
+    if trimmed.is_empty() {
+        return Ok(String::new());
+    }
+
+    if !trimmed.starts_with('#') {
+        return Err(ServiceError::Validation("Color must start with '#'".to_string()));
+    }
+
+    let hex_part = &trimmed[1..];
+    if hex_part.len() != 3 && hex_part.len() != 6 && hex_part.len() != 8 {
+        return Err(ServiceError::Validation(
+            "Color must be in #RGB, #RRGGBB, or #RRGGBBAA format".to_string(),
+        ));
+    }
+
+    if !hex_part.chars().all(|c| c.is_ascii_hexdigit()) {
+        return Err(ServiceError::Validation(
+            "Color contains invalid hex characters".to_string(),
         ));
     }
 

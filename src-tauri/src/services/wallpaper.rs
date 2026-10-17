@@ -43,8 +43,37 @@ pub fn set_wallpaper_field(
             }
             "theme"
         }
-        "theme_family" => "theme_family",
-        "selected_background" => "selected_background",
+        "theme_family" => {
+            let trimmed = value.trim();
+            if trimmed.is_empty()
+                || trimmed.len() > 50
+                || !trimmed
+                    .chars()
+                    .all(|c| c.is_ascii_alphanumeric() || c == '_' || c == '-')
+            {
+                return Err(ServiceError::Validation(format!(
+                    "Invalid theme_family: '{}'. Must be alphanumeric slug (max 50 characters)",
+                    value
+                )));
+            }
+            "theme_family"
+        }
+        "selected_background" => {
+            let trimmed = value.trim();
+            if !trimmed.is_empty()
+                && (trimmed.len() > 100
+                    || trimmed.contains('/')
+                    || trimmed.contains('\\')
+                    || trimmed.contains("..")
+                    || trimmed.chars().any(|c| c.is_control()))
+            {
+                return Err(ServiceError::Validation(format!(
+                    "Invalid selected_background: '{}'",
+                    value
+                )));
+            }
+            "selected_background"
+        }
         "blur" => {
             if value != "sm" && value != "md" && value != "lg" {
                 return Err(ServiceError::Validation(format!(

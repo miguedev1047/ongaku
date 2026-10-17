@@ -8,7 +8,7 @@ use crate::{
     constants::SERVER_HOST,
     db::DbPool,
     helpers::{
-        get_app_dir, get_app_paths, get_backgrounds_dir, get_cache_thumbs_dir, get_db_path,
+        get_app_paths, get_backgrounds_dir, get_cache_thumbs_dir, get_db_path,
         get_ffmpeg_path, get_ytdlp_path, move_app_directory, resolve_inside,
     },
     server::ServerPort,
@@ -16,41 +16,14 @@ use crate::{
 
 // --- Config Types & Commands ---
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct AppConfig {
-    pub folder_colors: String,
-    pub app_dir: String,
-    pub player_position: String,
-    pub toggle_sidebar: String,
-    pub lang: String,
-}
+pub use crate::services::config::AppConfig;
 
 #[tauri::command]
 pub fn get_app_config(db: State<'_, DbPool>) -> Result<AppConfig, String> {
     let conn = db
         .get()
         .map_err(|err| format!("Failed to acquire DB connection: {}", err))?;
-    let all = crate::db::queries::get_all_config(&conn)
-        .map_err(|err| format!("Failed to read configuration: {}", err))?;
-
-    let default_app_dir = get_app_dir().to_string_lossy().to_string();
-
-    Ok(AppConfig {
-        folder_colors: all
-            .get("folder_colors")
-            .cloned()
-            .unwrap_or_else(|| "#507dbc".to_string()),
-        app_dir: all.get("app_dir").cloned().unwrap_or(default_app_dir),
-        player_position: all
-            .get("player_position")
-            .cloned()
-            .unwrap_or_else(|| "bottom".to_string()),
-        toggle_sidebar: all
-            .get("toggle_sidebar")
-            .cloned()
-            .unwrap_or_else(|| "false".to_string()),
-        lang: all.get("lang").cloned().unwrap_or_else(|| "en".to_string()),
-    })
+    crate::services::config::get_app_config(&conn).map_err(|err| err.to_string())
 }
 
 #[tauri::command]
@@ -58,9 +31,7 @@ pub fn set_app_config(db: State<'_, DbPool>, key: String, value: String) -> Resu
     let conn = db
         .get()
         .map_err(|err| format!("Failed to acquire DB connection: {}", err))?;
-    crate::db::queries::set_config(&conn, &key, &value)
-        .map_err(|err| format!("Failed to update configuration: {}", err))?;
-    Ok(())
+    crate::services::config::set_app_config(&conn, &key, &value).map_err(|err| err.to_string())
 }
 
 #[tauri::command]

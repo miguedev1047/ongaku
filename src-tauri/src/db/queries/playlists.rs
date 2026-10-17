@@ -176,6 +176,10 @@ pub fn delete_playlist_with_orphan_cleanup(
 }
 
 pub fn reorder_playlists(conn: &mut Connection, playlist_names: &[String]) -> Result<()> {
+    if playlist_names.is_empty() {
+        return Ok(());
+    }
+
     let tx = conn.transaction()?;
     for (index, name) in playlist_names.iter().enumerate() {
         tx.execute(

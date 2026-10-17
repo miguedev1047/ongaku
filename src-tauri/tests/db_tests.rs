@@ -454,3 +454,149 @@ fn test_cleanup_orphan_songs() {
     assert_eq!(remaining.len(), 1);
     assert_eq!(remaining[0].id, "active-song");
 }
+
+#[test]
+fn test_playlist_name_validation_and_max_length() {
+    use tauri_app_lib::helpers::validate_name;
+
+    // 100 characters should succeed
+    let name_100 = "a".repeat(100);
+    assert!(validate_name(&name_100).is_ok());
+
+    // 101 characters should fail
+    let name_101 = "a".repeat(101);
+    assert!(validate_name(&name_101).is_err());
+
+    // Empty or whitespace
+    assert!(validate_name("").is_err());
+    assert!(validate_name("   ").is_err());
+
+    // Forbidden characters
+    assert!(validate_name("Bad/Name").is_err());
+    assert!(validate_name("Bad\\Name").is_err());
+    assert!(validate_name("Bad:Name").is_err());
+    assert!(validate_name("Bad*Name").is_err());
+
+    // Trailing dot is rejected, leading/trailing spaces are safely trimmed
+    assert!(validate_name("Trailing.").is_err());
+    assert_eq!(validate_name("  Playlist Name  ").unwrap(), "Playlist Name");
+
+    // Reserved system names
+    assert!(validate_name("CON").is_err());
+    assert!(validate_name("nul").is_err());
+    assert!(validate_name("aux").is_err());
+}
+
+#[test]
+fn test_config_service_validation() {
+    use tauri_app_lib::services::config::{get_app_config, set_app_config};
+
+    let conn = setup_in_memory_db();
+
+    // Default configuration should load cleanly
+    let config = get_app_config(&conn).unwrap();
+    assert_eq!(config.folder_colors, "#507dbc");
+    assert_eq!(config.player_position, "bottom");
+    assert_eq!(config.toggle_sidebar, "false");
+    assert_eq!(config.lang, "en");
+
+    // Valid updates
+    assert!(set_app_config(&conn, "folder_colors", "#ffffff").is_ok());
+    assert!(set_app_config(&conn, "player_position", "top").is_ok());
+    assert!(set_app_config(&conn, "toggle_sidebar", "true").is_ok());
+    assert!(set_app_config(&conn, "lang", "es").is_ok());
+
+    let updated = get_app_config(&conn).unwrap();
+    assert_eq!(updated.folder_colors, "#ffffff");
+    assert_eq!(updated.player_position, "top");
+    assert_eq!(updated.toggle_sidebar, "true");
+    assert_eq!(updated.lang, "es");
+
+    // Invalid folder_colors
+    assert!(set_app_config(&conn, "folder_colors", "not-a-color").is_err());
+    assert!(set_app_config(&conn, "folder_colors", "#12").is_err());
+    assert!(set_app_config(&conn, "folder_colors", "#gggggg").is_err());
+
+    // Invalid player_position
+    assert!(set_app_config(&conn, "player_position", "middle").is_err());
+    assert!(set_app_config(&conn, "player_position", "center").is_err());
+
+    // Invalid toggle_sidebar
+    assert!(set_app_config(&conn, "toggle_sidebar", "yes").is_err());
+    assert!(set_app_config(&conn, "toggle_sidebar", "1").is_err());
+
+    // Invalid lang
+    assert!(set_app_config(&conn, "lang", "too-long-language-code-12345").is_err());
+    assert!(set_app_config(&conn, "lang", "en; DROP TABLE config;").is_err());
+
+    // Forbidden direct modification of app_dir
+    assert!(set_app_config(&conn, "app_dir", "/tmp/malicious").is_err());
+
+    // Unknown key
+    assert!(set_app_config(&conn, "malicious_key", "payload").is_err());
+}
+
+#[test]
+fn test_song_id_validation() {
+    use tauri_app_lib::helpers::validate_song_id;
+
+    // Valid IDs
+    assert!(validate_song_id("dQw4w9WgXcQ").is_ok());
+    assert!(validate_song_id("1729000_a1b2c3d4").is_ok());
+    assert!(validate_song_id("my_song-id.v1").is_ok());
+
+    // Path traversal & directory injection attempts
+    assert!(validate_song_id("../secret").is_err());
+    assert!(validate_song_id("/etc/passwd").is_err());
+    assert!(validate_song_id("C:\\Windows\\System32").is_err());
+
+    // CLI flag injection
+    assert!(validate_song_id("-v").is_err());
+    assert!(validate_song_id("--exec").is_err());
+
+    // Empty or control characters
+    assert!(validate_song_id("").is_err());
+    assert!(validate_song_id("   ").is_err());
+    assert!(validate_song_id("bad\0id").is_err());
+    assert!(validate_song_id("bad\nid").is_err());
+}
+
+#[test]
+fn test_wallpaper_service_validation() {
+    use tauri_app_lib::services::wallpaper::{get_wallpaper, set_wallpaper_field};
+
+    let conn = setup_in_memory_db();
+
+    let initial = get_wallpaper(&conn).unwrap();
+    assert_eq!(initial.theme, "dark");
+    assert_eq!(initial.blur, "sm");
+
+    // Valid updates
+    assert!(set_wallpaper_field(&conn, "theme", "light").is_ok());
+    assert!(set_wallpaper_field(&conn, "blur", "md").is_ok());
+    assert!(set_wallpaper_field(&conn, "theme_family", "nord").is_ok());
+    assert!(set_wallpaper_field(&conn, "selected_background", "wallpaper-123.jpg").is_ok());
+
+    let updated = get_wallpaper(&conn).unwrap();
+    assert_eq!(updated.theme, "light");
+    assert_eq!(updated.blur, "md");
+    assert_eq!(updated.theme_family, "nord");
+    assert_eq!(updated.selected_background, "wallpaper-123.jpg");
+
+    // Invalid theme
+    assert!(set_wallpaper_field(&conn, "theme", "neon").is_err());
+
+    // Invalid blur
+    assert!(set_wallpaper_field(&conn, "blur", "xl").is_err());
+
+    // Invalid theme_family (special characters or too long)
+    assert!(set_wallpaper_field(&conn, "theme_family", "../evil").is_err());
+    assert!(set_wallpaper_field(&conn, "theme_family", &"a".repeat(51)).is_err());
+
+    // Path traversal in selected_background
+    assert!(set_wallpaper_field(&conn, "selected_background", "../../etc/passwd").is_err());
+    assert!(set_wallpaper_field(&conn, "selected_background", "/root/img.png").is_err());
+
+    // Unknown field
+    assert!(set_wallpaper_field(&conn, "arbitrary_field", "val").is_err());
+}

@@ -290,6 +290,10 @@ pub fn reorder_playlist_songs(
     playlist_name: &str,
     song_ids: &[String],
 ) -> Result<()> {
+    if song_ids.is_empty() {
+        return Ok(());
+    }
+
     let playlist_id: i64 = conn.query_row(
         "SELECT id FROM playlists WHERE name = ?1",
         params![playlist_name],

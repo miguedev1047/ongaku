@@ -8,7 +8,7 @@ use tauri::Emitter;
 use crate::db::DbPool;
 use crate::helpers::{
     extract_song_id, extract_song_name, get_cache_pictures_dir, get_library_dir, is_audio_file,
-    resolve_inside, resolve_song_id, validate_name,
+    resolve_inside, resolve_song_id, validate_name, validate_song_id,
 };
 use crate::services::errors::ServiceError;
 
@@ -131,6 +131,7 @@ pub fn batch_delete_songs(
 
     // If playlist_name is provided, remove them from the playlist with ref-check
     if let Some(ref pl_name) = playlist_name {
+        let safe_pl_name = validate_name(pl_name).map_err(ServiceError::Validation)?;
         let cache_pictures_dir = get_cache_pictures_dir();
         for item in items {
             let song_id = item.id.or_else(|| {
@@ -141,24 +142,26 @@ pub fn batch_delete_songs(
             });
 
             if let Some(ref id) = song_id {
-                if let Ok(deleted_path_opt) =
-                    crate::db::queries::remove_song_from_playlist_with_ref_check(conn, pl_name, id)
-                {
-                    if let Some(path) = deleted_path_opt {
-                        let file = Path::new(&path);
-                        if file.exists() {
-                            let _ = remove_file(file);
-                        }
-                        if let Ok(cover_path) =
-                            resolve_inside(&cache_pictures_dir, &format!("{}.webp", id))
-                        {
-                            if cover_path.exists() && cover_path.is_file() {
-                                let _ = remove_file(cover_path);
+                if let Ok(safe_id) = validate_song_id(id) {
+                    if let Ok(deleted_path_opt) =
+                        crate::db::queries::remove_song_from_playlist_with_ref_check(conn, &safe_pl_name, &safe_id)
+                    {
+                        if let Some(path) = deleted_path_opt {
+                            let file = Path::new(&path);
+                            if file.exists() {
+                                let _ = remove_file(file);
+                            }
+                            if let Ok(cover_path) =
+                                resolve_inside(&cache_pictures_dir, &format!("{}.webp", safe_id))
+                            {
+                                if cover_path.exists() && cover_path.is_file() {
+                                    let _ = remove_file(cover_path);
+                                }
                             }
                         }
+                        success_count += 1;
+                        continue;
                     }
-                    success_count += 1;
-                    continue;
                 }
             }
             failed_count += 1;
@@ -188,12 +191,14 @@ pub fn batch_delete_songs(
         }
 
         if let Some(ref id) = song_id {
-            if let Ok(cover_path) = resolve_inside(&cache_pictures_dir, &format!("{}.webp", id)) {
-                if cover_path.exists() {
-                    let _ = remove_file(cover_path);
+            if let Ok(safe_id) = validate_song_id(id) {
+                if let Ok(cover_path) = resolve_inside(&cache_pictures_dir, &format!("{}.webp", safe_id)) {
+                    if cover_path.exists() {
+                        let _ = remove_file(cover_path);
+                    }
                 }
+                let _ = crate::db::queries::delete_song_from_library(conn, &safe_id);
             }
-            let _ = crate::db::queries::delete_song_from_library(conn, id);
         }
 
         success_count += 1;
@@ -213,6 +218,10 @@ pub fn batch_move_songs(
     target_playlist: &str,
 ) -> Result<BatchActionResponse, ServiceError> {
     let safe_target = validate_name(target_playlist).map_err(ServiceError::Validation)?;
+    let safe_source_opt = match source_playlist.as_deref() {
+        Some(s) if !s.trim().is_empty() => Some(validate_name(s).map_err(ServiceError::Validation)?),
+        _ => None,
+    };
 
     let mut success_count = 0;
     let mut failed_count = 0;
@@ -228,7 +237,16 @@ pub fn batch_move_songs(
             }
         };
 
-        let src = match source_playlist.as_deref() {
+        let safe_song_id = match validate_song_id(&song_id) {
+            Ok(id) => id,
+            Err(_) => {
+                failed_count += 1;
+                failed_items.push(path);
+                continue;
+            }
+        };
+
+        let src = match safe_source_opt.as_deref() {
             Some(s) => s.to_string(),
             None => {
                 let found: Option<String> = conn
@@ -237,7 +255,7 @@ pub fn batch_move_songs(
                          JOIN playlists p ON p.id = ps.playlist_id
                          WHERE ps.song_id = ?1
                          LIMIT 1",
-                        rusqlite::params![song_id],
+                        rusqlite::params![safe_song_id],
                         |row| row.get(0),
                     )
                     .ok();
@@ -245,7 +263,7 @@ pub fn batch_move_songs(
                     Some(s) => s,
                     None => {
                         let _ =
-                            crate::db::queries::add_song_to_playlist(conn, &safe_target, &song_id);
+                            crate::db::queries::add_song_to_playlist(conn, &safe_target, &safe_song_id);
                         success_count += 1;
                         continue;
                     }
@@ -253,7 +271,7 @@ pub fn batch_move_songs(
             }
         };
 
-        if crate::db::queries::move_song_between_playlists(conn, &src, &safe_target, &song_id)
+        if crate::db::queries::move_song_between_playlists(conn, &src, &safe_target, &safe_song_id)
             .is_ok()
         {
             success_count += 1;
