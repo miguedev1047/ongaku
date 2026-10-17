@@ -505,7 +505,7 @@
     "active_track": {
       "no_active_track": "Sin canción activa",
       "no_active_track_desc": "Selecciona cualquier canción de la búsqueda para ver detalles y escuchar.",
-      "stream": "Transmitir",
+      "stream": "Transmitiendo",
       "playing": "Reproduciendo",
       "loading_stream": "Cargando audio",
       "fetching_audio": "Obteniendo audio de YouTube...",
