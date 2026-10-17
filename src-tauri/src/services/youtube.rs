@@ -50,6 +50,12 @@ pub async fn search_youtube(
     search_name: String,
     max_results: usize,
 ) -> Result<Vec<YoutubeSearchResult>, ServiceError> {
+    let clean_query = crate::helpers::validate_search_query(&search_name)?;
+    if clean_query.is_empty() || max_results == 0 {
+        return Ok(Vec::new());
+    }
+
+    crate::services::binaries::ensure_binaries().await?;
     let ytdlp_path = get_ytdlp_path();
     let ffmpeg_path = get_ffmpeg_path();
 
@@ -62,7 +68,7 @@ pub async fn search_youtube(
     let youtube = downloader.youtube_extractor();
     let fetch_count = max_results.saturating_mul(2).clamp(max_results, 50);
     let results = youtube
-        .search(&search_name, fetch_count)
+        .search(&clean_query, fetch_count)
         .await
         .map_err(|e| ServiceError::Execution(e.to_string()))?;
 
@@ -89,27 +95,11 @@ pub async fn search_youtube(
 }
 
 pub async fn get_youtube_stream_url(video_id: String) -> Result<String, ServiceError> {
-    let clean_id = video_id.trim();
-    if clean_id.is_empty() {
-        return Err(ServiceError::Validation(
-            "Invalid empty video ID".to_string(),
-        ));
-    }
-
-    let video_url = if clean_id.starts_with("http://") || clean_id.starts_with("https://") {
-        crate::helpers::validate_youtube_url(clean_id)?
+    let validated = crate::helpers::validate_video_id_or_url(&video_id)?;
+    let video_url = if validated.starts_with("http://") || validated.starts_with("https://") {
+        validated
     } else {
-        if clean_id.starts_with('-')
-            || clean_id.contains('\0')
-            || clean_id.contains('/')
-            || clean_id.contains('\\')
-            || clean_id.contains(' ')
-            || clean_id.contains('&')
-            || clean_id.contains('?')
-        {
-            return Err(ServiceError::Validation("Invalid video ID format".to_string()));
-        }
-        format!("https://www.youtube.com/watch?v={clean_id}")
+        format!("https://www.youtube.com/watch?v={validated}")
     };
 
     // 1. Check in-memory cache
@@ -123,6 +113,7 @@ pub async fn get_youtube_stream_url(video_id: String) -> Result<String, ServiceE
     }
 
     // 2. Verify yt-dlp binary
+    crate::services::binaries::ensure_binaries().await?;
     let ytdlp_path = get_ytdlp_path();
     if !ytdlp_path.is_file() {
         return Err(ServiceError::NotFound(
