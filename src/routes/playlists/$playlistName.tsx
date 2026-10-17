@@ -37,9 +37,8 @@ function RouteComponent() {
   return (
     <div className='size-full flex flex-col overflow-hidden'>
       <PlaylistSongHeader />
-      <RouteSection>
-        <PlaylistSongHero />
-
+      <PlaylistSongHero />
+      <RouteSection padding='horizontal'>
         <Suspense fallback={<PlaylistSongsLoadingState />}>
           <PlaylistSongsList />
         </Suspense>

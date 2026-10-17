@@ -38,7 +38,11 @@ export function PlaylistSongHero() {
   if (isLoading || isError) return null
 
   return (
-    <div className={cn('flex shrink-0 items-center gap-2 mb-4')}>
+    <div
+      className={cn(
+        'flex shrink-0 items-center gap-2 p-4 lg:p-6 mx-auto container',
+      )}
+    >
       <CardWrapper
         variant='hero'
         padding='hero'
