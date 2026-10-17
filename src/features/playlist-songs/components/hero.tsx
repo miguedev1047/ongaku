@@ -40,7 +40,7 @@ export function PlaylistSongHero() {
   return (
     <div
       className={cn(
-        'flex shrink-0 items-center gap-2 p-4 lg:p-6 mx-auto container',
+        'flex shrink-0 items-center gap-2 px-6 lg:px-6 pt-4 lg:pt-6 mx-auto container',
       )}
     >
       <CardWrapper
