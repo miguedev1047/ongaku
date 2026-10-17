@@ -17,20 +17,77 @@ pub enum ResolveError {
 
 /// Resolves a requested relative path securely inside root, preventing path traversal attacks.
 pub fn resolve_inside(root: &Path, requested: &str) -> Result<PathBuf, ResolveError> {
-    let root = root.canonicalize().map_err(|_| ResolveError::NotFound)?;
-    let full = root
-        .join(requested)
-        .canonicalize()
-        .map_err(|_| ResolveError::NotFound)?;
+    let joined = root.join(requested);
+    verify_regular_file_inside(root, &joined)
+}
 
-    if !full.starts_with(&root) {
+/// Verifies that `candidate` is a regular file (not a symlink) and resolves canonically inside `root`.
+pub fn verify_regular_file_inside(root: &Path, candidate: &Path) -> Result<PathBuf, ResolveError> {
+    let sym_meta = std::fs::symlink_metadata(candidate).map_err(|_| ResolveError::NotFound)?;
+    if sym_meta.file_type().is_symlink() {
         return Err(ResolveError::OutsideRoot);
     }
-    if !full.is_file() {
+    if !sym_meta.file_type().is_file() {
         return Err(ResolveError::NotFound);
     }
 
-    Ok(full)
+    let canonical_root = root.canonicalize().map_err(|_| ResolveError::NotFound)?;
+    let canonical_file = candidate
+        .canonicalize()
+        .map_err(|_| ResolveError::NotFound)?;
+
+    if !canonical_file.starts_with(&canonical_root) {
+        return Err(ResolveError::OutsideRoot);
+    }
+
+    Ok(canonical_file)
+}
+
+/// Creates or prepares a directory securely:
+/// - Rejects or removes any pre-existing symlink at `dir` so symlinks are never followed.
+/// - Sets restrictive `0o700` permissions on Unix systems.
+/// - Returns the canonicalized directory path.
+pub fn prepare_secure_dir(dir: &Path) -> Result<PathBuf, String> {
+    if let Ok(meta) = std::fs::symlink_metadata(dir) {
+        if meta.file_type().is_symlink() {
+            std::fs::remove_file(dir).map_err(|err| {
+                format!(
+                    "Refusing to use symlinked directory '{}' and failed to remove symlink: {}",
+                    dir.display(),
+                    err
+                )
+            })?;
+        }
+    }
+
+    create_dir_all(dir).map_err(|err| {
+        format!(
+            "Failed to create secure directory '{}': {}",
+            dir.display(),
+            err
+        )
+    })?;
+
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        let perms = std::fs::Permissions::from_mode(0o700);
+        std::fs::set_permissions(dir, perms).map_err(|err| {
+            format!(
+                "Failed to set 0700 permissions on '{}': {}",
+                dir.display(),
+                err
+            )
+        })?;
+    }
+
+    dir.canonicalize().map_err(|err| {
+        format!(
+            "Failed to canonicalize directory '{}': {}",
+            dir.display(),
+            err
+        )
+    })
 }
 
 /// Ensures all necessary application directories exist on disk and cleans leftover staging directories.
@@ -62,25 +119,25 @@ pub fn ensure_dirs() -> Result<(), Box<dyn std::error::Error>> {
         })?;
     }
 
-    // Clean any leftover staging files from previous sessions
+    let _ = prepare_secure_dir(&get_streaming_cache_dir())?;
+
+    // Clean any leftover staging files from previous sessions without following symlinks
     let staging_dir = get_staging_dir();
-    if staging_dir.exists() {
-        if let Err(err) = std::fs::remove_dir_all(&staging_dir) {
-            eprintln!(
-                "[ONGAKU WARNING]: Could not clean staging directory '{}': {}",
-                staging_dir.display(),
-                err
-            );
+    if let Ok(meta) = std::fs::symlink_metadata(&staging_dir) {
+        if meta.file_type().is_symlink() {
+            let _ = std::fs::remove_file(&staging_dir);
+        } else if staging_dir.exists() {
+            if let Err(err) = std::fs::remove_dir_all(&staging_dir) {
+                eprintln!(
+                    "[ONGAKU WARNING]: Could not clean staging directory '{}': {}",
+                    staging_dir.display(),
+                    err
+                );
+            }
         }
     }
 
-    create_dir_all(&staging_dir).map_err(|err| {
-        format!(
-            "Failed to create staging directory at '{}': {}",
-            staging_dir.display(),
-            err
-        )
-    })?;
+    prepare_secure_dir(&staging_dir)?;
 
     ensure_paths_config()
         .map_err(|err| format!("Failed to write initial paths configuration file: {}", err))?;

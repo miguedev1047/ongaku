@@ -51,10 +51,16 @@ impl DownloadManagerState {
             }
         }
 
-        // Clean staging folder for this task immediately
-        let staging_task_dir = get_staging_dir().join(id);
-        if staging_task_dir.exists() {
-            let _ = fs::remove_dir_all(&staging_task_dir);
+        // Clean staging folder for this task immediately (only if task ID is valid and not a symlink)
+        if let Ok(safe_id) = crate::helpers::validate_task_id(id) {
+            let staging_task_dir = get_staging_dir().join(safe_id);
+            if let Ok(meta) = fs::symlink_metadata(&staging_task_dir) {
+                if meta.file_type().is_symlink() {
+                    let _ = fs::remove_file(&staging_task_dir);
+                } else if meta.file_type().is_dir() {
+                    let _ = fs::remove_dir_all(&staging_task_dir);
+                }
+            }
         }
     }
 }
@@ -94,7 +100,10 @@ pub async fn download_song_from_url<F>(
 where
     F: FnOnce(u32),
 {
-    use crate::helpers::{validate_task_id, validate_youtube_url};
+    use crate::constants::ALLOWED_YTDLP_EXTRACTORS;
+    use crate::helpers::{
+        prepare_secure_dir, validate_task_id, validate_youtube_url, verify_regular_file_inside,
+    };
 
     let safe_id = validate_task_id(id)?;
     let validated_url = validate_youtube_url(url)?;
@@ -104,40 +113,29 @@ where
     let ytdlp_path = get_ytdlp_path();
     let bin_dir = get_bin_dir();
 
-    // Isolated staging directory per task ID
-    let staging_task_dir = get_staging_dir().join(safe_id);
-    if !staging_task_dir.exists() {
-        fs::create_dir_all(&staging_task_dir).map_err(|err| {
-            ServiceError::Execution(format!("Failed to create staging directory: {}", err))
-        })?;
-    }
+    // Isolated staging directory per task ID with 0700 permissions and anti-symlink protection
+    let staging_base = prepare_secure_dir(&get_staging_dir()).map_err(ServiceError::Execution)?;
+    let staging_task_dir =
+        prepare_secure_dir(&staging_base.join(safe_id)).map_err(ServiceError::Execution)?;
 
-    // Clean URL: strip playlist and radio params if from YouTube
-    let is_youtube = validated_url.contains("youtube.com") || validated_url.contains("youtu.be");
-    let clean_url = if is_youtube {
-        clean_youtube_url(&validated_url)
-    } else {
-        validated_url
-    };
+    // Strip playlist and radio parameters for single track download
+    let clean_url = clean_youtube_url(&validated_url);
 
     let output_template = format!(
         "{}/%(title)s [%(id)s].%(ext)s",
         staging_task_dir.to_string_lossy().replace('\\', "/")
     );
 
-    let mut args = vec![
+    let args = vec![
+        "--ignore-config".to_string(),
+        "--use-extractors".to_string(),
+        ALLOWED_YTDLP_EXTRACTORS.to_string(),
         "--ffmpeg-location".to_string(),
         bin_dir.to_string_lossy().to_string(),
         "--encoding".to_string(),
         "utf-8".to_string(),
-    ];
-
-    if is_youtube {
-        args.push("--extractor-args".to_string());
-        args.push("youtube:player_client=android,ios,mweb".to_string());
-    }
-
-    args.extend([
+        "--extractor-args".to_string(),
+        "youtube:player_client=android,ios,mweb".to_string(),
         "-x".to_string(),
         "--audio-format".to_string(),
         "mp3".to_string(),
@@ -155,7 +153,7 @@ where
         output_template,
         "--".to_string(),
         clean_url,
-    ]);
+    ];
 
     let mut cmd = Command::new(&ytdlp_path);
     cmd.args(&args);
@@ -224,17 +222,25 @@ where
         return Err(ServiceError::Execution("yt-dlp download failed or was cancelled".to_string()));
     }
 
-    // Locate the resulting mp3 in staging_task_dir
+    // Locate the resulting mp3 securely inside staging_task_dir (rejecting symlinks and outside paths)
     let mut found_file: Option<PathBuf> = None;
-    let candidate = PathBuf::from(&last_filepath);
-    if candidate.is_file() {
-        found_file = Some(candidate);
-    } else if let Ok(entries) = fs::read_dir(&staging_task_dir) {
-        for entry in entries.filter_map(|e| e.ok()) {
-            let path = entry.path();
-            if path.is_file() && path.extension().is_some_and(|ext| ext == "mp3") {
-                found_file = Some(path);
-                break;
+    if !last_filepath.is_empty() {
+        let candidate = PathBuf::from(&last_filepath);
+        if let Ok(verified) = verify_regular_file_inside(&staging_task_dir, &candidate) {
+            found_file = Some(verified);
+        }
+    }
+
+    if found_file.is_none() {
+        if let Ok(entries) = fs::read_dir(&staging_task_dir) {
+            for entry in entries.filter_map(|e| e.ok()) {
+                let path = entry.path();
+                if path.extension().is_some_and(|ext| ext == "mp3") {
+                    if let Ok(verified) = verify_regular_file_inside(&staging_task_dir, &path) {
+                        found_file = Some(verified);
+                        break;
+                    }
+                }
             }
         }
     }
@@ -246,10 +252,10 @@ where
         if let Ok(entries) = fs::read_dir(&staging_task_dir) {
             for entry in entries.filter_map(|e| e.ok()) {
                 let path = entry.path();
-                if path.is_file() {
-                    let name = path.file_name().unwrap_or_default().to_string_lossy();
-                    if name.contains(&id_pattern) && name.ends_with(".mp3") {
-                        found_file = Some(path);
+                let name = path.file_name().unwrap_or_default().to_string_lossy();
+                if name.contains(&id_pattern) && name.ends_with(".mp3") {
+                    if let Ok(verified) = verify_regular_file_inside(&staging_task_dir, &path) {
+                        found_file = Some(verified);
                         break;
                     }
                 }
@@ -273,7 +279,21 @@ where
         }
     };
 
-    let dest_file = target_dir.join(&file_name);
+    let canonical_target_dir = target_dir.canonicalize().map_err(|err| {
+        let _ = fs::remove_dir_all(&staging_task_dir);
+        ServiceError::Execution(format!("Target directory is invalid: {}", err))
+    })?;
+    let dest_file = canonical_target_dir.join(&file_name);
+
+    // Ensure destination does not point to a pre-existing symlink
+    if let Ok(dest_meta) = fs::symlink_metadata(&dest_file) {
+        if dest_meta.file_type().is_symlink() {
+            let _ = fs::remove_dir_all(&staging_task_dir);
+            return Err(ServiceError::Execution(
+                "Refusing to overwrite symlink in target directory".to_string(),
+            ));
+        }
+    }
 
     // Atomic move from staging to target destination (fallback to copy + delete)
     if fs::rename(&src_file, &dest_file).is_err() {

@@ -242,14 +242,29 @@ pub async fn open_backgrounds_folder() -> Result<(), String> {
 #[tauri::command]
 pub async fn open_folder(path: String) -> Result<(), String> {
     let p = Path::new(&path);
-    if !p.exists() {
-        return Err(format!("Path does not exist: {}", path));
+    let sym_meta = fs::symlink_metadata(p).map_err(|_| format!("Path does not exist: {}", path))?;
+    if sym_meta.file_type().is_symlink() {
+        return Err("Refusing to open symlinked path".to_string());
+    }
+    if !sym_meta.file_type().is_dir() {
+        return Err("Path is not a directory".to_string());
+    }
+
+    let canonical_target = p
+        .canonicalize()
+        .map_err(|e| format!("Invalid directory path: {}", e))?;
+    let canonical_app_dir = crate::helpers::get_app_dir()
+        .canonicalize()
+        .map_err(|e| format!("Failed to resolve application directory: {}", e))?;
+
+    if !canonical_target.starts_with(&canonical_app_dir) {
+        return Err("Refusing to open directory outside Ongaku application storage".to_string());
     }
 
     #[cfg(target_os = "windows")]
     {
         std::process::Command::new("explorer")
-            .arg(&path)
+            .arg(&canonical_target)
             .spawn()
             .map_err(|e| format!("Failed to open folder: {}", e))?;
     }
@@ -257,7 +272,8 @@ pub async fn open_folder(path: String) -> Result<(), String> {
     #[cfg(target_os = "macos")]
     {
         std::process::Command::new("open")
-            .arg(&path)
+            .arg("--")
+            .arg(&canonical_target)
             .spawn()
             .map_err(|e| format!("Failed to open folder: {}", e))?;
     }
@@ -265,7 +281,7 @@ pub async fn open_folder(path: String) -> Result<(), String> {
     #[cfg(target_os = "linux")]
     {
         let mut cmd = std::process::Command::new("xdg-open");
-        cmd.arg(&path);
+        cmd.arg("--").arg(&canonical_target);
 
         // Sanitize environment variables in AppImage to prevent child processes
         // from crashing due to library version mismatch.

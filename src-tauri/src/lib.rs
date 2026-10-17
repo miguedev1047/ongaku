@@ -1,7 +1,7 @@
 pub mod audio;
 pub mod commands;
 pub mod compatibility;
-mod constants;
+pub mod constants;
 pub mod db;
 pub mod helpers;
 mod server;

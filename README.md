@@ -44,3 +44,4 @@ For detailed setup, troubleshooting, complete features, and developer guides:
 
 - [Platform Compatibility & Requirements](docs/en/compatibility.md) _(Windows SmartScreen, macOS Gatekeeper approval, Linux multimedia dependencies)_
 - [Complete Documentation & Architecture](docs/en/welcome.md) _(Key features, tech stack, and development setup)_
+- [Security Architecture & Defense-in-Depth](docs/en/security.md) _(`yt-dlp` hardening, threat matrix, CI contract tests, and vulnerability reporting)_

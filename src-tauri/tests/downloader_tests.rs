@@ -127,3 +127,58 @@ fn test_validate_task_id_security() {
     assert!(validate_task_id("-flag").is_err());
     assert!(validate_task_id("").is_err());
 }
+
+#[test]
+fn test_secure_staging_dir_and_symlink_protection() {
+    use tauri_app_lib::helpers::{prepare_secure_dir, verify_regular_file_inside, ResolveError};
+
+    let temp_root = std::env::temp_dir().join("ongaku_symlink_security_test");
+    let _ = fs::remove_dir_all(&temp_root);
+    let canonical_base = prepare_secure_dir(&temp_root).expect("Failed to prepare secure dir");
+
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        let mode = fs::metadata(&canonical_base).unwrap().permissions().mode() & 0o777;
+        assert_eq!(mode, 0o700, "Staging dir should have 0o700 permissions on Unix");
+    }
+
+    // Normal regular file inside base should pass
+    let regular_file = canonical_base.join("legit.mp3");
+    fs::write(&regular_file, b"audio bytes").unwrap();
+    assert!(verify_regular_file_inside(&canonical_base, &regular_file).is_ok());
+
+    // File outside base should fail containment check
+    let outside_file = std::env::temp_dir().join("ongaku_outside_secret.txt");
+    fs::write(&outside_file, b"secret").unwrap();
+    assert_eq!(
+        verify_regular_file_inside(&canonical_base, &outside_file).unwrap_err(),
+        ResolveError::OutsideRoot
+    );
+
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::symlink;
+        // Symlink inside staging pointing to an outside file must be rejected
+        let symlink_file = canonical_base.join("evil_link.mp3");
+        symlink(&outside_file, &symlink_file).unwrap();
+        let res = verify_regular_file_inside(&canonical_base, &symlink_file);
+        assert_eq!(
+            res.unwrap_err(),
+            ResolveError::OutsideRoot,
+            "Symlinks inside staging must be rejected"
+        );
+
+        // Pre-existing symlink directory should be replaced by prepare_secure_dir
+        let symlink_dir = temp_root.join("sub_symlink_dir");
+        symlink(std::env::temp_dir(), &symlink_dir).unwrap();
+        assert!(fs::symlink_metadata(&symlink_dir).unwrap().file_type().is_symlink());
+
+        let secured_sub = prepare_secure_dir(&symlink_dir).unwrap();
+        assert!(!fs::symlink_metadata(&secured_sub).unwrap().file_type().is_symlink());
+        assert!(secured_sub.is_dir());
+    }
+
+    let _ = fs::remove_file(&outside_file);
+    let _ = fs::remove_dir_all(&temp_root);
+}

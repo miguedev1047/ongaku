@@ -18,6 +18,9 @@ Welcome to the official documentation for **Ongaku** (`音楽`), a lightweight, 
 - [Performance & Technical Architecture](benchmarks.md)  
   _For developers and technical readers: internal architecture, speed benchmarks, database design, and multithreaded processing._
 
+- [Security Architecture & Defense-in-Depth](security.md)  
+  _Detailed overview of `yt-dlp` hardening, RFC 3986 URL validation, filesystem containment, CI contract tests, and how to report vulnerabilities or submit PRs._
+
 - [Quick Start & Development Guide](#-quick-start-guide)  
   _How to install dependencies, run the application in development mode, and build release packages._
 

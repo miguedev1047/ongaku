@@ -18,6 +18,9 @@ Bienvenido a la documentación oficial de **Ongaku** (`音楽`), un reproductor 
 - [Arquitectura y Rendimiento Técnico](rendimiento.md)  
   _Para desarrolladores o curiosos técnicos: cómo funciona Ongaku por dentro, benchmarks de velocidad, base de datos y procesamiento multihilo._
 
+- [Arquitectura de Seguridad y Defensa en Profundidad](seguridad.md)  
+  _Detalle del blindaje en torno a `yt-dlp`, validación RFC 3986, aislamiento del sistema de archivos, pruebas de contrato en CI y cómo reportar vulnerabilidades o enviar PRs._
+
 - [Guía de Inicio Rápido](#-guía-de-inicio-rápido)  
   _Cómo instalar dependencias, probar la app en modo desarrollo y compilarla en tu equipo._
 

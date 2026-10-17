@@ -255,3 +255,177 @@ async fn test_resolve_playlist_info_rejects_malicious_inputs_immediately() {
     let res5 = resolve_playlist_info("   ").await;
     assert!(matches!(res5, Err(ServiceError::Validation(_))));
 }
+
+// =========================================================================
+// 4. Defensa en Profundidad: RFC 3986 Userinfo, Redirecciones Abiertas y Reconstrucción Canónica
+// =========================================================================
+
+#[test]
+fn test_rfc3986_host_confusion_and_open_redirect_protection() {
+    // 1. Confusión de host mediante userinfo RFC 3986 (user:pass@attacker)
+    assert!(validate_youtube_url("https://youtube.com@attacker.site/watch?v=dQw4w9WgXcQ").is_err());
+    assert!(validate_youtube_url("https://youtube.com:80@attacker.site/watch?v=dQw4w9WgXcQ").is_err());
+    assert!(validate_youtube_url("https://www.youtube.com:443@127.0.0.1/watch?v=dQw4w9WgXcQ").is_err());
+
+    // 2. Puertos explícitos no estándar rechazados
+    assert!(validate_youtube_url("https://www.youtube.com:8080/watch?v=dQw4w9WgXcQ").is_err());
+
+    // 3. Subdominios no autorizados rechazados (comparación exacta de host)
+    assert!(validate_youtube_url("https://evil.youtube.com/watch?v=dQw4w9WgXcQ").is_err());
+    assert!(validate_youtube_url("https://youtube.com.attacker.site/watch?v=dQw4w9WgXcQ").is_err());
+
+    // 4. Endpoints de redirección abierta de YouTube rechazados (prevención de SSRF)
+    assert!(validate_youtube_url("https://www.youtube.com/redirect?q=http://127.0.0.1:8080").is_err());
+    assert!(validate_youtube_url("https://www.youtube.com/attribution_link?u=/watch?v=dQw4w9WgXcQ").is_err());
+    assert!(validate_youtube_url("https://www.youtube.com/channel/UC123456").is_err());
+
+    // 5. Reconstrucción canónica de URLs legítimas eliminando parámetros intrusos
+    assert_eq!(
+        validate_youtube_url("http://music.youtube.com/watch?v=dQw4w9WgXcQ&redirect=http://localhost&evil=1#frag").unwrap(),
+        "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    );
+    assert_eq!(
+        validate_youtube_url("https://youtu.be/dQw4w9WgXcQ?si=tracking123&redirect=http://127.0.0.1").unwrap(),
+        "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    );
+    assert_eq!(
+        validate_youtube_url("https://www.youtube.com/shorts/dQw4w9WgXcQ?feature=share").unwrap(),
+        "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    );
+
+    // 6. Inyección de flags en parámetros query v o list rechazada
+    assert!(validate_youtube_url("https://www.youtube.com/watch?v=-flagInjection").is_err());
+    assert!(validate_youtube_url("https://www.youtube.com/playlist?list=--exec=calc").is_err());
+}
+
+#[tokio::test]
+async fn test_streaming_audio_player_rejects_malicious_video_ids() {
+    use tauri_app_lib::audio::StreamingAudioPlayer;
+
+    let player = StreamingAudioPlayer::new();
+
+    // Flag injection debe ser rechazado inmediatamente antes de tocar yt-dlp
+    let res_flag = player.play_stream("--exec=calc".to_string(), None, None).await;
+    assert!(res_flag.is_err());
+
+    // Path traversal debe ser rechazado inmediatamente
+    let res_traversal = player.play_stream("../../etc/passwd".to_string(), None, None).await;
+    assert!(res_traversal.is_err());
+
+    // URL de redirección abierta debe ser rechazada inmediatamente
+    let res_redirect = player
+        .play_stream(
+            "https://www.youtube.com/redirect?q=http://127.0.0.1:8080".to_string(),
+            None,
+            None,
+        )
+        .await;
+    assert!(res_redirect.is_err());
+}
+
+#[test]
+fn test_ytdlp_use_extractors_and_ignore_config_contract() {
+    use std::collections::HashSet;
+    use std::process::Command;
+    use tauri_app_lib::constants::ALLOWED_YTDLP_EXTRACTORS;
+    use tauri_app_lib::helpers::get_ytdlp_path;
+
+    let yt_dlp = get_ytdlp_path();
+
+    // 1. Verificar que todos los extractores en ALLOWED_YTDLP_EXTRACTORS existen en la versión actual de yt-dlp
+    let list_out = Command::new(&yt_dlp)
+        .args(["--ignore-config", "--list-extractors"])
+        .output()
+        .expect("Failed to execute yt-dlp --list-extractors");
+    assert!(list_out.status.success());
+
+    let supported: HashSet<String> = String::from_utf8_lossy(&list_out.stdout)
+        .lines()
+        .map(|l| l.trim().to_ascii_lowercase())
+        .collect();
+
+    for ext in ALLOWED_YTDLP_EXTRACTORS.split(',') {
+        assert!(
+            supported.contains(&ext.trim().to_ascii_lowercase()),
+            "Extractor '{}' in ALLOWED_YTDLP_EXTRACTORS is not recognized by this yt-dlp version",
+            ext
+        );
+    }
+
+    // 2. Verificar que --use-extractors aborta una URL de dominio ajeno (desactiva generic y otros sitios)
+    let foreign_out = Command::new(&yt_dlp)
+        .args([
+            "--ignore-config",
+            "--use-extractors",
+            ALLOWED_YTDLP_EXTRACTORS,
+            "--simulate",
+            "--",
+            "https://example.com/audio.mp3",
+        ])
+        .output()
+        .expect("Failed to execute yt-dlp on foreign URL");
+    assert!(
+        !foreign_out.status.success(),
+        "--use-extractors must reject non-YouTube URLs"
+    );
+    let stderr_foreign = String::from_utf8_lossy(&foreign_out.stderr);
+    assert!(
+        stderr_foreign.contains("No suitable extractor found for URL")
+            || stderr_foreign.contains("Unsupported URL"),
+        "Expected 'No suitable extractor found for URL' from yt-dlp, got: {}",
+        stderr_foreign
+    );
+
+    // 3. Verificar que --ignore-config ignora un archivo de configuración malicioso en XDG_CONFIG_HOME / HOME
+    let temp_cfg_root = std::env::temp_dir().join("ongaku_ytdlp_malicious_config_test");
+    let ytdlp_cfg_dir = temp_cfg_root.join("yt-dlp");
+    let _ = std::fs::remove_dir_all(&temp_cfg_root);
+    std::fs::create_dir_all(&ytdlp_cfg_dir).unwrap();
+    // Inyectamos un flag inválido/malicioso en XDG_CONFIG_HOME/yt-dlp/config y HOME/yt-dlp.conf
+    let bad_config = "--malicious-injected-flag-from-config\n";
+    std::fs::write(ytdlp_cfg_dir.join("config"), bad_config).unwrap();
+    std::fs::write(temp_cfg_root.join("yt-dlp.conf"), bad_config).unwrap();
+
+    // Sin --ignore-config, yt-dlp lee el archivo de configuración y aborta con "no such option"
+    let without_ignore = Command::new(&yt_dlp)
+        .env("XDG_CONFIG_HOME", &temp_cfg_root)
+        .env("HOME", &temp_cfg_root)
+        .args(["--simulate", "--", "https://www.youtube.com/watch?v=dQw4w9WgXcQ"])
+        .output()
+        .expect("Failed to run yt-dlp without --ignore-config");
+    assert!(
+        !without_ignore.status.success(),
+        "Precondition: yt-dlp without --ignore-config should fail due to injected config flag"
+    );
+    let stderr_without = String::from_utf8_lossy(&without_ignore.stderr);
+    assert!(
+        stderr_without.contains("--malicious-injected-flag-from-config"),
+        "Expected error mentioning injected config flag, got: {}",
+        stderr_without
+    );
+
+    // Con --ignore-config, yt-dlp ignora por completo el config malicioso
+    let with_ignore = Command::new(&yt_dlp)
+        .env("XDG_CONFIG_HOME", &temp_cfg_root)
+        .env("HOME", &temp_cfg_root)
+        .args([
+            "--ignore-config",
+            "--use-extractors",
+            ALLOWED_YTDLP_EXTRACTORS,
+            "--simulate",
+            "--",
+            "https://example.com/audio.mp3",
+        ])
+        .output()
+        .expect("Failed to run yt-dlp with --ignore-config");
+    let stderr_with = String::from_utf8_lossy(&with_ignore.stderr);
+    assert!(
+        !stderr_with.contains("--malicious-injected-flag-from-config"),
+        "--ignore-config must prevent yt-dlp from loading external config files, got: {}",
+        stderr_with
+    );
+
+    let _ = std::fs::remove_dir_all(&temp_cfg_root);
+}
+
+

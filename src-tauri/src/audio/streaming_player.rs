@@ -62,12 +62,15 @@ impl StreamingAudioPlayer {
     }
 
     pub fn find_cached_file(video_id: &str) -> Option<PathBuf> {
+        use crate::helpers::verify_regular_file_inside;
+
+        let clean_id = crate::helpers::extract_canonical_video_id(video_id).ok()?;
         let cache_dir = get_streaming_cache_dir();
-        let direct_mp3 = cache_dir.join(format!("{video_id}.mp3"));
-        if direct_mp3.is_file() {
-            if let Ok(meta) = direct_mp3.metadata() {
+        let direct_mp3 = cache_dir.join(format!("{clean_id}.mp3"));
+        if let Ok(verified) = verify_regular_file_inside(&cache_dir, &direct_mp3) {
+            if let Ok(meta) = verified.metadata() {
                 if meta.len() > 1024 {
-                    return Some(direct_mp3);
+                    return Some(verified);
                 }
             }
         }
@@ -75,14 +78,14 @@ impl StreamingAudioPlayer {
         if let Ok(entries) = fs::read_dir(&cache_dir) {
             for entry in entries.flatten() {
                 let path = entry.path();
-                if path.is_file() {
-                    if let Some(stem) = path.file_stem() {
-                        if stem == video_id {
-                            let ext = path.extension().and_then(|e| e.to_str()).unwrap_or("");
-                            if ["mp3", "m4a", "flac", "wav", "ogg"].contains(&ext) {
-                                if let Ok(meta) = path.metadata() {
+                if let Some(stem) = path.file_stem() {
+                    if stem == clean_id.as_str() {
+                        let ext = path.extension().and_then(|e| e.to_str()).unwrap_or("");
+                        if ["mp3", "m4a", "flac", "wav", "ogg"].contains(&ext) {
+                            if let Ok(verified) = verify_regular_file_inside(&cache_dir, &path) {
+                                if let Ok(meta) = verified.metadata() {
                                     if meta.len() > 1024 {
-                                        return Some(path);
+                                        return Some(verified);
                                     }
                                 }
                             }
@@ -119,16 +122,19 @@ impl StreamingAudioPlayer {
         initial_volume: Option<f32>,
         start_pos_secs: Option<f64>,
     ) -> Result<(), AudioPlayerError> {
-        let clean_id = video_id.trim();
-        if clean_id.is_empty() {
+        let trimmed_id = video_id.trim();
+        if trimmed_id.is_empty() {
             return Err(AudioPlayerError::NotFound("Empty video ID".to_string()));
         }
+
+        let clean_id = crate::helpers::extract_canonical_video_id(trimmed_id)
+            .map_err(|e| AudioPlayerError::Internal(e.to_string()))?;
 
         let request_generation = self.generation.fetch_add(1, Ordering::SeqCst) + 1;
         self.stop_active_download();
 
         // Check if file is already in streaming cache
-        let cached_path_opt = Self::find_cached_file(clean_id);
+        let cached_path_opt = Self::find_cached_file(&clean_id);
 
         let audio_path = match cached_path_opt {
             Some(path) => path,
@@ -141,16 +147,16 @@ impl StreamingAudioPlayer {
                 }
 
                 let bin_dir = get_bin_dir();
-                let video_url = if clean_id.starts_with("http://") || clean_id.starts_with("https://") {
-                    clean_id.to_string()
-                } else {
-                    format!("https://www.youtube.com/watch?v={clean_id}")
-                };
-
-                let output_template = get_streaming_cache_dir().join(format!("{clean_id}.%(ext)s"));
+                let cache_dir = crate::helpers::prepare_secure_dir(&get_streaming_cache_dir())
+                    .map_err(AudioPlayerError::Internal)?;
+                let video_url = format!("https://www.youtube.com/watch?v={clean_id}");
+                let output_template = cache_dir.join(format!("{clean_id}.%(ext)s"));
 
                 let mut cmd = Command::new(&ytdlp_path);
                 cmd.args([
+                    "--ignore-config",
+                    "--use-extractors",
+                    crate::constants::ALLOWED_YTDLP_EXTRACTORS,
                     "--ffmpeg-location",
                     bin_dir.to_string_lossy().as_ref(),
                     "--encoding",
@@ -164,6 +170,7 @@ impl StreamingAudioPlayer {
                     "--no-warnings",
                     "-o",
                     output_template.to_string_lossy().as_ref(),
+                    "--",
                     &video_url,
                 ]);
                 cmd.stdout(Stdio::piped());
@@ -201,7 +208,7 @@ impl StreamingAudioPlayer {
                     ));
                 }
 
-                Self::find_cached_file(clean_id).ok_or_else(|| {
+                Self::find_cached_file(&clean_id).ok_or_else(|| {
                     AudioPlayerError::NotFound(
                         "Downloaded streaming audio file could not be found".to_string(),
                     )

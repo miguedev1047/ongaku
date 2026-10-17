@@ -124,6 +124,9 @@ pub async fn get_youtube_stream_url(video_id: String) -> Result<String, ServiceE
     // 3. Extract direct audio stream URL with yt-dlp
     let mut cmd = Command::new(&ytdlp_path);
     cmd.args([
+        "--ignore-config",
+        "--use-extractors",
+        crate::constants::ALLOWED_YTDLP_EXTRACTORS,
         "-g",
         "-f",
         "bestaudio/best",
@@ -164,6 +167,15 @@ pub async fn get_youtube_stream_url(video_id: String) -> Result<String, ServiceE
         ));
     }
 
+    let parsed_stream = url::Url::parse(&stream_url).map_err(|_| {
+        ServiceError::Execution("Invalid stream URL returned by extractor".to_string())
+    })?;
+    if parsed_stream.scheme() != "https" {
+        return Err(ServiceError::Execution(
+            "Insecure stream URL scheme rejected".to_string(),
+        ));
+    }
+
     // 4. Cache valid URL
     {
         let mut cache = STREAM_CACHE.write().await;
@@ -182,6 +194,9 @@ pub async fn resolve_url_info(url: &str) -> Result<YoutubeSearchResult, ServiceE
 
     let mut cmd = Command::new(&ytdlp_path);
     cmd.args([
+        "--ignore-config",
+        "--use-extractors",
+        crate::constants::ALLOWED_YTDLP_EXTRACTORS,
         "--dump-json",
         "--no-warnings",
         "--no-playlist",
@@ -266,6 +281,9 @@ pub async fn resolve_playlist_info(url: &str) -> Result<Vec<YoutubeSearchResult>
 
     let mut cmd = Command::new(&ytdlp_path);
     cmd.args([
+        "--ignore-config",
+        "--use-extractors",
+        crate::constants::ALLOWED_YTDLP_EXTRACTORS,
         "--flat-playlist",
         "-J",
         "--no-warnings",

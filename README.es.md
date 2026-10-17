@@ -44,3 +44,4 @@ Para ver la guía de instalación, solución de problemas, características comp
 
 - [Compatibilidad de Plataformas y Requisitos](docs/es/compatibilidad.md) *(Aviso de SmartScreen en Windows, aprobación de Gatekeeper en macOS, dependencias multimedia en Linux)*
 - [Documentación Completa y Arquitectura](docs/es/bienvenida.md) *(Características detalladas, arquitectura técnica y configuración para desarrollo)*
+- [Arquitectura de Seguridad y Defensa en Profundidad](docs/es/seguridad.md) *(Blindaje de `yt-dlp`, matriz de amenazas, pruebas en CI y reporte de vulnerabilidades)*
