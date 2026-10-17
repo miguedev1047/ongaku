@@ -97,8 +97,18 @@ pub async fn get_youtube_stream_url(video_id: String) -> Result<String, ServiceE
     }
 
     let video_url = if clean_id.starts_with("http://") || clean_id.starts_with("https://") {
-        clean_id.to_string()
+        crate::helpers::validate_youtube_url(clean_id)?
     } else {
+        if clean_id.starts_with('-')
+            || clean_id.contains('\0')
+            || clean_id.contains('/')
+            || clean_id.contains('\\')
+            || clean_id.contains(' ')
+            || clean_id.contains('&')
+            || clean_id.contains('?')
+        {
+            return Err(ServiceError::Validation("Invalid video ID format".to_string()));
+        }
         format!("https://www.youtube.com/watch?v={clean_id}")
     };
 
@@ -130,6 +140,7 @@ pub async fn get_youtube_stream_url(video_id: String) -> Result<String, ServiceE
         "--no-playlist",
         "--match-filter",
         "!is_live",
+        "--",
         &video_url,
     ]);
     cmd.stdout(Stdio::piped());
@@ -173,10 +184,7 @@ pub async fn get_youtube_stream_url(video_id: String) -> Result<String, ServiceE
 
 /// Resolves single video or audio metadata without downloading the file.
 pub async fn resolve_url_info(url: &str) -> Result<YoutubeSearchResult, ServiceError> {
-    let clean_url = url.trim();
-    if clean_url.is_empty() {
-        return Err(ServiceError::Validation("URL cannot be empty".to_string()));
-    }
+    let valid_url = crate::helpers::validate_youtube_url(url)?;
 
     crate::services::binaries::ensure_binaries().await?;
     let ytdlp_path = get_ytdlp_path();
@@ -186,7 +194,8 @@ pub async fn resolve_url_info(url: &str) -> Result<YoutubeSearchResult, ServiceE
         "--dump-json",
         "--no-warnings",
         "--no-playlist",
-        clean_url,
+        "--",
+        &valid_url,
     ]);
     cmd.stdout(Stdio::piped());
     cmd.stderr(Stdio::piped());
@@ -244,7 +253,7 @@ pub async fn resolve_url_info(url: &str) -> Result<YoutubeSearchResult, ServiceE
     let resolved_url = json
         .get("webpage_url")
         .and_then(|v| v.as_str())
-        .unwrap_or(clean_url)
+        .unwrap_or(&valid_url)
         .to_string();
 
     Ok(YoutubeSearchResult {
@@ -259,10 +268,7 @@ pub async fn resolve_url_info(url: &str) -> Result<YoutubeSearchResult, ServiceE
 
 /// Resolves playlist items as a flat array of YoutubeSearchResult without downloading files.
 pub async fn resolve_playlist_info(url: &str) -> Result<Vec<YoutubeSearchResult>, ServiceError> {
-    let clean_url = url.trim();
-    if clean_url.is_empty() {
-        return Err(ServiceError::Validation("URL cannot be empty".to_string()));
-    }
+    let valid_url = crate::helpers::validate_youtube_url(url)?;
 
     crate::services::binaries::ensure_binaries().await?;
     let ytdlp_path = get_ytdlp_path();
@@ -274,7 +280,8 @@ pub async fn resolve_playlist_info(url: &str) -> Result<Vec<YoutubeSearchResult>
         "--no-warnings",
         "--extractor-args",
         "youtube:player_client=android,web",
-        clean_url,
+        "--",
+        &valid_url,
     ]);
     cmd.stdout(Stdio::piped());
     cmd.stderr(Stdio::piped());
@@ -398,7 +405,7 @@ pub async fn resolve_playlist_info(url: &str) -> Result<Vec<YoutubeSearchResult>
             let item_url = json
                 .get("webpage_url")
                 .and_then(|v| v.as_str())
-                .unwrap_or(clean_url)
+                .unwrap_or(&valid_url)
                 .to_string();
 
             results.push(YoutubeSearchResult {

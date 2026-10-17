@@ -50,3 +50,71 @@ pub fn clean_youtube_url(raw_url: &str) -> String {
     }
     raw_url.to_string()
 }
+
+/// Validates that an input URL belongs strictly to YouTube or YouTube Music
+/// and contains no malicious command injection tokens.
+pub fn validate_youtube_url(raw_url: &str) -> Result<String, crate::services::errors::ServiceError> {
+    use crate::services::errors::ServiceError;
+
+    let trimmed = raw_url.trim();
+    if trimmed.is_empty() {
+        return Err(ServiceError::Validation("URL cannot be empty".to_string()));
+    }
+
+    // Disallow flag injections or control characters
+    if trimmed.starts_with('-') || trimmed.contains('\0') || trimmed.contains('\n') || trimmed.contains('\r') {
+        return Err(ServiceError::Validation("Invalid characters or flags detected in URL".to_string()));
+    }
+
+    // Must be HTTP or HTTPS
+    if !trimmed.starts_with("http://") && !trimmed.starts_with("https://") {
+        return Err(ServiceError::Validation("URL must start with http:// or https://".to_string()));
+    }
+
+    // Extract domain host safely
+    let host_start = if let Some(stripped) = trimmed.strip_prefix("https://") {
+        stripped
+    } else if let Some(stripped) = trimmed.strip_prefix("http://") {
+        stripped
+    } else {
+        trimmed
+    };
+
+    let host = host_start
+        .split('/')
+        .next()
+        .unwrap_or("")
+        .split(':')
+        .next()
+        .unwrap_or("")
+        .to_ascii_lowercase();
+
+    let is_valid_host = crate::constants::ALLOWED_URLS
+        .iter()
+        .any(|&allowed| host == allowed || host.ends_with(&format!(".{allowed}")));
+
+    if !is_valid_host {
+        return Err(ServiceError::Validation(format!(
+            "Only YouTube and YouTube Music URLs are supported. Host '{}' is not allowed.",
+            host
+        )));
+    }
+
+    Ok(trimmed.to_string())
+}
+
+/// Validates that an ID does not contain directory traversal or invalid characters.
+pub fn validate_task_id(id: &str) -> Result<&str, crate::services::errors::ServiceError> {
+    use crate::services::errors::ServiceError;
+
+    let trimmed = id.trim();
+    if trimmed.is_empty() {
+        return Err(ServiceError::Validation("Task ID cannot be empty".to_string()));
+    }
+
+    if trimmed.contains("..") || trimmed.contains('/') || trimmed.contains('\\') || trimmed.starts_with('-') {
+        return Err(ServiceError::Validation("Invalid task ID format".to_string()));
+    }
+
+    Ok(trimmed)
+}

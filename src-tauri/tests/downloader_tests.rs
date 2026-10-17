@@ -85,3 +85,45 @@ async fn test_download_manager_state_lifecycle() {
         assert!(!pids.contains_key(task_id));
     }
 }
+
+#[test]
+fn test_validate_youtube_url_security() {
+    use tauri_app_lib::helpers::validate_youtube_url;
+
+    // Valid URLs
+    assert!(validate_youtube_url("https://www.youtube.com/watch?v=dQw4w9WgXcQ").is_ok());
+    assert!(validate_youtube_url("https://youtube.com/watch?v=dQw4w9WgXcQ").is_ok());
+    assert!(validate_youtube_url("https://youtu.be/dQw4w9WgXcQ").is_ok());
+    assert!(validate_youtube_url("https://music.youtube.com/watch?v=dQw4w9WgXcQ").is_ok());
+    assert!(validate_youtube_url("https://music.youtube.com/playlist?list=PL123456789").is_ok());
+    assert!(validate_youtube_url("http://www.youtube.com/watch?v=dQw4w9WgXcQ").is_ok());
+
+    // Flag injection attempts
+    assert!(validate_youtube_url("--dump-json").is_err());
+    assert!(validate_youtube_url("-v").is_err());
+    assert!(validate_youtube_url("--exec rm -rf /").is_err());
+
+    // Non-allowed hosts and protocols
+    assert!(validate_youtube_url("https://evil.com/watch?v=123").is_err());
+    assert!(validate_youtube_url("https://youtube.com.attacker.com/watch?v=123").is_err());
+    assert!(validate_youtube_url("file:///etc/passwd").is_err());
+    assert!(validate_youtube_url("javascript:alert(1)").is_err());
+    assert!(validate_youtube_url("").is_err());
+    assert!(validate_youtube_url("   ").is_err());
+}
+
+#[test]
+fn test_validate_task_id_security() {
+    use tauri_app_lib::helpers::validate_task_id;
+
+    // Valid task IDs
+    assert!(validate_task_id("task-12345").is_ok());
+    assert!(validate_task_id("550e8400-e29b-41d4-a716-446655440000").is_ok());
+
+    // Directory traversal / flag attacks
+    assert!(validate_task_id("../escape").is_err());
+    assert!(validate_task_id("dir/subdir").is_err());
+    assert!(validate_task_id("dir\\subdir").is_err());
+    assert!(validate_task_id("-flag").is_err());
+    assert!(validate_task_id("").is_err());
+}

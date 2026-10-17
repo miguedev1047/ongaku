@@ -9,9 +9,18 @@ import { YoutubeSearchNav } from '@/components/layout/app-sidebar/navigations/yo
 import { PlaylistNav } from '@/components/layout/app-sidebar/navigations/playlist-nav'
 import { LibraryNav } from '@/components/layout/app-sidebar/navigations/library-nav'
 import { DownloadSongsNav } from '@/components/layout/app-sidebar/navigations/download-songs-nav'
+import { systemHealthQueryOpts } from '@/shared/queries/system-health'
+import { useQuery } from '@tanstack/react-query'
+import { Show } from '@/components/utility/show'
 
 export function AppSidebarNav() {
   const { t } = useTranslation()
+  const { data: health } = useQuery(systemHealthQueryOpts())
+
+  const binaries =
+    health?.binariesInstalled ??
+    (health?.ytdlpInstalled && health?.ffmpegInstalled)
+  const isBinariesInstalled = Boolean(binaries)
 
   return (
     <SidebarGroup>
@@ -20,8 +29,10 @@ export function AppSidebarNav() {
         <SidebarMenu>
           <PlaylistNav />
           <LibraryNav />
-          <DownloadSongsNav />
-          <YoutubeSearchNav />
+          <Show when={isBinariesInstalled}>
+            <DownloadSongsNav />
+            <YoutubeSearchNav />
+          </Show>
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>

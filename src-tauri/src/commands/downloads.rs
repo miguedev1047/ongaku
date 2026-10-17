@@ -15,6 +15,9 @@ pub async fn download_song(
     db: State<'_, DbPool>,
     app: AppHandle,
 ) -> Result<PlaylistSong, String> {
+    crate::helpers::validate_name(&playlist_name)
+        .map_err(|err| format!("Invalid playlist name: {err}"))?;
+
     // 1. Check if song already exists in library
     if let Ok(conn) = db.get() {
         if let Ok(Some(existing_song)) =

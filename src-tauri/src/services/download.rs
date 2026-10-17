@@ -94,13 +94,18 @@ pub async fn download_song_from_url<F>(
 where
     F: FnOnce(u32),
 {
+    use crate::helpers::{validate_task_id, validate_youtube_url};
+
+    let safe_id = validate_task_id(id)?;
+    let validated_url = validate_youtube_url(url)?;
+
     ensure_binaries().await?;
 
     let ytdlp_path = get_ytdlp_path();
     let bin_dir = get_bin_dir();
 
     // Isolated staging directory per task ID
-    let staging_task_dir = get_staging_dir().join(id);
+    let staging_task_dir = get_staging_dir().join(safe_id);
     if !staging_task_dir.exists() {
         fs::create_dir_all(&staging_task_dir).map_err(|err| {
             ServiceError::Execution(format!("Failed to create staging directory: {}", err))
@@ -108,11 +113,11 @@ where
     }
 
     // Clean URL: strip playlist and radio params if from YouTube
-    let is_youtube = url.contains("youtube.com") || url.contains("youtu.be");
+    let is_youtube = validated_url.contains("youtube.com") || validated_url.contains("youtu.be");
     let clean_url = if is_youtube {
-        clean_youtube_url(url)
+        clean_youtube_url(&validated_url)
     } else {
-        url.to_string()
+        validated_url
     };
 
     let output_template = format!(
@@ -148,6 +153,7 @@ where
         "--newline".to_string(),
         "-o".to_string(),
         output_template,
+        "--".to_string(),
         clean_url,
     ]);
 
