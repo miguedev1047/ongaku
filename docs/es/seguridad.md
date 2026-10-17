@@ -69,8 +69,8 @@ Cada control de seguridad está respaldado por pruebas de contrato automatizadas
 
 La seguridad es un proceso continuo y el feedback de la comunidad es fundamental para mejorar Ongaku.
 
-- **¿Encontraste una vulnerabilidad, un vector de evasión o un caso borde?**  
-  Por favor abre un **[Issue en GitHub](https://github.com/miguedev1047/ongaku/issues)** describiendo el vector, los pasos para reproducirlo y el componente afectado.
+- **¿Encontraste una vulnerabilidad?**  
+  Por favor abre un **[Issue en GitHub](https://github.com/miguedev1047/ongaku/issues)** describiendo el problema, los pasos para reproducirlo y el componente afectado.
 - **¿Ya lo resolviste o implementaste una mejora de seguridad?**  
   ¡Te invitamos a abrir un **[Pull Request](https://github.com/miguedev1047/ongaku/pulls)** directamente! Por favor incluye una prueba unitaria o de contrato en `src-tauri/tests/` para que la mitigación quede protegida de forma permanente en CI.
 
