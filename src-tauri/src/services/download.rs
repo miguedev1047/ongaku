@@ -102,7 +102,8 @@ where
 {
     use crate::constants::ALLOWED_YTDLP_EXTRACTORS;
     use crate::helpers::{
-        prepare_secure_dir, validate_task_id, validate_youtube_url, verify_regular_file_inside,
+        canonicalize_path, prepare_secure_dir, validate_task_id, validate_youtube_url,
+        verify_regular_file_inside,
     };
 
     let safe_id = validate_task_id(id)?;
@@ -279,7 +280,7 @@ where
         }
     };
 
-    let canonical_target_dir = target_dir.canonicalize().map_err(|err| {
+    let canonical_target_dir = canonicalize_path(target_dir).map_err(|err| {
         let _ = fs::remove_dir_all(&staging_task_dir);
         ServiceError::Execution(format!("Target directory is invalid: {}", err))
     })?;

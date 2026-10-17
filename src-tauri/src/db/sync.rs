@@ -8,7 +8,7 @@ use rusqlite::{params, Connection, Result};
 
 use crate::helpers::{
     created_time, extract_song_id, extract_song_metadata, extract_song_name, get_cache_pictures_dir,
-    get_library_dir, is_audio_file,
+    get_library_dir, is_audio_file, normalize_path,
 };
 
 #[derive(Debug, Clone)]
@@ -95,7 +95,7 @@ pub fn cleanup_orphan_covers(conn: &Connection) -> Result<usize> {
 
 pub fn sync_library(conn: &mut Connection) -> Result<SyncStats> {
     let start_time = Instant::now();
-    let library_dir = get_library_dir();
+    let library_dir = normalize_path(&get_library_dir());
 
     if !library_dir.exists() {
         let _ = fs::create_dir_all(&library_dir);
@@ -109,11 +109,11 @@ pub fn sync_library(conn: &mut Connection) -> Result<SyncStats> {
 
     // 1. Scan flat library/ directory
     let mut discovered_files = Vec::new();
-    let mut paths_on_disk = HashSet::new();
+    let mut ids_on_disk = HashSet::new();
 
     if let Ok(entries) = fs::read_dir(&library_dir) {
         for entry in entries.flatten() {
-            let sub_path = entry.path();
+            let sub_path = normalize_path(&entry.path());
             if sub_path.is_file() && is_audio_file(&sub_path) {
                 let file_name = entry.file_name().to_string_lossy().to_string();
                 let meta = entry.metadata().ok();
@@ -132,8 +132,7 @@ pub fn sync_library(conn: &mut Connection) -> Result<SyncStats> {
                     id = format!("{}", mtime);
                 }
 
-                let path_str = sub_path.to_string_lossy().to_string();
-                paths_on_disk.insert(path_str);
+                ids_on_disk.insert(id.clone());
 
                 discovered_files.push(DiscoveredFile {
                     id,
@@ -147,28 +146,34 @@ pub fn sync_library(conn: &mut Connection) -> Result<SyncStats> {
         }
     }
 
-    // 2. Query current DB state (path, mtime, file_size)
-    let mut existing_songs: HashMap<String, (i64, i64)> = HashMap::new();
+    // 2. Query current DB state keyed by `id` -> (path, mtime, file_size)
+    let mut existing_songs: HashMap<String, (String, i64, i64)> = HashMap::new();
     {
-        let mut stmt = conn.prepare("SELECT path, mtime, file_size FROM songs")?;
+        let mut stmt = conn.prepare("SELECT id, path, mtime, file_size FROM songs")?;
         let rows = stmt.query_map([], |row| {
-            let p: String = row.get(0)?;
-            let m: i64 = row.get(1)?;
-            let s: i64 = row.get(2)?;
-            Ok((p, (m, s)))
+            let id: String = row.get(0)?;
+            let p: String = row.get(1)?;
+            let m: i64 = row.get(2)?;
+            let s: i64 = row.get(3)?;
+            Ok((id, (p, m, s)))
         })?;
         for r in rows.flatten() {
             existing_songs.insert(r.0, r.1);
         }
     }
 
-    // 3. Compute delta
+    // 3. Compute delta by `id` (preserving playlist_songs across Unix <-> Windows or path prefix changes)
     let mut files_to_parse = Vec::new();
+    let mut paths_to_relocate: Vec<(String, String, String)> = Vec::new();
+
     for file in discovered_files {
         let path_str = file.path.to_string_lossy().to_string();
-        if let Some(&(saved_mtime, saved_size)) = existing_songs.get(&path_str) {
-            if saved_mtime == file.mtime && saved_size == file.file_size as i64 {
-                continue; // Skip parsing: identical mtime and size
+        if let Some((saved_path, saved_mtime, saved_size)) = existing_songs.get(&file.id) {
+            if *saved_mtime == file.mtime && *saved_size == file.file_size as i64 {
+                if *saved_path != path_str {
+                    paths_to_relocate.push((file.id, path_str, file.file_name));
+                }
+                continue; // Skip audio tag parsing: identical mtime and size
             }
         }
         files_to_parse.push(file);
@@ -176,7 +181,7 @@ pub fn sync_library(conn: &mut Connection) -> Result<SyncStats> {
 
     let songs_to_delete: Vec<String> = existing_songs
         .keys()
-        .filter(|p| !paths_on_disk.contains(*p))
+        .filter(|id| !ids_on_disk.contains(*id))
         .cloned()
         .collect();
 
@@ -204,13 +209,20 @@ pub fn sync_library(conn: &mut Connection) -> Result<SyncStats> {
         .collect();
 
     // 5. Single atomic SQLite transaction for writes
-    let added_count = parsed_songs.len();
+    let added_count = parsed_songs.len() + paths_to_relocate.len();
     let deleted_songs_count = songs_to_delete.len();
 
     let tx = conn.transaction()?;
 
-    for song_path in &songs_to_delete {
-        tx.execute("DELETE FROM songs WHERE path = ?1", params![song_path])?;
+    for song_id in &songs_to_delete {
+        tx.execute("DELETE FROM songs WHERE id = ?1", params![song_id])?;
+    }
+
+    for (song_id, new_path, new_file_name) in paths_to_relocate {
+        tx.execute(
+            "UPDATE songs SET path = ?1, file_name = ?2 WHERE id = ?3",
+            params![new_path, new_file_name, song_id],
+        )?;
     }
 
     for song in parsed_songs {

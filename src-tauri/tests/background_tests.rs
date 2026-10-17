@@ -88,6 +88,9 @@ fn test_save_and_get_and_delete_background_flow() {
     }
 
     let _ = fs::remove_dir_all(&temp_root);
+    if let Some(config_base) = dirs::config_dir() {
+        let _ = fs::remove_file(config_base.join("ongaku").join("location.txt"));
+    }
 }
 
 fn uuid_simple() -> u128 {

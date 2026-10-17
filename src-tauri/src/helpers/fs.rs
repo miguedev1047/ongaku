@@ -4,9 +4,9 @@ use std::path::{Path, PathBuf};
 use std::time::UNIX_EPOCH;
 
 use crate::helpers::{
-    ensure_paths_config, get_backgrounds_dir, get_bin_dir, get_cache_dir, get_cache_pictures_dir,
-    get_cache_thumbs_dir, get_config_dir, get_db_dir, get_library_dir, get_staging_dir,
-    get_streaming_cache_dir,
+    canonicalize_path, ensure_paths_config, get_backgrounds_dir, get_bin_dir, get_cache_dir,
+    get_cache_pictures_dir, get_cache_thumbs_dir, get_config_dir, get_db_dir, get_library_dir,
+    get_staging_dir, get_streaming_cache_dir,
 };
 
 #[derive(Debug, PartialEq, Eq)]
@@ -31,10 +31,8 @@ pub fn verify_regular_file_inside(root: &Path, candidate: &Path) -> Result<PathB
         return Err(ResolveError::NotFound);
     }
 
-    let canonical_root = root.canonicalize().map_err(|_| ResolveError::NotFound)?;
-    let canonical_file = candidate
-        .canonicalize()
-        .map_err(|_| ResolveError::NotFound)?;
+    let canonical_root = canonicalize_path(root).map_err(|_| ResolveError::NotFound)?;
+    let canonical_file = canonicalize_path(candidate).map_err(|_| ResolveError::NotFound)?;
 
     if !canonical_file.starts_with(&canonical_root) {
         return Err(ResolveError::OutsideRoot);
@@ -81,7 +79,7 @@ pub fn prepare_secure_dir(dir: &Path) -> Result<PathBuf, String> {
         })?;
     }
 
-    dir.canonicalize().map_err(|err| {
+    canonicalize_path(dir).map_err(|err| {
         format!(
             "Failed to canonicalize directory '{}': {}",
             dir.display(),

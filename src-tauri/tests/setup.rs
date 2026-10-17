@@ -53,6 +53,9 @@ fn test_ensure_dirs_creates_all_required_directories() {
 
     // Cleanup test temp dir
     let _ = fs::remove_dir_all(&temp_root);
+    if let Some(config_base) = dirs::config_dir() {
+        let _ = fs::remove_file(config_base.join("ongaku").join("location.txt"));
+    }
 }
 
 #[test]
@@ -86,6 +89,9 @@ fn test_db_init_and_sync_in_setup() {
 
     // Cleanup test temp dir
     let _ = fs::remove_dir_all(&temp_root);
+    if let Some(config_base) = dirs::config_dir() {
+        let _ = fs::remove_file(config_base.join("ongaku").join("location.txt"));
+    }
 }
 
 #[test]
@@ -112,6 +118,9 @@ fn test_staging_directory_cleans_leftovers() {
 
     // Cleanup test temp dir
     let _ = fs::remove_dir_all(&temp_root);
+    if let Some(config_base) = dirs::config_dir() {
+        let _ = fs::remove_file(config_base.join("ongaku").join("location.txt"));
+    }
 }
 
 #[test]
@@ -153,6 +162,9 @@ fn test_streaming_cache_cleans_orphans_in_background() {
 
     // Cleanup test temp dir
     let _ = fs::remove_dir_all(&temp_root);
+    if let Some(config_base) = dirs::config_dir() {
+        let _ = fs::remove_file(config_base.join("ongaku").join("location.txt"));
+    }
 }
 
 #[test]
@@ -189,6 +201,9 @@ fn test_clean_streaming_cache_dir_directly() {
 
     // Cleanup test temp dir
     let _ = fs::remove_dir_all(&temp_root);
+    if let Some(config_base) = dirs::config_dir() {
+        let _ = fs::remove_file(config_base.join("ongaku").join("location.txt"));
+    }
 }
 
 fn uuid_simple() -> u128 {

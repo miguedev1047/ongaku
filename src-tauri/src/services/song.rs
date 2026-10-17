@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::helpers::{
     created_time, extract_song_id, extract_song_metadata, extract_song_name,
-    get_cache_pictures_dir, resolve_inside, validate_name, validate_song_id,
+    get_cache_pictures_dir, normalize_path, resolve_inside, validate_name, validate_song_id,
 };
 use crate::services::errors::ServiceError;
 use crate::services::playlist::PlaylistSong;
@@ -312,7 +312,8 @@ pub fn index_downloaded_song(
     fallback_id: &str,
     playlist_name: &str,
 ) -> Result<PlaylistSong, ServiceError> {
-    let file_name = file_path
+    let clean_path = normalize_path(file_path);
+    let file_name = clean_path
         .file_name()
         .map(|f| f.to_string_lossy().to_string())
         .ok_or_else(|| ServiceError::Execution("Invalid downloaded song filename".to_string()))?;
@@ -323,26 +324,26 @@ pub fn index_downloaded_song(
     } else {
         song_id
     };
-    let metadata = extract_song_metadata(file_path);
-    let created = created_time(file_path.metadata());
+    let metadata = extract_song_metadata(&clean_path);
+    let created = created_time(clean_path.metadata());
 
     let song = PlaylistSong {
         name: extract_song_name(&file_name),
         id: resolved_id.clone(),
         playlist_name: playlist_name.to_string(),
-        path: file_path.to_string_lossy().to_string(),
+        path: clean_path.to_string_lossy().to_string(),
         created,
         metadata,
     };
 
-    let mtime = file_path
+    let mtime = clean_path
         .metadata()
         .ok()
         .and_then(|m| m.modified().ok())
         .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok())
         .map(|d| d.as_millis() as i64)
         .unwrap_or(0);
-    let file_size = file_path.metadata().map(|m| m.len() as i64).unwrap_or(0);
+    let file_size = clean_path.metadata().map(|m| m.len() as i64).unwrap_or(0);
 
     conn.execute(
         "INSERT INTO songs (id, path, file_name, title, artist, album, duration, file_size, mtime, created_at)

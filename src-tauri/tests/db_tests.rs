@@ -600,3 +600,158 @@ fn test_wallpaper_service_validation() {
     // Unknown field
     assert!(set_wallpaper_field(&conn, "arbitrary_field", "val").is_err());
 }
+
+#[test]
+fn test_normalize_path_and_canonicalize_path() {
+    use std::path::Path;
+    use tauri_app_lib::helpers::{canonicalize_path, normalize_path};
+
+    let temp_dir = std::env::temp_dir().join("ongaku_norm_path_test");
+    let _ = fs::create_dir_all(&temp_dir);
+
+    let canon = canonicalize_path(&temp_dir).expect("canonicalize_path must succeed");
+    let canon_str = canon.to_string_lossy();
+    assert!(
+        !canon_str.starts_with(r"\\?\"),
+        "canonicalize_path must never return a Windows verbatim prefix: {canon_str}"
+    );
+
+    #[cfg(windows)]
+    {
+        let verbatim = Path::new(r"\\?\C:\Users\migue\Music\ongaku\library\Song [abc].mp3");
+        assert_eq!(
+            normalize_path(verbatim),
+             std::path::PathBuf::from(r"C:\Users\migue\Music\ongaku\library\Song [abc].mp3")
+        );
+
+        let unc = Path::new(r"\\?\UNC\server\share\ongaku\Song [abc].mp3");
+        assert_eq!(
+            normalize_path(unc),
+            std::path::PathBuf::from(r"\\server\share\ongaku\Song [abc].mp3")
+        );
+    }
+
+    let _ = fs::remove_dir_all(&temp_dir);
+}
+
+#[test]
+fn test_sync_library_preserves_playlists_across_unix_and_windows_paths() {
+    let _guard = TEST_LOCK.lock().unwrap();
+    let nanos = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_nanos();
+    let temp_app = std::env::temp_dir().join(format!("ongaku_cross_os_sync_test_{}", nanos));
+    let temp_lib = temp_app.join("library");
+    fs::create_dir_all(&temp_lib).unwrap();
+    let _ = tauri_app_lib::helpers::set_app_dir(temp_app.clone());
+
+    // Create 2 physical audio files on disk in the active library directory
+    let song1_file = temp_lib.join("Track One [id_unix_migrated].mp3");
+    let song2_file = temp_lib.join("Track Two [id_win_verbatim].mp3");
+    fs::write(&song1_file, b"mp3 audio bytes 1").unwrap();
+    fs::write(&song2_file, b"mp3 audio bytes 2").unwrap();
+
+    let mtime1 = song1_file
+        .metadata()
+        .unwrap()
+        .modified()
+        .unwrap()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_millis() as i64;
+    let size1 = song1_file.metadata().unwrap().len() as i64;
+
+    let mtime2 = song2_file
+        .metadata()
+        .unwrap()
+        .modified()
+        .unwrap()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_millis() as i64;
+    let size2 = song2_file.metadata().unwrap().len() as i64;
+
+    let mut conn = setup_in_memory_db();
+    create_playlist_in_db(&conn, "Uma Musume").unwrap();
+    create_playlist_in_db(&conn, "Hololive").unwrap();
+
+    // Seed song 1 with a legacy Linux path (/home/miguel/...)
+    conn.execute(
+        "INSERT INTO songs (id, path, file_name, title, artist, album, duration, file_size, mtime, created_at)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
+        rusqlite::params![
+            "id_unix_migrated",
+            "/home/miguel/Music/ongaku/library/Track One [id_unix_migrated].mp3",
+            "Track One [id_unix_migrated].mp3",
+            "Track One",
+            Some("Artist 1"),
+            None::<String>,
+            Some(180.0),
+            size1,
+            mtime1,
+            1000
+        ],
+    )
+    .unwrap();
+
+    // Seed song 2 with a Windows verbatim UNC path (\\?\C:\...)
+    conn.execute(
+        "INSERT INTO songs (id, path, file_name, title, artist, album, duration, file_size, mtime, created_at)
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
+        rusqlite::params![
+            "id_win_verbatim",
+            r"\\?\C:\Users\migue\Music\ongaku\library\Track Two [id_win_verbatim].mp3",
+            "Track Two [id_win_verbatim].mp3",
+            "Track Two",
+            Some("Artist 2"),
+            None::<String>,
+            Some(200.0),
+            size2,
+            mtime2,
+            1000
+        ],
+    )
+    .unwrap();
+
+    add_song_to_playlist(&conn, "Uma Musume", "id_unix_migrated").unwrap();
+    add_song_to_playlist(&conn, "Hololive", "id_win_verbatim").unwrap();
+
+    // Run startup sequence: sync_library followed by cleanup_orphan_songs
+    let stats = sync_library(&mut conn).unwrap();
+    assert_eq!(stats.deleted_songs, 0, "No songs should be deleted when their IDs exist on disk");
+
+    let orphans_removed = tauri_app_lib::db::sync::cleanup_orphan_songs(&mut conn).unwrap();
+    assert_eq!(orphans_removed, 0, "Playlist songs must NOT become orphans after sync_library");
+
+    // Verify both playlists still have their songs intact
+    let uma_songs = get_playlist_songs(&conn, "Uma Musume").unwrap();
+    assert_eq!(uma_songs.len(), 1);
+    assert_eq!(uma_songs[0].id, "id_unix_migrated");
+    assert_eq!(
+        uma_songs[0].path,
+        tauri_app_lib::helpers::normalize_path(&song1_file)
+            .to_string_lossy()
+            .to_string()
+    );
+
+    let holo_songs = get_playlist_songs(&conn, "Hololive").unwrap();
+    assert_eq!(holo_songs.len(), 1);
+    assert_eq!(holo_songs[0].id, "id_win_verbatim");
+    assert_eq!(
+        holo_songs[0].path,
+        tauri_app_lib::helpers::normalize_path(&song2_file)
+            .to_string_lossy()
+            .to_string()
+    );
+
+    // Verify physical files still exist on disk
+    assert!(song1_file.exists(), "Physical song1 file must not be deleted");
+    assert!(song2_file.exists(), "Physical song2 file must not be deleted");
+
+    let _ = fs::remove_dir_all(&temp_app);
+    if let Some(config_base) = dirs::config_dir() {
+        let _ = fs::remove_file(config_base.join("ongaku").join("location.txt"));
+    }
+}
+

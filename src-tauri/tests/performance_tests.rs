@@ -154,6 +154,9 @@ fn test_benchmark_library_scan_and_sync() {
 
     // Cleanup
     let _ = fs::remove_dir_all(&temp_app);
+    if let Some(config_base) = dirs::config_dir() {
+        let _ = fs::remove_file(config_base.join("ongaku").join("location.txt"));
+    }
     println!("========================================================\n");
 }
 
@@ -451,6 +454,9 @@ fn test_benchmark_lofty_real_tags_and_cover_art() {
     assert_eq!(sync_stats.added_or_updated, count);
 
     let _ = fs::remove_dir_all(&temp_app);
+    if let Some(config_base) = dirs::config_dir() {
+        let _ = fs::remove_file(config_base.join("ongaku").join("location.txt"));
+    }
     println!("========================================================\n");
 }
 

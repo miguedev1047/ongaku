@@ -19,6 +19,38 @@ pub struct AppPaths {
 
 static APP_DIR_OVERRIDE: OnceLock<RwLock<Option<PathBuf>>> = OnceLock::new();
 
+/// Unified cross-platform path normalization function for Unix (macOS/Linux) and Windows:
+/// - On Windows: strips extended-length UNC verbatim prefixes (`\\?\UNC\` -> `\\` and `\\?\` -> ``)
+///   produced by `std::fs::canonicalize()` and normalizes separators to `\`.
+/// - On Unix (Linux / macOS): preserves clean POSIX paths.
+pub fn normalize_path(path: &Path) -> PathBuf {
+    let raw = path.to_string_lossy();
+
+    #[cfg(windows)]
+    {
+        let cleaned = raw.replace('/', "\\");
+        if let Some(unc) = cleaned.strip_prefix(r"\\?\UNC\") {
+            return PathBuf::from(format!(r"\\{}", unc));
+        }
+        if let Some(stripped) = cleaned.strip_prefix(r"\\?\") {
+            return PathBuf::from(stripped);
+        }
+        PathBuf::from(cleaned)
+    }
+
+    #[cfg(not(windows))]
+    {
+        let _ = raw;
+        path.to_path_buf()
+    }
+}
+
+/// Canonicalizes a filesystem path and returns its normalized cross-platform representation
+/// (resolving symlinks while stripping `\\?\` verbatim prefixes on Windows).
+pub fn canonicalize_path(path: &Path) -> std::io::Result<PathBuf> {
+    path.canonicalize().map(|p| normalize_path(&p))
+}
+
 fn get_override_lock() -> &'static RwLock<Option<PathBuf>> {
     APP_DIR_OVERRIDE.get_or_init(|| {
         if let Some(config_base) = dirs::config_dir() {
@@ -26,7 +58,7 @@ fn get_override_lock() -> &'static RwLock<Option<PathBuf>> {
             if let Ok(saved_path) = fs::read_to_string(&pointer_file) {
                 let trimmed = saved_path.trim();
                 if !trimmed.is_empty() {
-                    let p = PathBuf::from(trimmed);
+                    let p = normalize_path(Path::new(trimmed));
                     if p.exists() {
                         return RwLock::new(Some(p));
                     }
@@ -40,25 +72,26 @@ fn get_override_lock() -> &'static RwLock<Option<PathBuf>> {
 pub fn get_app_dir() -> PathBuf {
     if let Ok(guard) = get_override_lock().read() {
         if let Some(ref custom) = *guard {
-            return custom.clone();
+            return normalize_path(custom);
         }
     }
     let path = dirs::audio_dir()
         .or_else(dirs::data_local_dir)
         .or_else(dirs::home_dir)
         .unwrap_or_else(|| PathBuf::from("."));
-    path.join("ongaku")
+    normalize_path(&path.join("ongaku"))
 }
 
 pub fn set_app_dir(new_path: PathBuf) -> Result<(), std::io::Error> {
+    let normalized = normalize_path(&new_path);
     if let Some(config_base) = dirs::config_dir() {
         let dir = config_base.join("ongaku");
         let _ = fs::create_dir_all(&dir);
         let pointer_file = dir.join("location.txt");
-        fs::write(&pointer_file, new_path.to_string_lossy().as_bytes())?;
+        fs::write(&pointer_file, normalized.to_string_lossy().as_bytes())?;
     }
     if let Ok(mut guard) = get_override_lock().write() {
-        *guard = Some(new_path);
+        *guard = Some(normalized);
     }
     let _ = ensure_paths_config();
     Ok(())

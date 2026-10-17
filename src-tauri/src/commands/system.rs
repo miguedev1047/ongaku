@@ -8,7 +8,7 @@ use crate::{
     constants::SERVER_HOST,
     db::DbPool,
     helpers::{
-        get_app_paths, get_backgrounds_dir, get_cache_thumbs_dir, get_db_path,
+        canonicalize_path, get_app_paths, get_backgrounds_dir, get_cache_thumbs_dir, get_db_path,
         get_ffmpeg_path, get_ytdlp_path, move_app_directory, resolve_inside,
     },
     server::ServerPort,
@@ -250,11 +250,9 @@ pub async fn open_folder(path: String) -> Result<(), String> {
         return Err("Path is not a directory".to_string());
     }
 
-    let canonical_target = p
-        .canonicalize()
-        .map_err(|e| format!("Invalid directory path: {}", e))?;
-    let canonical_app_dir = crate::helpers::get_app_dir()
-        .canonicalize()
+    let canonical_target =
+        canonicalize_path(p).map_err(|e| format!("Invalid directory path: {}", e))?;
+    let canonical_app_dir = canonicalize_path(&crate::helpers::get_app_dir())
         .map_err(|e| format!("Failed to resolve application directory: {}", e))?;
 
     if !canonical_target.starts_with(&canonical_app_dir) {
