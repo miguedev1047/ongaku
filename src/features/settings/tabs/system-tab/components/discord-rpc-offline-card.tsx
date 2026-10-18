@@ -2,7 +2,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { CardWrapper } from '@/components/ui/card-wrapper'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { WifiOff01Icon, GameController02Icon } from '@hugeicons/core-free-icons'
+import { WifiOff01Icon, DiscordIcon } from '@hugeicons/core-free-icons'
 import { useTranslation } from 'react-i18next'
 import { cn } from 'cn'
 
@@ -10,7 +10,9 @@ interface DiscordRpcOfflineCardProps {
   className?: string
 }
 
-export function DiscordRpcOfflineCard({ className }: DiscordRpcOfflineCardProps) {
+export function DiscordRpcOfflineCard({
+  className,
+}: DiscordRpcOfflineCardProps) {
   const { t } = useTranslation()
 
   return (
@@ -22,7 +24,7 @@ export function DiscordRpcOfflineCard({ className }: DiscordRpcOfflineCardProps)
               'size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary',
             )}
           >
-            <HugeiconsIcon icon={GameController02Icon} className={cn('size-4')} />
+            <HugeiconsIcon icon={DiscordIcon} className={cn('size-4')} />
           </div>
           <div>
             <h2 className={cn('text-sm font-semibold text-foreground')}>
@@ -32,7 +34,8 @@ export function DiscordRpcOfflineCard({ className }: DiscordRpcOfflineCardProps)
             </h2>
             <p className={cn('text-xs text-muted-foreground')}>
               {t('settings.tabs.system.discord_rpc.description', {
-                defaultValue: 'Desktop IPC socket status and active presence metadata',
+                defaultValue:
+                  'Desktop IPC socket status and active presence metadata',
               })}
             </p>
           </div>
