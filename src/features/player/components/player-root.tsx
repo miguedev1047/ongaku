@@ -3,6 +3,7 @@ import { LocalPlayer } from '@/features/player/components/local-player'
 import { StreamingPlayer } from '@/features/player/components/streaming-player'
 import { useMediaSession } from '@/hooks/use-media-session'
 import { usePlayerSync } from '@/features/player/hooks/use-player-sync'
+import { useDiscordRpcSync } from '@/features/player/hooks/use-discord-rpc-sync'
 import { Show } from '@/components/utility/show'
 
 interface PlayerRootProps {
@@ -13,6 +14,7 @@ export function PlayerRoot({ position = 'bottom' }: PlayerRootProps) {
   const activePlayer = useActivePlayerStore((s) => s.activePlayer)
   useMediaSession()
   usePlayerSync()
+  useDiscordRpcSync()
 
   return (
     <>

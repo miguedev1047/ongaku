@@ -1,5 +1,6 @@
 pub mod audio;
 pub mod batch;
+pub mod discord;
 pub mod downloads;
 pub mod library;
 pub mod playlists;
@@ -10,6 +11,7 @@ pub mod youtube;
 
 pub use audio::*;
 pub use batch::*;
+pub use discord::*;
 pub use downloads::*;
 pub use library::*;
 pub use playlists::*;

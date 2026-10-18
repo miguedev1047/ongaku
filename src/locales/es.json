@@ -92,6 +92,10 @@
     "tabs": {
       "general": {
         "title": "General",
+        "discord_rpc": {
+          "title": "Discord Rich Presence",
+          "description": "Muestra la música que estás reproduciendo como tu estado de actividad en Discord"
+        },
         "app_and_releases": {
           "title": "Aplicación y Versiones",
           "description": "Versión del entorno instalada y canal de actualización automática",
@@ -280,6 +284,33 @@
           "status": {
             "online": "En línea",
             "offline": "Desconectado"
+          }
+        },
+        "discord_rpc": {
+          "title": "Discord Rich Presence",
+          "description": "Estado del socket IPC de escritorio y metadatos de presencia activa",
+          "app_id": "ID de Aplicación",
+          "connection": "Socket IPC",
+          "not_detected": "Sin cliente de Discord",
+          "active_pipe": "Activo (Named Pipe)",
+          "active_track": "Presencia Activa",
+          "idle": "Inactivo (Sin reproducir)",
+          "error_title": "Aviso de Conexión de Discord",
+          "error_desc": "Asegúrate de que el cliente de escritorio de Discord esté abierto y ejecutándose en tu sistema.",
+          "activity_error_title": "Presencia rechazada por Discord",
+          "setup_warning": {
+            "title": "Configuración del Portal de Desarrolladores",
+            "invalid_app_id": "El ID de aplicación de Discord configurado no es válido, por lo que Rich Presence no se puede publicar.",
+            "application_not_found": "El ID de aplicación de Discord configurado no existe en el Portal de Desarrolladores."
+          },
+          "status": {
+            "connected": "Conectado",
+            "disconnected": "Desconectado",
+            "offline": "Sin conexión"
+          },
+          "offline": {
+            "title": "Actualmente estás sin conexión",
+            "description": "Las actualizaciones de Discord Rich Presence están en pausa hasta que se restablezca la conexión a internet."
           }
         },
         "binaries_status": {

@@ -92,6 +92,10 @@
     "tabs": {
       "general": {
         "title": "General",
+        "discord_rpc": {
+          "title": "Discord Rich Presence",
+          "description": "Display your currently playing music as your Discord activity status"
+        },
         "app_and_releases": {
           "title": "Application & Releases",
           "description": "Installed runtime version and automatic updater channel",
@@ -280,6 +284,33 @@
           "status": {
             "online": "Online",
             "offline": "Offline"
+          }
+        },
+        "discord_rpc": {
+          "title": "Discord Rich Presence",
+          "description": "Desktop IPC socket status and active presence metadata",
+          "app_id": "Application ID",
+          "connection": "IPC Socket",
+          "not_detected": "No Discord Client",
+          "active_pipe": "Active (Named Pipe)",
+          "active_track": "Current Presence",
+          "idle": "Idle (No Track Playing)",
+          "error_title": "Discord Connection Notice",
+          "error_desc": "Ensure the Discord desktop client is open and running on your system.",
+          "activity_error_title": "Presence Rejected by Discord",
+          "setup_warning": {
+            "title": "Discord Developer Portal Setup",
+            "invalid_app_id": "The configured Discord application ID is invalid, so Rich Presence cannot be published.",
+            "application_not_found": "The configured Discord application ID does not exist in the Discord Developer Portal."
+          },
+          "status": {
+            "connected": "Connected",
+            "disconnected": "Disconnected",
+            "offline": "Offline"
+          },
+          "offline": {
+            "title": "You're currently offline",
+            "description": "Discord Rich Presence updates are paused until your internet connection is restored."
           }
         },
         "binaries_status": {

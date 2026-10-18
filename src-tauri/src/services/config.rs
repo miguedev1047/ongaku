@@ -11,6 +11,7 @@ pub struct AppConfig {
     pub player_position: String,
     pub toggle_sidebar: String,
     pub lang: String,
+    pub discord_rpc: String,
 }
 
 pub fn get_app_config(conn: &Connection) -> Result<AppConfig, ServiceError> {
@@ -33,6 +34,10 @@ pub fn get_app_config(conn: &Connection) -> Result<AppConfig, ServiceError> {
             .cloned()
             .unwrap_or_else(|| "false".to_string()),
         lang: all.get("lang").cloned().unwrap_or_else(|| "en".to_string()),
+        discord_rpc: all
+            .get("discord_rpc")
+            .cloned()
+            .unwrap_or_else(|| "false".to_string()),
     })
 }
 
@@ -77,6 +82,16 @@ pub fn set_app_config(conn: &Connection, key: &str, value: &str) -> Result<(), S
                 )));
             }
             crate::db::queries::set_config(conn, "lang", trimmed_val)
+                .map_err(ServiceError::Database)?;
+        }
+        "discord_rpc" => {
+            if trimmed_val != "true" && trimmed_val != "false" {
+                return Err(ServiceError::Validation(format!(
+                    "Invalid discord_rpc value: '{}'. Must be 'true' or 'false'",
+                    trimmed_val
+                )));
+            }
+            crate::db::queries::set_config(conn, "discord_rpc", trimmed_val)
                 .map_err(ServiceError::Database)?;
         }
         "app_dir" => {

@@ -89,7 +89,11 @@ pub fn run() {
             streaming_audio_stop,
             streaming_audio_seek,
             streaming_audio_set_volume,
-            streaming_audio_get_status
+            streaming_audio_get_status,
+            get_discord_status,
+            set_discord_rpc_enabled,
+            set_discord_activity,
+            clear_discord_activity
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

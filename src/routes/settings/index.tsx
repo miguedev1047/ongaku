@@ -20,6 +20,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { systemBackgroundsOpts } from '@/features/settings/queries/backgrounds'
+import { discordStatusQueryOpts } from '@/shared/queries/discord'
 
 function SettingsPending() {
   const { t } = useTranslation()
@@ -34,11 +35,14 @@ function SettingsPending() {
 export const Route = createFileRoute('/settings/')({
   pendingComponent: SettingsPending,
   errorComponent: RouteErrorState,
-  loader: ({ context }) => {
-    context.queryClient.query(systemConfigQueryOpts())
-    context.queryClient.query(systemHealthQueryOpts())
-    context.queryClient.query(updatesQueryOpts())
-    context.queryClient.query(systemBackgroundsOpts())
+  loader: async ({ context }) => {
+    await Promise.all([
+      context.queryClient.query(systemConfigQueryOpts()),
+      context.queryClient.query(systemHealthQueryOpts()),
+      context.queryClient.query(updatesQueryOpts()),
+      context.queryClient.query(systemBackgroundsOpts()),
+      context.queryClient.query(discordStatusQueryOpts()),
+    ])
   },
   component: RouteComponent,
 })

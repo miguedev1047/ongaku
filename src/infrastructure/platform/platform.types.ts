@@ -257,6 +257,51 @@ export interface CommandMap {
     args?: undefined
     return: AudioPlayerStatus
   }
+  get_discord_status: {
+    args?: undefined
+    return: TDiscordStatus
+  }
+  set_discord_rpc_enabled: {
+    args: { enabled: boolean }
+    return: void
+  }
+  set_discord_activity: {
+    args: { payload: TDiscordActivityPayload }
+    return: void
+  }
+  clear_discord_activity: {
+    args?: undefined
+    return: void
+  }
+}
+
+export interface TDiscordStatus {
+  enabled: boolean
+  connected: boolean
+  activity_title?: string | null
+  /** Transport-level problem: Discord is not reachable through its IPC pipe. */
+  last_error?: string | null
+  /** Discord refused the activity even though the pipe is healthy. */
+  activity_error?: string | null
+  /**
+   * Machine-readable code describing a Discord Developer Portal setup problem.
+   * See `resolveSetupWarning` for the supported values.
+   *
+   * Rich Presence asset keys are intentionally not covered here: Discord serves
+   * application assets by asset id and listing them requires credentials, so a bad
+   * asset key is reported through `activity_error` at runtime instead.
+   */
+  setup_warning?: string | null
+}
+
+export interface TDiscordActivityPayload {
+  title: string
+  subtitle?: string | null
+  album?: string | null
+  song_path?: string | null
+  image_url?: string | null
+  start_timestamp?: number | null
+  end_timestamp?: number | null
 }
 
 export interface AudioPlayerStatus {

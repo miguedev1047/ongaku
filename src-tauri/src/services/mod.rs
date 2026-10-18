@@ -2,6 +2,7 @@ pub mod background;
 pub mod batch;
 pub mod binaries;
 pub mod config;
+pub mod discord;
 pub mod download;
 pub mod errors;
 pub mod playlist;

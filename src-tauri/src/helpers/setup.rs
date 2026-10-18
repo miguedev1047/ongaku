@@ -38,9 +38,20 @@ pub fn setup_app(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>>
     })?;
 
     // 4. Register DB pool state in Tauri
-    app.manage(db_pool);
+    app.manage(db_pool.clone());
 
-    // 5. Start local media streaming/cover HTTP server
+    // 5. Initialize Discord RPC service with saved config
+    let initial_discord_enabled = if let Ok(conn) = db_pool.get() {
+        crate::services::config::get_app_config(&conn)
+            .map(|cfg| cfg.discord_rpc == "true")
+            .unwrap_or(false)
+    } else {
+        false
+    };
+    let discord_service = crate::services::discord::DiscordService::new(initial_discord_enabled);
+    app.manage(discord_service);
+
+    // 6. Start local media streaming/cover HTTP server
     init_server(app).map_err(|err| format!("Initialization error (media server): {err}"))?;
 
     Ok(())

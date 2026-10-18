@@ -113,6 +113,10 @@ pub fn change_app_dir(db: State<'_, DbPool>, new_parent_dir: String) -> Result<A
             .cloned()
             .unwrap_or_else(|| "false".to_string()),
         lang: all.get("lang").cloned().unwrap_or_else(|| "en".to_string()),
+        discord_rpc: all
+            .get("discord_rpc")
+            .cloned()
+            .unwrap_or_else(|| "false".to_string()),
     })
 }
 

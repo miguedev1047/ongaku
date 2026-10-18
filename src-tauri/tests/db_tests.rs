@@ -499,18 +499,23 @@ fn test_config_service_validation() {
     assert_eq!(config.player_position, "bottom");
     assert_eq!(config.toggle_sidebar, "false");
     assert_eq!(config.lang, "en");
+    assert_eq!(config.discord_rpc, "false");
 
     // Valid updates
     assert!(set_app_config(&conn, "folder_colors", "#ffffff").is_ok());
     assert!(set_app_config(&conn, "player_position", "top").is_ok());
     assert!(set_app_config(&conn, "toggle_sidebar", "true").is_ok());
     assert!(set_app_config(&conn, "lang", "es").is_ok());
+    assert!(set_app_config(&conn, "discord_rpc", "true").is_ok());
 
     let updated = get_app_config(&conn).unwrap();
     assert_eq!(updated.folder_colors, "#ffffff");
     assert_eq!(updated.player_position, "top");
     assert_eq!(updated.toggle_sidebar, "true");
     assert_eq!(updated.lang, "es");
+    assert_eq!(updated.discord_rpc, "true");
+
+    assert!(set_app_config(&conn, "discord_rpc", "invalid").is_err());
 
     // Invalid folder_colors
     assert!(set_app_config(&conn, "folder_colors", "not-a-color").is_err());

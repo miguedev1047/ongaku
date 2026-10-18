@@ -7,6 +7,7 @@ export interface TAppConfig {
   player_position: 'bottom' | 'top'
   toggle_sidebar: string
   lang: string
+  discord_rpc: string
 }
 
 export const systemConfigQueryOpts = () =>

@@ -81,7 +81,7 @@ pub fn init_schema(conn: &Connection) -> Result<()> {
 
     let default_app_dir = crate::helpers::get_app_dir().to_string_lossy().to_string();
     conn.execute_batch(
-        "INSERT OR IGNORE INTO config (key, value) VALUES ('folder_colors', '#507dbc'), ('player_position', 'bottom'), ('toggle_sidebar', 'false'), ('lang', 'en');",
+        "INSERT OR IGNORE INTO config (key, value) VALUES ('folder_colors', '#507dbc'), ('player_position', 'bottom'), ('toggle_sidebar', 'false'), ('lang', 'en'), ('discord_rpc', 'false');",
     )?;
     conn.execute(
         "INSERT INTO config (key, value) VALUES ('app_dir', ?1)
