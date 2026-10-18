@@ -102,7 +102,12 @@
             "downloading": "Downloading Update",
             "installing": "Installing Update",
             "download_complete": "Download Complete",
-            "error": "Update Check Failed"
+            "error": "Update Check Failed",
+            "offline": "Offline"
+          },
+          "network_error": {
+            "title": "Unable to check for updates",
+            "description": "No internet connection detected. Reconnect to check for new releases."
           },
           "version": {
             "title": "Current Version",
@@ -293,7 +298,12 @@
           "installing_desc": "Downloading and setting up yt-dlp & ffmpeg...",
           "status": {
             "installed": "Ready",
-            "missing": "Missing"
+            "missing": "Missing",
+            "offline": "Offline"
+          },
+          "offline": {
+            "title": "You're offline",
+            "description": "Installing the helper tools requires an internet connection. Reconnect to download yt-dlp and ffmpeg."
           },
           "install_all": "Install Missing Tools",
           "installing": "Installing..."
@@ -688,7 +698,8 @@
     "tools": {
       "installed_success": "Tools installed successfully (yt-dlp & ffmpeg)",
       "install_error": "An error occurred while downloading tools",
-      "open_folder_error": "Failed to open binaries folder"
+      "open_folder_error": "Failed to open binaries folder",
+      "offline_blocked": "Cannot install tools while offline. Please connect to the internet."
     },
     "downloads": {
       "added_single_for_playlist": "\"{{title}}\" added to download queue for \"{{playlist}}\"",

@@ -1,5 +1,6 @@
 export * from './system-tab'
 export * from './components/server-health-card'
 export * from './components/binaries-status-card'
+export * from './components/binaries-offline-card'
 export * from './components/directories-status-card'
 export * from './components/system-tab-trigger'

@@ -1,11 +1,15 @@
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import { useBinariesStore } from '@/shared/stores/actions'
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
+import { useNetworkState } from '@/hooks/use-network-state'
 import type { TBinariesInfo } from '@/shared/types/binaries.types'
+import { toast } from 'sonner'
+import i18n from '@/lib/i18n'
 
 export type { TBinariesInfo }
 
 export function useBinaries() {
+  const { isOnline } = useNetworkState()
   const { data: health } = useSuspenseQuery(systemHealthQueryOpts())
 
   const isBinariesInstalled = Boolean(
@@ -26,6 +30,11 @@ export function useBinaries() {
   const isPending = status === 'installing'
 
   const installBinaries = async () => {
+    if (!isOnline) {
+      toast.error(i18n.t('toasts.tools.offline_blocked'))
+      return
+    }
+
     const success = await install(queryClient)
     if (success) {
       await queryClient.invalidateQueries({

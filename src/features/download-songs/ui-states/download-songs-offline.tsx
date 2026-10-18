@@ -22,7 +22,7 @@ export function DownloadSongsOffline({ className }: DownloadSongsOfflineProps) {
     <RouteSection
       className={cn(
         'size-full flex items-center justify-center text-center p-8 select-none',
-        className
+        className,
       )}
     >
       <Empty className='py-16 max-w-md'>

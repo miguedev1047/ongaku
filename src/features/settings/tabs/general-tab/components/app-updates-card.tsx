@@ -8,16 +8,18 @@ import {
   CheckmarkCircle02Icon,
   SparklesIcon,
   ArrowUpRight01Icon,
+  WifiOff01Icon,
 } from '@hugeicons/core-free-icons'
 import { useUpdater } from '@/features/settings/hooks/use-updater'
 import { Show } from '@/components/utility/show'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
-import { updatesQueryOpts } from '@/features/settings/queries/updates'
 import { openReleaseNotes } from '@/shared/helpers/open-release-notes'
 import { DotmSquare10 } from '@/components/ui/loaders/dotm-square-10'
 import { useTranslation } from 'react-i18next'
 import { cn } from 'cn'
+import { useNetworkState } from '@/hooks/use-network-state'
+import { AppUpdateNetworkError } from '@/features/settings/tabs/general-tab/components/app-update-network-error'
 
 interface ReleaseNotesLinkProps {
   version?: string
@@ -51,10 +53,7 @@ function ReleaseNotesLink({
       )}
     >
       <span>{label}</span>
-      <HugeiconsIcon
-        icon={ArrowUpRight01Icon}
-        className={cn('size-3')}
-      />
+      <HugeiconsIcon icon={ArrowUpRight01Icon} className={cn('size-3')} />
     </p>
   )
 }
@@ -62,8 +61,10 @@ function ReleaseNotesLink({
 export function AppUpdatesCard() {
   const { t } = useTranslation()
   const { data: health } = useSuspenseQuery(systemHealthQueryOpts())
-  const { data: update } = useSuspenseQuery(updatesQueryOpts())
+  const { isOnline } = useNetworkState()
+
   const {
+    update,
     status,
     progress,
     isPending,
@@ -84,10 +85,7 @@ export function AppUpdatesCard() {
               'size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary',
             )}
           >
-            <HugeiconsIcon
-              icon={SparklesIcon}
-              className={cn('size-4')}
-            />
+            <HugeiconsIcon icon={SparklesIcon} className={cn('size-4')} />
           </div>
           <div>
             <h2 className={cn('text-sm font-semibold text-foreground')}>
@@ -100,29 +98,35 @@ export function AppUpdatesCard() {
         </div>
 
         <Show
-          when={hasUpdate}
+          when={isOnline}
           fallback={
-            <Badge variant='success'>
-              <HugeiconsIcon
-                icon={CheckmarkCircle02Icon}
-                className={cn('size-3')}
-              />
-              {t('settings.tabs.general.app_and_releases.status.updated')}
+            <Badge variant='warning'>
+              <HugeiconsIcon icon={WifiOff01Icon} className={cn('size-3')} />
+              {t('settings.tabs.general.app_and_releases.status.offline')}
             </Badge>
           }
         >
-          <Badge variant='default'>
-            {t('settings.tabs.general.app_and_releases.status.available')}
-          </Badge>
+          <Show
+            when={hasUpdate}
+            fallback={
+              <Badge variant='success'>
+                <HugeiconsIcon
+                  icon={CheckmarkCircle02Icon}
+                  className={cn('size-3')}
+                />
+                {t('settings.tabs.general.app_and_releases.status.updated')}
+              </Badge>
+            }
+          >
+            <Badge variant='default'>
+              {t('settings.tabs.general.app_and_releases.status.available')}
+            </Badge>
+          </Show>
         </Show>
       </div>
 
-      <div
-        className={cn(
-          'flex flex-col sm:flex-row items-stretch sm:items-center justify-between p-3 rounded-md bg-muted/30 border border-border/30 gap-3',
-        )}
-      >
-        <div className={cn('space-y-1')}>
+      <CardWrapper spacing='compact'>
+        <div className={cn('space-y-2')}>
           <div className={cn('flex items-center gap-2')}>
             <span className={cn('text-xs text-muted-foreground')}>
               {t('settings.tabs.general.app_and_releases.version.title')}:
@@ -132,38 +136,43 @@ export function AppUpdatesCard() {
             </span>
           </div>
 
-          <Show
-            when={hasUpdate}
-            fallback={
+          <Show when={isOnline} fallback={<AppUpdateNetworkError />}>
+            <Show
+              when={hasUpdate}
+              fallback={
+                <ReleaseNotesLink
+                  version={currentVersion}
+                  label={t(
+                    'settings.tabs.general.app_and_releases.version.link',
+                    {
+                      version: `v${currentVersion}`,
+                    },
+                  )}
+                />
+              }
+            >
+              <p className={cn('text-xs text-primary font-medium')}>
+                {t(
+                  'settings.tabs.general.app_and_releases.version.ready_to_install',
+                  {
+                    version: `v${update?.version}`,
+                  },
+                )}
+              </p>
               <ReleaseNotesLink
-                version={currentVersion}
+                version={update?.version}
                 label={t(
                   'settings.tabs.general.app_and_releases.version.link',
                   {
-                    version: `v${currentVersion}`,
+                    version: `v${update?.version}`,
                   },
                 )}
               />
-            }
-          >
-            <p className={cn('text-xs text-primary font-medium')}>
-              {t(
-                'settings.tabs.general.app_and_releases.version.ready_to_install',
-                {
-                  version: `v${update?.version}`,
-                },
-              )}
-            </p>
-            <ReleaseNotesLink
-              version={update?.version}
-              label={t('settings.tabs.general.app_and_releases.version.link', {
-                version: `v${update?.version}`,
-              })}
-            />
+            </Show>
           </Show>
         </div>
 
-        <Show when={hasUpdate}>
+        <Show when={isOnline && hasUpdate}>
           <div className={cn('flex items-center gap-2')}>
             <Button
               size='sm'
@@ -175,10 +184,7 @@ export function AppUpdatesCard() {
                 when={!isPending}
                 fallback={<Spinner className={cn('size-3.5')} />}
               >
-                <HugeiconsIcon
-                  icon={DownloadIcon}
-                  className={cn('size-3.5')}
-                />
+                <HugeiconsIcon icon={DownloadIcon} className={cn('size-3.5')} />
               </Show>
               <span>
                 <Show
@@ -213,7 +219,7 @@ export function AppUpdatesCard() {
             </Button>
           </div>
         </Show>
-      </div>
+      </CardWrapper>
 
       <Show when={isPending}>
         <div
@@ -226,11 +232,7 @@ export function AppUpdatesCard() {
               'shrink-0 flex items-center justify-center size-8 rounded-md bg-primary/10 text-primary',
             )}
           >
-            <DotmSquare10
-              size={18}
-              dotSize={2.5}
-              speed={1.5}
-            />
+            <DotmSquare10 size={18} dotSize={2.5} speed={1.5} />
           </div>
           <div className={cn('min-w-0 flex-1 space-y-1.5')}>
             <div className={cn('flex items-center justify-between text-xs')}>
@@ -287,10 +289,7 @@ export function AppUpdatesCard() {
           <div
             className={cn('flex items-center gap-1.5 text-muted-foreground')}
           >
-            <Badge
-              variant='warning'
-              size='sm'
-            >
+            <Badge variant='warning' size='sm'>
               DEV
             </Badge>
             <span className={cn('text-xs')}>
@@ -317,11 +316,7 @@ export function AppUpdatesCard() {
               </span>
             </Button>
             <Show when={status !== 'idle'}>
-              <Button
-                size='default'
-                variant='ghost-muted'
-                onClick={reset}
-              >
+              <Button size='default' variant='ghost-muted' onClick={reset}>
                 {t('settings.tabs.general.app_and_releases.actions.reset')}
               </Button>
             </Show>

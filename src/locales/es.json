@@ -102,7 +102,12 @@
             "downloading": "Descargando actualización",
             "installing": "Instalando actualización",
             "download_complete": "Descarga completada",
-            "error": "Error al buscar actualizaciones"
+            "error": "Error al buscar actualizaciones",
+            "offline": "Sin conexión"
+          },
+          "network_error": {
+            "title": "No se pudieron buscar actualizaciones",
+            "description": "No se detectó conexión a internet. Vuelve a conectarte para buscar nuevas versiones."
           },
           "version": {
             "title": "Versión Actual",
@@ -293,7 +298,12 @@
           "installing_desc": "Descargando y configurando yt-dlp y ffmpeg...",
           "status": {
             "installed": "Listo",
-            "missing": "Falta"
+            "missing": "Falta",
+            "offline": "Sin conexión"
+          },
+          "offline": {
+            "title": "Sin conexión",
+            "description": "Instalar las herramientas auxiliares requiere conexión a internet. Vuelve a conectarte para descargar yt-dlp y ffmpeg."
           },
           "install_all": "Instalar Herramientas Faltantes",
           "installing": "Instalando..."
@@ -688,7 +698,8 @@
     "tools": {
       "installed_success": "Herramientas instaladas con éxito (yt-dlp y ffmpeg)",
       "install_error": "Ocurrió un error al descargar las herramientas",
-      "open_folder_error": "No se pudo abrir la carpeta de binarios"
+      "open_folder_error": "No se pudo abrir la carpeta de binarios",
+      "offline_blocked": "No se pueden instalar herramientas sin conexión a internet. Conéctate a una red."
     },
     "downloads": {
       "added_single_for_playlist": "\"{{title}}\" agregada a la cola de descargas para \"{{playlist}}\"",
