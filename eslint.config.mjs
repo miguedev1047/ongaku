@@ -46,8 +46,18 @@ export default defineConfig([
               ],
             },
             {
-              pattern: '^Card(Header|Content|Footer|Title|Description)?$',
-              allow: ['layout', 'w-full', 'mt-*', 'mb-*', 'p-*', 'gap-*'],
+              pattern:
+                '^Card(Header|CardContainer|CardBody|Content|Footer|Title|Description)?$',
+              allow: [
+                'layout',
+                'w-full',
+                'mt-*',
+                'mb-*',
+                'p-*',
+                'gap-*',
+                'transition-*',
+                'duration-*',
+              ],
             },
             {
               pattern: '^CardWrapper$',
