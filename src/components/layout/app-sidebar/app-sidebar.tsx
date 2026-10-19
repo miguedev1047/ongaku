@@ -1,9 +1,4 @@
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarRail,
-} from '@/components/ui/sidebar'
+import { Sidebar, SidebarContent, SidebarFooter } from '@/components/ui/sidebar'
 import { AppSidebarHeader } from '@/components/layout/app-sidebar/app-sidebar-header'
 import { AppSidebarNav } from '@/components/layout/app-sidebar/app-sidebar-nav'
 import { AppSidebarFooter } from '@/components/layout/app-sidebar/app-sidebar-footer'
@@ -29,7 +24,6 @@ export function AppSidebar() {
       <SidebarFooter>
         <AppSidebarFooter />
       </SidebarFooter>
-      <SidebarRail />
     </Sidebar>
   )
 }
