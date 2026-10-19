@@ -24,7 +24,7 @@ export function SettingsHeader({ isLoading, onRefresh }: SettingsHeaderProps) {
 
   return (
     <RouteHeader>
-      <SidebarTrigger className='-ml-1 max-md:block hidden' />
+      <SidebarTrigger className='place-items-center max-md:block hidden' />
       <Separator
         orientation='vertical'
         className='mx-2 data-[orientation=vertical]:h-4 max-md:block hidden my-auto'
@@ -44,14 +44,8 @@ export function SettingsHeader({ isLoading, onRefresh }: SettingsHeaderProps) {
           onClick={onRefresh}
           disabled={isLoading}
         >
-          <Show
-            when={!isLoading}
-            fallback={<Spinner className='size-3.5' />}
-          >
-            <HugeiconsIcon
-              icon={RefreshIcon}
-              className='size-3.5'
-            />
+          <Show when={!isLoading} fallback={<Spinner className='size-3.5' />}>
+            <HugeiconsIcon icon={RefreshIcon} className='size-3.5' />
           </Show>
           <span>{t('settings.refresh_status')}</span>
         </Button>

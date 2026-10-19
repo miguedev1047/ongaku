@@ -8,12 +8,9 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command'
-import { Button } from '@/components/ui/button'
-import { HugeiconsIcon } from '@hugeicons/react'
-import { Search01Icon } from '@hugeicons/core-free-icons'
+import { SearchTrigger } from '@/components/ui/search-trigger'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { librarySongsQueryOpts } from '@/features/library/queries'
-import { Kbd } from '@/components/ui/kbd'
 import { useHotkey } from '@tanstack/react-hotkeys'
 import { CoverImage } from '@/components/ui/cover-image'
 import { useSongUtils } from '@/hooks/use-song-utils'
@@ -33,16 +30,10 @@ export function SearchLibrary() {
 
   return (
     <div className='ml-auto flex items-center'>
-      <Button
+      <SearchTrigger
         onClick={() => setIsOpen(true)}
-        variant='outline'
-        className='w-52'
-        size='sm'
-      >
-        <HugeiconsIcon icon={Search01Icon} className='size-4' />
-        {t('library.header.search_placeholder')}
-        <Kbd className='ml-auto'>⌘K</Kbd>
-      </Button>
+        placeholder={t('library.header.search_placeholder')}
+      />
       <CommandDialog open={isOpen} onOpenChange={setIsOpen} size='md'>
         <Command>
           <CommandInput placeholder={t('library.search_command_placeholder')} />

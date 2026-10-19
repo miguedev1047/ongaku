@@ -7,11 +7,8 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command'
-import { Button } from '@/components/ui/button'
-import { HugeiconsIcon } from '@hugeicons/react'
-import { Search01Icon } from '@hugeicons/core-free-icons'
+import { SearchTrigger } from '@/components/ui/search-trigger'
 import { useSuspenseQuery } from '@tanstack/react-query'
-import { Kbd } from '@/components/ui/kbd'
 import { useState } from 'react'
 import { useParams } from '@tanstack/react-router'
 import { useHotkey } from '@tanstack/react-hotkeys'
@@ -38,16 +35,10 @@ export function SearchSongs() {
 
   return (
     <div className='ml-auto flex items-center gap-2'>
-      <Button
+      <SearchTrigger
         onClick={() => setIsOpen(true)}
-        variant='outline'
-        className='w-52'
-        size='sm'
-      >
-        <HugeiconsIcon icon={Search01Icon} className='size-4' />
-        {t('playlists.search_songs_placeholder')}
-        <Kbd className='ml-auto'>⌘K</Kbd>
-      </Button>
+        placeholder={t('playlists.search_songs_placeholder')}
+      />
       <CommandDialog open={isOpen} onOpenChange={setIsOpen} size='md'>
         <Command>
           <CommandInput

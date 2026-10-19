@@ -183,11 +183,7 @@ function Sidebar({
 
   if (isMobile) {
     return (
-      <Sheet
-        open={openMobile}
-        onOpenChange={setOpenMobile}
-        {...props}
-      >
+      <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
         <SheetContent
           dir={dir}
           data-sidebar='sidebar'
@@ -276,17 +272,14 @@ function SidebarTrigger({
       data-slot='sidebar-trigger'
       variant='ghost'
       size='icon-sm'
-      className={cn(className)}
+      className={cn('group-data-[collapsible=icon]:mx-auto', className)}
       onClick={(event) => {
         onClick?.(event)
         toggleSidebar()
       }}
       {...props}
     >
-      <HugeiconsIcon
-        icon={SidebarLeftIcon}
-        strokeWidth={2}
-      />
+      <HugeiconsIcon icon={SidebarLeftIcon} strokeWidth={2} />
       <span className='sr-only'>Toggle Sidebar</span>
     </Button>
   )

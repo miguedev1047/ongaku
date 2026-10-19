@@ -14,7 +14,7 @@ export function AppSidebar() {
   const { data: wallpaper } = useQuery(wallpaperQueryOpts())
   const hasBackground = Boolean(
     wallpaper?.selected_background &&
-      wallpaper.selected_background.trim().length > 0,
+    wallpaper.selected_background.trim().length > 0,
   )
 
   return (

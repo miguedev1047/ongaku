@@ -21,7 +21,7 @@ export function YoutubeSearchHeader({
 
   return (
     <RouteHeader>
-      <SidebarTrigger className='-ml-1 max-md:block hidden' />
+      <SidebarTrigger className='place-items-center max-md:block hidden' />
       <Separator
         orientation='vertical'
         className='mx-2 data-[orientation=vertical]:h-4 max-md:block hidden my-auto'

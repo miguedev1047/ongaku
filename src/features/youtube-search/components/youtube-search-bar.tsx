@@ -15,7 +15,7 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command'
-import { Kbd } from '@/components/ui/kbd'
+import { SearchTrigger } from '@/components/ui/search-trigger'
 import { Show } from '@/components/utility/show'
 import { useYoutubeSearchBar } from '@/features/youtube-search/hooks'
 import { useTranslation } from 'react-i18next'
@@ -33,7 +33,6 @@ export function YoutubeSearchBar({ initialQuery = '' }: YoutubeSearchBarProps) {
     hasTypedQuery,
     hasHistory,
     hasAnyHistory,
-    hasDisplayQuery,
     setQueryInput,
     handleOpenChange,
     handleSearch,
@@ -44,30 +43,11 @@ export function YoutubeSearchBar({ initialQuery = '' }: YoutubeSearchBarProps) {
 
   return (
     <div className='flex items-center gap-2'>
-      <Button
+      <SearchTrigger
         onClick={() => handleOpenChange(true)}
-        variant='search-trigger'
-        size='sm'
-        className='w-60'
-      >
-        <HugeiconsIcon
-          icon={Search01Icon}
-          className='size-3.5 mr-2 shrink-0 text-muted-foreground'
-        />
-        <Show
-          when={hasDisplayQuery}
-          fallback={
-            <span className='text-muted-foreground truncate'>
-              {t('youtube_search.search_bar_placeholder')}
-            </span>
-          }
-        >
-          <span className='truncate text-foreground font-medium'>
-            {initialQuery}
-          </span>
-        </Show>
-        <Kbd className='ml-auto'>⌘K</Kbd>
-      </Button>
+        placeholder={t('youtube_search.search_bar_placeholder')}
+        query={initialQuery}
+      />
 
       <CommandDialog open={isOpen} onOpenChange={handleOpenChange} size='md'>
         <Command shouldFilter={false}>

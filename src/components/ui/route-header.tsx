@@ -3,7 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from 'cn'
 
 export const routeHeaderVariants = cva(
-  'flex h-12 shrink-0 items-center gap-2 border-b transition-all ease-linear select-none',
+  'flex h-12 shrink-0 items-center gap-2 border-b transition-all ease-linear select-none  bg-card/40 backdrop-blur-md',
   {
     variants: {
       sticky: {
@@ -18,7 +18,8 @@ export const routeHeaderVariants = cva(
 )
 
 export interface RouteHeaderProps
-  extends React.ComponentProps<'header'>,
+  extends
+    React.ComponentProps<'header'>,
     VariantProps<typeof routeHeaderVariants> {
   containerClassName?: string
 }
