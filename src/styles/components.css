@@ -89,12 +89,12 @@
     --color-picker-content-width: var(--spacing-72, 18rem);
   }
 
-  .color-picker-popover-content[data-has-alpha="true"] {
+  .color-picker-popover-content[data-has-alpha='true'] {
     --color-picker-content-width: var(--spacing-96, 24rem);
   }
 
   @media (min-width: 768px) {
-    .color-picker-popover-content[data-has-alpha="true"] {
+    .color-picker-popover-content[data-has-alpha='true'] {
       --color-picker-content-width: var(--spacing-84, 21rem);
     }
   }
@@ -102,7 +102,9 @@
   .color-picker-thumb {
     width: var(--color-picker-thumb-size);
     height: var(--color-picker-thumb-size);
-    box-shadow: 0 0 0 1px rgb(0 0 0 / 0.12), 0 1px 3px rgb(0 0 0 / 0.3);
+    box-shadow:
+      0 0 0 1px rgb(0 0 0 / 0.12),
+      0 1px 3px rgb(0 0 0 / 0.3);
     transition: box-shadow 0.15s;
   }
 
@@ -115,7 +117,10 @@
   }
 
   .color-picker-wheel-inner {
-    inset: calc(50% - (50% - var(--color-picker-wheel-thickness)) * 0.7071 + var(--spacing) * 1.5);
+    inset: calc(
+      50% - (50% - var(--color-picker-wheel-thickness)) * 0.7071 +
+        var(--spacing) * 1.5
+    );
   }
 
   .color-picker-field-hex {
@@ -148,7 +153,9 @@
   }
 
   .color-picker-swatch-item {
-    transition: transform 0.15s, scale 0.15s;
+    transition:
+      transform 0.15s,
+      scale 0.15s;
   }
 
   .folder-root {
@@ -193,3 +200,18 @@
   }
 }
 
+@property --cover-color {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+.cover-bg {
+  --cover-color: transparent;
+  background: radial-gradient(
+    circle at 50% 40%,
+    var(--cover-color) 0%,
+    transparent 100%
+  );
+  transition: --cover-color 400ms ease-in-out;
+}

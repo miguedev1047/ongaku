@@ -17,6 +17,7 @@ import { useQuery } from '@tanstack/react-query'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
 
 interface PlaylistSongTableRowProps {
   row: Row<PlaylistTableFeatures, TPlaylistSong>
@@ -35,6 +36,8 @@ export const PlaylistSongTableRow = memo(function PlaylistSongTableRow({
   )
   const playSong = useActivePlayerStore((state) => state.playSong)
 
+  const navigate = useNavigate()
+
   const handleRowClick = (e: React.MouseEvent) => {
     if (isItemAction(e)) return
 
@@ -48,6 +51,10 @@ export const PlaylistSongTableRow = memo(function PlaylistSongTableRow({
         type: 'playlist',
         playlistName: song.playlist_name || '',
       })
+    }
+
+    if (isActiveTrack) {
+      navigate({ to: '/song' })
     }
   }
 

@@ -94,3 +94,13 @@
   mask-image: radial-gradient(farthest-side, transparent calc(100% - var(--color-picker-wheel-thickness)), #000 calc(100% - var(--color-picker-wheel-thickness) + 1px));
 }
 
+@utility preserve-3d {
+  transform-style: preserve-3d;
+}
+
+@utility preserve-3d-children {
+  & > * {
+    transform-style: preserve-3d;
+  }
+}
+

@@ -2,6 +2,10 @@ import { CoverImage } from '@/components/ui/cover-image'
 import { Show } from '@/components/utility/show'
 import { cn } from 'cn'
 import type { TPlaylistSong } from '@/features/playlist-songs/types'
+import { useTranslation } from 'react-i18next'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { Music3Icon } from '@hugeicons/core-free-icons'
+import { Link } from '@tanstack/react-router'
 
 export interface PlaylistHeroCoverProps {
   coverUrl?: string
@@ -14,10 +18,6 @@ export interface PlaylistHeroCoverProps {
   isPlaylistPlaying: boolean
   currentSong: TPlaylistSong | null
 }
-
-import { useTranslation } from 'react-i18next'
-import { HugeiconsIcon } from '@hugeicons/react'
-import { Music3Icon } from '@hugeicons/core-free-icons'
 
 export function PlaylistHeroCover({
   coverUrl,
@@ -39,7 +39,9 @@ export function PlaylistHeroCover({
       )}
     >
       <Show when={hasShowCover && coverUrl}>
-        <figure
+        <Link
+          to='/song'
+          role='figure'
           className={cn(
             'size-24 sm:size-32 md:size-36 lg:size-40 shrink-0 overflow-hidden rounded-lg shadow-md border border-border/20',
           )}
@@ -49,7 +51,7 @@ export function PlaylistHeroCover({
             alt={coverAlt}
             className={cn('size-full object-cover')}
           />
-        </figure>
+        </Link>
       </Show>
 
       <div className={cn('space-y-1.5 sm:space-y-2 min-w-0 flex-1')}>

@@ -40,7 +40,9 @@ export function usePlaylistHero() {
   const targetCoverSong =
     isThisPlaylistActive && currentSong ? currentSong : firstSong
 
-  const coverUrl = targetCoverSong ? getCoverUrl({ song: targetCoverSong }) : undefined
+  const coverUrl = targetCoverSong
+    ? getCoverUrl({ song: targetCoverSong })
+    : undefined
   const coverAlt = targetCoverSong?.name ?? playlistName
   const tracksCount = songs?.length ?? 0
   const trackLabel = tracksCount === 1 ? 'track' : 'tracks'
