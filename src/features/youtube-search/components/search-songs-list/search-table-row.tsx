@@ -1,19 +1,15 @@
-import React, { memo, Suspense } from 'react'
+import React, { memo, useMemo } from 'react'
 import type { Row } from '@tanstack/react-table'
 import type { TYoutubeSearchResult } from '@/features/youtube-search/types'
 import type { SearchTableFeatures } from '@/features/youtube-search/components/search-songs-list/search-table-features'
 import { formatDuration } from '@/shared/helpers/format-duration'
 import {
-  useStreamingPlayerStore,
-  useActivePlayerStore,
-} from '@/features/player/stores'
-import {
   SearchSongActions,
   SearchSongContextMenu,
 } from '@/features/youtube-search/components/song-actions'
+import { useSearchSongActions } from '@/features/youtube-search/components/song-actions/hooks'
 import { isItemAction } from '@/shared/helpers/is-item-action'
 import { TableSongItem } from '@/components/table-songs-list'
-import { Skeleton } from '@/components/ui/skeleton'
 
 interface SearchSongTableRowProps {
   row: Row<SearchTableFeatures, TYoutubeSearchResult>
@@ -23,30 +19,22 @@ export const SearchSongTableRow = memo(function SearchSongTableRow({
   row,
 }: SearchSongTableRowProps) {
   const item = row.original
-
-  const isCurrentTrack = useStreamingPlayerStore(
-    (state) => state.currentTrack?.id === item.id,
-  )
-  const togglePlay = useStreamingPlayerStore((s) => s.togglePlay)
-  const playStream = useActivePlayerStore((s) => s.playStream)
+  const actions = useSearchSongActions({ item })
 
   const handleRowClick = (e: React.MouseEvent) => {
     if (isItemAction(e)) return
-
-    if (isCurrentTrack) {
-      togglePlay()
-      return
-    }
-
-    playStream(item)
+    actions.togglePlayback()
   }
 
-  const durationText = item.duration ? formatDuration(item.duration) : '--:--'
+  const durationText = useMemo(
+    () => (item.duration ? formatDuration(item.duration) : '--:--'),
+    [item.duration],
+  )
 
   return (
-    <SearchSongContextMenu item={item}>
+    <SearchSongContextMenu item={item} actions={actions}>
       <TableSongItem
-        isActive={isCurrentTrack}
+        isActive={actions.isCurrentTrack}
         onClick={handleRowClick}
       >
         <TableSongItem.Select
@@ -63,9 +51,7 @@ export const SearchSongTableRow = memo(function SearchSongTableRow({
         />
         <TableSongItem.Duration text={durationText} />
         <TableSongItem.Actions>
-          <Suspense fallback={<Skeleton className='size-7 rounded-md' />}>
-            <SearchSongActions item={item} />
-          </Suspense>
+          <SearchSongActions item={item} actions={actions} />
         </TableSongItem.Actions>
       </TableSongItem>
     </SearchSongContextMenu>

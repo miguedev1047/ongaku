@@ -49,6 +49,7 @@ export function useLibraryList({ data }: UseLibraryListProps) {
     data,
     columns: librarySongColumns,
     features: libraryTableFeatures,
+    overscan: 3,
   })
 }
 

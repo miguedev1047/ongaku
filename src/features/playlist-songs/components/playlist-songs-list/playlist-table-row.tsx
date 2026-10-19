@@ -13,7 +13,7 @@ import {
 } from '@/features/playlist-songs/components/song-actions'
 import { isItemAction } from '@/shared/helpers/is-item-action'
 import { TableSongItem } from '@/components/table-songs-list'
-import { useQuery } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
@@ -29,7 +29,7 @@ export const PlaylistSongTableRow = memo(function PlaylistSongTableRow({
   const { t } = useTranslation()
   const song = row.original
   const { getCoverUrl } = useSongUtils()
-  const { data: health } = useQuery(systemHealthQueryOpts())
+  const queryClient = useQueryClient()
 
   const isActiveTrack = useLocalPlayerStore(
     (state) => state.currentSong?.id === song.id,
@@ -41,6 +41,7 @@ export const PlaylistSongTableRow = memo(function PlaylistSongTableRow({
   const handleRowClick = (e: React.MouseEvent) => {
     if (isItemAction(e)) return
 
+    const health = queryClient.getQueryData<any>(systemHealthQueryOpts().queryKey)
     if (health && !health.serverHealthy) {
       toast.error(t('toasts.songs.media_offline'))
       return

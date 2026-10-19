@@ -14,11 +14,14 @@ import { RouteErrorState } from '@/components/feedback/route-ui-state'
 import { createFileRoute } from '@tanstack/react-router'
 import { librarySongsQueryOpts } from '@/features/library/queries'
 
+import { playlistsQueryOpts } from '@/features/playlists/queries'
+
 export const Route = createFileRoute('/library/')({
   pendingComponent: LibraryPending,
   errorComponent: RouteErrorState,
   loader: ({ context }) => {
     context.queryClient.query(librarySongsQueryOpts())
+    context.queryClient.query(playlistsQueryOpts())
   },
   component: RouteComponent,
 })

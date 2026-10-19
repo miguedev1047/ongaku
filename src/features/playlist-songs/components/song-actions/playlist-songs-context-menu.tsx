@@ -110,17 +110,21 @@ export function PlaylistSongContextMenu({
         </ContextMenuContent>
       </ContextMenu>
 
-      <MoveSong
-        song={song}
-        open={isMoveDialogOpen}
-        onOpenChange={setIsMoveDialogOpen}
-      />
+      <Show when={isMoveDialogOpen}>
+        <MoveSong
+          song={song}
+          open={isMoveDialogOpen}
+          onOpenChange={setIsMoveDialogOpen}
+        />
+      </Show>
 
-      <DeleteSong
-        song={song}
-        open={isDeleteDialogOpen}
-        onOpenChange={setIsDeleteDialogOpen}
-      />
+      <Show when={isDeleteDialogOpen}>
+        <DeleteSong
+          song={song}
+          open={isDeleteDialogOpen}
+          onOpenChange={setIsDeleteDialogOpen}
+        />
+      </Show>
     </>
   )
 }

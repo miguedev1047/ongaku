@@ -22,7 +22,12 @@ interface DeleteSongProps {
 
 import { useTranslation } from "react-i18next"
 
-export function DeleteSong({
+export function DeleteSong(props: DeleteSongProps) {
+  if (!props.open) return null
+  return <DeleteSongContent {...props} />
+}
+
+function DeleteSongContent({
   song,
   open,
   onOpenChange,

@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { librarySongsQueryOpts } from '@/features/library/queries'
@@ -12,7 +13,10 @@ export function LibraryStats() {
   const { data: songs = [] } = useSuspenseQuery(librarySongsQueryOpts())
   const { data: playlists = [] } = useSuspenseQuery(playlistsQueryOpts())
 
-  const totalTracksDuration = formatPlaylistDuration(songs)
+  const totalTracksDuration = useMemo(
+    () => formatPlaylistDuration(songs),
+    [songs],
+  )
 
   return (
     <div className='grid md:grid-cols-3 gap-4'>
@@ -20,7 +24,7 @@ export function LibraryStats() {
         <CardHeader>
           <CardDescription>{t('library.stats.tracks')}</CardDescription>
           <CardTitle size='metric'>
-            <NumberTicker value={songs.length} />
+            <NumberTicker value={songs.length} delay={0.1} />
           </CardTitle>
         </CardHeader>
       </CardWrapper>
@@ -28,7 +32,7 @@ export function LibraryStats() {
         <CardHeader>
           <CardDescription>{t('library.stats.playlists')}</CardDescription>
           <CardTitle size='metric'>
-            <NumberTicker value={playlists.length} />
+            <NumberTicker value={playlists.length} delay={0.1} />
           </CardTitle>
         </CardHeader>
       </CardWrapper>

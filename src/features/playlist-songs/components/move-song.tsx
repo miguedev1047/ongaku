@@ -89,7 +89,12 @@ function MovePlaylistSelect({
   )
 }
 
-export function MoveSong({ song, open, onOpenChange }: MoveSongProps) {
+export function MoveSong(props: MoveSongProps) {
+  if (!props.open) return null
+  return <MoveSongContent {...props} />
+}
+
+function MoveSongContent({ song, open, onOpenChange }: MoveSongProps) {
   const { t } = useTranslation()
   const [targetPlaylist, setTargetPlaylist] = useState<string>("")
 

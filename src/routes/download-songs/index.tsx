@@ -14,12 +14,15 @@ import { useNetworkState } from '@/hooks/use-network-state'
 import { Show } from '@/components/utility/show'
 import { RouteErrorState } from '@/components/feedback/route-ui-state'
 
+import { systemHealthQueryOpts } from '@/shared/queries/system-health'
+
 export const Route = createFileRoute('/download-songs/')({
   component: RouteComponent,
   pendingComponent: DownloadSongsPending,
   errorComponent: RouteErrorState,
   loader: ({ context }) => {
     context.queryClient.query(playlistsQueryOpts())
+    context.queryClient.query(systemHealthQueryOpts())
   },
 })
 

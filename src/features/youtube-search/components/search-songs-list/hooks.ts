@@ -51,6 +51,7 @@ export function useSearchList({ data }: UseSearchListProps) {
     data,
     columns: searchSongColumns,
     features: searchTableFeatures,
+    overscan: 3,
   })
 }
 

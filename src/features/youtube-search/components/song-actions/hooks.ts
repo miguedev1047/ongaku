@@ -11,7 +11,7 @@ interface UseSearchSongActionsProps {
 
 export function useSearchSongActions({ item }: UseSearchSongActionsProps) {
   const { t } = useTranslation()
-  const { isPlaying, isLoading, togglePlayback } = useYoutubePlayback(item)
+  const { isCurrentTrack, isPlaying, isLoading, togglePlayback } = useYoutubePlayback(item)
   const { downloadSong } = useDownloadToPlaylist()
 
   const handleOpenYoutube = async () => {
@@ -37,6 +37,7 @@ export function useSearchSongActions({ item }: UseSearchSongActionsProps) {
   }
 
   return {
+    isCurrentTrack,
     isPlaying,
     isLoading,
     togglePlayback,

@@ -6,7 +6,7 @@ import {
 import { getPlaylistPath } from '@/shared/helpers/get-playlist-helper'
 import { openFolder } from '@/shared/helpers/open-folder'
 import { toast } from 'sonner'
-import { useQuery } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import type { TPlaylistSong } from '@/features/playlist-songs/types'
 import { useTranslation } from 'react-i18next'
@@ -19,7 +19,7 @@ export function useLibrarySongActions({ song }: UseLibrarySongActionsProps) {
   const { t } = useTranslation()
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isMoveDialogOpen, setIsMoveDialogOpen] = useState(false)
-  const { data: health } = useQuery(systemHealthQueryOpts())
+  const queryClient = useQueryClient()
 
   const isCurrentSong = useLocalPlayerStore(
     (state) => state.currentSong?.id === song.id,
@@ -31,6 +31,7 @@ export function useLibrarySongActions({ song }: UseLibrarySongActionsProps) {
   const playSong = useActivePlayerStore((state) => state.playSong)
 
   const handleTogglePlayback = () => {
+    const health = queryClient.getQueryData<any>(systemHealthQueryOpts().queryKey)
     if (health && !health.serverHealthy) {
       toast.error(t('toasts.songs.media_offline'))
       return

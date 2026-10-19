@@ -75,6 +75,17 @@
 
 ---
 
+## 🧪 Organización de Tests en el Frontend (`src/`)
+
+1. **Ubicación Obligatoria por Dominio (`src/features/<feature>/tests/`)**:
+   - Cada test específico de una funcionalidad o ruta debe residir obligatoriamente dentro de su dominio asignado en `src/features/<feature>/tests/`.
+   - Prohibido crear o mezclar tests en carpetas genéricas en la raíz del proyecto (e.g. `/tests`).
+2. **Infraestructura y Tests Compartidos (`src/shared/`)**:
+   - Todo setup global de testing (`setup.ts`), mocks de plataforma y helpers de prueba residen en `src/shared/test/`.
+   - Los tests generalistas o benchmarks de navegación transversales a toda la aplicación residen en `src/shared/tests/`.
+
+---
+
 ## 🦀 Arquitectura y Reglas de Rust (`src-tauri`)
 
 ### 1. Separación Estricta: Comandos vs Servicios vs Helpers

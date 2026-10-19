@@ -23,9 +23,10 @@ export function SearchYoutubeList({ query }: SearchYoutubeListProps = {}) {
   const { q } = useSearch({ from: '/search-youtube/' })
   const activeQuery = query ?? q
 
-  const { data: results = [] } = useSuspenseQuery(
+  const { data: rawResults } = useSuspenseQuery(
     youtubeSearchQueryOpts(activeQuery),
   )
+  const results = rawResults ?? []
 
   return (
     <Show
