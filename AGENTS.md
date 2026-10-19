@@ -96,3 +96,17 @@
 ### 3. Integridad del Contrato con TypeScript
 - Al añadir o modificar comandos en `src-tauri/src/commands/`:
   - Los nombres y firmas registrados en `lib.rs` (`tauri::generate_handler![...]`) deben coincidir exactamente con los tipos de `CommandMap` en `src/infrastructure/platform/platform.types.ts`.
+
+### 4. Estructura Domain-Driven y Modularidad (< 200 LOC)
+- **Organización por Dominio (`services/<domain>/`)**:
+  - Cada servicio reside en su propio subdirectorio con archivos desacoplados: `models.rs`, lógica dividida por operaciones/acciones, `helpers.rs`, `tests.rs` y un `mod.rs`.
+- **Archivos Concisos (< 200 líneas)**:
+  - Ningún archivo de código fuente en `src-tauri/src` debe sobrepasar ~200 líneas. Si un archivo crece, debe subdividirse por responsabilidades cohesivas.
+- **Regla Estricta de `mod.rs` (Solo Exportaciones)**:
+  - Prohibido escribir funciones, structs con lógica o bloques de tests dentro de `mod.rs`.
+  - Los archivos `mod.rs` se reservan **únicamente** para declaraciones (`mod`, `pub mod`) y re-exportaciones (`pub use`).
+- **Aislamiento de Tests Unitarios**:
+  - Prohibido mezclar bloques `#[cfg(test)] mod tests` al final de los archivos de lógica en servicios o reproductores.
+  - Los tests unitarios deben residir en `tests.rs` dedicado dentro del dominio o módulo correspondiente.
+- **Código Limpio de Comentarios Obvios**:
+  - Evitar comentarios redundantes, banners decorativos o enumeraciones obvias ("// 1. do this"). El código debe ser auto-descriptivo e idiomático.

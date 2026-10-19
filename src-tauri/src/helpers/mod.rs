@@ -19,9 +19,9 @@ pub use crate::services::batch::{
     copy_and_import_songs, copy_and_import_songs_with_app, generate_imported_filename,
     ImportProgressPayload, ImportSongsResult,
 };
-pub use crate::services::binaries::{
-    are_binaries_installed, ensure_binaries, get_binaries_info, get_ffmpeg_path,
-    get_ytdlp_libraries, get_ytdlp_path, BinariesInfo,
+pub use crate::services::system::{
+    are_binaries_installed, ensure_binaries, get_binaries_info, get_ffmpeg_path, get_ytdlp_path,
+    BinariesInfo,
 };
 pub use crate::services::download::{
     download_song_from_url, parse_progress_line, DownloadManagerState, DownloadProgress,
