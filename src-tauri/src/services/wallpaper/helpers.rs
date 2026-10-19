@@ -40,7 +40,7 @@ pub fn validate_wallpaper_field<'a>(key: &'a str, value: &str) -> Result<&'a str
             Ok("selected_background")
         }
         "blur" => {
-            if value != "sm" && value != "md" && value != "lg" {
+            if value != "sm" && value != "md" && value != "lg" && value != "none" {
                 return Err(ServiceError::Validation(format!(
                     "Invalid blur value: '{value}'. Must be 'sm', 'md', or 'lg'"
                 )));

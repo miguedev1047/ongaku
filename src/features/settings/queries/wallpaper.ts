@@ -2,7 +2,7 @@ import { queryOptions } from '@tanstack/react-query'
 import { platformService } from '@/infrastructure/platform'
 import type { ThemeMode } from '@/constants/themes'
 
-export type WallpaperBlur = 'sm' | 'md' | 'lg'
+export type WallpaperBlur = 'none' | 'sm' | 'md' | 'lg'
 
 export interface TWallpaperConfig {
   theme: ThemeMode

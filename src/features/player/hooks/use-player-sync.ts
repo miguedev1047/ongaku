@@ -122,6 +122,7 @@ export function usePlayerSync() {
 
         // Handle track progression
         if (queue && queue.length > 0) {
+          useLocalPlayerStore.getState().setDirection(1)
           const nextSong = isShuffle
             ? getRandomSong(queue, currentSong)
             : getAdjacentSong(queue, currentSong, 1)

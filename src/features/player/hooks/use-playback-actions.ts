@@ -16,9 +16,12 @@ export function usePlaybackActions() {
   }
 
   const nextTrack = () => {
-    const { isShuffle, currentSong, queue } = useLocalPlayerStore.getState()
+    const { isShuffle, currentSong, queue, setDirection } =
+      useLocalPlayerStore.getState()
 
     if (!queue || queue.length === 0) return
+
+    setDirection(1)
 
     if (isShuffle) {
       const randomSong = getRandomSong(queue, currentSong)
@@ -31,9 +34,12 @@ export function usePlaybackActions() {
   }
 
   const prevTrack = () => {
-    const { isShuffle, currentSong, queue } = useLocalPlayerStore.getState()
+    const { isShuffle, currentSong, queue, setDirection } =
+      useLocalPlayerStore.getState()
 
     if (!queue || queue.length === 0) return
+
+    setDirection(-1)
 
     if (isShuffle) {
       const randomSong = getRandomSong(queue, currentSong)

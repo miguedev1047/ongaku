@@ -5,6 +5,7 @@ import { playlistsQueryOpts } from '@/features/playlists/queries'
 import { useTranslation } from 'react-i18next'
 import { CardWrapper } from '@/components/ui/card-wrapper'
 import { formatPlaylistDuration } from '@/shared/helpers/total-tracks-hours'
+import { NumberTicker } from '@/components/ui/number-ticker'
 
 export function LibraryStats() {
   const { t } = useTranslation()
@@ -18,13 +19,17 @@ export function LibraryStats() {
       <CardWrapper className='@container/card'>
         <CardHeader>
           <CardDescription>{t('library.stats.tracks')}</CardDescription>
-          <CardTitle size='metric'>{songs.length}</CardTitle>
+          <CardTitle size='metric'>
+            <NumberTicker value={songs.length} />
+          </CardTitle>
         </CardHeader>
       </CardWrapper>
       <CardWrapper className='@container/card'>
         <CardHeader>
           <CardDescription>{t('library.stats.playlists')}</CardDescription>
-          <CardTitle size='metric'>{playlists.length}</CardTitle>
+          <CardTitle size='metric'>
+            <NumberTicker value={playlists.length} />
+          </CardTitle>
         </CardHeader>
       </CardWrapper>
       <CardWrapper className='@container/card'>

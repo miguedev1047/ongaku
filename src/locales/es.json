@@ -241,6 +241,7 @@
             "list_description": "Elige una imagen de fondo o mantén el aspecto predeterminado",
             "blur_title": "Desenfoque del Wallpaper",
             "blur_description": "Ajusta la intensidad del desenfoque aplicado al wallpaper",
+            "blur_none": "Ninguno",
             "blur_sm": "Sutil (sm)",
             "blur_md": "Medio (md)",
             "blur_lg": "Intenso (lg)",

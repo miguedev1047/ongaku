@@ -27,6 +27,7 @@ export function SongLocalView() {
           <SongCoverCanvas
             coverUrl={getCoverUrl({ song })}
             title={song.name}
+            songId={song.id}
             isPlaying={playerState === 'playing'}
             onPlayToggle={togglePlay}
           />

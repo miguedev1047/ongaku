@@ -198,6 +198,90 @@
   .dark .folder-front {
     background-color: var(--folder-front-dark);
   }
+
+  /* Rainbow Button */
+  .rainbow-btn-default {
+    background-image:
+      linear-gradient(var(--primary), var(--primary)),
+      linear-gradient(var(--primary) 50%, color-mix(in srgb, var(--primary) 60%, transparent) 80%, transparent),
+      linear-gradient(90deg, var(--color-1), var(--color-5), var(--color-3), var(--color-4), var(--color-2));
+    background-size: 200%;
+    background-clip: padding-box, border-box, border-box;
+    background-origin: border-box;
+    border: 1px solid transparent;
+    color: var(--primary-foreground);
+  }
+
+  .rainbow-btn-default:hover {
+    filter: brightness(1.1);
+  }
+
+  .rainbow-btn-outline {
+    background-image:
+      linear-gradient(var(--background), var(--background)),
+      linear-gradient(var(--background) 50%, color-mix(in srgb, var(--background) 60%, transparent) 80%, transparent),
+      linear-gradient(90deg, var(--color-1), var(--color-5), var(--color-3), var(--color-4), var(--color-2));
+    background-size: 200%;
+    background-clip: padding-box, border-box, border-box;
+    background-origin: border-box;
+    border: 1px solid transparent;
+    color: var(--foreground);
+  }
+
+  .rainbow-btn-outline:hover {
+    background-color: var(--accent);
+  }
+
+  .rainbow-btn-secondary {
+    background-image:
+      linear-gradient(var(--secondary), var(--secondary)),
+      linear-gradient(var(--secondary) 50%, color-mix(in srgb, var(--secondary) 60%, transparent) 80%, transparent),
+      linear-gradient(90deg, var(--color-1), var(--color-5), var(--color-3), var(--color-4), var(--color-2));
+    background-size: 200%;
+    background-clip: padding-box, border-box, border-box;
+    background-origin: border-box;
+    border: 1px solid transparent;
+    color: var(--secondary-foreground);
+  }
+
+  .rainbow-btn-secondary:hover {
+    filter: brightness(1.05);
+  }
+
+  .rainbow-btn-glow {
+    isolation: isolate;
+  }
+
+  .rainbow-btn-glow > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .rainbow-btn-glow::before {
+    content: '';
+    position: absolute;
+    bottom: -20%;
+    left: 50%;
+    z-index: 0;
+    height: 30%;
+    width: 60%;
+    transform: translateX(-50%);
+    animation: rainbow var(--speed, 2s) infinite linear;
+    background-image: linear-gradient(90deg, var(--color-1), var(--color-5), var(--color-3), var(--color-4), var(--color-2));
+    background-size: 200%;
+    filter: blur(0.6rem);
+    pointer-events: none;
+    opacity: 0.8;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  .rainbow-btn-glow:hover::before {
+    opacity: 1;
+  }
+
+  .rainbow-btn-glow:disabled::before {
+    opacity: 0;
+  }
 }
 
 @property --cover-color {
@@ -208,10 +292,6 @@
 
 .cover-bg {
   --cover-color: transparent;
-  background: radial-gradient(
-    circle at 50% 40%,
-    var(--cover-color) 0%,
-    transparent 100%
-  );
+  background: color-mix(in srgb, var(--cover-color) 50%, transparent);
   transition: --cover-color 400ms ease-in-out;
 }

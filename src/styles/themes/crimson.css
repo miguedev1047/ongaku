@@ -1,6 +1,6 @@
 /* --- Crimson Theme (Still In Love - Carmesí) --- */
 
-[data-theme="crimson"] {
+[data-theme='crimson'] {
   --background: oklch(0.985 0.006 15);
   --foreground: oklch(0.28 0.04 15);
   --card: oklch(1 0 0);
@@ -23,8 +23,8 @@
   --warning-foreground: oklch(0.25 0.05 65);
   --success: oklch(0.65 0.16 145);
   --success-foreground: oklch(0.99 0 0);
-  --border: oklch(0.90 0.015 15);
-  --input: oklch(0.90 0.015 15);
+  --border: oklch(0.9 0.015 15);
+  --input: oklch(0.9 0.015 15);
   --ring: oklch(0.55 0.22 18);
   --chart-1: oklch(0.55 0.22 18);
   --chart-2: oklch(0.65 0.18 355);
@@ -39,10 +39,10 @@
   --sidebar-accent-foreground: oklch(0.45 0.18 18);
   --sidebar-border: oklch(0.91 0.015 15);
   --sidebar-ring: oklch(0.55 0.22 18);
-  --radius: 0.5rem;
+  --radius: 0.7rem;
 }
 
-[data-theme="crimson"].dark {
+[data-theme='crimson'].dark {
   --background: oklch(0.15 0.02 18);
   --foreground: oklch(0.95 0.01 15);
   --card: oklch(0.19 0.025 18);
@@ -70,7 +70,7 @@
   --ring: oklch(0.62 0.24 20);
   --chart-1: oklch(0.62 0.24 20);
   --chart-2: oklch(0.72 0.18 355);
-  --chart-3: oklch(0.50 0.16 15);
+  --chart-3: oklch(0.5 0.16 15);
   --chart-4: oklch(0.78 0.12 30);
   --chart-5: oklch(0.85 0.08 20);
   --sidebar: oklch(0.13 0.02 18);
@@ -81,5 +81,5 @@
   --sidebar-accent-foreground: oklch(0.96 0.02 15);
   --sidebar-border: oklch(0.23 0.025 18);
   --sidebar-ring: oklch(0.62 0.24 20);
-  --radius: 0.5rem;
+  --radius: 0.7rem;
 }

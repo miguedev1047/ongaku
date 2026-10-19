@@ -3,7 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { platformService } from '@/infrastructure/platform'
 import { systemBackgroundsOpts } from '@/features/settings/queries/backgrounds'
-import { wallpaperQueryOpts } from '@/features/settings/queries/wallpaper'
+import {
+  type WallpaperBlur,
+  wallpaperQueryOpts,
+} from '@/features/settings/queries/wallpaper'
 import { useUpdateWallpaper } from '@/features/settings/hooks/use-wallpaper'
 
 export function useAppWallpaperMutations() {
@@ -124,7 +127,7 @@ export function useAppWallpaperMutations() {
     updateWallpaper.mutate({ field: 'selected_background', value: id })
   }
 
-  const updateBlur = (blur: 'sm' | 'md' | 'lg') => {
+  const updateBlur = (blur: WallpaperBlur) => {
     updateWallpaper.mutate({ field: 'blur', value: blur })
   }
 

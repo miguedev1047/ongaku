@@ -70,6 +70,8 @@ export function usePlayerNextSong() {
   const handleNextSong = () => {
     if (queue.length === 0) return
 
+    useLocalPlayerStore.getState().setDirection(1)
+
     if (isShuffle) {
       const randomSong = getRandomSong(queue, currentSong)
       if (randomSong) useActivePlayerStore.getState().playSong(randomSong)
@@ -92,6 +94,8 @@ export function usePlayerPreviousSong() {
 
   const handlePreviousSong = () => {
     if (queue.length === 0) return
+
+    useLocalPlayerStore.getState().setDirection(-1)
 
     if (isShuffle) {
       const randomSong = getRandomSong(queue, currentSong)

@@ -9,6 +9,11 @@ import type { WallpaperBlur } from '@/features/settings/queries/wallpaper'
 
 const BLUR_OPTIONS: { value: WallpaperBlur; labelKey: string }[] = [
   {
+    value: 'none',
+    labelKey:
+      'settings.tabs.appearance.appearance_and_interface.app_background.blur_none',
+  },
+  {
     value: 'sm',
     labelKey:
       'settings.tabs.appearance.appearance_and_interface.app_background.blur_sm',
@@ -58,13 +63,8 @@ export function AppWallpaperBlurSelection() {
               'flex items-center gap-2 p-2.5 rounded-md border border-border/60 bg-muted/20 hover:bg-muted/40 transition-colors cursor-pointer select-none',
             )}
           >
-            <RadioGroupItem
-              value={opt.value}
-              id={`blur-${opt.value}`}
-            />
-            <span className='text-xs text-foreground'>
-              {t(opt.labelKey)}
-            </span>
+            <RadioGroupItem value={opt.value} id={`blur-${opt.value}`} />
+            <span className='text-xs text-foreground'>{t(opt.labelKey)}</span>
           </label>
         ))}
       </RadioGroup>

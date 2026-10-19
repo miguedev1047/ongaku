@@ -23,11 +23,11 @@ export function DownloadQueueCompletedCard({
   const { t } = useTranslation()
 
   return (
-    <div className='p-2 rounded-lg bg-success/5 border border-success/20 flex items-center justify-between gap-2 text-xs'>
+    <div className='p-2 rounded-lg bg-primary/5 border border-primary/20 flex items-center justify-between gap-2 text-xs'>
       <div className='flex items-center gap-2 min-w-0'>
         <HugeiconsIcon
           icon={CheckmarkCircle02Icon}
-          className='size-3.5 text-success shrink-0'
+          className='size-3.5 text-primary shrink-0'
         />
         <span
           className='truncate font-medium text-foreground'
@@ -57,10 +57,7 @@ export function DownloadQueueCompletedCard({
         onClick={() => onRemove(task.id)}
         title={t('common.remove')}
       >
-        <HugeiconsIcon
-          icon={MultiplicationSignIcon}
-          className='size-3.5'
-        />
+        <HugeiconsIcon icon={MultiplicationSignIcon} className='size-3.5' />
       </Button>
     </div>
   )

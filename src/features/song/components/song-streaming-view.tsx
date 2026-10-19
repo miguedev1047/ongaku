@@ -25,6 +25,7 @@ export function SongStreamingView() {
           <SongCoverCanvas
             coverUrl={track.thumbnail}
             title={track.title}
+            songId={track.id}
             isPlaying={playerState === 'playing'}
             onPlayToggle={togglePlay}
           />

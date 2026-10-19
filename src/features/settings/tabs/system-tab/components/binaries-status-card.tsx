@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next'
 import { cn } from 'cn'
 import { useNetworkState } from '@/hooks/use-network-state'
 import { BinariesOfflineCard } from '@/features/settings/tabs/system-tab/components/binaries-offline-card'
+import { RainbowButton } from '@/components/ui/rainbow-button'
 
 interface BinariesManagerCardProps {
   isOnline: boolean
@@ -148,21 +149,14 @@ function BinariesManagerCard({ isOnline }: BinariesManagerCardProps) {
         </div>
 
         <div className={cn('flex items-center gap-2 shrink-0')}>
-          <Button
-            variant='outline'
-            size='sm'
-            onClick={handleOpenFolder}
-            className='h-8 gap-1.5'
-          >
+          <Button variant='outline' onClick={handleOpenFolder}>
             <HugeiconsIcon icon={FolderIcon} className='size-3.5' />
             <span>{t('settings.tabs.system.binaries_status.open_folder')}</span>
           </Button>
 
-          <Button
-            size='sm'
+          <RainbowButton
             onClick={installBinaries}
             disabled={isPending || !isOnline}
-            className='h-8 gap-1.5'
           >
             <Show
               when={!isPending}
@@ -185,7 +179,7 @@ function BinariesManagerCard({ isOnline }: BinariesManagerCardProps) {
                 {t('settings.tabs.system.binaries_status.installing')}
               </Show>
             </span>
-          </Button>
+          </RainbowButton>
         </div>
       </div>
 

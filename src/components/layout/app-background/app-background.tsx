@@ -8,6 +8,7 @@ import { cn } from 'cn'
 type AppBackgroundProps = React.ComponentProps<'div'>
 
 const BLUR_CLASSES = {
+  none: 'blur-none',
   sm: 'blur-xs',
   md: 'blur-sm',
   lg: 'blur-md',
@@ -44,10 +45,10 @@ export function AppBackground({
               blurClass,
             )}
             style={{
-              backgroundImage: `radial-gradient(rgba(255,255,255,1) 1px, transparent 1px), url('${url}')`,
-              backgroundSize: '12px 12px, cover',
-              backgroundPosition: '0 0, center',
-              backgroundRepeat: 'repeat, no-repeat',
+              backgroundImage: `url('${url}')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
             }}
           />
         )}

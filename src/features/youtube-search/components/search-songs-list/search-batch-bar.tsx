@@ -17,6 +17,7 @@ import { cn } from 'cn'
 import { useTranslation } from 'react-i18next'
 import { Show } from '@/components/utility/show'
 import { DROPDOWN_ACTIONS_MENU_WIDTH } from '@/constants/styles'
+import { RainbowButton } from '@/components/ui/rainbow-button'
 
 export function SearchBatchBar() {
   const { t } = useTranslation()
@@ -55,10 +56,7 @@ export function SearchBatchBar() {
           onClick={clearSelection}
           title={t('playlists.batch.deselect_all')}
         >
-          <HugeiconsIcon
-            icon={Cancel01Icon}
-            className='size-3.5'
-          />
+          <HugeiconsIcon icon={Cancel01Icon} className='size-3.5' />
         </Button>
       </div>
 
@@ -67,16 +65,10 @@ export function SearchBatchBar() {
       <DropdownMenu>
         <DropdownMenuTrigger
           render={
-            <Button
-              size='sm'
-              className='gap-1.5 h-8'
-            >
-              <HugeiconsIcon
-                icon={Download01Icon}
-                className='size-3.5'
-              />
+            <RainbowButton size='sm'>
+              <HugeiconsIcon icon={Download01Icon} className='size-3.5' />
               <span>{t('youtube_search.download_to')}</span>
-            </Button>
+            </RainbowButton>
           }
         />
         <DropdownMenuContent

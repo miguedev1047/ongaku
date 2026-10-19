@@ -22,12 +22,14 @@ export interface LocalPlayerStore {
   volume: number
   playerState: LocalPlayerState
   trackChangeTimestamp: number
+  direction: number
 
   setCurrentSong: (
     song: TPlaylistSong | null,
     queueOrContext?: readonly TPlaylistSong[] | PlaybackContext,
     context?: PlaybackContext
   ) => void
+  setDirection: (direction: number) => void
   setQueue: (queue: readonly TPlaylistSong[]) => void
   removeFromQueue: (songId: string) => void
   setCurrentPlaylist: (playlist: string) => void
@@ -64,6 +66,8 @@ export const useLocalPlayerStore = create<LocalPlayerStore>()(
   progress: 0,
   volume: DEFAULT_PLAYER_VOLUME,
   trackChangeTimestamp: 0,
+  direction: 1,
+  setDirection: (direction) => set({ direction }),
   setCurrentSong: (song, queueOrContext, context) =>
     set((state) => {
       let resolvedQueue: readonly TPlaylistSong[] | undefined
@@ -214,6 +218,7 @@ export const useLocalPlayerStore = create<LocalPlayerStore>()(
       duration: 0,
       playerState: "idle",
       currentPlaylist: "",
+      direction: 1,
     })
   },
     }),

@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { RainbowButton } from '@/components/ui/rainbow-button'
 import { Spinner } from '@/components/ui/spinner'
 import { Show } from '@/components/utility/show'
 import { Search01Icon } from '@hugeicons/core-free-icons'
@@ -17,7 +17,7 @@ export function SubmitDownloadButton({
   const { t } = useTranslation()
 
   return (
-    <Button
+    <RainbowButton
       type='submit'
       form='download-song-form'
       disabled={disabled || isPending}
@@ -25,20 +25,17 @@ export function SubmitDownloadButton({
       <Show
         when={isPending}
         fallback={
-          <div className='flex items-center gap-2'>
-            <HugeiconsIcon
-              icon={Search01Icon}
-              className='size-4'
-            />
+          <>
+            <HugeiconsIcon icon={Search01Icon} className='size-4' />
             <span>{t('download_songs.form.submit')}</span>
-          </div>
+          </>
         }
       >
-        <div className='flex items-center gap-2'>
+        <>
           <Spinner className='size-3.5' />
           <span>{t('download_songs.form.resolving')}</span>
-        </div>
+        </>
       </Show>
-    </Button>
+    </RainbowButton>
   )
 }

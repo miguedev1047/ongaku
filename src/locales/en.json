@@ -241,6 +241,7 @@
             "list_description": "Choose a background image or keep the default backdrop",
             "blur_title": "Wallpaper Blur",
             "blur_description": "Adjust the background blur intensity applied to the wallpaper",
+            "blur_none": "None",
             "blur_sm": "Subtle (sm)",
             "blur_md": "Medium (md)",
             "blur_lg": "Strong (lg)",

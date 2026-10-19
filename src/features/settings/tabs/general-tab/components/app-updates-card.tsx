@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next'
 import { cn } from 'cn'
 import { useNetworkState } from '@/hooks/use-network-state'
 import { AppUpdateNetworkError } from '@/features/settings/tabs/general-tab/components/app-update-network-error'
+import { RainbowButton } from '@/components/ui/rainbow-button'
 
 interface ReleaseNotesLinkProps {
   version?: string
@@ -174,12 +175,7 @@ export function AppUpdatesCard() {
 
         <Show when={isOnline && hasUpdate}>
           <div className={cn('flex items-center gap-2')}>
-            <Button
-              size='sm'
-              onClick={handleInstallUpdate}
-              disabled={isPending}
-              className='h-8 gap-1.5'
-            >
+            <RainbowButton onClick={handleInstallUpdate} disabled={isPending}>
               <Show
                 when={!isPending}
                 fallback={<Spinner className={cn('size-3.5')} />}
@@ -216,7 +212,7 @@ export function AppUpdatesCard() {
                   </Show>
                 </Show>
               </span>
-            </Button>
+            </RainbowButton>
           </div>
         </Show>
       </CardWrapper>
