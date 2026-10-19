@@ -27,7 +27,7 @@ function PlaylistSongPending() {
 export const Route = createFileRoute('/playlists/$playlistName')({
   pendingComponent: PlaylistSongPending,
   errorComponent: RouteErrorState,
-  loader: async ({ context, params }) => {
+  loader: ({ context, params }) => {
     context.queryClient.query(playlistSongsQueryOpts(params.playlistName))
   },
   component: RouteComponent,

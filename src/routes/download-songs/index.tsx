@@ -18,7 +18,7 @@ export const Route = createFileRoute('/download-songs/')({
   component: RouteComponent,
   pendingComponent: DownloadSongsPending,
   errorComponent: RouteErrorState,
-  loader: async ({ context }) => {
+  loader: ({ context }) => {
     context.queryClient.query(playlistsQueryOpts())
   },
 })
@@ -40,10 +40,7 @@ function RouteComponent() {
           />
         }
       >
-        <Show
-          when={isOnline}
-          fallback={<DownloadSongsOffline />}
-        >
+        <Show when={isOnline} fallback={<DownloadSongsOffline />}>
           <DownloadSongsContent />
         </Show>
       </Show>
