@@ -4,7 +4,7 @@ export const defaultMockHealth = {
   serverHealthy: true,
   serverPort: 4200,
   serverHost: 'localhost',
-  appVersion: '0.1.39',
+  appVersion: '0.1.40',
   binariesInstalled: true,
   ytdlpInstalled: true,
   ffmpegInstalled: true,
