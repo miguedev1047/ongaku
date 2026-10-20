@@ -16,20 +16,8 @@ interface DownloadQueueListProps {
   onNavigate?: () => void
 }
 
-function getEstimatedTaskHeight(status?: DownloadTask['status']): number {
-  switch (status) {
-    case 'downloading':
-      return 76
-    case 'network-error':
-    case 'error':
-    case 'cancelled':
-      return 56
-    case 'queued':
-    case 'retry':
-    case 'on-saved':
-    default:
-      return 44
-  }
+function getEstimatedTaskHeight(): number {
+  return 52
 }
 
 export function DownloadQueueList({
@@ -45,7 +33,7 @@ export function DownloadQueueList({
   const rowVirtualizer = useVirtualizer({
     count: tasks.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: (index) => getEstimatedTaskHeight(tasks[index]?.status),
+    estimateSize: () => getEstimatedTaskHeight(),
     getItemKey: (index) => tasks[index]?.id ?? index,
     gap: 8,
     overscan: 5,

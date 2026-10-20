@@ -6,6 +6,14 @@ import {
   FolderIcon,
   MultiplicationSignIcon,
 } from '@hugeicons/core-free-icons'
+import {
+  Attachment,
+  AttachmentActions,
+  AttachmentContent,
+  AttachmentDescription,
+  AttachmentMedia,
+  AttachmentTitle,
+} from '@/components/ui/attachment'
 import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 
@@ -23,42 +31,46 @@ export function DownloadQueueCompletedCard({
   const { t } = useTranslation()
 
   return (
-    <div className='p-2 rounded-lg bg-primary/5 border border-primary/20 flex items-center justify-between gap-2 text-xs'>
-      <div className='flex items-center gap-2 min-w-0'>
-        <HugeiconsIcon
-          icon={CheckmarkCircle02Icon}
-          className='size-3.5 text-primary shrink-0'
-        />
-        <span
-          className='truncate font-medium text-foreground'
-          title={task.item.title}
+    <Attachment state='done' orientation='horizontal-full'>
+      <AttachmentMedia>
+        <HugeiconsIcon icon={CheckmarkCircle02Icon} />
+      </AttachmentMedia>
+      <AttachmentContent>
+        <AttachmentTitle>{task.item.title}</AttachmentTitle>
+        <AttachmentDescription>
+          {t('download_queue.saved_to', {
+            playlist: task.playlistName,
+          })}
+        </AttachmentDescription>
+      </AttachmentContent>
+      <AttachmentActions>
+        <Button
+          nativeButton={false}
+          variant='ghost-muted'
+          size='icon-sm'
+          onClick={onNavigate}
+          render={
+            <Link
+              to='/playlists/$playlistName'
+              params={{ playlistName: task.playlistName }}
+            />
+          }
+          title={t('download_queue.saved_to', {
+            playlist: task.playlistName,
+          })}
         >
-          {task.item.title}
-        </span>
-        <div className='flex items-center gap-1 text-xs text-muted-foreground shrink-0'>
-          <HugeiconsIcon icon={FolderIcon} className='size-3' />
-          <Link
-            to='/playlists/$playlistName'
-            params={{ playlistName: task.playlistName }}
-            className='text-primary hover:underline font-medium'
-            onClick={onNavigate}
-          >
-            {t('download_queue.saved_to', {
-              playlist: task.playlistName,
-            })}
-          </Link>
-        </div>
-      </div>
+          <HugeiconsIcon icon={FolderIcon} />
+        </Button>
 
-      <Button
-        size='icon-sm'
-        variant='ghost-muted'
-        className='shrink-0'
-        onClick={() => onRemove(task.id)}
-        title={t('common.remove')}
-      >
-        <HugeiconsIcon icon={MultiplicationSignIcon} className='size-3.5' />
-      </Button>
-    </div>
+        <Button
+          size='icon-sm'
+          variant='ghost-muted'
+          onClick={() => onRemove(task.id)}
+          title={t('common.remove')}
+        >
+          <HugeiconsIcon icon={MultiplicationSignIcon} />
+        </Button>
+      </AttachmentActions>
+    </Attachment>
   )
 }

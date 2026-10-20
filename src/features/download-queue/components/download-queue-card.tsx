@@ -5,6 +5,7 @@ import {
   DownloadQueueDownloadingCard,
   DownloadQueueErrorCard,
   DownloadQueueQueuedCard,
+  DownloadQueueWarnCard,
 } from './cards'
 
 export interface DownloadQueueCardProps {
@@ -25,6 +26,7 @@ export function DownloadQueueCard({
   const isDownloading = task.status === 'downloading'
   const isQueued = task.status === 'queued' || task.status === 'retry'
   const isCompleted = task.status === 'on-saved'
+  const isWarn = task.status === 'network-error'
 
   return (
     <Show
@@ -36,11 +38,22 @@ export function DownloadQueueCard({
             <Show
               when={isCompleted}
               fallback={
-                <DownloadQueueErrorCard
-                  task={task}
-                  onRetry={onRetry}
-                  onRemove={onRemove}
-                />
+                <Show
+                  when={isWarn}
+                  fallback={
+                    <DownloadQueueErrorCard
+                      task={task}
+                      onRetry={onRetry}
+                      onRemove={onRemove}
+                    />
+                  }
+                >
+                  <DownloadQueueWarnCard
+                    task={task}
+                    onRetry={onRetry}
+                    onRemove={onRemove}
+                  />
+                </Show>
               }
             >
               <DownloadQueueCompletedCard

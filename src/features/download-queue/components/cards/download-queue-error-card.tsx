@@ -6,9 +6,16 @@ import {
   Alert02Icon,
   MultiplicationSignIcon,
   RefreshIcon,
-  WifiOff01Icon,
+  WifiErrorIcon,
 } from '@hugeicons/core-free-icons'
-import { cn } from 'cn'
+import {
+  Attachment,
+  AttachmentActions,
+  AttachmentContent,
+  AttachmentDescription,
+  AttachmentMedia,
+  AttachmentTitle,
+} from '@/components/ui/attachment'
 import { useTranslation } from 'react-i18next'
 
 interface DownloadQueueErrorCardProps {
@@ -33,70 +40,42 @@ export function DownloadQueueErrorCard({
       : task.error || t('download_queue.download_failed')
 
   return (
-    <div
-      className={cn(
-        'p-2 rounded-lg flex items-center justify-between gap-2 text-xs border',
-        isNetworkError
-          ? 'bg-warning/10 border-warning/20'
-          : 'bg-destructive/5 border-destructive/20'
-      )}
+    <Attachment
+      state={isNetworkError ? 'warning' : 'error'}
+      orientation='horizontal-full'
     >
-      <div className='flex items-center gap-2 min-w-0'>
+      <AttachmentMedia>
         <Show
           when={isNetworkError}
-          fallback={
-            <HugeiconsIcon
-              icon={Alert02Icon}
-              className='size-3.5 text-destructive shrink-0'
-            />
-          }
+          fallback={<HugeiconsIcon icon={Alert02Icon} />}
         >
-          <HugeiconsIcon
-            icon={WifiOff01Icon}
-            className='size-3.5 text-warning shrink-0'
-          />
+          <HugeiconsIcon icon={WifiErrorIcon} />
         </Show>
-
-        <div className='flex flex-col gap-0.5 min-w-0'>
-          <span
-            className='truncate font-medium text-foreground'
-            title={task.item.title}
-          >
-            {task.item.title}
-          </span>
-          <span
-            className={cn(
-              'text-xs truncate',
-              isNetworkError ? 'text-warning' : 'text-destructive'
-            )}
-          >
-            {errorMessage}
-          </span>
-        </div>
-      </div>
-
-      <div className='flex items-center gap-1 shrink-0'>
+      </AttachmentMedia>
+      <AttachmentContent>
+        <AttachmentTitle title={task.item.title}>
+          {task.item.title}
+        </AttachmentTitle>
+        <AttachmentDescription>{errorMessage}</AttachmentDescription>
+      </AttachmentContent>
+      <AttachmentActions>
         <Button
-          size='sm'
-          variant={isNetworkError ? 'warning' : 'outline'}
+          size='icon-sm'
+          variant='outline'
           onClick={() => onRetry(task.id)}
+          title={t('common.retry')}
         >
-          <HugeiconsIcon icon={RefreshIcon} className='size-3' />
-          <span>{t('common.retry')}</span>
+          <HugeiconsIcon icon={RefreshIcon} />
         </Button>
-
         <Button
           size='icon-sm'
           variant='ghost-muted'
           onClick={() => onRemove(task.id)}
           title={t('common.remove')}
         >
-          <HugeiconsIcon
-            icon={MultiplicationSignIcon}
-            className='size-3.5'
-          />
+          <HugeiconsIcon icon={MultiplicationSignIcon} />
         </Button>
-      </div>
-    </div>
+      </AttachmentActions>
+    </Attachment>
   )
 }

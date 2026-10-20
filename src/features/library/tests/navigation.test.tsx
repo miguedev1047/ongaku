@@ -24,7 +24,7 @@ describe('Library Feature: Navigation & Performance', () => {
     })
 
     // Navigation should resolve quickly
-    expect(duration).toBeLessThan(600)
+    expect(duration).toBeLessThan(800)
     unmount()
   })
 

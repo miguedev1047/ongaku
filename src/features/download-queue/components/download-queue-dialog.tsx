@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -13,10 +14,13 @@ import { useDownloadQueue } from '@/features/download-queue/hooks'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Download01Icon } from '@hugeicons/core-free-icons'
 import { useTranslation } from 'react-i18next'
+import { cn } from 'cn'
 import { DownloadQueueList } from './download-queue-list'
+import { DownloadQueueDevPreview } from './download-queue-dev-preview'
 
 export function DownloadQueueDialog() {
   const { t } = useTranslation()
+  const [showDevPreview, setShowDevPreview] = useState(false)
   const {
     allTasks,
     activeTasks,
@@ -41,30 +45,55 @@ export function DownloadQueueDialog() {
     <Dialog open={isDialogOpen} onOpenChange={(open) => toggleDialog(open)}>
       <DialogContent size='lg'>
         <DialogHeader>
-          <DialogTitle className='flex items-center gap-1.5'>
-            <HugeiconsIcon
-              icon={Download01Icon}
-              className='size-4 text-primary'
-            />
-            <span>{t('download_queue.title')}</span>
-          </DialogTitle>
+          <div className={cn('flex items-center justify-between w-full')}>
+            <DialogTitle className={cn('flex items-center gap-1.5')}>
+              <HugeiconsIcon
+                icon={Download01Icon}
+                className={cn('text-primary')}
+              />
+              <span>{t('download_queue.title')}</span>
+            </DialogTitle>
+
+            <Show when={import.meta.env.DEV}>
+              <Button
+                type='button'
+                variant='outline'
+                size='xs'
+                onClick={() => setShowDevPreview((prev) => !prev)}
+              >
+                <Badge
+                  variant={showDevPreview ? 'warning' : 'secondary'}
+                  size='sm'
+                >
+                  DEV
+                </Badge>
+                <span>
+                  <Show when={showDevPreview} fallback='Preview States'>
+                    Real Queue
+                  </Show>
+                </span>
+              </Button>
+            </Show>
+          </div>
         </DialogHeader>
 
         <DialogDescription className='sr-only'>
           {t('download_queue.dialog_desc')}
         </DialogDescription>
 
-        <DownloadQueueList
-          tasks={allTasks}
-          onCancel={cancelTask}
-          onRetry={retryTask}
-          onRemove={removeTask}
-          onNavigate={() => toggleDialog(false)}
-        />
+        <Show when={!showDevPreview} fallback={<DownloadQueueDevPreview />}>
+          <DownloadQueueList
+            tasks={allTasks}
+            onCancel={cancelTask}
+            onRetry={retryTask}
+            onRemove={removeTask}
+            onNavigate={() => toggleDialog(false)}
+          />
+        </Show>
 
-        <DialogFooter className='mt-auto'>
-          <div className='flex items-center justify-between w-full gap-2'>
-            <div className='flex items-center gap-1.5 flex-wrap'>
+        <DialogFooter className={cn('mt-auto')}>
+          <div className={cn('flex items-center justify-between w-full gap-2')}>
+            <div className={cn('flex items-center gap-1.5 flex-wrap')}>
               <Show when={hasActiveTasks}>
                 <Badge size='sm' variant='default'>
                   {t('download_queue.active_count', {
@@ -99,7 +128,7 @@ export function DownloadQueueDialog() {
               <Button
                 size='sm'
                 variant='ghost-muted'
-                className='shrink-0'
+                className={cn('shrink-0')}
                 onClick={clearFinished}
               >
                 {t('download_queue.clear_completed')}

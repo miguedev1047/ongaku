@@ -6,8 +6,10 @@ import { Show } from '@/components/utility/show'
 import { AnimatePresence, motion } from 'motion/react'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { PauseIcon, PlayIcon } from '@hugeicons/core-free-icons'
-import { CardBody, CardContainer } from '@/components/ui/3d-card'
 import { useLocalPlayerStore } from '@/features/player/stores'
+import { Tilt, TiltContent } from '@animate-ui/react/primitives/effects/tilt'
+import { useCanGoBack, useRouter } from '@tanstack/react-router'
+import { useHotkey } from '@tanstack/react-hotkeys'
 
 interface SongCoverCanvasProps {
   coverUrl?: string | null
@@ -28,7 +30,23 @@ export function SongCoverCanvas({
 }: SongCoverCanvasProps) {
   const storeDirection = useLocalPlayerStore((s) => s.direction)
   const direction = propDirection ?? storeDirection ?? 1
+
   const [dominantColor, setDominantColor] = useState<string | null>(null)
+
+  const canGoBack = useCanGoBack()
+  const router = useRouter()
+
+  const handleBack = () => {
+    if (canGoBack) {
+      router.history.back()
+    } else {
+      router.navigate({ to: '/' })
+    }
+  }
+
+  useHotkey({ key: 'Escape' }, () => {
+    handleBack()
+  })
 
   useEffect(() => {
     if (!coverUrl) {
@@ -69,48 +87,48 @@ export function SongCoverCanvas({
           exit='exit'
           transition={{ duration: 1, ease: [0.32, 0.72, 0, 1] }}
         >
-        <div
-          className={cn(
-            'size-full flex-1 overflow-y-auto no-scrollbar scroll-fade-y transition-colors duration-300 ease-in-out bg-background rounded-md',
-            'cover-bg',
-          )}
-          style={{ '--cover-color': dominantColor } as React.CSSProperties}
-        >
-          <div className='min-h-full flex flex-col items-center justify-center p-6 sm:p-10'>
-            <CardContainer className='size-100 select-none cursor-pointer active:scale-90'>
-              <CardBody>
-                <CoverImage
-                  src={coverUrl ?? undefined}
-                  alt={title}
-                  className='size-full object-cover'
-                />
-                <Show when={Boolean(onPlayToggle)}>
-                  <div
-                    className={cn(
-                      'absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 backdrop-blur-xs',
-                    )}
-                  >
-                    <div className='size-14 rounded-xl bg-white/90 text-black flex items-center justify-center shadow-lg transition-transform duration-200 group-hover:scale-105'>
-                      <Show
-                        when={isPlaying}
-                        fallback={
-                          <HugeiconsIcon
-                            icon={PlayIcon}
-                            className='size-7 ml-0.5'
-                          />
-                        }
-                      >
-                        <HugeiconsIcon icon={PauseIcon} className='size-7' />
-                      </Show>
+          <div
+            className={cn(
+              'size-full flex-1 overflow-y-auto no-scrollbar scroll-fade-y transition-colors duration-300 ease-in-out bg-background rounded-md',
+              'cover-bg',
+            )}
+            style={{ '--cover-color': dominantColor } as React.CSSProperties}
+          >
+            <div className='min-h-full flex flex-col items-center justify-center p-6 sm:p-10'>
+              <Tilt className='size-100! select-none cursor-pointer active:scale-90 '>
+                <TiltContent className='size-full'>
+                  <CoverImage
+                    src={coverUrl ?? undefined}
+                    alt={title}
+                    className='size-full object-cover'
+                  />
+                  <Show when={Boolean(onPlayToggle)}>
+                    <div
+                      className={cn(
+                        'absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 backdrop-blur-xs',
+                      )}
+                    >
+                      <div className='size-14 rounded-xl bg-white/90 text-black flex items-center justify-center shadow-lg transition-transform duration-200 group-hover:scale-105'>
+                        <Show
+                          when={isPlaying}
+                          fallback={
+                            <HugeiconsIcon
+                              icon={PlayIcon}
+                              className='size-7 ml-0.5'
+                            />
+                          }
+                        >
+                          <HugeiconsIcon icon={PauseIcon} className='size-7' />
+                        </Show>
+                      </div>
                     </div>
-                  </div>
-                </Show>
-              </CardBody>
-            </CardContainer>
+                  </Show>
+                </TiltContent>
+              </Tilt>
+            </div>
           </div>
-        </div>
-      </motion.div>
-    </AnimatePresence>
+        </motion.div>
+      </AnimatePresence>
     </div>
   )
 }
