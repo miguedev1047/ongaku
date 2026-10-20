@@ -145,6 +145,10 @@ export default defineConfig([
               allow: ['layout', 'size-*', 'text-*', 'shrink-*'],
             },
             {
+              pattern: '^BarVisualizer$',
+              allow: ['layout', 'w-*', 'h-*', 'text-*', 'pointer-events-*', 'z-*'],
+            },
+            {
               pattern: '^Tabs(Content|List|Trigger)?$',
               allow: [
                 'layout',

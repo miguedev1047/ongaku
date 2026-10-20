@@ -1,4 +1,4 @@
-import { invoke as tauriInvoke } from '@tauri-apps/api/core'
+import { invoke as tauriInvoke, Channel as TauriChannel } from '@tauri-apps/api/core'
 import { listen as tauriListen } from '@tauri-apps/api/event'
 import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow'
 import { openUrl as tauriOpenUrl } from '@tauri-apps/plugin-opener'
@@ -102,6 +102,10 @@ class TauriAdapter implements PlatformService {
         // Silently ignore if write is blocked
       }
     }
+  }
+
+  createChannel<T = unknown>(): TauriChannel<T> {
+    return new TauriChannel<T>()
   }
 }
 

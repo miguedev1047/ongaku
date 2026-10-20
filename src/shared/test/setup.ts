@@ -19,6 +19,11 @@ vi.mock('@tanstack/react-devtools', () => ({
 // Mock Tauri modules directly as safety net
 vi.mock('@tauri-apps/api/core', () => ({
   invoke: vi.fn(),
+  Channel: vi.fn().mockImplementation(() => ({
+    id: 0,
+    onmessage: vi.fn(),
+    send: vi.fn(),
+  })),
 }))
 
 vi.mock('@tauri-apps/api/event', () => ({

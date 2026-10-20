@@ -1,3 +1,4 @@
+import type { Channel } from '@tauri-apps/api/core'
 import type { TPlaylist, TPlaylistAction } from '@/features/playlists/types'
 import type {
   TPlaylistSong,
@@ -38,6 +39,7 @@ export type {
   TBinariesInfo,
   TWallpaperConfig,
   WallpaperBlur,
+  Channel,
 }
 
 export interface CommandMap {
@@ -257,6 +259,10 @@ export interface CommandMap {
     args?: undefined
     return: AudioPlayerStatus
   }
+  audio_visualizer_listen: {
+    args: { onFrame: Channel<number[]> }
+    return: void
+  }
   get_discord_status: {
     args?: undefined
     return: TDiscordStatus
@@ -354,4 +360,5 @@ export interface PlatformService {
 
   readClipboard(): Promise<string>
   writeClipboard(text: string): Promise<void>
+  createChannel<T = unknown>(): Channel<T>
 }

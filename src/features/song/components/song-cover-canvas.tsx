@@ -3,6 +3,8 @@ import { extractColors } from 'extract-colors'
 import { CoverImage } from '@/components/ui/cover-image'
 import { cn } from 'cn'
 import { Show } from '@/components/utility/show'
+import { BarVisualizer } from '@/components/ui/bar-visualizer'
+import { useAudioVisualizerSource } from '@/features/song/hooks'
 import { AnimatePresence, motion } from 'motion/react'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { PauseIcon, PlayIcon } from '@hugeicons/core-free-icons'
@@ -31,6 +33,7 @@ export function SongCoverCanvas({
   const storeDirection = useLocalPlayerStore((s) => s.direction)
   const direction = propDirection ?? storeDirection ?? 1
 
+  const visualizerSource = useAudioVisualizerSource(true)
   const [dominantColor, setDominantColor] = useState<string | null>(null)
 
   const canGoBack = useCanGoBack()
@@ -76,7 +79,7 @@ export function SongCoverCanvas({
         <motion.div
           key={songId}
           custom={direction}
-          className='size-full p-2'
+          className='size-full p-2 '
           variants={{
             enter: (d: number) => ({ x: d > 0 ? '100%' : '-100%' }),
             center: { x: 0 },
@@ -89,13 +92,20 @@ export function SongCoverCanvas({
         >
           <div
             className={cn(
-              'size-full flex-1 overflow-y-auto no-scrollbar scroll-fade-y transition-colors duration-300 ease-in-out bg-background rounded-md',
+              'size-full relative flex-1 overflow-y-auto no-scrollbar scroll-fade-y transition-colors duration-300 ease-in-out bg-background rounded-md',
               'cover-bg',
             )}
             style={{ '--cover-color': dominantColor } as React.CSSProperties}
           >
+            <BarVisualizer
+              source={visualizerSource}
+              align='end'
+              barCount={90}
+              className='absolute -bottom-1 inset-x-0 h-20 w-full text-foreground/80 pointer-events-none z-10'
+            />
+
             <div className='min-h-full flex flex-col items-center justify-center p-6 sm:p-10'>
-              <Tilt className='size-100! select-none cursor-pointer active:scale-90 '>
+              <Tilt className='size-100! select-none cursor-pointer'>
                 <TiltContent className='size-full'>
                   <CoverImage
                     src={coverUrl ?? undefined}

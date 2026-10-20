@@ -11,13 +11,16 @@ use std::{
 use rodio::{Decoder, MixerDeviceSink, Player};
 
 use super::cache::{download_stream_audio, find_cached_file};
-use crate::audio::lib::{
-    controls::{pause_player, resume_player, stop_player},
-    seek::seek_player,
-    sink::{ensure_player_sink, reset_player_sink},
-    status::get_player_status,
-    types::{AudioPlayerError, AudioPlayerStatus},
-    volume::set_player_volume,
+use crate::audio::{
+    lib::{
+        controls::{pause_player, resume_player, stop_player},
+        seek::seek_player,
+        sink::{ensure_player_sink, reset_player_sink},
+        status::get_player_status,
+        types::{AudioPlayerError, AudioPlayerStatus},
+        volume::set_player_volume,
+    },
+    visualizer::{AudioVisualizerCollector, VisualizerSource},
 };
 
 pub struct StreamingAudioPlayer {
@@ -28,6 +31,7 @@ pub struct StreamingAudioPlayer {
     current_video_id: Mutex<Option<String>>,
     active_pid: Mutex<Option<u32>>,
     generation: AtomicU64,
+    collector: Arc<AudioVisualizerCollector>,
 }
 
 impl Default for StreamingAudioPlayer {
@@ -38,6 +42,10 @@ impl Default for StreamingAudioPlayer {
 
 impl StreamingAudioPlayer {
     pub fn new() -> Self {
+        Self::with_collector(Arc::new(AudioVisualizerCollector::new()))
+    }
+
+    pub fn with_collector(collector: Arc<AudioVisualizerCollector>) -> Self {
         Self {
             sink: Mutex::new(None),
             player: Mutex::new(None),
@@ -46,7 +54,12 @@ impl StreamingAudioPlayer {
             current_video_id: Mutex::new(None),
             active_pid: Mutex::new(None),
             generation: AtomicU64::new(0),
+            collector,
         }
+    }
+
+    pub fn collector(&self) -> Arc<AudioVisualizerCollector> {
+        self.collector.clone()
     }
 
     pub fn ensure_player(&self) -> Result<(), AudioPlayerError> {
@@ -163,7 +176,8 @@ impl StreamingAudioPlayer {
         };
 
         player.set_volume(vol);
-        player.append(source);
+        let visualizer_source = VisualizerSource::new(source, self.collector.clone());
+        player.append(visualizer_source);
 
         if let Some(pos) = start_pos_secs {
             if pos > 0.0 {

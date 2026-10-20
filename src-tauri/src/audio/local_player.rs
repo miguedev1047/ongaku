@@ -18,6 +18,7 @@ pub use crate::audio::lib::{
     types::{AudioPlayerError, AudioPlayerStatus},
     volume::set_player_volume,
 };
+use crate::audio::visualizer::AudioVisualizerCollector;
 
 pub struct LocalAudioPlayer {
     sink: Mutex<Option<MixerDeviceSink>>,
@@ -25,6 +26,7 @@ pub struct LocalAudioPlayer {
     volume: Mutex<f32>,
     current_path: Mutex<Option<PathBuf>>,
     generation: AtomicU64,
+    collector: Arc<AudioVisualizerCollector>,
 }
 
 impl Default for LocalAudioPlayer {
@@ -35,13 +37,22 @@ impl Default for LocalAudioPlayer {
 
 impl LocalAudioPlayer {
     pub fn new() -> Self {
+        Self::with_collector(Arc::new(AudioVisualizerCollector::new()))
+    }
+
+    pub fn with_collector(collector: Arc<AudioVisualizerCollector>) -> Self {
         Self {
             sink: Mutex::new(None),
             player: Mutex::new(None),
             volume: Mutex::new(0.4),
             current_path: Mutex::new(None),
             generation: AtomicU64::new(0),
+            collector,
         }
+    }
+
+    pub fn collector(&self) -> Arc<AudioVisualizerCollector> {
+        self.collector.clone()
     }
 
     pub fn ensure_player(&self) -> Result<(), AudioPlayerError> {
@@ -67,6 +78,7 @@ impl LocalAudioPlayer {
             &self.volume,
             &self.current_path,
             &self.generation,
+            &self.collector,
         )
     }
 

@@ -23,6 +23,7 @@
   "menuAccent": "subtle",
   "registries": {
     "@dotmatrix": "https://dotmatrix.zzzzshawn.cloud/r/{name}.json",
-    "@reui": "https://reui.io/r/{style}/{name}.json"
+    "@reui": "https://reui.io/r/{style}/{name}.json",
+    "@audiocn": "https://www.audiocn.dev/r/{name}.json"
   }
 }

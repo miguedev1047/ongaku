@@ -10,23 +10,29 @@ pub mod services;
 use std::sync::Arc;
 
 use crate::{
-    audio::{LocalAudioPlayer, StreamingAudioPlayer},
+    audio::{AudioVisualizerManager, LocalAudioPlayer, StreamingAudioPlayer},
     commands::*,
     helpers::{setup_app, single_instance_plugin},
 };
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let local_player = Arc::new(LocalAudioPlayer::new());
-    let ticker_player = local_player.clone();
+    let visualizer_manager = Arc::new(AudioVisualizerManager::new());
+    let visualizer_worker = visualizer_manager.clone();
 
-    let streaming_player = Arc::new(StreamingAudioPlayer::new());
+    let local_player = Arc::new(LocalAudioPlayer::with_collector(visualizer_manager.collector()));
+    let ticker_player = local_player.clone();
+    let visualizer_local = local_player.clone();
+
+    let streaming_player = Arc::new(StreamingAudioPlayer::with_collector(visualizer_manager.collector()));
     let ticker_streaming = streaming_player.clone();
+    let visualizer_streaming = streaming_player.clone();
 
     tauri::Builder::default()
         .manage(DownloadManagerState::default())
         .manage(local_player)
         .manage(streaming_player)
+        .manage(visualizer_manager)
         .plugin(single_instance_plugin())
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
@@ -36,6 +42,11 @@ pub fn run() {
             setup_app(app)?;
             LocalAudioPlayer::start_playback_ticker(ticker_player, app.handle().clone());
             StreamingAudioPlayer::start_playback_ticker(ticker_streaming, app.handle().clone());
+            AudioVisualizerManager::spawn_worker(
+                visualizer_worker,
+                visualizer_local,
+                visualizer_streaming,
+            );
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -90,6 +101,7 @@ pub fn run() {
             streaming_audio_seek,
             streaming_audio_set_volume,
             streaming_audio_get_status,
+            audio_visualizer_listen,
             get_discord_status,
             set_discord_rpc_enabled,
             set_discord_activity,

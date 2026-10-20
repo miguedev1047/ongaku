@@ -3,14 +3,17 @@ use std::{
     path::{Path, PathBuf},
     sync::{
         atomic::{AtomicU64, Ordering},
-        Mutex,
+        Arc, Mutex,
     },
     time::Duration,
 };
 
 use rodio::{Decoder, MixerDeviceSink, Player};
 
-use crate::audio::lib::{sink::ensure_player_sink, types::AudioPlayerError};
+use crate::audio::{
+    lib::{sink::ensure_player_sink, types::AudioPlayerError},
+    visualizer::{AudioVisualizerCollector, VisualizerSource},
+};
 
 pub fn play_audio_file(
     path: impl AsRef<Path>,
@@ -21,6 +24,7 @@ pub fn play_audio_file(
     volume_mutex: &Mutex<f32>,
     current_path_mutex: &Mutex<Option<PathBuf>>,
     generation: &AtomicU64,
+    collector: &Arc<AudioVisualizerCollector>,
 ) -> Result<(), AudioPlayerError> {
     let path_ref = path.as_ref();
     if !path_ref.is_file() {
@@ -83,7 +87,8 @@ pub fn play_audio_file(
     };
 
     player.set_volume(vol);
-    player.append(source);
+    let visualizer_source = VisualizerSource::new(source, collector.clone());
+    player.append(visualizer_source);
 
     if let Some(pos) = start_pos_secs {
         if pos > 0.0 {

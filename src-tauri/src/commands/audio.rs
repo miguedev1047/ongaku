@@ -1,7 +1,10 @@
 use std::sync::Arc;
 use tauri::State;
 
-use crate::audio::{AudioPlayerError, AudioPlayerStatus, LocalAudioPlayer, StreamingAudioPlayer};
+use crate::audio::{
+    AudioPlayerError, AudioPlayerStatus, AudioVisualizerManager, LocalAudioPlayer,
+    StreamingAudioPlayer,
+};
 
 // --- Local Audio Commands ---
 
@@ -124,4 +127,15 @@ pub fn streaming_audio_get_status(
     streaming_player: State<'_, Arc<StreamingAudioPlayer>>,
 ) -> Result<AudioPlayerStatus, AudioPlayerError> {
     streaming_player.get_status()
+}
+
+// --- Visualizer Commands ---
+
+#[tauri::command]
+pub fn audio_visualizer_listen(
+    visualizer: State<'_, Arc<AudioVisualizerManager>>,
+    on_frame: tauri::ipc::Channel<Vec<f32>>,
+) -> Result<(), AudioPlayerError> {
+    visualizer.add_channel(on_frame);
+    Ok(())
 }

@@ -110,6 +110,12 @@ export function createMockPlatformService(
     relaunch: async () => {},
     readClipboard: async () => '',
     writeClipboard: async () => {},
+    createChannel: () =>
+      ({
+        id: 0,
+        onmessage: () => {},
+        send: async () => {},
+      }) as never,
   }
 }
 
