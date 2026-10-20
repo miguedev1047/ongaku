@@ -490,7 +490,7 @@
       "count_plural": "{{count}} songs",
       "search_placeholder": "Search library songs..."
     },
-    "your_library": "Your Library",
+    "your_library": "Library",
     "refresh_library": "Refresh library",
     "search_command_placeholder": "Type a song, artist, or album...",
     "search_command_heading": "Search library songs",

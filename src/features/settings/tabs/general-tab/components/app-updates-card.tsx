@@ -86,7 +86,7 @@ export function AppUpdatesCard() {
               'size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary',
             )}
           >
-            <HugeiconsIcon icon={SparklesIcon} className={cn('size-4')} />
+            <HugeiconsIcon icon={SparklesIcon} />
           </div>
           <div>
             <h2 className={cn('text-sm font-semibold text-foreground')}>

@@ -490,7 +490,7 @@
       "count_plural": "{{count}} canciones",
       "search_placeholder": "Buscar canciones..."
     },
-    "your_library": "Tu biblioteca",
+    "your_library": "Biblioteca",
     "refresh_library": "Actualizar biblioteca",
     "search_command_placeholder": "Escribe una canción, artista o álbum...",
     "search_command_heading": "Buscar canciones de la biblioteca",

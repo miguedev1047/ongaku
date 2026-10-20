@@ -7,8 +7,9 @@ import { Show } from '@/components/utility/show'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { cn } from 'cn'
 
-export interface SearchTriggerProps
-  extends React.ComponentProps<typeof Button> {
+export interface SearchTriggerProps extends React.ComponentProps<
+  typeof Button
+> {
   placeholder?: React.ReactNode
   query?: string | null
   shortcut?: React.ReactNode
@@ -65,16 +66,14 @@ export function SearchTrigger({
           <Show
             when={hasDisplayQuery}
             fallback={
-              <span className='text-muted-foreground truncate'>
+              <span className=' truncate'>
                 <Show when={placeholder} fallback={children}>
                   {placeholder}
                 </Show>
               </span>
             }
           >
-            <span className='truncate text-foreground font-medium'>
-              {query}
-            </span>
+            <span className='truncate font-medium'>{query}</span>
           </Show>
           <Show when={hasShortcut}>
             <Kbd className='ml-auto'>

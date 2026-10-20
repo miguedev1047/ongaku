@@ -1,11 +1,15 @@
-import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import {
+  Empty,
+  EmptyContent,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty'
+import { FieldContent, FieldLabel } from '@/components/ui/field'
+import { RadioGroupItem } from '@/components/ui/radio-group'
 import { Show } from '@/components/utility/show'
 import type { TBackgroundItem } from '@/features/settings/queries/backgrounds'
-import {
-  Delete02Icon,
-  ImageNotFound01Icon,
-  Tick02Icon,
-} from '@hugeicons/core-free-icons'
+import { Delete02Icon, ImageNotFound01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { cn } from 'cn'
 import { useTranslation } from 'react-i18next'
@@ -13,96 +17,92 @@ import { useTranslation } from 'react-i18next'
 export interface AppWallpaperCardProps {
   wallpaper?: TBackgroundItem
   isDefault?: boolean
-  isSelected: boolean
   imageUrl?: string
-  onSelect: () => void
-  onDelete?: (e: React.MouseEvent) => void
+  value: string
+  onDelete?: () => void
 }
 
 export function AppWallpaperCard({
   wallpaper,
   isDefault = false,
-  isSelected,
   imageUrl,
-  onSelect,
+  value,
   onDelete,
 }: AppWallpaperCardProps) {
   const { t } = useTranslation()
+  const inputId = isDefault ? 'wallpaper-default' : `wallpaper-${value}`
 
   return (
     <div
-      onClick={onSelect}
-      role='button'
-      tabIndex={0}
       className={cn(
-        'group relative h-36 rounded-md border bg-muted/20 cursor-pointer transition-all select-none',
-        isDefault
-          ? 'flex flex-col items-center justify-center p-3'
-          : 'overflow-hidden',
-        isSelected
-          ? 'border-transparent ring-2 outline-2 ring-foreground outline-foreground'
-          : 'border-black/10 dark:border-white/10 hover:opacity-85 hover:scale-102',
+        'group relative h-35 rounded-md border border-border/60 overflow-hidden bg-muted/20 hover:border-border transition-colors has-data-checked:border-primary has-data-checked:ring-1 has-data-checked:ring-primary/40',
       )}
     >
-      <Show
-        when={!isDefault}
-        fallback={
-          <>
-            <HugeiconsIcon
-              icon={ImageNotFound01Icon}
-              className='size-6 text-muted-foreground mb-1'
-            />
-            <span className='text-xs font-medium text-foreground'>
-              {t(
-                'settings.tabs.appearance.appearance_and_interface.app_background.default',
-              )}
-            </span>
-          </>
-        }
+      <FieldLabel
+        htmlFor={inputId}
+        className={cn('size-full cursor-pointer block')}
       >
-        <Show when={Boolean(imageUrl)}>
-          <img
-            src={imageUrl}
-            alt={wallpaper?.file_name ?? 'Wallpaper'}
-            className='absolute inset-0 size-full object-cover'
-            loading='lazy'
-            decoding='async'
-          />
-        </Show>
-
-        <div className='absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent pointer-events-none' />
-
-        <Show when={Boolean(onDelete)}>
-          <button
-            type='button'
-            aria-label={t(
-              'settings.tabs.appearance.appearance_and_interface.app_background.delete',
-            )}
-            onClick={onDelete}
-            className='absolute top-1.5 right-1.5 size-6 rounded-md bg-black/60 hover:bg-destructive text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity'
-          >
-            <HugeiconsIcon
-              icon={Delete02Icon}
-              className='size-3.5'
-            />
-          </button>
-        </Show>
-      </Show>
-
-      <Show when={isSelected}>
-        <Badge
-          variant='default'
-          size='sm'
-          className='absolute bottom-1.5 left-1.5'
+        <Show
+          when={!isDefault}
+          fallback={
+            <Empty
+              className={cn('size-full border-dashed justify-center relative')}
+            >
+              <EmptyContent>
+                <EmptyMedia>
+                  <HugeiconsIcon icon={ImageNotFound01Icon} />
+                </EmptyMedia>
+                <EmptyTitle>
+                  {t(
+                    'settings.tabs.appearance.appearance_and_interface.app_background.default',
+                  )}
+                </EmptyTitle>
+              </EmptyContent>
+              <RadioGroupItem
+                value=''
+                id='wallpaper-default'
+                className={cn('absolute bottom-2 right-2 z-10')}
+              />
+            </Empty>
+          }
         >
-          <HugeiconsIcon
-            icon={Tick02Icon}
-            className='size-2.5 mr-0.5'
-          />
-          {t(
-            'settings.tabs.appearance.appearance_and_interface.app_background.active',
+          <FieldContent className={cn('size-full relative')}>
+            <Show when={Boolean(imageUrl)}>
+              <img
+                src={imageUrl}
+                alt={wallpaper?.file_name}
+                className={cn('size-full object-cover')}
+              />
+            </Show>
+
+            <RadioGroupItem
+              value={value}
+              id={inputId}
+              className={cn('absolute bottom-2 right-2 z-10')}
+            />
+          </FieldContent>
+        </Show>
+      </FieldLabel>
+
+      <Show when={Boolean(onDelete)}>
+        <Button
+          type='button'
+          size='icon'
+          variant='destructive-solid'
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            onDelete?.()
+          }}
+          className={cn(
+            'absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity',
           )}
-        </Badge>
+          aria-label={t(
+            'settings.tabs.appearance.appearance_and_interface.app_background.delete',
+          )}
+        >
+          <HugeiconsIcon icon={Delete02Icon} />
+        </Button>
       </Show>
     </div>
   )

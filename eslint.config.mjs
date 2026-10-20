@@ -43,6 +43,9 @@ export default defineConfig([
                 'self-*',
                 'cursor-*',
                 'select-*',
+                'opacity-*',
+                'group-*',
+                'transition-*',
               ],
             },
             {
@@ -113,6 +116,8 @@ export default defineConfig([
                 'my-*',
                 'py-*',
                 'text-*',
+                'border-*',
+                'border',
                 'gap-*',
               ],
             },

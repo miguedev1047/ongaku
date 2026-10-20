@@ -31,7 +31,7 @@ export function DiscordRpcToggle() {
               'size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary',
             )}
           >
-            <HugeiconsIcon icon={DiscordIcon} className={cn('size-4')} />
+            <HugeiconsIcon icon={DiscordIcon} />
           </div>
           <label htmlFor='rpc-toggle'>
             <h2 className={cn('text-sm font-semibold text-foreground')}>

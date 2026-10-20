@@ -49,7 +49,7 @@ function BinariesManagerCard({ isOnline }: BinariesManagerCardProps) {
               'size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary',
             )}
           >
-            <HugeiconsIcon icon={Wrench01Icon} className={cn('size-4')} />
+            <HugeiconsIcon icon={Wrench01Icon} />
           </div>
           <div>
             <h2 className={cn('text-sm font-semibold text-foreground')}>
@@ -150,19 +150,17 @@ function BinariesManagerCard({ isOnline }: BinariesManagerCardProps) {
 
         <div className={cn('flex items-center gap-2 shrink-0')}>
           <Button variant='outline' onClick={handleOpenFolder}>
-            <HugeiconsIcon icon={FolderIcon} className='size-3.5' />
+            <HugeiconsIcon icon={FolderIcon} />
             <span>{t('settings.tabs.system.binaries_status.open_folder')}</span>
           </Button>
 
-          <RainbowButton
+          <Button
+            render={isBinariesInstalled ? <Button /> : <RainbowButton />}
             onClick={installBinaries}
             disabled={isPending || !isOnline}
           >
-            <Show
-              when={!isPending}
-              fallback={<Spinner className={cn('size-3.5')} />}
-            >
-              <HugeiconsIcon icon={Download01Icon} className={cn('size-3.5')} />
+            <Show when={!isPending} fallback={<Spinner />}>
+              <HugeiconsIcon icon={Download01Icon} />
             </Show>
             <span>
               <Show
@@ -179,7 +177,7 @@ function BinariesManagerCard({ isOnline }: BinariesManagerCardProps) {
                 {t('settings.tabs.system.binaries_status.installing')}
               </Show>
             </span>
-          </RainbowButton>
+          </Button>
         </div>
       </div>
 

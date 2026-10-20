@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button'
 import { CardWrapper } from '@/components/ui/card-wrapper'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
@@ -9,6 +8,8 @@ import { useQuery } from '@tanstack/react-query'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import { useUpdateConfig } from '@/features/settings/hooks/use-config'
 import { useTranslation } from 'react-i18next'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Field, FieldLabel, FieldTitle } from '@/components/ui/field'
 
 export const PLAYER_POSITION_OPTIONS = [
   {
@@ -40,10 +41,7 @@ export function PlayerPositionOptions() {
     <CardWrapper>
       <div className='flex items-center gap-2.5'>
         <div className='size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary'>
-          <HugeiconsIcon
-            icon={AlignBoxBottomCenterIcon}
-            className='size-4'
-          />
+          <HugeiconsIcon icon={AlignBoxBottomCenterIcon} />
         </div>
         <div>
           <h2 className='text-sm font-semibold text-foreground'>
@@ -59,28 +57,23 @@ export function PlayerPositionOptions() {
         </div>
       </div>
 
-      <div className='grid grid-cols-2 gap-2'>
-        {PLAYER_POSITION_OPTIONS.map((opt) => {
-          const isSelected = currentPosition === opt.id
-
-          return (
-            <Button
-              key={opt.id}
-              variant='selectable'
-              size='sm'
-              aria-selected={isSelected}
-              onClick={() => handleSelectPosition(opt.id)}
-              className='h-9'
-            >
-              <HugeiconsIcon
-                icon={opt.icon}
-                className='size-3.5'
-              />
-              <span>{t(opt.labelKey)}</span>
-            </Button>
-          )
-        })}
-      </div>
+      <RadioGroup
+        value={currentPosition}
+        onValueChange={(val) => handleSelectPosition(val as 'bottom' | 'top')}
+        className='grid grid-cols-2 gap-2'
+      >
+        {PLAYER_POSITION_OPTIONS.map((opt) => (
+          <FieldLabel key={opt.id} htmlFor={opt.id}>
+            <Field orientation='horizontal'>
+              <FieldTitle>
+                <HugeiconsIcon icon={opt.icon} />
+                <span>{t(opt.labelKey)}</span>
+              </FieldTitle>
+              <RadioGroupItem value={opt.id} id={opt.id} />
+            </Field>
+          </FieldLabel>
+        ))}
+      </RadioGroup>
     </CardWrapper>
   )
 }

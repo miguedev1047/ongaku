@@ -43,10 +43,7 @@ export function DirectoriesStatusCard() {
       <div className='flex items-center justify-between'>
         <div className='flex items-center gap-2.5'>
           <div className='size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary'>
-            <HugeiconsIcon
-              icon={FolderIcon}
-              className='size-4'
-            />
+            <HugeiconsIcon icon={FolderIcon} />
           </div>
           <div>
             <h2 className='text-sm font-semibold text-foreground'>
@@ -66,10 +63,7 @@ export function DirectoriesStatusCard() {
               <span className='text-xs font-semibold text-foreground'>
                 {t('settings.tabs.system.directories_status.base_storage')}
               </span>
-              <Badge
-                variant='outline-primary'
-                size='sm'
-              >
+              <Badge variant='outline-primary' size='sm'>
                 {t('settings.tabs.system.directories_status.active_root')}
               </Badge>
             </div>
@@ -89,10 +83,7 @@ export function DirectoriesStatusCard() {
               onClick={handleSelectDirectory}
               disabled={isChangingDir}
             >
-              <HugeiconsIcon
-                icon={FolderEditIcon}
-                className='size-3.5'
-              />
+              <HugeiconsIcon icon={FolderEditIcon} className='size-3.5' />
               <span>
                 {t('settings.tabs.system.directories_status.change_location')}
               </span>
@@ -102,10 +93,7 @@ export function DirectoriesStatusCard() {
               size='sm'
               onClick={() => handleOpen(config.app_dir)}
             >
-              <HugeiconsIcon
-                icon={FolderIcon}
-                className='size-3.5'
-              />
+              <HugeiconsIcon icon={FolderIcon} className='size-3.5' />
               <span>{t('settings.tabs.system.directories_status.open')}</span>
             </Button>
           </div>
@@ -131,20 +119,14 @@ export function DirectoriesStatusCard() {
                   <Show
                     when={dir.exists}
                     fallback={
-                      <Badge
-                        variant='destructive'
-                        size='sm'
-                      >
+                      <Badge variant='destructive' size='sm'>
                         {t(
                           'settings.tabs.system.directories_status.status.missing',
                         )}
                       </Badge>
                     }
                   >
-                    <Badge
-                      variant='success'
-                      size='sm'
-                    >
+                    <Badge variant='success' size='sm'>
                       {t(
                         'settings.tabs.system.directories_status.status.exists',
                       )}
@@ -154,20 +136,14 @@ export function DirectoriesStatusCard() {
                   <Show
                     when={dir.writable}
                     fallback={
-                      <Badge
-                        variant='destructive'
-                        size='sm'
-                      >
+                      <Badge variant='destructive' size='sm'>
                         {t(
                           'settings.tabs.system.directories_status.status.readonly',
                         )}
                       </Badge>
                     }
                   >
-                    <Badge
-                      variant='outline'
-                      size='sm'
-                    >
+                    <Badge variant='outline' size='sm'>
                       {t(
                         'settings.tabs.system.directories_status.status.writable',
                       )}
@@ -190,10 +166,7 @@ export function DirectoriesStatusCard() {
                 onClick={() => handleOpen(dir.path)}
                 className='h-7 gap-1.5 shrink-0'
               >
-                <HugeiconsIcon
-                  icon={FolderIcon}
-                  className='size-3.5'
-                />
+                <HugeiconsIcon icon={FolderIcon} className='size-3.5' />
                 <span>{t('settings.tabs.system.directories_status.open')}</span>
               </Button>
             </div>
@@ -202,10 +175,7 @@ export function DirectoriesStatusCard() {
       </div>
 
       <Alert variant='destructive-muted'>
-        <HugeiconsIcon
-          icon={AlertCircleIcon}
-          className='size-4'
-        />
+        <HugeiconsIcon icon={AlertCircleIcon} className='size-4' />
         <AlertTitle>
           {t('settings.tabs.system.directories_status.notice.title')}
         </AlertTitle>
@@ -215,10 +185,7 @@ export function DirectoriesStatusCard() {
       </Alert>
 
       {/* Confirmation Dialog */}
-      <AlertDialog
-        open={isConfirmOpen}
-        onOpenChange={setIsConfirmOpen}
-      >
+      <AlertDialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>

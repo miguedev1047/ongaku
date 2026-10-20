@@ -50,7 +50,7 @@ export function FolderColorOptions() {
       <div className='flex items-center justify-between'>
         <div className='flex items-center gap-2.5'>
           <div className='size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary'>
-            <HugeiconsIcon icon={FolderIcon} className='size-4' />
+            <HugeiconsIcon icon={FolderIcon} />
           </div>
           <div>
             <h2 className='text-sm font-semibold text-foreground'>
@@ -72,7 +72,7 @@ export function FolderColorOptions() {
       </div>
 
       <RadioGroup
-        value={currentColor}
+        value={currentColor.toLowerCase()}
         onValueChange={handleSelectColor}
         className={cn(
           'grid gap-2',
@@ -81,14 +81,15 @@ export function FolderColorOptions() {
         )}
       >
         {FOLDER_COLOR_PRESETS.map((preset) => {
-          const isChecked =
-            currentColor.toLowerCase() === preset.color.toLowerCase()
+          const presetColorLower = preset.color.toLowerCase()
+          const isChecked = currentColor.toLowerCase() === presetColorLower
 
           return (
             <Tooltip key={preset.id}>
               <TooltipTrigger
                 render={
                   <label
+                    htmlFor={`folder-color-${preset.id}`}
                     className={cn(
                       'relative h-10 rounded-md cursor-pointer transition-all border shadow-xs select-none',
                       isChecked
@@ -97,7 +98,11 @@ export function FolderColorOptions() {
                     )}
                     style={{ backgroundColor: preset.color }}
                   >
-                    <RadioGroupItem value={preset.color} className='sr-only' />
+                    <RadioGroupItem
+                      value={presetColorLower}
+                      id={`folder-color-${preset.id}`}
+                      className='sr-only'
+                    />
                   </label>
                 }
               />

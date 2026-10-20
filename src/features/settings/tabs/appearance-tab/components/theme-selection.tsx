@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button'
 import { CardWrapper } from '@/components/ui/card-wrapper'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Moon, Sun, PaintBoardIcon } from '@hugeicons/core-free-icons'
@@ -7,6 +6,14 @@ import { useUpdateWallpaper } from '@/features/settings/hooks/use-wallpaper'
 import { useTranslation } from 'react-i18next'
 import { REGISTERED_THEMES, type ThemeMode } from '@/constants/themes'
 import { cn } from 'cn'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldLabel,
+  FieldTitle,
+} from '@/components/ui/field'
 
 export const MODE_OPTIONS = [
   {
@@ -25,7 +32,8 @@ export const MODE_OPTIONS = [
 
 export function ThemeSelection() {
   const { t } = useTranslation()
-  const { mode, setMode, theme, setTheme } = useTheme()
+  const { mode, theme, setMode, setTheme } = useTheme()
+
   const updateWallpaper = useUpdateWallpaper()
 
   const handleSelectMode = (selectedMode: ThemeMode) => {
@@ -42,10 +50,7 @@ export function ThemeSelection() {
     <CardWrapper>
       <div className='flex items-center gap-2.5'>
         <div className='size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary'>
-          <HugeiconsIcon
-            icon={PaintBoardIcon}
-            className='size-4'
-          />
+          <HugeiconsIcon icon={PaintBoardIcon} />
         </div>
         <div>
           <h2 className='text-sm font-semibold text-foreground'>
@@ -61,82 +66,73 @@ export function ThemeSelection() {
         </div>
       </div>
 
-      {/* 1. Color Mode Section (Light / Dark / System) */}
       <div className='space-y-2'>
         <h3 className='text-xs font-medium text-foreground'>
           {t(
             'settings.tabs.appearance.appearance_and_interface.interface_theme.color_mode',
           )}
         </h3>
-        <div className='grid grid-cols-2 gap-2'>
-          {MODE_OPTIONS.map((opt) => {
-            const isSelected = mode === opt.id
-
-            return (
-              <Button
-                key={opt.id}
-                variant='selectable'
-                size='sm'
-                aria-selected={isSelected}
-                onClick={() => handleSelectMode(opt.id)}
-                className='h-9'
-              >
-                <HugeiconsIcon
-                  icon={opt.icon}
-                  className='size-3.5'
-                />
-                <span>{t(opt.labelKey)}</span>
-              </Button>
-            )
-          })}
-        </div>
+        <RadioGroup
+          value={mode}
+          onValueChange={(val) => handleSelectMode(val as ThemeMode)}
+          className='grid grid-cols-2 gap-2'
+        >
+          {MODE_OPTIONS.map((opt) => (
+            <FieldLabel key={opt.id} htmlFor={`mode-${opt.id}`}>
+              <Field orientation='horizontal'>
+                <FieldTitle>
+                  <HugeiconsIcon icon={opt.icon} />
+                  <span>{t(opt.labelKey)}</span>
+                </FieldTitle>
+                <RadioGroupItem value={opt.id} id={`mode-${opt.id}`} />
+              </Field>
+            </FieldLabel>
+          ))}
+        </RadioGroup>
       </div>
 
-      {/* 2. Theme Family Palette Section */}
       <div className='space-y-2 pt-2 border-t border-border/50'>
         <h3 className='text-xs font-medium text-foreground'>
           {t(
             'settings.tabs.appearance.appearance_and_interface.interface_theme.theme_family',
           )}
         </h3>
-        <div className='grid grid-cols-2 gap-2'>
-          {REGISTERED_THEMES.map((themeItem) => {
-            const isSelected = theme === themeItem.id
-
-            return (
-              <Button
-                key={themeItem.id}
-                variant='selectable'
-                size='sm'
-                aria-selected={isSelected}
-                onClick={() => handleSelectTheme(themeItem.id)}
-                className='h-11 justify-start'
-              >
-                {/* Big Preview Dot with theme color respecting default radius */}
-                <div
-                  className={cn(
-                    'size-5 rounded-md border border-border/60 shrink-0 shadow-xs'
-                  )}
-                  style={{
-                    backgroundColor:
-                      mode === 'dark'
-                        ? themeItem.colors.dark
-                        : themeItem.colors.light,
-                  }}
-                  aria-hidden='true'
+        <RadioGroup
+          value={theme}
+          onValueChange={(val) => handleSelectTheme(val as string)}
+          className='grid grid-cols-2 gap-2'
+        >
+          {REGISTERED_THEMES.map((themeItem) => (
+            <FieldLabel key={themeItem.id} htmlFor={`theme-${themeItem.id}`}>
+              <Field orientation='horizontal'>
+                <FieldContent className='flex flex-row'>
+                  <div
+                    className={cn(
+                      'size-5 rounded-md border border-border/60 shrink-0 shadow-xs',
+                    )}
+                    style={{
+                      backgroundColor:
+                        mode === 'dark'
+                          ? themeItem.colors.dark
+                          : themeItem.colors.light,
+                    }}
+                    aria-hidden='true'
+                  />
+                  <div className='space-y-1 ml-1'>
+                    <FieldTitle>{t(themeItem.nameKey)}</FieldTitle>
+                    <FieldDescription>
+                      {t(themeItem.descriptionKey)}
+                    </FieldDescription>
+                  </div>
+                </FieldContent>
+                <RadioGroupItem
+                  value={themeItem.id}
+                  id={`theme-${themeItem.id}`}
                 />
-                <div className='text-left leading-tight truncate ml-1'>
-                  <div className='font-medium text-xs text-foreground'>
-                    {t(themeItem.nameKey)}
-                  </div>
-                  <div className='text-3xs text-muted-foreground truncate'>
-                    {t(themeItem.descriptionKey)}
-                  </div>
-                </div>
-              </Button>
-            )
-          })}
-        </div>
+              </Field>
+            </FieldLabel>
+          ))}
+        </RadioGroup>
       </div>
     </CardWrapper>
   )

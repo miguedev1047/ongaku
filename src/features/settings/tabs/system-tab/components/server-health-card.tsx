@@ -1,11 +1,15 @@
-import { Badge } from "@/components/ui/badge"
-import { CardWrapper } from "@/components/ui/card-wrapper"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { CloudServerIcon, CheckmarkCircle02Icon, AlertCircleIcon } from "@hugeicons/core-free-icons"
-import { Show } from "@/components/utility/show"
-import { useSuspenseQuery } from "@tanstack/react-query"
-import { systemHealthQueryOpts } from "@/shared/queries/system-health"
-import { useTranslation } from "react-i18next"
+import { Badge } from '@/components/ui/badge'
+import { CardWrapper } from '@/components/ui/card-wrapper'
+import { HugeiconsIcon } from '@hugeicons/react'
+import {
+  CloudServerIcon,
+  CheckmarkCircle02Icon,
+  AlertCircleIcon,
+} from '@hugeicons/core-free-icons'
+import { Show } from '@/components/utility/show'
+import { useSuspenseQuery } from '@tanstack/react-query'
+import { systemHealthQueryOpts } from '@/shared/queries/system-health'
+import { useTranslation } from 'react-i18next'
 
 export function ServerHealthCard() {
   const { t } = useTranslation()
@@ -18,19 +22,16 @@ export function ServerHealthCard() {
 
   return (
     <CardWrapper spacing='compact'>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary">
-            <HugeiconsIcon
-              icon={CloudServerIcon}
-              className="size-4"
-            />
+      <div className='flex items-center justify-between'>
+        <div className='flex items-center gap-2.5'>
+          <div className='size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary'>
+            <HugeiconsIcon icon={CloudServerIcon} />
           </div>
           <div>
-            <h2 className="text-sm font-semibold text-foreground">
+            <h2 className='text-sm font-semibold text-foreground'>
               {t('settings.tabs.system.server_health.title')}
             </h2>
-            <p className="text-xs text-muted-foreground">
+            <p className='text-xs text-muted-foreground'>
               {t('settings.tabs.system.server_health.description')}
             </p>
           </div>
@@ -39,49 +40,46 @@ export function ServerHealthCard() {
         <Show
           when={isHealthy}
           fallback={
-            <Badge variant="destructive">
-              <HugeiconsIcon
-                icon={AlertCircleIcon}
-                className="size-3"
-              />
+            <Badge variant='destructive'>
+              <HugeiconsIcon icon={AlertCircleIcon} />
               {t('settings.tabs.system.server_health.status.offline')}
             </Badge>
           }
         >
-          <Badge variant="success">
-            <HugeiconsIcon
-              icon={CheckmarkCircle02Icon}
-              className="size-3"
-            />
+          <Badge variant='success'>
+            <HugeiconsIcon icon={CheckmarkCircle02Icon} />
             {t('settings.tabs.system.server_health.status.online')}
           </Badge>
         </Show>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 text-xs">
-        <div className="p-2.5 rounded-md bg-muted/40 border border-border/30">
-          <span className="text-2xs text-muted-foreground block uppercase tracking-wider font-semibold">
+      <div className='grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 text-xs'>
+        <div className='p-2.5 rounded-md bg-muted/40 border border-border/30'>
+          <span className='text-2xs text-muted-foreground block uppercase tracking-wider font-semibold'>
             {t('settings.tabs.system.server_health.binding_host')}
           </span>
-          <span className="font-mono font-medium text-foreground mt-0.5 block">
+          <span className='font-mono font-medium text-foreground mt-0.5 block'>
             {host}
           </span>
         </div>
 
-        <div className="p-2.5 rounded-md bg-muted/40 border border-border/30">
-          <span className="text-2xs text-muted-foreground block uppercase tracking-wider font-semibold">
+        <div className='p-2.5 rounded-md bg-muted/40 border border-border/30'>
+          <span className='text-2xs text-muted-foreground block uppercase tracking-wider font-semibold'>
             {t('settings.tabs.system.server_health.allocated_port')}
           </span>
-          <span className="font-mono font-medium text-foreground mt-0.5 block">
+          <span className='font-mono font-medium text-foreground mt-0.5 block'>
             {port}
           </span>
         </div>
 
-        <div className="p-2.5 rounded-md bg-muted/40 border border-border/30">
-          <span className="text-2xs text-muted-foreground block uppercase tracking-wider font-semibold">
+        <div className='p-2.5 rounded-md bg-muted/40 border border-border/30'>
+          <span className='text-2xs text-muted-foreground block uppercase tracking-wider font-semibold'>
             {t('settings.tabs.system.server_health.base_endpoint')}
           </span>
-          <span className="font-mono font-medium text-foreground mt-0.5 block truncate" title={url}>
+          <span
+            className='font-mono font-medium text-foreground mt-0.5 block truncate'
+            title={url}
+          >
             {url}
           </span>
         </div>

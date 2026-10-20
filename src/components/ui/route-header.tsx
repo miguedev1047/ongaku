@@ -3,7 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from 'cn'
 
 export const routeHeaderVariants = cva(
-  'flex h-12 shrink-0 items-center gap-2 border-b transition-all ease-linear select-none  bg-card/40 backdrop-blur-md',
+  'flex h-12 shrink-0 items-center gap-2 transition-all ease-linear select-none  bg-background/10 backdrop-blur-2xl',
   {
     variants: {
       sticky: {

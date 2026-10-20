@@ -18,10 +18,7 @@ export function SystemTab() {
       <ServerHealthCard />
 
       <Show when={isDiscordRpcEnabled}>
-        <Show
-          when={Boolean(isOnline)}
-          fallback={<DiscordRpcOfflineCard />}
-        >
+        <Show when={Boolean(isOnline)} fallback={<DiscordRpcOfflineCard />}>
           <DiscordRpcStatusCard />
         </Show>
       </Show>

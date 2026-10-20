@@ -22,7 +22,7 @@ export function AppWallpaperHeader({
     <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-2.5'>
       <div className='flex items-center gap-2.5'>
         <div className='size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary'>
-          <HugeiconsIcon icon={ImageIcon} className='size-4' />
+          <HugeiconsIcon icon={ImageIcon} />
         </div>
         <div>
           <h2 className='text-sm font-semibold text-foreground'>

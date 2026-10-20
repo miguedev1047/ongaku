@@ -44,8 +44,8 @@ export function SettingsHeader({ isLoading, onRefresh }: SettingsHeaderProps) {
           onClick={onRefresh}
           disabled={isLoading}
         >
-          <Show when={!isLoading} fallback={<Spinner className='size-3.5' />}>
-            <HugeiconsIcon icon={RefreshIcon} className='size-3.5' />
+          <Show when={!isLoading} fallback={<Spinner />}>
+            <HugeiconsIcon icon={RefreshIcon} />
           </Show>
           <span>{t('settings.refresh_status')}</span>
         </Button>

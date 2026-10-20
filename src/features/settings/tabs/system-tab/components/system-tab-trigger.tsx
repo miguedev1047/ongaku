@@ -25,17 +25,14 @@ export function SystemTabTrigger({
       <Show when={hasError}>
         <HugeiconsIcon
           icon={AlertCircleIcon}
-          className='size-3.5 text-destructive animate-pulse shrink-0'
+          className='text-destructive animate-pulse shrink-0'
         />
       </Show>
 
       <span>{children}</span>
 
       <Show when={hasError}>
-        <Badge
-          variant='destructive'
-          size='xs'
-        >
+        <Badge variant='destructive' size='xs'>
           {errorReasons.length}
         </Badge>
       </Show>

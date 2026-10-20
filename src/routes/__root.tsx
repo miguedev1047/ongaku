@@ -88,7 +88,6 @@ function RootComponent() {
       <div className='h-screen w-screen flex flex-col overflow-hidden select-none'>
         <TanstackDevtool />
 
-        {/* Top Player Position */}
         <Show when={isPlayerTop}>
           <Suspense>
             <PlayerRoot position='top' />
@@ -109,7 +108,6 @@ function RootComponent() {
 
         <DownloadQueueDialog />
 
-        {/* Bottom Player Position (Default) */}
         <Show when={!isPlayerTop}>
           <Suspense>
             <PlayerRoot position='bottom' />

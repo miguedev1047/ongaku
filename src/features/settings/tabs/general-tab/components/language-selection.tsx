@@ -33,10 +33,7 @@ export function LanguageSelection() {
       <div className='flex items-center justify-between gap-4'>
         <div className='flex items-center gap-2.5'>
           <div className='size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary'>
-            <HugeiconsIcon
-              icon={TranslateIcon}
-              className='size-4'
-            />
+            <HugeiconsIcon icon={TranslateIcon} />
           </div>
           <div>
             <h2 className='text-sm font-semibold text-foreground'>
@@ -48,10 +45,7 @@ export function LanguageSelection() {
           </div>
         </div>
 
-        <Select
-          value={currentLang}
-          onValueChange={handleLanguageChange}
-        >
+        <Select value={currentLang} onValueChange={handleLanguageChange}>
           <SelectTrigger className='w-36'>
             <SelectValue>
               {(value) => {
@@ -62,10 +56,7 @@ export function LanguageSelection() {
           </SelectTrigger>
           <SelectContent align='end'>
             {LANGUAGES.map((item) => (
-              <SelectItem
-                key={item.value}
-                value={item.value}
-              >
+              <SelectItem key={item.value} value={item.value}>
                 {t(item.labelKey)}
               </SelectItem>
             ))}

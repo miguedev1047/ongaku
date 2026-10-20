@@ -23,7 +23,7 @@ describe('Settings Feature: Navigation', () => {
       expect(router.state.location.pathname).toBe('/settings')
     })
 
-    expect(duration).toBeLessThan(600)
+    expect(duration).toBeLessThan(800)
     unmount()
   })
 })

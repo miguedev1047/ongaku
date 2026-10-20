@@ -30,10 +30,7 @@
   // {hasPlaylists ? <PlaylistsList /> : <EmptyPlaylists />}
 
   // ✅ CORRECTO (Uso canónico de Show con fallback):
-  ;<Show
-    when={hasPlaylists}
-    fallback={<EmptyPlaylists />}
-  >
+  ;<Show when={hasPlaylists} fallback={<EmptyPlaylists />}>
     <PlaylistsList />
   </Show>
   ```
@@ -41,10 +38,7 @@
   En React, los hijos JSX normales se evalúan antes de pasarse al componente. Cuando los hijos dependan de que `when` no sea nulo o indefinido, **usar una función como hijo** para prevenir errores de acceso a propiedades en `null`/`undefined`:
   ```tsx
   // ✅ Pasa una función si el hijo depende de la existencia del objeto
-  <Show
-    when={selectedUser}
-    fallback={<p>No user selected</p>}
-  >
+  <Show when={selectedUser} fallback={<p>No user selected</p>}>
     {(user) => <UserProfile name={user.name} />}
   </Show>
   ```
@@ -61,10 +55,15 @@
    - Prohibido el uso de `rounded-full` en cualquier parte de `src/`.
    - Utilizar la escala de bordes definida por el tema (`rounded-sm`, `rounded-md`, `rounded-lg`).
 
-3. **Idioma de la Interfaz**:
+3. **Size de los Iconos**:
+
+- Prohibido el uso hardcode de `size` en los iconos, ellos por defecto toman el `size` de forma automatica
+  dentro de su contendor padre.
+
+4. **Idioma de la Interfaz**:
    - Todo el contenido de cara al usuario en la UI (textos, botones, diálogos, títulos de columnas, aria-labels y notificaciones toast) debe estar en **inglés**.
 
-4. **ensureQuery Deprecado**:
+5. **ensureQuery Deprecado**:
 
 - En nuevas versiones esa api ".ensureQuery" para precargar datos esta deprecada y solo se usa ".query" en su lugar
 
@@ -89,6 +88,7 @@
 ## 🦀 Arquitectura y Reglas de Rust (`src-tauri`)
 
 ### 1. Separación Estricta: Comandos vs Servicios vs Helpers
+
 - **`commands/` (Controladores IPC delgados)**:
   - Solo reciben la invocación de Tauri (`#[tauri::command]`), extraen argumentos / `State`, delegan la ejecución a un servicio en `services/` y mapean el resultado.
   - **Prohibido**: Escribir lógica de negocio pesada, bucles complejos, algoritmos de archivo o consultas SQL directas dentro de `commands/`.
@@ -100,15 +100,18 @@
   - Si un helper interactúa con la base de datos o coordina un flujo de negocio, **debe ser un servicio**, no un helper.
 
 ### 2. Manejo de Errores Tipados (`ServiceError`)
+
 - Usar siempre el enum `ServiceError` (`thiserror`) en la capa de servicios. Evitar strings planos (`Err("mensaje".into())`) dentro de la lógica de dominio.
 - La conversión a `String` para el frontend se realiza únicamente en la frontera de `commands/` mediante `.map_err(|err| err.to_string())`.
 - Evitar `unwrap()` y `expect()` en rutas de ejecución críticas de producción; propagar errores con el operador `?`.
 
 ### 3. Integridad del Contrato con TypeScript
+
 - Al añadir o modificar comandos en `src-tauri/src/commands/`:
   - Los nombres y firmas registrados en `lib.rs` (`tauri::generate_handler![...]`) deben coincidir exactamente con los tipos de `CommandMap` en `src/infrastructure/platform/platform.types.ts`.
 
 ### 4. Estructura Domain-Driven y Modularidad (< 200 LOC)
+
 - **Organización por Dominio (`services/<domain>/`)**:
   - Cada servicio reside en su propio subdirectorio con archivos desacoplados: `models.rs`, lógica dividida por operaciones/acciones, `helpers.rs`, `tests.rs` y un `mod.rs`.
 - **Archivos Concisos (< 200 líneas)**:

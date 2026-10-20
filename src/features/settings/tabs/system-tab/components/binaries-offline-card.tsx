@@ -22,7 +22,7 @@ export function BinariesOfflineCard({ className }: BinariesOfflineCardProps) {
               'size-8 rounded-md bg-primary/10 flex items-center justify-center text-primary',
             )}
           >
-            <HugeiconsIcon icon={Wrench01Icon} className={cn('size-4')} />
+            <HugeiconsIcon icon={Wrench01Icon} />
           </div>
           <div>
             <h2 className={cn('text-sm font-semibold text-foreground')}>

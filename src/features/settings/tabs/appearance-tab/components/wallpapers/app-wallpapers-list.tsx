@@ -5,6 +5,7 @@ import { AppWallpaperCard } from '@/features/settings/tabs/appearance-tab/compon
 import { getBackgroundUrl } from '@/lib/song-utils'
 import type { TBackgroundItem } from '@/features/settings/queries/backgrounds'
 import { useTranslation } from 'react-i18next'
+import { RadioGroup } from '@/components/ui/radio-group'
 
 export interface AppWallpapersListProps {
   wallpapers: TBackgroundItem[]
@@ -29,16 +30,28 @@ export function AppWallpapersList({
   const hasMore = remainingCount > 0
 
   return (
-    <>
-      <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 pt-1'>
-        <AppWallpaperCard
-          isDefault
-          isSelected={!currentWallpaper}
-          onSelect={() => onSelect('')}
-        />
+    <div className='space-y-2'>
+      <div>
+        <h3 className='text-xs font-medium text-foreground'>
+          {t(
+            'settings.tabs.appearance.appearance_and_interface.app_background.list_title',
+          )}
+        </h3>
+        <p className='text-3xs text-muted-foreground'>
+          {t(
+            'settings.tabs.appearance.appearance_and_interface.app_background.list_description',
+          )}
+        </p>
+      </div>
+
+      <RadioGroup
+        value={currentWallpaper ?? ''}
+        onValueChange={(val) => onSelect(val as string)}
+        className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5'
+      >
+        <AppWallpaperCard isDefault value='' />
 
         {visibleWallpapers.map((bg) => {
-          const isChecked = currentWallpaper === bg.id
           const imageUrl = serverPort
             ? getBackgroundUrl({ id: bg.id, port: serverPort, thumb: true })
             : ''
@@ -47,17 +60,13 @@ export function AppWallpapersList({
             <AppWallpaperCard
               key={bg.id}
               wallpaper={bg}
-              isSelected={isChecked}
               imageUrl={imageUrl}
-              onSelect={() => onSelect(bg.id)}
-              onDelete={(e) => {
-                e.stopPropagation()
-                onDelete(bg.id)
-              }}
+              value={bg.id}
+              onDelete={() => onDelete(bg.id)}
             />
           )
         })}
-      </div>
+      </RadioGroup>
 
       <Show when={hasMore}>
         <div className='flex items-center justify-center pt-1'>
@@ -74,6 +83,6 @@ export function AppWallpapersList({
           </Button>
         </div>
       </Show>
-    </>
+    </div>
   )
 }
