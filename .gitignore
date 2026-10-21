@@ -11,6 +11,7 @@ pnpm-lock.yaml
 node_modules
 dist
 dist-ssr
+.turbo
 *.local
 
 # Editor directories and files
@@ -26,10 +27,12 @@ dist-ssr
 
 # Rust / Tauri
 src-tauri/target/
+**/src-tauri/target/
 .tauri
 
 # Tauri generated files (regenerated on build)
 src-tauri/gen/
+**/src-tauri/gen/
 
 # Bun lockfile (optional: commit if you want reproducible installs)
 # bun.lock
