@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button'
-import { Show } from '@/components/utility/show'
+import { Button } from '@ongaku/ui'
+import { Show } from '@ongaku/ui'
 import type { DownloadTask } from '@/shared/types/download.types'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
@@ -15,7 +15,7 @@ import {
   AttachmentDescription,
   AttachmentMedia,
   AttachmentTitle,
-} from '@/components/ui/attachment'
+} from '@ongaku/ui'
 import { useTranslation } from 'react-i18next'
 
 interface DownloadQueueErrorCardProps {

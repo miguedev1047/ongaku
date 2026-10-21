@@ -3,7 +3,7 @@ import { playlistSongsQueryOpts } from "@/features/playlist-songs/queries"
 import { useParams } from "@tanstack/react-router"
 import { PlaylistSongsTable } from "@/features/playlist-songs/components/playlist-songs-list"
 import { PlaylistSongsEmptyState } from "@/features/playlist-songs/ui-state"
-import { Show } from "@/components/utility/show"
+import { Show } from "@ongaku/ui"
 
 export function PlaylistSongsList() {
   const { playlistName } = useParams({ from: "/playlists/$playlistName" })

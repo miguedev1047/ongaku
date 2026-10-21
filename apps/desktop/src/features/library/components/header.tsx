@@ -4,8 +4,8 @@ import {
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
-} from '@/components/ui/breadcrumb'
-import { Skeleton } from '@/components/ui/skeleton'
+} from '@ongaku/ui'
+import { Skeleton } from '@ongaku/ui'
 import { Suspense } from 'react'
 import { SearchLibrary } from '@/features/library/components/search-library'
 import { LibraryReloadList } from '@/features/library/components'

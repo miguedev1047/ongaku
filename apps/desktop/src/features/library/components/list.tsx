@@ -2,7 +2,7 @@ import { useSuspenseQuery } from '@tanstack/react-query'
 import { librarySongsQueryOpts } from '@/features/library/queries'
 import { LibrarySongsList } from '@/features/library/components/library-songs-list'
 import { LibraryEmptyState } from '@/features/library/ui-state'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 
 export function LibraryList() {
   const { data: songs = [] } = useSuspenseQuery(librarySongsQueryOpts())

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { cn } from 'cn'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { platformService } from '@/infrastructure/platform'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {

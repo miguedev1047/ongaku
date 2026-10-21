@@ -1,10 +1,10 @@
 import { memo } from 'react'
 import { cn } from 'cn'
 import type { TPlaylistSong } from '@/features/playlist-songs/types'
-import { CoverImage } from '@/components/ui/cover-image'
+import { CoverImage } from '@ongaku/ui'
 import { useSongUtils } from '@/hooks/use-song-utils'
 import { formatDuration } from '@/shared/helpers/format-duration'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { PlayIcon, VolumeHighIcon } from '@hugeicons/core-free-icons'
 

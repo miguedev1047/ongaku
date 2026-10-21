@@ -1,7 +1,7 @@
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { CardWrapper } from '@/components/ui/card-wrapper'
-import { Spinner } from '@/components/ui/spinner'
+import { Badge } from '@ongaku/ui'
+import { Button } from '@ongaku/ui'
+import { CardWrapper } from '@ongaku/ui'
+import { Spinner } from '@ongaku/ui'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
   DownloadIcon,
@@ -11,16 +11,16 @@ import {
   WifiOff01Icon,
 } from '@hugeicons/core-free-icons'
 import { useUpdater } from '@/features/settings/hooks/use-updater'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import { openReleaseNotes } from '@/shared/helpers/open-release-notes'
-import { DotmSquare10 } from '@/components/ui/loaders/dotm-square-10'
+import { DotmSquare10 } from '@ongaku/ui'
 import { useTranslation } from 'react-i18next'
 import { cn } from 'cn'
 import { useNetworkState } from '@/hooks/use-network-state'
 import { AppUpdateNetworkError } from '@/features/settings/tabs/general-tab/components/app-update-network-error'
-import { RainbowButton } from '@/components/ui/rainbow-button'
+import { RainbowButton } from '@ongaku/ui'
 
 interface ReleaseNotesLinkProps {
   version?: string

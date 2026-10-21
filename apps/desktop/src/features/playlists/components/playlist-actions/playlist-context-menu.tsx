@@ -5,9 +5,9 @@ import {
   ContextMenuGroup,
   ContextMenuItem,
   ContextMenuTrigger,
-} from '@/components/ui/context-menu'
+} from '@ongaku/ui'
 import type { TPlaylist } from '@/features/playlists/types'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { DeletePlaylist, RenamePlaylist } from '@/features/playlists/components'
 import { usePlaylistItem } from '@/features/playlists/hooks'
 import { HugeiconsIcon } from '@hugeicons/react'
@@ -17,7 +17,7 @@ import {
   PencilEdit01Icon,
 } from '@hugeicons/core-free-icons'
 import { cn } from 'cn'
-import { CONTEXT_ACTIONS_MENU_WIDTH } from '@/constants/styles'
+import { CONTEXT_ACTIONS_MENU_WIDTH } from '@ongaku/ui'
 
 import { useTranslation } from 'react-i18next'
 

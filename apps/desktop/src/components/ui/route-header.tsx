@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from 'cn'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { platformService } from '@/infrastructure/platform'
 import {
   WindowControls,
@@ -9,8 +9,7 @@ import {
   WindowMaximizeButton,
   WindowCloseButton,
 } from '@/components/ui/window-controls'
-import { Separator } from './separator'
-import { SidebarTrigger } from './sidebar'
+import { Separator, SidebarTrigger } from '@ongaku/ui'
 export {
   WindowControls,
   WindowMinimizeButton,

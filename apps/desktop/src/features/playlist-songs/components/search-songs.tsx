@@ -6,8 +6,8 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@/components/ui/command'
-import { SearchTrigger } from '@/components/ui/search-trigger'
+} from '@ongaku/ui'
+import { SearchTrigger } from '@ongaku/ui'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { useParams } from '@tanstack/react-router'
@@ -16,7 +16,7 @@ import { playlistSongsQueryOpts } from '@/features/playlist-songs/queries'
 import { useActivePlayerStore } from '@/features/player/stores'
 import { useTranslation } from 'react-i18next'
 import { useSongUtils } from '@/hooks/use-song-utils'
-import { CoverImage } from '@/components/ui/cover-image'
+import { CoverImage } from '@ongaku/ui'
 
 export function SearchSongs() {
   const { t } = useTranslation()

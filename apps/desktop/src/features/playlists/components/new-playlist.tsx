@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { PlusIcon } from '@hugeicons/core-free-icons'
 import { useHotkey } from '@tanstack/react-hotkeys'
-import { Button } from '@/components/ui/button'
+import { Button } from '@ongaku/ui'
 import {
   Dialog,
   DialogClose,
@@ -11,24 +11,24 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
+} from '@ongaku/ui'
 import {
   Field,
   FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
-import { Spinner } from '@/components/ui/spinner'
+} from '@ongaku/ui'
+import { Input } from '@ongaku/ui'
+import { Spinner } from '@ongaku/ui'
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from '@/components/ui/tooltip'
-import { Kbd, KbdGroup } from '@/components/ui/kbd'
+} from '@ongaku/ui'
+import { Kbd, KbdGroup } from '@ongaku/ui'
 import { useNewPlaylist } from '@/features/playlists/hooks'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { cn } from 'cn'
 
 import { useTranslation } from 'react-i18next'

@@ -1,6 +1,6 @@
 import { createPortal } from "react-dom"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { Button } from "@ongaku/ui"
+import { Badge } from "@ongaku/ui"
 import { useDownloadQueue } from "@/features/download-queue/hooks"
 import { useActivePlayerStore } from "@/features/player/stores"
 import { HugeiconsIcon } from "@hugeicons/react"

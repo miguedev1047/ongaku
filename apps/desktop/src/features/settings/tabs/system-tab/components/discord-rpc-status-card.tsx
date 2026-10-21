@@ -1,13 +1,13 @@
-import { Badge } from '@/components/ui/badge'
-import { CardWrapper } from '@/components/ui/card-wrapper'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Badge } from '@ongaku/ui'
+import { CardWrapper } from '@ongaku/ui'
+import { Alert, AlertDescription, AlertTitle } from '@ongaku/ui'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
   CheckmarkCircle02Icon,
   AlertCircleIcon,
   DiscordIcon,
 } from '@hugeicons/core-free-icons'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { discordStatusQueryOpts } from '@/shared/queries/discord'
 import { resolveSetupWarning } from '@/features/settings/tabs/system-tab/helpers/resolve-setup-warning'

@@ -1,5 +1,5 @@
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { Badge } from '@ongaku/ui'
+import { Button } from '@ongaku/ui'
 import {
   Dialog,
   DialogClose,
@@ -8,10 +8,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Spinner } from '@/components/ui/spinner'
-import { Show } from '@/components/utility/show'
+} from '@ongaku/ui'
+import { Input } from '@ongaku/ui'
+import { Spinner } from '@ongaku/ui'
+import { Show } from '@ongaku/ui'
 import { RECOMMENDED_WALLPAPER_SOURCES } from '@/features/settings/constants/wallpaper-sources'
 import { useAppWallpaperUrlDialog } from '@/features/settings/hooks/use-app-wallpaper-url-dialog'
 import { platformService } from '@/infrastructure/platform'

@@ -4,8 +4,8 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from '@/components/ui/empty'
-import { RouteSection } from '@/components/ui/route-section'
+} from '@ongaku/ui'
+import { RouteSection } from '@ongaku/ui'
 import { WifiOff01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { cn } from 'cn'

@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { Button } from "@/components/ui/button"
+import { Button } from "@ongaku/ui"
 import {
   Dialog,
   DialogClose,
@@ -8,9 +8,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from "@/components/ui/dialog"
-import { Spinner } from "@/components/ui/spinner"
-import { Show } from "@/components/utility/show"
+} from "@ongaku/ui"
+import { Spinner } from "@ongaku/ui"
+import { Show } from "@ongaku/ui"
 
 interface BatchDeleteDialogProps {
   open: boolean

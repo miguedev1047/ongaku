@@ -1,10 +1,10 @@
 import { useState } from "react"
 import { useStreamingPlayerStore } from "@/features/player/stores"
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@ongaku/ui"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { MusicNote01Icon, YoutubeIcon } from "@hugeicons/core-free-icons"
 import { PlayerMedia } from "@/components/ui/player"
-import { Show } from "@/components/utility/show"
+import { Show } from "@ongaku/ui"
 
 export function StreamingCover() {
   const [hasImageError, setHasImageError] = useState(false)

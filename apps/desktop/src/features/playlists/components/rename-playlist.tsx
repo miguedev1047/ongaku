@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@ongaku/ui"
 import {
   Dialog,
   DialogClose,
@@ -7,19 +7,19 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from "@/components/ui/dialog"
+} from "@ongaku/ui"
 import {
   Field,
   FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { Spinner } from "@/components/ui/spinner"
+} from "@ongaku/ui"
+import { Input } from "@ongaku/ui"
+import { Spinner } from "@ongaku/ui"
 import type { TPlaylist } from "@/features/playlists/types"
 import { useRenamePlaylist } from "@/features/playlists/hooks"
-import { Show } from "@/components/utility/show"
+import { Show } from "@ongaku/ui"
 
 interface RenamePlaylistProps {
   playlist: TPlaylist

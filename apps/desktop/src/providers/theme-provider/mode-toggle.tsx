@@ -1,6 +1,6 @@
 import { Moon, Sun } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { Button } from "@/components/ui/button"
+import { Button } from "@ongaku/ui"
 import { useTheme } from "@/providers/theme-provider"
 
 export function ModeToggle() {

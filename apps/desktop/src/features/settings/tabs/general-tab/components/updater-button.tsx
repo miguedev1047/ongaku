@@ -2,13 +2,13 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { Button } from "@/components/ui/button"
+} from "@ongaku/ui"
+import { Button } from "@ongaku/ui"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { DownloadIcon } from "@hugeicons/core-free-icons"
 import { useUpdater } from "@/features/settings/hooks/use-updater"
-import { Show } from "@/components/utility/show"
-import { DotmSquare10 } from "@/components/ui/loaders/dotm-square-10"
+import { Show } from "@ongaku/ui"
+import { DotmSquare10 } from "@ongaku/ui"
 import { cn } from "cn"
 
 export function UpdaterButton() {

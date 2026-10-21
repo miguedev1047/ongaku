@@ -1,18 +1,18 @@
 import { PauseIcon, PlayIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { cn } from 'cn'
-import { Button } from '@/components/ui/button'
-import { Show } from '@/components/utility/show'
+import { Button } from '@ongaku/ui'
+import { Show } from '@ongaku/ui'
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from '@/components/ui/tooltip'
+} from '@ongaku/ui'
 import { usePlaylistHero } from '@/features/playlist-songs/hooks/use-playlist-hero'
 import { PlaylistHeroActions } from '@/features/playlists/components/playlist-actions'
 import { PlaylistHeroCover } from '@/features/playlist-songs/components/hero-cover'
 import { useTranslation } from 'react-i18next'
-import { CardWrapper } from '@/components/ui/card-wrapper'
+import { CardWrapper } from '@ongaku/ui'
 
 export function PlaylistSongHero() {
   const { t } = useTranslation()

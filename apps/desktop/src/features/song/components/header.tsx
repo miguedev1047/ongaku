@@ -6,9 +6,9 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
+} from '@ongaku/ui'
 import { Link } from '@tanstack/react-router'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { useTranslation } from 'react-i18next'
 import type { TPlaylistSong } from '@/features/playlist-songs/types'
 

@@ -8,8 +8,8 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { InputGroup, InputGroupAddon } from '@/components/ui/input-group'
+} from '../../components/ui/dialog'
+import { InputGroup, InputGroupAddon } from '../../components/ui/input-group'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { SearchIcon, Tick02Icon } from '@hugeicons/core-free-icons'
 

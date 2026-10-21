@@ -1,4 +1,4 @@
-import { SidebarMenu } from "@/components/ui/sidebar"
+import { SidebarMenu } from "@ongaku/ui"
 import { SettingsNav } from "@/components/layout/app-sidebar/navigations/settings-nav"
 import { SidebarDownloadQueue } from "@/components/layout/app-sidebar/components/download-queue"
 

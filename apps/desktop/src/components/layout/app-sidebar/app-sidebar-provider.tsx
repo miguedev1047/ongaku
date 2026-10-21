@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { SidebarProvider } from '@/components/ui/sidebar'
+import { SidebarProvider } from '@ongaku/ui'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import { useUpdateConfig } from '@/features/settings/hooks/use-config'
 import { useQuery } from '@tanstack/react-query'

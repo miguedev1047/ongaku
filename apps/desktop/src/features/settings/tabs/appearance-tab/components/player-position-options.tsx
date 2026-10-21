@@ -1,4 +1,4 @@
-import { CardWrapper } from '@/components/ui/card-wrapper'
+import { CardWrapper } from '@ongaku/ui'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
   AlignBoxBottomCenterIcon,
@@ -8,8 +8,8 @@ import { useQuery } from '@tanstack/react-query'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import { useUpdateConfig } from '@/features/settings/hooks/use-config'
 import { useTranslation } from 'react-i18next'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Field, FieldLabel, FieldTitle } from '@/components/ui/field'
+import { RadioGroup, RadioGroupItem } from '@ongaku/ui'
+import { Field, FieldLabel, FieldTitle } from '@ongaku/ui'
 
 export const PLAYER_POSITION_OPTIONS = [
   {

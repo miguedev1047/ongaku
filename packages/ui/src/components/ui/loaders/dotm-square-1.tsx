@@ -2,12 +2,12 @@
 
 import type { CSSProperties } from "react";
 
-import { DotMatrixBase } from "@/lib/dotmatrix-core";
-import { useDotMatrixPhases } from "@/lib/dotmatrix-hooks";
-import { trBlPathNormFromIndex } from "@/lib/dotmatrix-core";
-import { usePrefersReducedMotion } from "@/lib/dotmatrix-hooks";
-import type { DotAnimationResolver } from "@/lib/dotmatrix-core";
-import type { DotMatrixCommonProps } from "@/lib/dotmatrix-core";
+import { DotMatrixBase } from "../../../lib/dotmatrix-core";
+import { useDotMatrixPhases } from "../../../lib/dotmatrix-hooks";
+import { trBlPathNormFromIndex } from "../../../lib/dotmatrix-core";
+import { usePrefersReducedMotion } from "../../../lib/dotmatrix-hooks";
+import type { DotAnimationResolver } from "../../../lib/dotmatrix-core";
+import type { DotMatrixCommonProps } from "../../../lib/dotmatrix-core";
 
 export type DotmSquare1Props = DotMatrixCommonProps;
 

@@ -1,14 +1,14 @@
-import { Button } from '@/components/ui/button'
+import { Button } from '@ongaku/ui'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Spinner } from '@/components/ui/spinner'
-import { Show } from '@/components/utility/show'
-import { DROPDOWN_ACTIONS_MENU_WIDTH } from '@/constants/styles'
+} from '@ongaku/ui'
+import { Spinner } from '@ongaku/ui'
+import { Show } from '@ongaku/ui'
+import { DROPDOWN_ACTIONS_MENU_WIDTH } from '@ongaku/ui'
 import {
   FileUploadIcon,
   FolderIcon,

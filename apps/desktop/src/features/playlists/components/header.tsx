@@ -4,9 +4,9 @@ import {
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
-} from '@/components/ui/breadcrumb'
+} from '@ongaku/ui'
 import { SearchPlaylists } from '@/features/playlists/components/search-playlists'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Skeleton } from '@ongaku/ui'
 import { Suspense } from 'react'
 import { PlaylistsReloadList } from '@/features/playlists/components'
 import { useTranslation } from 'react-i18next'

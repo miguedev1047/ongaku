@@ -7,7 +7,7 @@ import {
   WindowCloseButton,
 } from '@/components/ui/window-controls'
 import { RouteHeader } from '@/components/ui/route-header'
-import { SidebarProvider } from '@/components/ui/sidebar'
+import { SidebarProvider } from '@ongaku/ui'
 import { platformService } from '@/infrastructure/platform'
 
 describe('Window Controls', () => {

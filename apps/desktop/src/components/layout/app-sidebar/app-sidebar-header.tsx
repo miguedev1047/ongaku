@@ -1,4 +1,4 @@
-import { SidebarHeader, SidebarTrigger } from '@/components/ui/sidebar'
+import { SidebarHeader, SidebarTrigger } from '@ongaku/ui'
 
 export function AppSidebarHeader() {
   return (

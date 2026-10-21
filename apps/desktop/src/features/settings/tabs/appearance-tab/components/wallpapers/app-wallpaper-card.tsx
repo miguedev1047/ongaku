@@ -1,13 +1,13 @@
-import { Button } from '@/components/ui/button'
+import { Button } from '@ongaku/ui'
 import {
   Empty,
   EmptyContent,
   EmptyMedia,
   EmptyTitle,
-} from '@/components/ui/empty'
-import { FieldContent, FieldLabel } from '@/components/ui/field'
-import { RadioGroupItem } from '@/components/ui/radio-group'
-import { Show } from '@/components/utility/show'
+} from '@ongaku/ui'
+import { FieldContent, FieldLabel } from '@ongaku/ui'
+import { RadioGroupItem } from '@ongaku/ui'
+import { Show } from '@ongaku/ui'
 import type { TBackgroundItem } from '@/features/settings/queries/backgrounds'
 import { Delete02Icon, ImageNotFound01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'

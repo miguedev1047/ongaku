@@ -1,5 +1,5 @@
 import { Suspense, useState } from 'react'
-import { Button } from '@/components/ui/button'
+import { Button } from '@ongaku/ui'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,8 +11,8 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Spinner } from '@/components/ui/spinner'
+} from '@ongaku/ui'
+import { Spinner } from '@ongaku/ui'
 import type { TYoutubeSearchResult } from '@/features/youtube-search/types'
 import {
   MoreHorizontalSquare01Icon,
@@ -25,9 +25,9 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import { PlaylistMenuGroup } from '@/features/download-queue/components'
 import { CopySongMenuItem } from '@/shared/components/song-actions/copy-song-menu-item'
 import { useSearchSongActions } from './hooks'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { cn } from 'cn'
-import { DROPDOWN_ACTIONS_MENU_WIDTH } from '@/constants/styles'
+import { DROPDOWN_ACTIONS_MENU_WIDTH } from '@ongaku/ui'
 import { useTranslation } from 'react-i18next'
 
 export interface SearchSongActionsProps {

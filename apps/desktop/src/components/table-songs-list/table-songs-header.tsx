@@ -1,9 +1,9 @@
-import { Checkbox } from '@/components/ui/checkbox'
-import { TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Checkbox } from '@ongaku/ui'
+import { TableHead, TableHeader, TableRow } from '@ongaku/ui'
 import { TABLE_SONGS_SLOTS } from '@/components/table-songs-list/table-songs-constants'
 import { useTableSongsContext } from '@/components/table-songs-list/table-songs-context'
 import { Subscribe } from '@tanstack/react-table'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { cn } from 'cn'
 import { useTranslation } from 'react-i18next'
 

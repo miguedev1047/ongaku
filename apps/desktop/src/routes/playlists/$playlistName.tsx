@@ -7,7 +7,7 @@ import {
   PlaylistSongsList,
 } from '@/features/playlist-songs/components'
 import { PlaylistSongsLoadingState } from '@/features/playlist-songs/ui-state'
-import { RouteSection } from '@/components/ui/route-section'
+import { RouteSection } from '@ongaku/ui'
 import {
   RoutePendingState,
   RouteErrorState,

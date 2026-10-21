@@ -4,7 +4,7 @@ import {
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
-} from '@/components/ui/breadcrumb'
+} from '@ongaku/ui'
 import { YoutubeSearchBar } from '@/features/youtube-search/components'
 import { useTranslation } from 'react-i18next'
 

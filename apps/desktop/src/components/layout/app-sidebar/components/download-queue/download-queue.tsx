@@ -1,5 +1,5 @@
-import { SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
-import { Show } from "@/components/utility/show"
+import { SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem } from "@ongaku/ui"
+import { Show } from "@ongaku/ui"
 import { useDownloadQueue } from "@/features/download-queue/hooks"
 import { Download01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"

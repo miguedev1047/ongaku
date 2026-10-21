@@ -3,8 +3,8 @@ import {
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
-} from '@/components/ui/input-group'
-import { Show } from '@/components/utility/show'
+} from '@ongaku/ui'
+import { Show } from '@ongaku/ui'
 import { FilePasteIcon, Link01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useTranslation } from 'react-i18next'

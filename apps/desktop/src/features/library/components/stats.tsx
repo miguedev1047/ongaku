@@ -1,12 +1,12 @@
 import { useMemo } from 'react'
-import { CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { CardDescription, CardHeader, CardTitle } from '@ongaku/ui'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { librarySongsQueryOpts } from '@/features/library/queries'
 import { playlistsQueryOpts } from '@/features/playlists/queries'
 import { useTranslation } from 'react-i18next'
-import { CardWrapper } from '@/components/ui/card-wrapper'
+import { CardWrapper } from '@ongaku/ui'
 import { formatPlaylistDuration } from '@/shared/helpers/total-tracks-hours'
-import { NumberTicker } from '@/components/ui/number-ticker'
+import { NumberTicker } from '@ongaku/ui'
 
 export function LibraryStats() {
   const { t } = useTranslation()

@@ -5,7 +5,7 @@ import {
   PlayerPreviousButton,
   PlayerNextButton
 } from "@/components/ui/player"
-import { Kbd } from "@/components/ui/kbd"
+import { Kbd } from "@ongaku/ui"
 import { useTranslation } from "react-i18next"
 
 export function StreamingControls() {

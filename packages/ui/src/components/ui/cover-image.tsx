@@ -2,7 +2,7 @@ import { MusicIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { cn } from 'cn'
 import { useState } from 'react'
-import { Show } from '@/components/utility/show'
+import { Show } from '../../components/utility/show'
 
 interface CoverImageProps extends React.ComponentProps<'img'> {
   rounded?: 'none' | 'sm' | 'md' | 'lg'

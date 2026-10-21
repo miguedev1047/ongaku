@@ -20,7 +20,7 @@ import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 
 interface LibrarySongTableRowProps {
   row: Row<LibraryTableFeatures, TPlaylistSong>

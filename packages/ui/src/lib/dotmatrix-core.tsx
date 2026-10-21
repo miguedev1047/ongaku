@@ -2,13 +2,13 @@
 
 import type { CSSProperties } from 'react'
 
-import '@/styles/dotmatrix-loader.css'
+import '../styles/dotmatrix-loader.css'
 import { useMemo } from 'react'
 import {
   useDotMatrixPhases,
   usePrefersReducedMotion,
   useCyclePhase,
-} from '@/lib/dotmatrix-hooks'
+} from './dotmatrix-hooks'
 
 export type MatrixPattern =
   'diamond' | 'full' | 'outline' | 'rose' | 'cross' | 'rings'

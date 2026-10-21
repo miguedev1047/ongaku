@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button'
-import { Show } from '@/components/utility/show'
+import { Button } from '@ongaku/ui'
+import { Show } from '@ongaku/ui'
 import { Cancel01Icon, ListMusicIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useTranslation } from 'react-i18next'

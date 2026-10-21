@@ -4,7 +4,7 @@ import {
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
-} from '@/components/ui/breadcrumb'
+} from '@ongaku/ui'
 import { useTranslation } from 'react-i18next'
 
 export function DownloadSongsHeader() {

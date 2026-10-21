@@ -8,60 +8,65 @@ import {
   useRef,
   useState,
   useSyncExternalStore,
-} from "react"
+} from 'react'
 import type {
   ComponentProps,
   KeyboardEvent as ReactKeyboardEvent,
   ReactNode,
   PointerEvent as ReactPointerEvent,
   Ref,
-} from "react"
-import { cn } from "cn"
-import { flushSync } from "react-dom"
+} from 'react'
+import { cn } from 'cn'
+import { flushSync } from 'react-dom'
 
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from '@/components/ui/dropdown-menu'
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
-} from "@/components/ui/input-group"
+} from '@/components/ui/input-group'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { Separator } from "@/components/ui/separator"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { ArrowDown01Icon, ColorPickerIcon, Tick02Icon, Copy01Icon } from "@hugeicons/core-free-icons"
+} from '@/components/ui/popover'
+import { Separator } from '@/components/ui/separator'
+import { HugeiconsIcon } from '@hugeicons/react'
+import {
+  ArrowDown01Icon,
+  ColorPickerIcon,
+  Tick02Icon,
+  Copy01Icon,
+} from '@hugeicons/core-free-icons'
 
 /* -------------------------------------------------------------------------- */
 /*                                    Types                                   */
 /* -------------------------------------------------------------------------- */
 
 /** How a value is written: what `onValueChange` emits and what the fields show. */
-export type ColorPickerFormat = "hex" | "rgb" | "hsl" | "hsb" | "oklch"
+export type ColorPickerFormat = 'hex' | 'rgb' | 'hsl' | 'hsb' | 'oklch'
 
 /** Where channels live. HSB is `hsv` here, after the math. */
-export type ColorPickerColorSpace = "rgb" | "hsl" | "hsv" | "oklch"
+export type ColorPickerColorSpace = 'rgb' | 'hsl' | 'hsv' | 'oklch'
 
 export type ColorPickerChannel =
-  | "hue"
-  | "saturation"
-  | "brightness"
-  | "lightness"
-  | "chroma"
-  | "red"
-  | "green"
-  | "blue"
-  | "alpha"
+  | 'hue'
+  | 'saturation'
+  | 'brightness'
+  | 'lightness'
+  | 'chroma'
+  | 'red'
+  | 'green'
+  | 'blue'
+  | 'alpha'
 
 /**
  * A parsed color. Channels stay in the space they were given or edited in,
@@ -125,26 +130,26 @@ const SPACE_CHANNELS: Record<
   ColorPickerColorSpace,
   [ColorPickerChannel, ColorPickerChannel, ColorPickerChannel]
 > = {
-  rgb: ["red", "green", "blue"],
-  hsl: ["hue", "saturation", "lightness"],
-  hsv: ["hue", "saturation", "brightness"],
-  oklch: ["lightness", "chroma", "hue"],
+  rgb: ['red', 'green', 'blue'],
+  hsl: ['hue', 'saturation', 'lightness'],
+  hsv: ['hue', 'saturation', 'brightness'],
+  oklch: ['lightness', 'chroma', 'hue'],
 }
 
 export const COLOR_PICKER_FORMATS: ColorPickerFormat[] = [
-  "hex",
-  "rgb",
-  "hsl",
-  "hsb",
-  "oklch",
+  'hex',
+  'rgb',
+  'hsl',
+  'hsb',
+  'oklch',
 ]
 
 const FORMAT_LABELS: Record<ColorPickerFormat, string> = {
-  hex: "HEX",
-  rgb: "RGB",
-  hsl: "HSL",
-  hsb: "HSB",
-  oklch: "OKLCH",
+  hex: 'HEX',
+  rgb: 'RGB',
+  hsl: 'HSL',
+  hsb: 'HSB',
+  oklch: 'OKLCH',
 }
 
 /* -------------------------------------------------------------------------- */
@@ -269,7 +274,7 @@ function clipError(clipped: Triple, [lightness, chroma, hue]: Triple) {
   return Math.hypot(
     l - lightness / 100,
     a - chroma * Math.cos(angle),
-    b - chroma * Math.sin(angle)
+    b - chroma * Math.sin(angle),
   )
 }
 
@@ -313,32 +318,32 @@ function oklchToRgb([lightness, chroma, hue]: Triple): Triple {
 
 function toRgb(color: ColorPickerColor): Triple {
   const { space, channels } = color
-  if (space === "rgb") return channels
-  if (space === "hsv") return hsvToRgb(channels)
-  if (space === "hsl") return hsvToRgb(hslToHsv(channels))
+  if (space === 'rgb') return channels
+  if (space === 'hsv') return hsvToRgb(channels)
+  if (space === 'hsl') return hsvToRgb(hslToHsv(channels))
   return oklchToRgb(channels)
 }
 
 /** A color's channels in another space. */
 function toSpace(
   color: ColorPickerColor,
-  space: ColorPickerColorSpace
+  space: ColorPickerColorSpace,
 ): Triple {
   const { space: from, channels } = color
   if (from === space) return channels
-  if (from === "hsv" && space === "hsl") return hsvToHsl(channels)
-  if (from === "hsl" && space === "hsv") return hslToHsv(channels)
+  if (from === 'hsv' && space === 'hsl') return hsvToHsl(channels)
+  if (from === 'hsl' && space === 'hsv') return hslToHsv(channels)
   const rgb = toRgb(color)
-  const hue = from === "rgb" ? 0 : channels[from === "oklch" ? 2 : 0]
-  if (space === "rgb") return rgb
-  if (space === "hsv") return rgbToHsv(rgb, hue)
-  if (space === "hsl") return hsvToHsl(rgbToHsv(rgb, hue))
+  const hue = from === 'rgb' ? 0 : channels[from === 'oklch' ? 2 : 0]
+  if (space === 'rgb') return rgb
+  if (space === 'hsv') return rgbToHsv(rgb, hue)
+  if (space === 'hsl') return hsvToHsl(rgbToHsv(rgb, hue))
   return rgbToOklch(rgb, hue)
 }
 
 /** Whether a color fits sRGB. OKLCH can reach past it; the picker then maps it into sRGB the way CSS does. */
 export function isColorInSrgb(color: ColorPickerColor) {
-  return color.space !== "oklch" || inSrgb(oklchToLinear(color.channels))
+  return color.space !== 'oklch' || inSrgb(oklchToLinear(color.channels))
 }
 
 const HEX_PATTERN = /^#?([\da-f]{3,4}|[\da-f]{6}|[\da-f]{8})$/
@@ -350,53 +355,53 @@ const NUMBER_PATTERN =
 /* The 148 CSS named colors, each name then its hex: about 2.3 KB, checked
    against Chrome, and safe to read on the server unlike a canvas. */
 const NAMED_COLORS =
-  "alicebluef0f8ff antiquewhitefaebd7 aqua00ffff aquamarine7fffd4 " +
-  "azuref0ffff beigef5f5dc bisqueffe4c4 black000000 blanchedalmondffebcd " +
-  "blue0000ff blueviolet8a2be2 browna52a2a burlywooddeb887 " +
-  "cadetblue5f9ea0 chartreuse7fff00 chocolated2691e coralff7f50 " +
-  "cornflowerblue6495ed cornsilkfff8dc crimsondc143c cyan00ffff " +
-  "darkblue00008b darkcyan008b8b darkgoldenrodb8860b darkgraya9a9a9 " +
-  "darkgreen006400 darkgreya9a9a9 darkkhakibdb76b darkmagenta8b008b " +
-  "darkolivegreen556b2f darkorangeff8c00 darkorchid9932cc darkred8b0000 " +
-  "darksalmone9967a darkseagreen8fbc8f darkslateblue483d8b " +
-  "darkslategray2f4f4f darkslategrey2f4f4f darkturquoise00ced1 " +
-  "darkviolet9400d3 deeppinkff1493 deepskyblue00bfff dimgray696969 " +
-  "dimgrey696969 dodgerblue1e90ff firebrickb22222 floralwhitefffaf0 " +
-  "forestgreen228b22 fuchsiaff00ff gainsborodcdcdc ghostwhitef8f8ff " +
-  "goldffd700 goldenroddaa520 gray808080 green008000 greenyellowadff2f " +
-  "grey808080 honeydewf0fff0 hotpinkff69b4 indianredcd5c5c indigo4b0082 " +
-  "ivoryfffff0 khakif0e68c lavendere6e6fa lavenderblushfff0f5 " +
-  "lawngreen7cfc00 lemonchiffonfffacd lightblueadd8e6 lightcoralf08080 " +
-  "lightcyane0ffff lightgoldenrodyellowfafad2 lightgrayd3d3d3 " +
-  "lightgreen90ee90 lightgreyd3d3d3 lightpinkffb6c1 lightsalmonffa07a " +
-  "lightseagreen20b2aa lightskyblue87cefa lightslategray778899 " +
-  "lightslategrey778899 lightsteelblueb0c4de lightyellowffffe0 lime00ff00 " +
-  "limegreen32cd32 linenfaf0e6 magentaff00ff maroon800000 " +
-  "mediumaquamarine66cdaa mediumblue0000cd mediumorchidba55d3 " +
-  "mediumpurple9370db mediumseagreen3cb371 mediumslateblue7b68ee " +
-  "mediumspringgreen00fa9a mediumturquoise48d1cc mediumvioletredc71585 " +
-  "midnightblue191970 mintcreamf5fffa mistyroseffe4e1 moccasinffe4b5 " +
-  "navajowhiteffdead navy000080 oldlacefdf5e6 olive808000 olivedrab6b8e23 " +
-  "orangeffa500 orangeredff4500 orchidda70d6 palegoldenrodeee8aa " +
-  "palegreen98fb98 paleturquoiseafeeee palevioletreddb7093 " +
-  "papayawhipffefd5 peachpuffffdab9 perucd853f pinkffc0cb plumdda0dd " +
-  "powderblueb0e0e6 purple800080 rebeccapurple663399 redff0000 " +
-  "rosybrownbc8f8f royalblue4169e1 saddlebrown8b4513 salmonfa8072 " +
-  "sandybrownf4a460 seagreen2e8b57 seashellfff5ee siennaa0522d " +
-  "silverc0c0c0 skyblue87ceeb slateblue6a5acd slategray708090 " +
-  "slategrey708090 snowfffafa springgreen00ff7f steelblue4682b4 tand2b48c " +
-  "teal008080 thistled8bfd8 tomatoff6347 turquoise40e0d0 violetee82ee " +
-  "wheatf5deb3 whiteffffff whitesmokef5f5f5 yellowffff00 " +
-  "yellowgreen9acd32"
+  'alicebluef0f8ff antiquewhitefaebd7 aqua00ffff aquamarine7fffd4 ' +
+  'azuref0ffff beigef5f5dc bisqueffe4c4 black000000 blanchedalmondffebcd ' +
+  'blue0000ff blueviolet8a2be2 browna52a2a burlywooddeb887 ' +
+  'cadetblue5f9ea0 chartreuse7fff00 chocolated2691e coralff7f50 ' +
+  'cornflowerblue6495ed cornsilkfff8dc crimsondc143c cyan00ffff ' +
+  'darkblue00008b darkcyan008b8b darkgoldenrodb8860b darkgraya9a9a9 ' +
+  'darkgreen006400 darkgreya9a9a9 darkkhakibdb76b darkmagenta8b008b ' +
+  'darkolivegreen556b2f darkorangeff8c00 darkorchid9932cc darkred8b0000 ' +
+  'darksalmone9967a darkseagreen8fbc8f darkslateblue483d8b ' +
+  'darkslategray2f4f4f darkslategrey2f4f4f darkturquoise00ced1 ' +
+  'darkviolet9400d3 deeppinkff1493 deepskyblue00bfff dimgray696969 ' +
+  'dimgrey696969 dodgerblue1e90ff firebrickb22222 floralwhitefffaf0 ' +
+  'forestgreen228b22 fuchsiaff00ff gainsborodcdcdc ghostwhitef8f8ff ' +
+  'goldffd700 goldenroddaa520 gray808080 green008000 greenyellowadff2f ' +
+  'grey808080 honeydewf0fff0 hotpinkff69b4 indianredcd5c5c indigo4b0082 ' +
+  'ivoryfffff0 khakif0e68c lavendere6e6fa lavenderblushfff0f5 ' +
+  'lawngreen7cfc00 lemonchiffonfffacd lightblueadd8e6 lightcoralf08080 ' +
+  'lightcyane0ffff lightgoldenrodyellowfafad2 lightgrayd3d3d3 ' +
+  'lightgreen90ee90 lightgreyd3d3d3 lightpinkffb6c1 lightsalmonffa07a ' +
+  'lightseagreen20b2aa lightskyblue87cefa lightslategray778899 ' +
+  'lightslategrey778899 lightsteelblueb0c4de lightyellowffffe0 lime00ff00 ' +
+  'limegreen32cd32 linenfaf0e6 magentaff00ff maroon800000 ' +
+  'mediumaquamarine66cdaa mediumblue0000cd mediumorchidba55d3 ' +
+  'mediumpurple9370db mediumseagreen3cb371 mediumslateblue7b68ee ' +
+  'mediumspringgreen00fa9a mediumturquoise48d1cc mediumvioletredc71585 ' +
+  'midnightblue191970 mintcreamf5fffa mistyroseffe4e1 moccasinffe4b5 ' +
+  'navajowhiteffdead navy000080 oldlacefdf5e6 olive808000 olivedrab6b8e23 ' +
+  'orangeffa500 orangeredff4500 orchidda70d6 palegoldenrodeee8aa ' +
+  'palegreen98fb98 paleturquoiseafeeee palevioletreddb7093 ' +
+  'papayawhipffefd5 peachpuffffdab9 perucd853f pinkffc0cb plumdda0dd ' +
+  'powderblueb0e0e6 purple800080 rebeccapurple663399 redff0000 ' +
+  'rosybrownbc8f8f royalblue4169e1 saddlebrown8b4513 salmonfa8072 ' +
+  'sandybrownf4a460 seagreen2e8b57 seashellfff5ee siennaa0522d ' +
+  'silverc0c0c0 skyblue87ceeb slateblue6a5acd slategray708090 ' +
+  'slategrey708090 snowfffafa springgreen00ff7f steelblue4682b4 tand2b48c ' +
+  'teal008080 thistled8bfd8 tomatoff6347 turquoise40e0d0 violetee82ee ' +
+  'wheatf5deb3 whiteffffff whitesmokef5f5f5 yellowffff00 ' +
+  'yellowgreen9acd32'
 
 let namedColors: Map<string, string> | null = null
 
 function namedColor(name: string) {
   namedColors ??= new Map(
-    NAMED_COLORS.split(" ").map((entry) => [
+    NAMED_COLORS.split(' ').map((entry) => [
       entry.slice(0, -6),
       entry.slice(-6),
-    ])
+    ]),
   )
   return namedColors.get(name)
 }
@@ -404,18 +409,18 @@ function namedColor(name: string) {
 /* One CSS number: 100% is worth `percentOf`, computed as value * percentOf
    / 100 so 50% of 255 is exactly 127.5; angles only where allowed. */
 function readNumber(token: string, percentOf: number, angle = false) {
-  if (token === "none") return 0
+  if (token === 'none') return 0
   const match = NUMBER_PATTERN.exec(token)
   if (!match) return null
   const value = Number(match[1])
   if (!Number.isFinite(value)) return null
   const unit = match[2]
   if (!unit) return value
-  if (unit === "%") return angle ? null : (value * percentOf) / 100
+  if (unit === '%') return angle ? null : (value * percentOf) / 100
   if (!angle) return null
-  if (unit === "rad") return (value * 180) / Math.PI
-  if (unit === "grad") return value * 0.9
-  if (unit === "turn") return value * 360
+  if (unit === 'rad') return (value * 180) / Math.PI
+  if (unit === 'grad') return value * 0.9
+  if (unit === 'turn') return value * 360
   return value
 }
 
@@ -430,8 +435,8 @@ const compose = (outer: Matrix, inner: Matrix): Matrix =>
       (column) =>
         row[0] * inner[0][column] +
         row[1] * inner[1][column] +
-        row[2] * inner[2][column]
-    )
+        row[2] * inner[2][column],
+    ),
   ) as Matrix
 
 /* CSS Color 4's matrices: XYZ D65 to linear sRGB, each RGB space to XYZ,
@@ -462,8 +467,8 @@ const RGB_SPACES: Record<
   { decode: (value: number) => number; toSrgb: Matrix | null }
 > = {
   srgb: { decode: decodeSrgb, toSrgb: null },
-  "srgb-linear": { decode: (value) => value, toSrgb: null },
-  "display-p3": {
+  'srgb-linear': { decode: (value) => value, toSrgb: null },
+  'display-p3': {
     decode: decodeSrgb,
     toSrgb: compose(XYZ_TO_SRGB, [
       [0.4865709486482162, 0.26566769316909306, 0.1982172852343625],
@@ -471,7 +476,7 @@ const RGB_SPACES: Record<
       [0, 0.04511338185890264, 1.043944368900976],
     ]),
   },
-  "a98-rgb": {
+  'a98-rgb': {
     decode: (value) => Math.sign(value) * Math.abs(value) ** (563 / 256),
     toSrgb: compose(XYZ_TO_SRGB, [
       [573536 / 994567, 263643 / 1420810, 187206 / 994567],
@@ -479,7 +484,7 @@ const RGB_SPACES: Record<
       [53769 / 1989134, 351524 / 4972835, 4929758 / 4972835],
     ]),
   },
-  "prophoto-rgb": {
+  'prophoto-rgb': {
     decode: (value) => {
       const size = Math.abs(value)
       return size <= 16 / 512 ? value / 16 : Math.sign(value) * size ** 1.8
@@ -505,8 +510,8 @@ const RGB_SPACES: Record<
     ]),
   },
   xyz: { decode: (value) => value, toSrgb: XYZ_TO_SRGB },
-  "xyz-d65": { decode: (value) => value, toSrgb: XYZ_TO_SRGB },
-  "xyz-d50": { decode: (value) => value, toSrgb: D50_TO_SRGB },
+  'xyz-d65': { decode: (value) => value, toSrgb: XYZ_TO_SRGB },
+  'xyz-d50': { decode: (value) => value, toSrgb: D50_TO_SRGB },
 }
 
 /* CIE Lab, D50 white, to XYZ D50, as CSS Color 4 writes it. */
@@ -533,94 +538,94 @@ const isUnit = (channels: Triple) =>
 /* The channels of one function, as a color in the picker's spaces. */
 function readChannels(
   name: string,
-  parts: string[]
+  parts: string[],
 ): { space: ColorPickerColorSpace; channels: Triple } | null {
-  if (name === "rgb") {
+  if (name === 'rgb') {
     const rgb = parts.map((part) => readNumber(part, 255))
     if (rgb.some((value) => value === null)) return null
     return {
-      space: "rgb",
+      space: 'rgb',
       channels: rgb.map((value) => clamp(value!, 0, 255)) as Triple,
     }
   }
-  if (name === "hsl" || name === "hsv" || name === "hsb" || name === "hwb") {
+  if (name === 'hsl' || name === 'hsv' || name === 'hsb' || name === 'hwb') {
     const hue = readNumber(parts[0], 1, true)
     const first = readNumber(parts[1], 100)
     const second = readNumber(parts[2], 100)
     if (hue === null || first === null || second === null) return null
     const x = clamp(first, 0, 100)
     const y = clamp(second, 0, 100)
-    if (name === "hsl") return { space: "hsl", channels: [hue, x, y] }
-    if (name !== "hwb") return { space: "hsv", channels: [hue, x, y] }
+    if (name === 'hsl') return { space: 'hsl', channels: [hue, x, y] }
+    if (name !== 'hwb') return { space: 'hsv', channels: [hue, x, y] }
     /* hwb(): whiteness and blackness are HSB's saturation and brightness
        read from the other end; summing past 100% gives their gray. */
     const total = x + y
     if (total >= 100) {
-      return { space: "hsv", channels: [hue, 0, (x / total) * 100] }
+      return { space: 'hsv', channels: [hue, 0, (x / total) * 100] }
     }
     const brightness = 100 - y
     return {
-      space: "hsv",
+      space: 'hsv',
       channels: [hue, (1 - x / brightness) * 100, brightness],
     }
   }
-  if (name === "oklch" || name === "oklab") {
+  if (name === 'oklch' || name === 'oklab') {
     const lightness = readNumber(parts[0], 1)
     const second = readNumber(parts[1], 0.4)
     const third =
-      name === "oklch"
+      name === 'oklch'
         ? readNumber(parts[2], 1, true)
         : readNumber(parts[2], 0.4)
     if (lightness === null || second === null || third === null) return null
     const l = clamp(lightness, 0, 1)
-    if (name === "oklch") {
+    if (name === 'oklch') {
       return {
-        space: "oklch",
+        space: 'oklch',
         channels: [l * 100, Math.max(0, second), third],
       }
     }
     return {
-      space: "oklch",
+      space: 'oklch',
       channels: oklabToOklch([l, second, third]),
     }
   }
-  if (name === "lab" || name === "lch") {
+  if (name === 'lab' || name === 'lch') {
     const lightness = readNumber(parts[0], 100)
-    const second = readNumber(parts[1], name === "lab" ? 125 : 150)
+    const second = readNumber(parts[1], name === 'lab' ? 125 : 150)
     const third =
-      name === "lch" ? readNumber(parts[2], 1, true) : readNumber(parts[2], 125)
+      name === 'lch' ? readNumber(parts[2], 1, true) : readNumber(parts[2], 125)
     if (lightness === null || second === null || third === null) return null
     const l = clamp(lightness, 0, 100)
     const angle = (third * Math.PI) / 180
     const [a, b] =
-      name === "lab"
+      name === 'lab'
         ? [second, third]
         : [
             Math.max(0, second) * Math.cos(angle),
             Math.max(0, second) * Math.sin(angle),
           ]
     return {
-      space: "oklch",
+      space: 'oklch',
       channels: fromLinearSrgb(multiply(D50_TO_SRGB, labToXyz([l, a, b]))),
     }
   }
-  if (name === "color") {
+  if (name === 'color') {
     const target = RGB_SPACES[parts[0]]
     if (!target || parts.length !== 4) return null
     const values = parts.slice(1).map((part) => readNumber(part, 1))
     if (values.some((value) => value === null)) return null
     const channels = values as Triple
-    if (parts[0] === "srgb" && isUnit(channels)) {
+    if (parts[0] === 'srgb' && isUnit(channels)) {
       return {
-        space: "rgb",
+        space: 'rgb',
         channels: channels.map((value) => clamp(value, 0, 1) * 255) as Triple,
       }
     }
     const linear = channels.map(target.decode) as Triple
     return {
-      space: "oklch",
+      space: 'oklch',
       channels: fromLinearSrgb(
-        target.toSrgb ? multiply(target.toSrgb, linear) : linear
+        target.toSrgb ? multiply(target.toSrgb, linear) : linear,
       ),
     }
   }
@@ -636,40 +641,40 @@ function readChannels(
  * Anything else, `var()` and `currentColor` included, is `null`.
  */
 export function parseColor(
-  input: string | null | undefined
+  input: string | null | undefined,
 ): ColorPickerColor | null {
-  if (typeof input !== "string") return null
+  if (typeof input !== 'string') return null
   const text = input.trim().toLowerCase()
   if (!text) return null
-  if (text === "transparent") {
-    return { space: "rgb", channels: [0, 0, 0], alpha: 0 }
+  if (text === 'transparent') {
+    return { space: 'rgb', channels: [0, 0, 0], alpha: 0 }
   }
   const hex = HEX_PATTERN.exec(namedColor(text) ?? text)
   if (hex) {
     let digits = hex[1]
     if (digits.length <= 4) {
-      digits = [...digits].map((digit) => digit + digit).join("")
+      digits = [...digits].map((digit) => digit + digit).join('')
     }
     const byte = (index: number) => parseInt(digits.slice(index, index + 2), 16)
     return {
-      space: "rgb",
+      space: 'rgb',
       channels: [byte(0), byte(2), byte(4)],
       alpha: digits.length === 8 ? byte(6) / 255 : 1,
     }
   }
   const call = FUNCTION_PATTERN.exec(text)
   if (!call) return null
-  const name = call[1].replace(/a$/, "")
-  const [main, slash, ...rest] = call[2].split("/")
+  const name = call[1].replace(/a$/, '')
+  const [main, slash, ...rest] = call[2].split('/')
   if (rest.length > 0) return null
   const parts = main.split(/[\s,]+/).filter(Boolean)
   /* color() names its space first, and takes alpha only after a slash. */
-  const count = name === "color" ? 4 : 3
+  const count = name === 'color' ? 4 : 3
   /* Alpha follows a slash, or is the fourth value of the comma syntax. */
-  const alphaToken = slash?.trim() ?? (name === "color" ? undefined : parts[3])
+  const alphaToken = slash?.trim() ?? (name === 'color' ? undefined : parts[3])
   if (
     parts.length !== count &&
-    !(name !== "color" && parts.length === 4 && slash === undefined)
+    !(name !== 'color' && parts.length === 4 && slash === undefined)
   ) {
     return null
   }
@@ -678,8 +683,8 @@ export function parseColor(
   if (alpha === null || !read) return null
   const channels = read.channels
   if (channels.some((channel) => !Number.isFinite(channel))) return null
-  if (read.space !== "rgb") {
-    const hueIndex = read.space === "oklch" ? 2 : 0
+  if (read.space !== 'rgb') {
+    const hueIndex = read.space === 'oklch' ? 2 : 0
     channels[hueIndex] = wrapHue(channels[hueIndex])
   }
   return { space: read.space, channels, alpha: clamp(alpha, 0, 1) }
@@ -695,21 +700,21 @@ const CSS_WIDE = /^(inherit|initial|unset|revert|revert-layer|currentcolor)$/
    this, never a render. */
 function parseWithBrowser(text: string): ColorPickerColor | null {
   if (
-    typeof document === "undefined" ||
+    typeof document === 'undefined' ||
     CSS_WIDE.test(text.toLowerCase()) ||
-    !CSS.supports?.("color", text)
+    !CSS.supports?.('color', text)
   ) {
     return null
   }
-  const parent = document.createElement("div")
-  const probe = document.createElement("div")
-  parent.style.display = "none"
+  const parent = document.createElement('div')
+  const probe = document.createElement('div')
+  parent.style.display = 'none'
   probe.style.color = text
   parent.append(probe)
   document.body.append(parent)
-  parent.style.color = "rgb(1, 2, 3)"
+  parent.style.color = 'rgb(1, 2, 3)'
   const first = getComputedStyle(probe).color
-  parent.style.color = "rgb(4, 5, 6)"
+  parent.style.color = 'rgb(4, 5, 6)'
   const second = getComputedStyle(probe).color
   parent.remove()
   return first === second ? parseColor(first) : null
@@ -722,35 +727,35 @@ function parseWithBrowser(text: string): ColorPickerColor | null {
  */
 export function formatColor(
   color: ColorPickerColor,
-  format: ColorPickerFormat
+  format: ColorPickerFormat,
 ): string {
   const alpha = clamp(color.alpha, 0, 1)
   /* Decided on the rounded alpha, so 0.996 writes no "/ 1" tail. */
-  const tail = fixed(alpha, 2) !== "1" ? ` / ${fixed(alpha, 2)}` : ""
-  if (format === "hex" || format === "rgb") {
+  const tail = fixed(alpha, 2) !== '1' ? ` / ${fixed(alpha, 2)}` : ''
+  if (format === 'hex' || format === 'rgb') {
     const rgb = toRgb(color).map((channel) =>
-      Math.round(clamp(channel, 0, 255))
+      Math.round(clamp(channel, 0, 255)),
     )
-    if (format === "rgb") return `rgb(${rgb.join(" ")}${tail})`
+    if (format === 'rgb') return `rgb(${rgb.join(' ')}${tail})`
     const opacity = Math.round(alpha * 255)
     const bytes = opacity < 255 ? [...rgb, opacity] : rgb
-    return `#${bytes.map((byte) => byte.toString(16).padStart(2, "0")).join("")}`
+    return `#${bytes.map((byte) => byte.toString(16).padStart(2, '0')).join('')}`
   }
-  if (format === "oklch") {
-    const [l, c, h] = toSpace(color, "oklch")
+  if (format === 'oklch') {
+    const [l, c, h] = toSpace(color, 'oklch')
     /* Fine enough that hex to OKLCH and back is exact: 0 of 140,608 colors
        drift, where 0.1% and 3 decimals moved 29,278 by up to 7. */
     /* Chroma is never below 0, and a hue that rounds to 360 is 0. */
     const hue = fixed(wrapHue(Number(h.toFixed(3))), 3)
     return `oklch(${fixed(l, 2)}% ${fixed(Math.max(0, c), 5)} ${hue}${tail})`
   }
-  const [h, s, third] = toSpace(color, format === "hsl" ? "hsl" : "hsv")
+  const [h, s, third] = toSpace(color, format === 'hsl' ? 'hsl' : 'hsv')
   return `${format}(${fixed(h, 1)} ${fixed(s, 1)}% ${fixed(third, 1)}%${tail})`
 }
 
 /* What CSS paints: OKLCH as itself, so a wide-gamut screen shows it. */
 const toCss = (color: ColorPickerColor) =>
-  formatColor(color, color.space === "oklch" ? "oklch" : "rgb")
+  formatColor(color, color.space === 'oklch' ? 'oklch' : 'rgb')
 
 function luminance(rgb: Triple) {
   const [r, g, b] = rgb.map(toLinear)
@@ -761,7 +766,7 @@ function luminance(rgb: Triple) {
 function over(top: ColorPickerColor, bottom: Triple): Triple {
   const rgb = toRgb(top)
   return rgb.map(
-    (channel, index) => channel * top.alpha + bottom[index] * (1 - top.alpha)
+    (channel, index) => channel * top.alpha + bottom[index] * (1 - top.alpha),
   ) as Triple
 }
 
@@ -772,12 +777,12 @@ function over(top: ColorPickerColor, bottom: Triple): Triple {
  */
 export function getContrastRatio(
   foreground: string | ColorPickerColor,
-  background: string | ColorPickerColor
+  background: string | ColorPickerColor,
 ): number | null {
   const front =
-    typeof foreground === "string" ? parseColor(foreground) : foreground
+    typeof foreground === 'string' ? parseColor(foreground) : foreground
   const back =
-    typeof background === "string" ? parseColor(background) : background
+    typeof background === 'string' ? parseColor(background) : background
   if (!front || !back) return null
   const base = over(back, [255, 255, 255])
   const a = luminance(over(front, base))
@@ -800,12 +805,12 @@ const FOREGROUND_SWITCH = 0.36
 export function getForegroundColor(
   background: string | ColorPickerColor,
   {
-    light = "#ffffff",
-    dark = "#0a0a0a",
-  }: { light?: string; dark?: string } = {}
+    light = '#ffffff',
+    dark = '#0a0a0a',
+  }: { light?: string; dark?: string } = {},
 ): string | null {
   const color =
-    typeof background === "string" ? parseColor(background) : background
+    typeof background === 'string' ? parseColor(background) : background
   if (!color) return null
   return luminance(over(color, [255, 255, 255])) < FOREGROUND_SWITCH &&
     (getContrastRatio(light, color) ?? 0) >= 3
@@ -815,68 +820,68 @@ export function getForegroundColor(
 
 /* OKLCH hue boundaries, each the upper end of its name. */
 const HUE_NAMES: Array<[number, string]> = [
-  [15, "pink"],
-  [45, "red"],
-  [80, "orange"],
-  [120, "yellow"],
-  [135, "lime"],
-  [165, "green"],
-  [205, "cyan"],
-  [250, "sky blue"],
-  [280, "blue"],
-  [300, "violet"],
-  [320, "purple"],
-  [345, "magenta"],
-  [360, "pink"],
+  [15, 'pink'],
+  [45, 'red'],
+  [80, 'orange'],
+  [120, 'yellow'],
+  [135, 'lime'],
+  [165, 'green'],
+  [205, 'cyan'],
+  [250, 'sky blue'],
+  [280, 'blue'],
+  [300, 'violet'],
+  [320, 'purple'],
+  [345, 'magenta'],
+  [360, 'pink'],
 ]
 
 /** A rough English name: "dark vibrant blue", "light gray". Swap it through `i18n.functions`. */
 function nameColor(color: ColorPickerColor) {
-  const [lightness, chroma, hue] = toSpace(color, "oklch")
+  const [lightness, chroma, hue] = toSpace(color, 'oklch')
   const l = lightness / 100
   if (chroma < 0.025) {
-    if (l < 0.2) return "black"
-    if (l < 0.45) return "dark gray"
-    if (l < 0.75) return "gray"
-    return l < 0.95 ? "light gray" : "white"
+    if (l < 0.2) return 'black'
+    if (l < 0.45) return 'dark gray'
+    if (l < 0.75) return 'gray'
+    return l < 0.95 ? 'light gray' : 'white'
   }
-  let name = HUE_NAMES.find(([end]) => hue < end)?.[1] ?? "pink"
-  if (l < 0.6 && hue >= 40 && hue < 100) name = "brown"
-  else if (l < 0.6 && hue >= 100 && hue < 135) name = "olive"
-  const tone = chroma < 0.07 ? "grayish " : chroma > 0.2 ? "vibrant " : ""
-  const shade = l < 0.45 ? "dark " : l > 0.82 ? "light " : ""
+  let name = HUE_NAMES.find(([end]) => hue < end)?.[1] ?? 'pink'
+  if (l < 0.6 && hue >= 40 && hue < 100) name = 'brown'
+  else if (l < 0.6 && hue >= 100 && hue < 135) name = 'olive'
+  const tone = chroma < 0.07 ? 'grayish ' : chroma > 0.2 ? 'vibrant ' : ''
+  const shade = l < 0.45 ? 'dark ' : l > 0.82 ? 'light ' : ''
   return `${shade}${tone}${name}`
 }
 
 export const DEFAULT_COLOR_PICKER_I18N: ColorPickerI18nConfig = {
   labels: {
-    placeholder: "Select color",
-    panelLabel: "Choose color",
-    openPicker: "Open color picker",
-    area: "Color",
-    hue: "Hue",
-    saturation: "Saturation",
-    brightness: "Brightness",
-    lightness: "Lightness",
-    chroma: "Chroma",
-    red: "Red",
-    green: "Green",
-    blue: "Blue",
-    alpha: "Opacity",
-    hex: "Hex",
-    format: "Color format",
-    eyeDropper: "Pick a color from the screen",
-    copy: "Copy color",
-    copied: "Copied",
-    clear: "Clear",
-    swatches: "Swatches",
+    placeholder: 'Select color',
+    panelLabel: 'Choose color',
+    openPicker: 'Open color picker',
+    area: 'Color',
+    hue: 'Hue',
+    saturation: 'Saturation',
+    brightness: 'Brightness',
+    lightness: 'Lightness',
+    chroma: 'Chroma',
+    red: 'Red',
+    green: 'Green',
+    blue: 'Blue',
+    alpha: 'Opacity',
+    hex: 'Hex',
+    format: 'Color format',
+    eyeDropper: 'Pick a color from the screen',
+    copy: 'Copy color',
+    copied: 'Copied',
+    clear: 'Clear',
+    swatches: 'Swatches',
   },
   functions: { getColorName: nameColor },
 }
 
 /** Merges per section, so an override can carry one key without restating the rest. */
 export function mergeColorPickerI18n(
-  overrides?: ColorPickerI18nOverrides
+  overrides?: ColorPickerI18nOverrides,
 ): ColorPickerI18nConfig {
   if (!overrides?.labels && !overrides?.functions) {
     return DEFAULT_COLOR_PICKER_I18N
@@ -895,42 +900,42 @@ export function mergeColorPickerI18n(
 /* -------------------------------------------------------------------------- */
 
 const DEFAULT_SPACE: Record<ColorPickerChannel, ColorPickerColorSpace> = {
-  hue: "hsv",
-  saturation: "hsv",
-  brightness: "hsv",
-  lightness: "hsl",
-  chroma: "oklch",
-  red: "rgb",
-  green: "rgb",
-  blue: "rgb",
-  alpha: "rgb",
+  hue: 'hsv',
+  saturation: 'hsv',
+  brightness: 'hsv',
+  lightness: 'hsl',
+  chroma: 'oklch',
+  red: 'rgb',
+  green: 'rgb',
+  blue: 'rgb',
+  alpha: 'rgb',
 }
 
 /* A space that has no such channel falls back to the channel's own. */
 const resolveSpace = (
   channel: ColorPickerChannel,
-  space: ColorPickerColorSpace | undefined
+  space: ColorPickerColorSpace | undefined,
 ) =>
-  channel !== "alpha" && space && SPACE_CHANNELS[space].includes(channel)
+  channel !== 'alpha' && space && SPACE_CHANNELS[space].includes(channel)
     ? space
     : DEFAULT_SPACE[channel]
 
 function channelRange(
   space: ColorPickerColorSpace,
-  channel: ColorPickerChannel
+  channel: ColorPickerChannel,
 ) {
-  if (channel === "alpha") return { max: 1, step: 0.01 }
-  if (channel === "hue") return { max: 360, step: 1 }
-  if (channel === "chroma") return { max: 0.4, step: 0.004 }
-  return { max: space === "rgb" ? 255 : 100, step: 1 }
+  if (channel === 'alpha') return { max: 1, step: 0.01 }
+  if (channel === 'hue') return { max: 360, step: 1 }
+  if (channel === 'chroma') return { max: 0.4, step: 0.004 }
+  return { max: space === 'rgb' ? 255 : 100, step: 1 }
 }
 
 function readChannel(
   color: ColorPickerColor,
   space: ColorPickerColorSpace,
-  channel: ColorPickerChannel
+  channel: ColorPickerChannel,
 ) {
-  if (channel === "alpha") return color.alpha
+  if (channel === 'alpha') return color.alpha
   return toSpace(color, space)[SPACE_CHANNELS[space].indexOf(channel)]
 }
 
@@ -938,9 +943,9 @@ function withChannel(
   color: ColorPickerColor,
   space: ColorPickerColorSpace,
   channel: ColorPickerChannel,
-  value: number
+  value: number,
 ): ColorPickerColor {
-  if (channel === "alpha") return { ...color, alpha: clamp(value, 0, 1) }
+  if (channel === 'alpha') return { ...color, alpha: clamp(value, 0, 1) }
   const channels = [...toSpace(color, space)] as Triple
   channels[SPACE_CHANNELS[space].indexOf(channel)] = value
   return { space, channels, alpha: color.alpha }
@@ -951,15 +956,15 @@ function channelValueText(
   color: ColorPickerColor,
   space: ColorPickerColorSpace,
   channel: ColorPickerChannel,
-  i18n: ColorPickerI18nConfig
+  i18n: ColorPickerI18nConfig,
 ) {
   const value = readChannel(color, space, channel)
-  if (channel === "alpha") return `${Math.round(value * 100)}%`
-  if (channel === "chroma") return fixed(value, 3)
-  if (channel === "hue") {
+  if (channel === 'alpha') return `${Math.round(value * 100)}%`
+  if (channel === 'chroma') return fixed(value, 3)
+  if (channel === 'hue') {
     return `${Math.round(value)}°, ${i18n.functions.getColorName(color)}`
   }
-  return space === "rgb" ? String(Math.round(value)) : `${Math.round(value)}%`
+  return space === 'rgb' ? String(Math.round(value)) : `${Math.round(value)}%`
 }
 
 /* The colors a track runs through: the full spectrum for hue, so a gray
@@ -968,41 +973,41 @@ function channelValueText(
 function trackStops(
   color: ColorPickerColor,
   space: ColorPickerColorSpace,
-  channel: ColorPickerChannel
+  channel: ColorPickerChannel,
 ) {
   const opaque = { ...color, alpha: 1 }
-  if (channel === "alpha") return ["transparent", toCss(opaque)]
+  if (channel === 'alpha') return ['transparent', toCss(opaque)]
   let base = opaque
-  if (channel === "hue") {
+  if (channel === 'hue') {
     base =
-      space === "oklch"
+      space === 'oklch'
         ? withChannel(
             opaque,
-            "oklch",
-            "chroma",
-            Math.max(readChannel(opaque, "oklch", "chroma"), 0.12)
+            'oklch',
+            'chroma',
+            Math.max(readChannel(opaque, 'oklch', 'chroma'), 0.12),
           )
-        : { space: "hsv", channels: [0, 100, 100], alpha: 1 }
+        : { space: 'hsv', channels: [0, 100, 100], alpha: 1 }
   }
   const count =
-    channel === "hue" || space === "oklch"
+    channel === 'hue' || space === 'oklch'
       ? 13
-      : space === "hsl" && channel === "lightness"
+      : space === 'hsl' && channel === 'lightness'
         ? 3
         : 2
   const { max } = channelRange(space, channel)
-  const target = channel === "hue" && space !== "oklch" ? "hsv" : space
+  const target = channel === 'hue' && space !== 'oklch' ? 'hsv' : space
   return Array.from({ length: count }, (_, index) =>
     formatColor(
       withChannel(base, target, channel, (max * index) / (count - 1)),
-      "rgb"
-    )
+      'rgb',
+    ),
   )
 }
 
 /* The transparency grid behind translucent colors, in theme tokens. */
 const CHECKER =
-  "repeating-conic-gradient(var(--color-muted) 0 25%, var(--color-background) 0 50%) 50% / 8px 8px"
+  'repeating-conic-gradient(var(--color-muted) 0 25%, var(--color-background) 0 50%) 50% / 8px 8px'
 
 /* -------------------------------------------------------------------------- */
 /*                                   Context                                  */
@@ -1010,7 +1015,7 @@ const CHECKER =
 
 /* What the controls show while the value is empty: white, hue 0. */
 const EMPTY_COLOR: ColorPickerColor = {
-  space: "hsv",
+  space: 'hsv',
   channels: [0, 0, 100],
   alpha: 1,
 }
@@ -1060,7 +1065,7 @@ type ColorPickerContextValue = {
 const ColorPickerContext = createContext<ColorPickerContextValue | null>(null)
 
 /** "inline" unless a part renders inside `ColorPickerContent`. */
-const SurfaceContext = createContext<"inline" | "popup">("inline")
+const SurfaceContext = createContext<'inline' | 'popup'>('inline')
 
 function useColorPickerContext(part: string) {
   const context = useContext(ColorPickerContext)
@@ -1082,7 +1087,7 @@ export type ColorPickerApi = {
 
 /** The picker's state and actions, inside a `ColorPicker`. */
 export function useColorPicker(): ColorPickerApi {
-  const context = useColorPickerContext("useColorPicker")
+  const context = useColorPickerContext('useColorPicker')
   return {
     value: context.value,
     color: context.color,
@@ -1099,7 +1104,7 @@ export function useColorPicker(): ColorPickerApi {
 }
 
 function assignRef<T>(ref: Ref<T> | undefined, node: T | null) {
-  if (typeof ref === "function") ref(node)
+  if (typeof ref === 'function') ref(node)
   else if (ref) ref.current = node
 }
 
@@ -1135,9 +1140,9 @@ export type ColorPickerProps = {
   inputRef?: Ref<HTMLInputElement>
   /** Lands on the trigger or the input. */
   id?: string
-  "aria-label"?: string
-  "aria-labelledby"?: string
-  "aria-describedby"?: string
+  'aria-label'?: string
+  'aria-labelledby'?: string
+  'aria-describedby'?: string
   i18n?: ColorPickerI18nOverrides
   /** Without children the picker renders a trigger and a popover; these reach the trigger. */
   placeholder?: string
@@ -1150,7 +1155,7 @@ export function ColorPicker({
   defaultValue = null,
   onValueChange,
   onValueCommit,
-  format = "hex",
+  format = 'hex',
   alpha = false,
   swatches,
   open: openProp,
@@ -1164,9 +1169,9 @@ export function ColorPicker({
   required = false,
   inputRef,
   id: idProp,
-  "aria-label": label,
-  "aria-labelledby": labelledBy,
-  "aria-describedby": describedBy,
+  'aria-label': label,
+  'aria-labelledby': labelledBy,
+  'aria-describedby': describedBy,
   i18n: i18nProp,
   placeholder,
   className,
@@ -1249,7 +1254,7 @@ export function ColorPicker({
 
   /* The fields report the format they show, so a copy takes what is seen. */
   const [fieldsFormat, setFieldsFormat] = useState<ColorPickerFormat | null>(
-    null
+    null,
   )
   const shownFormat = fieldsFormat ?? format
   const [copied, setCopied] = useState<ColorPickerFormat | null>(null)
@@ -1260,7 +1265,7 @@ export function ColorPicker({
     id,
     value: raw,
     text: color
-      ? format === "hex"
+      ? format === 'hex'
         ? formatColor(color, format).toUpperCase()
         : formatColor(color, format)
       : null,
@@ -1303,7 +1308,7 @@ export function ColorPicker({
           copiedTimer.current = window.setTimeout(() => setCopied(null), 1500)
         },
         /* No clipboard permission: nothing was copied, nothing to confirm. */
-        () => {}
+        () => {},
       )
     },
     copied,
@@ -1327,9 +1332,9 @@ export function ColorPicker({
         if (!event.defaultPrevented) resetRef.current()
       })
     }
-    root.addEventListener("reset", onReset, true)
+    root.addEventListener('reset', onReset, true)
     return () => {
-      root.removeEventListener("reset", onReset, true)
+      root.removeEventListener('reset', onReset, true)
       window.clearTimeout(pending)
     }
   }, [hasField])
@@ -1349,8 +1354,8 @@ export function ColorPicker({
           children
         )}
       </Popover>
-      <span role="status" className="sr-only">
-        {copied ? i18n.labels.copied : ""}
+      <span role='status' className='sr-only'>
+        {copied ? i18n.labels.copied : ''}
       </span>
       {hasField && (
         <input
@@ -1358,16 +1363,16 @@ export function ColorPicker({
             fieldRef.current = node
             assignRef(inputRef, node)
           }}
-          type="text"
+          type='text'
           name={name}
           form={form}
           required={required && !readOnly}
           disabled={disabled}
-          value={color ? formatColor(color, format) : ""}
+          value={color ? formatColor(color, format) : ''}
           onChange={() => {}}
           tabIndex={-1}
-          aria-hidden="true"
-          data-slot="color-picker-field"
+          aria-hidden='true'
+          data-slot='color-picker-field'
           /* A failed `required` check focuses this field; hand that to the control. */
           onFocus={(event) => {
             const target =
@@ -1376,7 +1381,7 @@ export function ColorPicker({
             if (target) target.focus()
             else event.currentTarget.blur()
           }}
-          className="pointer-events-none absolute size-px max-w-px opacity-0"
+          className='pointer-events-none absolute size-px max-w-px opacity-0'
         />
       )}
     </ColorPickerContext.Provider>
@@ -1389,15 +1394,14 @@ export function ColorPicker({
 
 /* The inset ring keeps a white swatch visible on a white surface. */
 const SWATCH_CLASS =
-  "forced-color-adjust-none relative inline-flex size-4 shrink-0 after:pointer-events-none after:absolute after:inset-0 after:rounded-inherit after:inset-ring after:inset-ring-foreground/10"
+  'forced-color-adjust-none relative inline-flex size-4 shrink-0 after:pointer-events-none after:absolute after:inset-0 after:rounded-inherit after:inset-ring after:inset-ring-foreground/10'
 
 /* A small square chip takes the shadcn Checkbox's radius in each style. */
-const SWATCH_SQUARE =
-  "rounded-md"
+const SWATCH_SQUARE = 'rounded-md'
 
 /* A slash through an empty swatch, the convention for "no color". */
 const EMPTY_SWATCH =
-  "linear-gradient(to top right, transparent calc(50% - 0.75px), var(--color-destructive) calc(50% - 0.75px) calc(50% + 0.75px), transparent calc(50% + 0.75px))"
+  'linear-gradient(to top right, transparent calc(50% - 0.75px), var(--color-destructive) calc(50% - 0.75px) calc(50% + 0.75px), transparent calc(50% + 0.75px))'
 
 function swatchBackground(color: ColorPickerColor | null) {
   if (!color) return EMPTY_SWATCH
@@ -1405,17 +1409,17 @@ function swatchBackground(color: ColorPickerColor | null) {
   return color.alpha < 1 ? `linear-gradient(${css}, ${css}), ${CHECKER}` : css
 }
 
-export type ColorPickerSwatchProps = Omit<ComponentProps<"span">, "color"> & {
+export type ColorPickerSwatchProps = Omit<ComponentProps<'span'>, 'color'> & {
   /** The color to show. Defaults to the picker's value, so it also works outside one. */
   color?: string | null
   /** `square` follows each style's radius; `circle` is round in all of them. */
-  shape?: "square" | "circle"
+  shape?: 'square' | 'circle'
 }
 
 /** A color chip: the value in a trigger, or any color in a table or a legend. */
 export function ColorPickerSwatch({
   color: colorProp,
-  shape = "square",
+  shape = 'square',
   className,
   style,
   ...props
@@ -1423,17 +1427,17 @@ export function ColorPickerSwatch({
   const context = useContext(ColorPickerContext)
   const color =
     colorProp !== undefined ? parseColor(colorProp) : (context?.color ?? null)
-  const labelled = !!props["aria-label"] || !!props["aria-labelledby"]
+  const labelled = !!props['aria-label'] || !!props['aria-labelledby']
   return (
     <span
-      role={labelled ? "img" : undefined}
+      role={labelled ? 'img' : undefined}
       aria-hidden={labelled ? undefined : true}
-      data-slot="color-picker-swatch"
-      data-empty={color ? undefined : ""}
+      data-slot='color-picker-swatch'
+      data-empty={color ? undefined : ''}
       className={cn(
         SWATCH_CLASS,
-        shape === "circle" ? "rounded-full" : SWATCH_SQUARE,
-        className
+        shape === 'circle' ? 'rounded-full' : SWATCH_SQUARE,
+        className,
       )}
       style={{ background: swatchBackground(color), ...style }}
       {...props}
@@ -1446,10 +1450,10 @@ export function ColorPickerSwatch({
 /* -------------------------------------------------------------------------- */
 
 const CHEVRON_ICON = (
-  <HugeiconsIcon icon={ArrowDown01Icon} strokeWidth={2} aria-hidden="true" />
+  <HugeiconsIcon icon={ArrowDown01Icon} strokeWidth={2} aria-hidden='true' />
 )
 
-export type ColorPickerValueProps = Omit<ComponentProps<"span">, "children"> & {
+export type ColorPickerValueProps = Omit<ComponentProps<'span'>, 'children'> & {
   placeholder?: ReactNode
 }
 
@@ -1459,12 +1463,12 @@ export function ColorPickerValue({
   className,
   ...props
 }: ColorPickerValueProps) {
-  const context = useColorPickerContext("ColorPickerValue")
+  const context = useColorPickerContext('ColorPickerValue')
   return (
     <span
-      data-slot="color-picker-value"
-      data-placeholder={context.color ? undefined : ""}
-      className={cn("truncate", className)}
+      data-slot='color-picker-value'
+      data-placeholder={context.color ? undefined : ''}
+      className={cn('truncate', className)}
       {...props}
     >
       {context.text ?? placeholder ?? context.i18n.labels.placeholder}
@@ -1475,7 +1479,7 @@ export function ColorPickerValue({
 /* `normal-case` and `tracking-normal` undo sera's uppercase button text: the
    trigger reads as a field, not an action. */
 const TRIGGER_CLASS =
-  "font-normal normal-case tracking-normal tabular-nums data-placeholder:text-muted-foreground"
+  'font-normal normal-case tracking-normal tabular-nums data-placeholder:text-muted-foreground'
 
 export type ColorPickerTriggerProps = ComponentProps<typeof Button> & {
   placeholder?: ReactNode
@@ -1484,24 +1488,24 @@ export type ColorPickerTriggerProps = ComponentProps<typeof Button> & {
 /** A shadcn Button that opens the picker. Children replace the swatch, value and chevron. */
 export function ColorPickerTrigger({
   className,
-  variant = "outline",
+  variant = 'outline',
   placeholder,
   children,
   ref,
   ...props
 }: ColorPickerTriggerProps) {
-  const context = useColorPickerContext("ColorPickerTrigger")
-  const labelledBy = props["aria-labelledby"] ?? context.labelledBy
+  const context = useColorPickerContext('ColorPickerTrigger')
+  const labelledBy = props['aria-labelledby'] ?? context.labelledBy
   const buttonProps = {
     variant,
     disabled: context.disabled,
-    "aria-label": context.label,
-    "aria-describedby": context.describedBy,
-    ...(context.invalid && { "aria-invalid": true, "data-invalid": "" }),
+    'aria-label': context.label,
+    'aria-describedby': context.describedBy,
+    ...(context.invalid && { 'aria-invalid': true, 'data-invalid': '' }),
     ...props,
     /* The label, then the button's own text: a label alone would replace the
        value, or whatever custom children show. */
-    "aria-labelledby": labelledBy ? `${labelledBy} ${context.id}` : undefined,
+    'aria-labelledby': labelledBy ? `${labelledBy} ${context.id}` : undefined,
     onKeyDown: (event: Parameters<NonNullable<typeof props.onKeyDown>>[0]) => {
       props.onKeyDown?.(event)
       if (!event.defaultPrevented) copyOnShortcut(event, context)
@@ -1511,26 +1515,26 @@ export function ColorPickerTrigger({
       context.registerFocusTarget(node)
       assignRef(ref, node)
     },
-    "data-slot": "color-picker-trigger",
-    "data-placeholder": context.color ? undefined : "",
+    'data-slot': 'color-picker-trigger',
+    'data-placeholder': context.color ? undefined : '',
     className: cn(
       TRIGGER_CLASS,
-      children === undefined && "justify-start",
-      className
+      children === undefined && 'justify-start',
+      className,
     ),
   }
   const content =
     children === undefined ? (
       <>
-        <ColorPickerSwatch data-icon="inline-start" />
+        <ColorPickerSwatch data-icon='inline-start' />
         <ColorPickerValue
           placeholder={placeholder}
-          className="flex-1 text-start"
+          className='flex-1 text-start'
         />
         <span
-          data-icon="inline-end"
-          aria-hidden="true"
-          className="text-muted-foreground flex"
+          data-icon='inline-end'
+          aria-hidden='true'
+          className='text-muted-foreground flex'
         >
           {CHEVRON_ICON}
         </span>
@@ -1548,7 +1552,7 @@ export function ColorPickerTrigger({
 
 export type ColorPickerInputProps = Omit<
   ComponentProps<typeof InputGroupInput>,
-  "value" | "defaultValue"
+  'value' | 'defaultValue'
 >
 
 /**
@@ -1565,10 +1569,10 @@ export function ColorPickerInput({
   ref,
   ...props
 }: ColorPickerInputProps) {
-  const context = useColorPickerContext("ColorPickerInput")
+  const context = useColorPickerContext('ColorPickerInput')
   /* `null` while the field shows the value rather than an edit in progress. */
   const [text, setText] = useState<string | null>(null)
-  const current = context.text ?? ""
+  const current = context.text ?? ''
   const shown = text ?? current
   const fieldRef = useRef<HTMLInputElement | null>(null)
   useEscapeRevert(fieldRef, text !== null, () => setText(null))
@@ -1583,19 +1587,19 @@ export function ColorPickerInput({
   }
 
   const swatchProps = {
-    size: "icon-xs" as const,
+    size: 'icon-xs' as const,
     disabled: context.disabled,
-    "aria-label": context.i18n.labels.openPicker,
-    "data-slot": "color-picker-input-trigger",
+    'aria-label': context.i18n.labels.openPicker,
+    'data-slot': 'color-picker-input-trigger',
   }
 
   return (
     <InputGroup
-      data-slot="color-picker-input"
-      data-disabled={context.disabled ? "" : undefined}
+      data-slot='color-picker-input'
+      data-disabled={context.disabled ? '' : undefined}
       className={className}
     >
-      <InputGroupAddon align="inline-start">
+      <InputGroupAddon align='inline-start'>
         <PopoverTrigger render={<InputGroupButton {...swatchProps} />}>
           <ColorPickerSwatch />
         </PopoverTrigger>
@@ -1606,16 +1610,16 @@ export function ColorPickerInput({
         disabled={context.disabled}
         readOnly={context.readOnly}
         required={context.required}
-        autoComplete="off"
-        autoCorrect="off"
-        autoCapitalize="off"
+        autoComplete='off'
+        autoCorrect='off'
+        autoCapitalize='off'
         spellCheck={false}
-        aria-keyshortcuts="Alt+ArrowDown"
+        aria-keyshortcuts='Alt+ArrowDown'
         aria-label={context.label}
         aria-labelledby={context.labelledBy}
         aria-describedby={context.describedBy}
         aria-invalid={context.invalid || undefined}
-        className="tabular-nums"
+        className='tabular-nums'
         onChange={(event) => {
           onChange?.(event)
           setText(event.target.value)
@@ -1627,10 +1631,10 @@ export function ColorPickerInput({
         onKeyDown={(event) => {
           onKeyDown?.(event)
           if (event.defaultPrevented || copyOnShortcut(event, context)) return
-          if (event.key === "Enter") {
+          if (event.key === 'Enter') {
             /* Flushed, so an implicit form submit reads the new value. */
             flushSync(() => read())
-          } else if (event.altKey && event.key === "ArrowDown") {
+          } else if (event.altKey && event.key === 'ArrowDown') {
             event.preventDefault()
             read()
             context.setOpen(true)
@@ -1663,12 +1667,12 @@ export type ColorPickerContentProps = ComponentProps<typeof PopoverContent>
  */
 export function ColorPickerContent({
   className,
-  align = "start",
+  align = 'start',
   onKeyDown,
   children,
   ...props
 }: ColorPickerContentProps) {
-  const context = useColorPickerContext("ColorPickerContent")
+  const context = useColorPickerContext('ColorPickerContent')
   return (
     <PopoverContent
       align={align}
@@ -1682,17 +1686,14 @@ export function ColorPickerContent({
          more below md, where the shadcn input's text grows to 16px so iOS
          does not zoom on focus. Capped to the viewport. A variable, not
          md:w-*, so one plain w-* in className wins at every breakpoint. */
-      data-has-alpha={context.alpha ? "true" : undefined}
-      className={cn(
-        "color-picker-popover-content",
-        className
-      )}
+      data-has-alpha={context.alpha ? 'true' : undefined}
+      className={cn('color-picker-popover-content', className)}
       onKeyDown={(event) => {
         onKeyDown?.(event)
-        if (event.defaultPrevented || event.key !== "Tab") return
+        if (event.defaultPrevented || event.key !== 'Tab') return
         if (event.altKey || event.ctrlKey || event.metaKey) return
         const items = Array.from(
-          event.currentTarget.querySelectorAll<HTMLElement>(TABBABLE)
+          event.currentTarget.querySelectorAll<HTMLElement>(TABBABLE),
         )
         const active = event.currentTarget.ownerDocument.activeElement
         const first = items[0]
@@ -1707,7 +1708,7 @@ export function ColorPickerContent({
       }}
       {...props}
     >
-      <SurfaceContext.Provider value="popup">
+      <SurfaceContext.Provider value='popup'>
         {children === undefined ? <ColorPickerPanel /> : children}
       </SurfaceContext.Provider>
     </PopoverContent>
@@ -1716,10 +1717,9 @@ export function ColorPickerContent({
 
 /* Bespoke spacing, a step tighter than each style's popover gap: the area,
    the sliders and the fields read as one control. */
-const PANEL_CLASS =
-  "flex w-full min-w-0 flex-col gap-2.5"
+const PANEL_CLASS = 'flex w-full min-w-0 flex-col gap-2.5'
 
-export type ColorPickerPanelProps = ComponentProps<"div">
+export type ColorPickerPanelProps = ComponentProps<'div'>
 
 /**
  * The area, the sliders, the fields and any `swatches`, rendered in place:
@@ -1730,30 +1730,30 @@ export function ColorPickerPanel({
   children,
   ...props
 }: ColorPickerPanelProps) {
-  const context = useColorPickerContext("ColorPickerPanel")
-  const inline = useContext(SurfaceContext) === "inline"
+  const context = useColorPickerContext('ColorPickerPanel')
+  const inline = useContext(SurfaceContext) === 'inline'
   return (
     <div
-      role={inline ? "group" : undefined}
+      role={inline ? 'group' : undefined}
       aria-labelledby={inline ? context.labelledBy : undefined}
       aria-label={
         inline && !context.labelledBy
           ? (context.label ?? context.i18n.labels.panelLabel)
           : undefined
       }
-      data-slot="color-picker-panel"
-      data-disabled={context.disabled ? "" : undefined}
+      data-slot='color-picker-panel'
+      data-disabled={context.disabled ? '' : undefined}
       className={cn(PANEL_CLASS, className)}
       {...props}
     >
       {children === undefined ? (
         <>
           <ColorPickerArea />
-          <div className="flex items-center gap-3">
+          <div className='flex items-center gap-3'>
             <ColorPickerEyeDropper />
-            <div className="flex min-w-0 flex-1 flex-col gap-2.5">
-              <ColorPickerSlider channel="hue" />
-              {context.alpha && <ColorPickerSlider channel="alpha" />}
+            <div className='flex min-w-0 flex-1 flex-col gap-2.5'>
+              <ColorPickerSlider channel='hue' />
+              {context.alpha && <ColorPickerSlider channel='alpha' />}
             </div>
             <ColorPickerCopy />
           </div>
@@ -1777,13 +1777,13 @@ export function ColorPickerPanel({
    format on screen. A selection in a field keeps the browser's own copy. */
 function copyOnShortcut(
   event: ReactKeyboardEvent<HTMLElement>,
-  context: ColorPickerContextValue
+  context: ColorPickerContextValue,
 ) {
   if (
     !(event.metaKey || event.ctrlKey) ||
     event.altKey ||
     event.shiftKey ||
-    event.key.toLowerCase() !== "c" ||
+    event.key.toLowerCase() !== 'c' ||
     !context.color
   ) {
     return false
@@ -1805,7 +1805,7 @@ function copyOnShortcut(
 function useEscapeRevert(
   field: { current: HTMLElement | null },
   editing: boolean,
-  revert: () => void
+  revert: () => void,
 ) {
   const revertRef = useRef(revert)
   useLayoutEffect(() => {
@@ -1815,13 +1815,13 @@ function useEscapeRevert(
     const view = field.current?.ownerDocument.defaultView
     if (!editing || !view) return
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Escape" || event.target !== field.current) return
+      if (event.key !== 'Escape' || event.target !== field.current) return
       event.preventDefault()
       event.stopPropagation()
       revertRef.current()
     }
-    view.addEventListener("keydown", onKeyDown, true)
-    return () => view.removeEventListener("keydown", onKeyDown, true)
+    view.addEventListener('keydown', onKeyDown, true)
+    return () => view.removeEventListener('keydown', onKeyDown, true)
   }, [editing, field])
 }
 
@@ -1829,22 +1829,22 @@ function useEscapeRevert(
    squircle in mira, square in lyra and sera) and its keyboard ring, drawn on
    the thumb while its control has focus. */
 const THUMB_CLASS =
-  "pointer-events-none absolute color-picker-thumb -translate-x-1/2 -translate-y-1/2 border-2 border-white rounded-md ring-ring/30 group-focus-visible/color-picker-control:ring-2 forced-colors:outline-2 forced-colors:outline-solid"
+  'pointer-events-none absolute color-picker-thumb -translate-x-1/2 -translate-y-1/2 border-2 border-white rounded-md ring-ring/30 group-focus-visible/color-picker-control:ring-2 forced-colors:outline-2 forced-colors:outline-solid'
 
 /* A hairline inside the edge, so the white corner of the area and the light
    end of a track stay visible on a white surface. */
 const EDGE_CLASS =
-  "after:pointer-events-none after:absolute after:inset-0 after:rounded-inherit after:inset-ring after:inset-ring-foreground/10"
+  'after:pointer-events-none after:absolute after:inset-0 after:rounded-inherit after:inset-ring after:inset-ring-foreground/10'
 
 const CONTROL_CLASS =
-  "group/color-picker-control color-picker-control relative outline-none select-none aria-disabled:pointer-events-none aria-disabled:opacity-50 data-dragging:cursor-grabbing"
+  'group/color-picker-control color-picker-control relative outline-none select-none aria-disabled:pointer-events-none aria-disabled:opacity-50 data-dragging:cursor-grabbing'
 
 /* Where the pointer sits, 0 to 1 each way, over a travel `inset` pixels
    shorter than the element: a slider thumb stays inside its track. */
 function pointerRatio(
   event: ReactPointerEvent<HTMLElement>,
   element: HTMLElement,
-  inset = 0
+  inset = 0,
 ) {
   const rect = element.getBoundingClientRect()
   const ratio = (offset: number, size: number) =>
@@ -1864,7 +1864,7 @@ const travel = (fraction: number) =>
    mousedown focuses it, so a click never paints the keyboard ring. */
 function useDrag(
   context: ColorPickerContextValue,
-  update: (event: ReactPointerEvent<HTMLElement>, element: HTMLElement) => void
+  update: (event: ReactPointerEvent<HTMLElement>, element: HTMLElement) => void,
 ) {
   const pointer = useRef<number | null>(null)
   const [dragging, setDragging] = useState(false)
@@ -1900,19 +1900,19 @@ function useDrag(
 function keyDelta(event: ReactKeyboardEvent, step: number) {
   const size = event.shiftKey ? step * 10 : step
   switch (event.key) {
-    case "ArrowUp":
-    case "ArrowRight":
+    case 'ArrowUp':
+    case 'ArrowRight':
       return size
-    case "ArrowDown":
-    case "ArrowLeft":
+    case 'ArrowDown':
+    case 'ArrowLeft':
       return -size
-    case "PageUp":
+    case 'PageUp':
       return step * 10
-    case "PageDown":
+    case 'PageDown':
       return -step * 10
-    case "Home":
+    case 'Home':
       return -Infinity
-    case "End":
+    case 'End':
       return Infinity
   }
   return null
@@ -1923,9 +1923,9 @@ const snap = (value: number, step: number) =>
 
 /* Both ends of the area run 0 to 100: saturation across, brightness up. */
 const AREA_CLASS =
-  "forced-color-adjust-none h-40 w-full touch-none bg-area-gradient rounded-md"
+  'forced-color-adjust-none h-40 w-full touch-none bg-area-gradient rounded-md'
 
-export type ColorPickerAreaProps = ComponentProps<"div">
+export type ColorPickerAreaProps = ComponentProps<'div'>
 
 /**
  * The saturation and brightness square, at the current hue. A single slider
@@ -1938,13 +1938,13 @@ export function ColorPickerArea({
   onKeyDown,
   ...props
 }: ColorPickerAreaProps) {
-  const context = useColorPickerContext("ColorPickerArea")
+  const context = useColorPickerContext('ColorPickerArea')
   const { labels } = context.i18n
-  const [hue, saturation, brightness] = toSpace(context.display, "hsv")
+  const [hue, saturation, brightness] = toSpace(context.display, 'hsv')
   const set = (s: number, v: number) => {
-    const [h] = toSpace(context.getColor(), "hsv")
+    const [h] = toSpace(context.getColor(), 'hsv')
     context.emit({
-      space: "hsv",
+      space: 'hsv',
       channels: [h, clamp(s, 0, 100), clamp(v, 0, 100)],
       alpha: context.getColor().alpha,
     })
@@ -1957,7 +1957,7 @@ export function ColorPickerArea({
   return (
     <div
       id={`${context.id}-area`}
-      role="slider"
+      role='slider'
       tabIndex={context.disabled ? -1 : 0}
       aria-label={labels.area}
       aria-valuemin={0}
@@ -1966,9 +1966,9 @@ export function ColorPickerArea({
       aria-valuetext={`${labels.saturation} ${Math.round(saturation)}%, ${labels.brightness} ${Math.round(brightness)}%, ${context.i18n.functions.getColorName(context.display)}`}
       aria-disabled={context.disabled || undefined}
       aria-readonly={context.readOnly || undefined}
-      dir="ltr"
-      data-slot="color-picker-area"
-      data-dragging={dragging ? "" : undefined}
+      dir='ltr'
+      data-slot='color-picker-area'
+      data-dragging={dragging ? '' : undefined}
       className={cn(CONTROL_CLASS, EDGE_CLASS, AREA_CLASS, className)}
       style={{ backgroundColor: `hsl(${hue} 100% 50%)`, ...style }}
       onKeyDown={(event) => {
@@ -1979,9 +1979,9 @@ export function ColorPickerArea({
         if (delta === null) return
         event.preventDefault()
         const vertical =
-          event.key === "ArrowUp" ||
-          event.key === "ArrowDown" ||
-          event.key.startsWith("Page")
+          event.key === 'ArrowUp' ||
+          event.key === 'ArrowDown' ||
+          event.key.startsWith('Page')
         context.startInteraction()
         /* Only the channel that moves is rounded to the step. */
         if (vertical) set(saturation, Math.round(brightness) + delta)
@@ -1992,7 +1992,7 @@ export function ColorPickerArea({
       {...props}
     >
       <div
-        data-slot="color-picker-area-thumb"
+        data-slot='color-picker-area-thumb'
         className={THUMB_CLASS}
         style={{ left: `${saturation}%`, top: `${100 - brightness}%` }}
       />
@@ -2007,39 +2007,39 @@ export function ColorPickerArea({
    Every color surface opts out of forced colors, which would paint it over
    with a system color and drop its gradient: the color is the content. */
 const SLIDER_CLASS =
-  "forced-color-adjust-none data-[orientation=horizontal]:h-3 data-[orientation=horizontal]:min-h-3 data-[orientation=horizontal]:w-full data-[orientation=horizontal]:min-w-0 data-[orientation=horizontal]:touch-pan-y data-[orientation=vertical]:h-40 data-[orientation=vertical]:shrink-0 data-[orientation=vertical]:w-3 data-[orientation=vertical]:touch-pan-x rounded-md"
+  'forced-color-adjust-none data-[orientation=horizontal]:h-3 data-[orientation=horizontal]:min-h-3 data-[orientation=horizontal]:w-full data-[orientation=horizontal]:min-w-0 data-[orientation=horizontal]:touch-pan-y data-[orientation=vertical]:h-40 data-[orientation=vertical]:shrink-0 data-[orientation=vertical]:w-3 data-[orientation=vertical]:touch-pan-x rounded-md'
 
-export type ColorPickerSliderProps = Omit<ComponentProps<"div">, "children"> & {
+export type ColorPickerSliderProps = Omit<ComponentProps<'div'>, 'children'> & {
   channel: ColorPickerChannel
   /** The space the channel belongs to. Defaults to HSB for hue, saturation and brightness, HSL for lightness, OKLCH for chroma and RGB for red, green and blue. */
   colorSpace?: ColorPickerColorSpace
-  orientation?: "horizontal" | "vertical"
+  orientation?: 'horizontal' | 'vertical'
 }
 
 /** One channel as a gradient track. Vertical tracks run bottom to top. */
 export function ColorPickerSlider({
   channel,
   colorSpace,
-  orientation = "horizontal",
+  orientation = 'horizontal',
   className,
   style,
   onKeyDown,
   ...props
 }: ColorPickerSliderProps) {
-  const context = useColorPickerContext("ColorPickerSlider")
+  const context = useColorPickerContext('ColorPickerSlider')
   const space = resolveSpace(channel, colorSpace)
   const { max, step } = channelRange(space, channel)
-  const precision = channel === "chroma" ? 0.001 : step
+  const precision = channel === 'chroma' ? 0.001 : step
   const value = readChannel(context.display, space, channel)
-  const vertical = orientation === "vertical"
+  const vertical = orientation === 'vertical'
   const set = (next: number) => {
     context.emit(
       withChannel(
         context.getColor(),
         space,
         channel,
-        clamp(snap(next, precision), 0, max)
-      )
+        clamp(snap(next, precision), 0, max),
+      ),
     )
   }
   const { dragging, handlers } = useDrag(context, (event, element) => {
@@ -2052,15 +2052,15 @@ export function ColorPickerSlider({
      value's own. */
   const colors = trackStops(context.display, space, channel)
   const stops = colors.map(
-    (color, index) => `${color} ${travel(index / (colors.length - 1))}`
+    (color, index) => `${color} ${travel(index / (colors.length - 1))}`,
   )
-  const gradient = `linear-gradient(${vertical ? "to top" : "to right"}, ${stops.join(", ")})`
+  const gradient = `linear-gradient(${vertical ? 'to top' : 'to right'}, ${stops.join(', ')})`
   const fraction = clamp(value, 0, max) / max
-  const scale = channel === "alpha" ? 100 : 1
+  const scale = channel === 'alpha' ? 100 : 1
 
   return (
     <div
-      role="slider"
+      role='slider'
       tabIndex={context.disabled ? -1 : 0}
       aria-label={context.i18n.labels[channel]}
       aria-orientation={orientation}
@@ -2071,18 +2071,18 @@ export function ColorPickerSlider({
         context.display,
         space,
         channel,
-        context.i18n
+        context.i18n,
       )}
       aria-disabled={context.disabled || undefined}
       aria-readonly={context.readOnly || undefined}
-      dir="ltr"
-      data-slot="color-picker-slider"
+      dir='ltr'
+      data-slot='color-picker-slider'
       data-channel={channel}
       data-orientation={orientation}
-      data-dragging={dragging ? "" : undefined}
+      data-dragging={dragging ? '' : undefined}
       className={cn(CONTROL_CLASS, EDGE_CLASS, SLIDER_CLASS, className)}
       style={{
-        background: channel === "alpha" ? `${gradient}, ${CHECKER}` : gradient,
+        background: channel === 'alpha' ? `${gradient}, ${CHECKER}` : gradient,
         ...style,
       }}
       onKeyDown={(event) => {
@@ -2100,12 +2100,12 @@ export function ColorPickerSlider({
       {...props}
     >
       <div
-        data-slot="color-picker-slider-thumb"
+        data-slot='color-picker-slider-thumb'
         className={THUMB_CLASS}
         style={
           vertical
-            ? { left: "50%", top: travel(1 - fraction) }
-            : { left: travel(fraction), top: "50%" }
+            ? { left: '50%', top: travel(1 - fraction) }
+            : { left: travel(fraction), top: '50%' }
         }
       />
     </div>
@@ -2116,9 +2116,9 @@ export function ColorPickerSlider({
    ring is a masked layer of its own, so the thumb and its focus ring are
    never masked with it. */
 const WHEEL_RING_CLASS =
-  "forced-color-adjust-none pointer-events-none absolute inset-0 rounded-full bg-hue-wheel mask-hue-wheel"
+  'forced-color-adjust-none pointer-events-none absolute inset-0 rounded-full bg-hue-wheel mask-hue-wheel'
 
-export type ColorPickerWheelProps = ComponentProps<"div">
+export type ColorPickerWheelProps = ComponentProps<'div'>
 
 /**
  * A hue ring. Children fill the square inscribed in its hole: an area there
@@ -2131,11 +2131,11 @@ export function ColorPickerWheel({
   onKeyDown,
   ...props
 }: ColorPickerWheelProps) {
-  const context = useColorPickerContext("ColorPickerWheel")
-  const [hue] = toSpace(context.display, "hsv")
+  const context = useColorPickerContext('ColorPickerWheel')
+  const [hue] = toSpace(context.display, 'hsv')
   const set = (next: number) => {
     context.emit(
-      withChannel(context.getColor(), "hsv", "hue", wrapHue(Math.round(next)))
+      withChannel(context.getColor(), 'hsv', 'hue', wrapHue(Math.round(next))),
     )
   }
   const { dragging, handlers } = useDrag(context, (event, element) => {
@@ -2149,38 +2149,35 @@ export function ColorPickerWheel({
   const onPointerDown = (event: ReactPointerEvent<HTMLElement>) => {
     const rect = event.currentTarget.getBoundingClientRect()
     const thumb = event.currentTarget
-      .querySelector("[data-slot=color-picker-wheel-thumb]")
+      .querySelector('[data-slot=color-picker-wheel-thumb]')
       ?.getBoundingClientRect()
     if (thumb) {
       const centerX = rect.left + rect.width / 2
       const centerY = rect.top + rect.height / 2
       const middle = Math.hypot(
         thumb.left + thumb.width / 2 - centerX,
-        thumb.top + thumb.height / 2 - centerY
+        thumb.top + thumb.height / 2 - centerY,
       )
       const inner = 2 * middle - rect.width / 2
       const distance = Math.hypot(
         event.clientX - centerX,
-        event.clientY - centerY
+        event.clientY - centerY,
       )
       if (distance < inner - 2) return
     }
     handlers.onPointerDown(event)
   }
   const angle = (hue * Math.PI) / 180
-  const radius = "(50% - var(--color-picker-wheel-thickness) / 2)"
+  const radius = '(50% - var(--color-picker-wheel-thickness) / 2)'
 
   return (
     <div
-      data-slot="color-picker-wheel"
-      className={cn(
-        "relative size-48 shrink-0 color-picker-wheel",
-        className
-      )}
+      data-slot='color-picker-wheel'
+      className={cn('relative size-48 shrink-0 color-picker-wheel', className)}
       {...props}
     >
       <div
-        role="slider"
+        role='slider'
         tabIndex={context.disabled ? -1 : 0}
         aria-label={context.i18n.labels.hue}
         aria-valuemin={0}
@@ -2188,17 +2185,17 @@ export function ColorPickerWheel({
         aria-valuenow={Math.round(hue)}
         aria-valuetext={channelValueText(
           context.display,
-          "hsv",
-          "hue",
-          context.i18n
+          'hsv',
+          'hue',
+          context.i18n,
         )}
         aria-disabled={context.disabled || undefined}
         aria-readonly={context.readOnly || undefined}
-        data-slot="color-picker-wheel-track"
-        data-dragging={dragging ? "" : undefined}
+        data-slot='color-picker-wheel-track'
+        data-dragging={dragging ? '' : undefined}
         className={cn(
           CONTROL_CLASS,
-          "absolute inset-0 touch-none rounded-full"
+          'absolute inset-0 touch-none rounded-full',
         )}
         onKeyDown={(event) => {
           onKeyDown?.(event)
@@ -2213,7 +2210,7 @@ export function ColorPickerWheel({
               ? Math.round(hue) + delta
               : delta > 0
                 ? 359
-                : 0
+                : 0,
           )
           context.endInteraction()
         }}
@@ -2222,7 +2219,7 @@ export function ColorPickerWheel({
       >
         <div className={WHEEL_RING_CLASS} />
         <div
-          data-slot="color-picker-wheel-thumb"
+          data-slot='color-picker-wheel-thumb'
           className={THUMB_CLASS}
           style={{
             left: `calc(50% + ${radius} * ${Math.sin(angle)})`,
@@ -2231,7 +2228,7 @@ export function ColorPickerWheel({
         />
       </div>
       {children !== undefined && (
-        <div className="absolute color-picker-wheel-inner flex items-center justify-center">
+        <div className='absolute color-picker-wheel-inner flex items-center justify-center'>
           {children}
         </div>
       )}
@@ -2259,28 +2256,28 @@ export type ColorPickerActionProps = ComponentProps<typeof Button>
  * Renders nothing where the browser has no EyeDropper (Firefox, Safari).
  */
 export function ColorPickerEyeDropper({
-  variant = "ghost",
-  size = "icon-sm",
+  variant = 'ghost',
+  size = 'icon-sm',
   onClick,
   children,
   ...props
 }: ColorPickerActionProps) {
-  const context = useColorPickerContext("ColorPickerEyeDropper")
+  const context = useColorPickerContext('ColorPickerEyeDropper')
   /* False on the server and in the first client render, so markup matches. */
   const supported = useSyncExternalStore(
     noSubscribe,
     () => !!getEyeDropper(),
-    () => false
+    () => false,
   )
   if (!supported) return null
   return (
     <Button
-      type="button"
+      type='button'
       variant={variant}
       size={size}
       disabled={!context.editable}
       aria-label={context.i18n.labels.eyeDropper}
-      data-slot="color-picker-eye-dropper"
+      data-slot='color-picker-eye-dropper'
       onClick={async (event) => {
         onClick?.(event)
         const EyeDropper = getEyeDropper()
@@ -2298,7 +2295,11 @@ export function ColorPickerEyeDropper({
       {...props}
     >
       {children === undefined ? (
-        <HugeiconsIcon icon={ColorPickerIcon} strokeWidth={2} aria-hidden="true" />
+        <HugeiconsIcon
+          icon={ColorPickerIcon}
+          strokeWidth={2}
+          aria-hidden='true'
+        />
       ) : (
         children
       )}
@@ -2317,26 +2318,26 @@ export type ColorPickerCopyProps = ColorPickerActionProps & {
  */
 export function ColorPickerCopy({
   format,
-  variant = "ghost",
-  size = "icon-sm",
+  variant = 'ghost',
+  size = 'icon-sm',
   onClick,
   children,
   ...props
 }: ColorPickerCopyProps) {
-  const context = useColorPickerContext("ColorPickerCopy")
+  const context = useColorPickerContext('ColorPickerCopy')
   const target = format ?? context.shownFormat
   const copied = context.copied === target
   const { labels } = context.i18n
   return (
     <Button
-      type="button"
+      type='button'
       variant={variant}
       size={size}
       disabled={context.disabled || !context.color}
       aria-label={copied ? labels.copied : labels.copy}
-      aria-keyshortcuts="Control+C Meta+C"
-      data-slot="color-picker-copy"
-      data-copied={copied ? "" : undefined}
+      aria-keyshortcuts='Control+C Meta+C'
+      data-slot='color-picker-copy'
+      data-copied={copied ? '' : undefined}
       onClick={(event) => {
         onClick?.(event)
         if (!event.defaultPrevented) context.copy(target)
@@ -2345,9 +2346,9 @@ export function ColorPickerCopy({
     >
       {children === undefined ? (
         copied ? (
-          <HugeiconsIcon icon={Tick02Icon} strokeWidth={2} aria-hidden="true" />
+          <HugeiconsIcon icon={Tick02Icon} strokeWidth={2} aria-hidden='true' />
         ) : (
-          <HugeiconsIcon icon={Copy01Icon} strokeWidth={2} aria-hidden="true" />
+          <HugeiconsIcon icon={Copy01Icon} strokeWidth={2} aria-hidden='true' />
         )
       ) : (
         children
@@ -2361,20 +2362,20 @@ export function ColorPickerCopy({
  * disabling itself on click would drop keyboard focus to the page.
  */
 export function ColorPickerClear({
-  variant = "ghost",
-  size = "sm",
+  variant = 'ghost',
+  size = 'sm',
   onClick,
   children,
   ...props
 }: ColorPickerActionProps) {
-  const context = useColorPickerContext("ColorPickerClear")
+  const context = useColorPickerContext('ColorPickerClear')
   return (
     <Button
-      type="button"
+      type='button'
       variant={variant}
       size={size}
       disabled={!context.editable}
-      data-slot="color-picker-clear"
+      data-slot='color-picker-clear'
       onClick={(event) => {
         onClick?.(event)
         if (!event.defaultPrevented) context.change(null)
@@ -2390,33 +2391,33 @@ export function ColorPickerClear({
 /*                                   Fields                                   */
 /* -------------------------------------------------------------------------- */
 
-type FieldChannel = ColorPickerChannel | "hex"
+type FieldChannel = ColorPickerChannel | 'hex'
 
 const FORMAT_FIELDS: Record<
   ColorPickerFormat,
   { space: ColorPickerColorSpace; channels: FieldChannel[] }
 > = {
-  hex: { space: "rgb", channels: ["hex"] },
-  rgb: { space: "rgb", channels: ["red", "green", "blue"] },
-  hsl: { space: "hsl", channels: ["hue", "saturation", "lightness"] },
-  hsb: { space: "hsv", channels: ["hue", "saturation", "brightness"] },
-  oklch: { space: "oklch", channels: ["lightness", "chroma", "hue"] },
+  hex: { space: 'rgb', channels: ['hex'] },
+  rgb: { space: 'rgb', channels: ['red', 'green', 'blue'] },
+  hsl: { space: 'hsl', channels: ['hue', 'saturation', 'lightness'] },
+  hsb: { space: 'hsv', channels: ['hue', 'saturation', 'brightness'] },
+  oklch: { space: 'oklch', channels: ['lightness', 'chroma', 'hue'] },
 }
 
 function channelText(
   color: ColorPickerColor,
   space: ColorPickerColorSpace,
-  channel: FieldChannel
+  channel: FieldChannel,
 ) {
-  if (channel === "hex") {
-    return formatColor({ ...color, alpha: 1 }, "hex")
+  if (channel === 'hex') {
+    return formatColor({ ...color, alpha: 1 }, 'hex')
       .slice(1)
       .toUpperCase()
   }
-  if (channel === "alpha") return `${Math.round(color.alpha * 100)}%`
+  if (channel === 'alpha') return `${Math.round(color.alpha * 100)}%`
   const value = readChannel(color, space, channel)
-  if (channel === "chroma") return fixed(value, 3)
-  return space === "oklch" ? fixed(value, 1) : String(Math.round(value))
+  if (channel === 'chroma') return fixed(value, 3)
+  return space === 'oklch' ? fixed(value, 1) : String(Math.round(value))
 }
 
 const FIELD_NUMBER =
@@ -2430,10 +2431,10 @@ function readChannelText(
   text: string,
   color: ColorPickerColor,
   space: ColorPickerColorSpace,
-  channel: FieldChannel
+  channel: FieldChannel,
 ): ColorPickerColor | null {
-  if (channel === "hex") {
-    const digits = text.trim().replace(/^#/, "")
+  if (channel === 'hex') {
+    const digits = text.trim().replace(/^#/, '')
     const parsed = /^[\da-f]+$/i.test(digits) ? parseColor(digits) : null
     if (!parsed) return null
     return digits.length === 4 || digits.length === 8
@@ -2442,31 +2443,31 @@ function readChannelText(
   }
   const match = FIELD_NUMBER.exec(text.trim().toLowerCase())
   if (!match) return null
-  const value = Number(match[1].replace(",", "."))
+  const value = Number(match[1].replace(',', '.'))
   const unit = match[2]
   if (!Number.isFinite(value)) return null
-  if (channel === "hue") {
-    if (unit === "%") return null
+  if (channel === 'hue') {
+    if (unit === '%') return null
     const degrees =
-      unit === "rad"
+      unit === 'rad'
         ? (value * 180) / Math.PI
-        : unit === "grad"
+        : unit === 'grad'
           ? value * 0.9
-          : unit === "turn"
+          : unit === 'turn'
             ? value * 360
             : value
     return withChannel(color, space, channel, wrapHue(degrees))
   }
-  if (unit && unit !== "%") return null
-  if (channel === "alpha") return { ...color, alpha: clamp(value / 100, 0, 1) }
+  if (unit && unit !== '%') return null
+  if (channel === 'alpha') return { ...color, alpha: clamp(value / 100, 0, 1) }
   const { max } = channelRange(space, channel)
-  const scaled = unit === "%" ? (value * max) / 100 : value
+  const scaled = unit === '%' ? (value * max) / 100 : value
   return withChannel(color, space, channel, clamp(scaled, 0, max))
 }
 
 export type ColorPickerChannelInputProps = Omit<
   ComponentProps<typeof InputGroupInput>,
-  "value" | "defaultValue"
+  'value' | 'defaultValue'
 > & {
   /** A channel, or `"hex"` for the six hex digits. */
   channel: FieldChannel
@@ -2487,27 +2488,27 @@ export function ColorPickerChannelInput({
   ref,
   ...props
 }: ColorPickerChannelInputProps) {
-  const context = useColorPickerContext("ColorPickerChannelInput")
-  const space = channel === "hex" ? "rgb" : resolveSpace(channel, colorSpace)
+  const context = useColorPickerContext('ColorPickerChannelInput')
+  const space = channel === 'hex' ? 'rgb' : resolveSpace(channel, colorSpace)
   const [text, setText] = useState<string | null>(null)
   const current = channelText(context.display, space, channel)
   const shown = text ?? current
   const fieldRef = useRef<HTMLInputElement | null>(null)
   useEscapeRevert(fieldRef, text !== null, () => setText(null))
-  const { max } = channelRange(space, channel === "hex" ? "red" : channel)
+  const { max } = channelRange(space, channel === 'hex' ? 'red' : channel)
   /* A number field is a spin button: a screen reader hears its range. */
   const spin =
-    channel === "hex"
+    channel === 'hex'
       ? {}
       : {
-          role: "spinbutton",
-          "aria-valuemin": 0,
-          "aria-valuemax": channel === "alpha" ? 100 : max,
-          "aria-valuenow":
-            channel === "alpha"
+          role: 'spinbutton',
+          'aria-valuemin': 0,
+          'aria-valuemax': channel === 'alpha' ? 100 : max,
+          'aria-valuenow':
+            channel === 'alpha'
               ? Math.round(context.display.alpha * 100)
               : Number(channelText(context.display, space, channel)),
-          "aria-valuetext": shown,
+          'aria-valuetext': shown,
         }
 
   const read = () => {
@@ -2521,35 +2522,35 @@ export function ColorPickerChannelInput({
   return (
     <InputGroupInput
       value={shown}
-      inputMode={channel === "hex" ? "text" : "decimal"}
-      maxLength={channel === "hex" ? 9 : 8}
+      inputMode={channel === 'hex' ? 'text' : 'decimal'}
+      maxLength={channel === 'hex' ? 9 : 8}
       disabled={context.disabled}
       readOnly={context.readOnly}
-      autoComplete="off"
-      autoCorrect="off"
-      autoCapitalize="off"
+      autoComplete='off'
+      autoCorrect='off'
+      autoCapitalize='off'
       spellCheck={false}
       aria-label={context.i18n.labels[channel]}
       {...spin}
       data-channel={channel}
       className={cn(
-        "h-auto min-w-0 self-stretch pr-1 pl-2 tabular-nums",
+        'h-auto min-w-0 self-stretch pr-1 pl-2 tabular-nums',
         /* Each field starts at its widest value plus padding, in ch so it
            tracks the font, where a tabular digit measures 1.03ch: 255 or 360,
            99.9 for OKLCH lightness, 0.399, 359.9, 100% and six hex digits. A
            short row shrinks every field in proportion. Equal shares clipped
            100% and every OKLCH channel. Text sits left, so the right padding
            is only the gap before the next separator. */
-        channel === "hex"
-          ? "color-picker-field-hex uppercase"
-          : channel === "alpha"
-            ? "color-picker-field-alpha"
-            : space !== "oklch"
-              ? "color-picker-field-short"
-              : channel === "lightness"
-                ? "color-picker-field-lightness"
-                : "color-picker-field-channel",
-        className
+        channel === 'hex'
+          ? 'color-picker-field-hex uppercase'
+          : channel === 'alpha'
+            ? 'color-picker-field-alpha'
+            : space !== 'oklch'
+              ? 'color-picker-field-short'
+              : channel === 'lightness'
+                ? 'color-picker-field-lightness'
+                : 'color-picker-field-channel',
+        className,
       )}
       onChange={(event) => {
         onChange?.(event)
@@ -2563,15 +2564,15 @@ export function ColorPickerChannelInput({
         onKeyDown?.(event)
         if (event.defaultPrevented || copyOnShortcut(event, context)) return
         const step = STEP_KEYS[event.key]
-        if (event.key === "Enter") {
+        if (event.key === 'Enter') {
           /* Flushed, so an implicit form submit reads the new value. */
           flushSync(() => read())
-        } else if (step && channel !== "hex" && context.editable) {
+        } else if (step && channel !== 'hex' && context.editable) {
           event.preventDefault()
           const from = readChannelText(shown, context.display, space, channel)
           if (!from) return
           const unit =
-            channel === "alpha" ? 0.01 : channel === "chroma" ? 0.001 : 1
+            channel === 'alpha' ? 0.01 : channel === 'chroma' ? 0.001 : 1
           const delta = step * unit * (event.shiftKey ? 10 : 1)
           const { max: top } = channelRange(space, channel)
           const next = snap(readChannel(from, space, channel) + delta, unit)
@@ -2581,8 +2582,8 @@ export function ColorPickerChannelInput({
               from,
               space,
               channel,
-              channel === "hue" ? wrapHue(next) : clamp(next, 0, top)
-            )
+              channel === 'hue' ? wrapHue(next) : clamp(next, 0, top),
+            ),
           )
         }
       }}
@@ -2604,18 +2605,17 @@ const STEP_KEYS: Record<string, number> = {
 }
 
 /* Full height, so the fields read as cells of one control. */
-const DIVIDER = <Separator orientation="vertical" aria-hidden="true" />
+const DIVIDER = <Separator orientation='vertical' aria-hidden='true' />
 
 /* The shadcn inline-start addon insets its button on the left only (padding
    less a pull-in), so the format button met the first divider. Each rung
    repeats that inset on the right. maia and luma take 5px a side, concentric
    with the pill: 8px a side clipped OKLCH in the popover on a phone. */
-const FORMAT_ADDON_CLASS =
-  "color-picker-format-addon"
+const FORMAT_ADDON_CLASS = 'color-picker-format-addon'
 
 export type ColorPickerFieldsProps = Omit<
   ComponentProps<typeof InputGroup>,
-  "children"
+  'children'
 > & {
   /** The format shown, controlled. It does not change what `onValueChange` emits. */
   format?: ColorPickerFormat
@@ -2638,9 +2638,9 @@ export function ColorPickerFields({
   className,
   ...props
 }: ColorPickerFieldsProps) {
-  const context = useColorPickerContext("ColorPickerFields")
+  const context = useColorPickerContext('ColorPickerFields')
   const [formatState, setFormatState] = useState(
-    defaultFormat ?? context.format
+    defaultFormat ?? context.format,
   )
   const shown = formatProp ?? formatState
   const fields = FORMAT_FIELDS[shown]
@@ -2655,23 +2655,23 @@ export function ColorPickerFields({
     onFormatChange?.(next)
   }
   const menuProps = {
-    size: "xs" as const,
+    size: 'xs' as const,
     disabled: context.disabled,
-    "aria-label": `${context.i18n.labels.format}, ${FORMAT_LABELS[shown]}`,
-    "data-slot": "color-picker-format-trigger",
-    className: "gap-1 text-xs font-medium",
+    'aria-label': `${context.i18n.labels.format}, ${FORMAT_LABELS[shown]}`,
+    'data-slot': 'color-picker-format-trigger',
+    className: 'gap-1 text-xs font-medium',
   }
 
   return (
     <InputGroup
-      dir="ltr"
-      data-slot="color-picker-fields"
-      data-disabled={context.disabled ? "" : undefined}
+      dir='ltr'
+      data-slot='color-picker-fields'
+      data-disabled={context.disabled ? '' : undefined}
       className={className}
       {...props}
     >
       {menu && (
-        <InputGroupAddon align="inline-start" className={FORMAT_ADDON_CLASS}>
+        <InputGroupAddon align='inline-start' className={FORMAT_ADDON_CLASS}>
           <DropdownMenu>
             <DropdownMenuTrigger render={<InputGroupButton {...menuProps} />}>
               {FORMAT_LABELS[shown]}
@@ -2680,8 +2680,8 @@ export function ColorPickerFields({
             {/* A pick's click bubbles through the portal to InputGroupAddon,
                 whose own handler would move focus into a field. */}
             <DropdownMenuContent
-              align="start"
-              className="w-auto min-w-56"
+              align='start'
+              className='w-auto min-w-56'
               onClick={(event) => event.stopPropagation()}
             >
               <DropdownMenuRadioGroup
@@ -2690,13 +2690,13 @@ export function ColorPickerFields({
               >
                 {formats.map((item) => (
                   <DropdownMenuRadioItem key={item} value={item} closeOnClick>
-                    <span className="w-12 shrink-0 font-medium">
+                    <span className='w-12 shrink-0 font-medium'>
                       {FORMAT_LABELS[item]}
                     </span>
-                    <span className="text-muted-foreground truncate text-xs tabular-nums">
+                    <span className='text-muted-foreground truncate text-xs tabular-nums'>
                       {formatColor(context.display, item).replace(
                         /^\w+\(|\)$/g,
-                        ""
+                        '',
                       )}
                     </span>
                   </DropdownMenuRadioItem>
@@ -2706,7 +2706,7 @@ export function ColorPickerFields({
           </DropdownMenu>
         </InputGroupAddon>
       )}
-      <div className="flex min-w-0 flex-1 self-stretch">
+      <div className='flex min-w-0 flex-1 self-stretch'>
         {fields.channels.map((channel, index) => (
           <Fragment key={`${shown}-${channel}`}>
             {(menu || index > 0) && DIVIDER}
@@ -2722,8 +2722,8 @@ export function ColorPickerFields({
           <>
             {DIVIDER}
             <ColorPickerChannelInput
-              channel="alpha"
-              className="color-picker-field-alpha flex-none"
+              channel='alpha'
+              className='color-picker-field-alpha flex-none'
             />
           </>
         )}
@@ -2737,13 +2737,13 @@ export function ColorPickerFields({
 /* -------------------------------------------------------------------------- */
 
 type SwatchesContextValue = {
-  shape: "square" | "circle"
+  shape: 'square' | 'circle'
   activeId: string | null
   setActiveId: (id: string | null) => void
 }
 
 const SwatchesContext = createContext<SwatchesContextValue>({
-  shape: "square",
+  shape: 'square',
   activeId: null,
   setActiveId: () => {},
 })
@@ -2759,22 +2759,22 @@ function neighbor(
   options: HTMLElement[],
   current: HTMLElement | undefined,
   key: string,
-  rtl: boolean
+  rtl: boolean,
 ) {
-  if (key === "Home") return options[0]
-  if (key === "End") return options[options.length - 1]
+  if (key === 'Home') return options[0]
+  if (key === 'End') return options[options.length - 1]
   if (!current) return options[0]
   const forward =
-    key === "ArrowDown" || key === (rtl ? "ArrowLeft" : "ArrowRight")
+    key === 'ArrowDown' || key === (rtl ? 'ArrowLeft' : 'ArrowRight')
   return options[options.indexOf(current) + (forward ? 1 : -1)]
 }
 
 export type ColorPickerSwatchesProps = Omit<
-  ComponentProps<"div">,
-  "children"
+  ComponentProps<'div'>,
+  'children'
 > & {
   colors?: ColorPickerSwatchInput[]
-  shape?: "square" | "circle"
+  shape?: 'square' | 'circle'
   children?: ReactNode
 }
 
@@ -2784,41 +2784,41 @@ export type ColorPickerSwatchesProps = Omit<
  */
 export function ColorPickerSwatches({
   colors,
-  shape = "square",
+  shape = 'square',
   className,
   children,
   onKeyDown,
   onFocus,
   ...props
 }: ColorPickerSwatchesProps) {
-  const context = useColorPickerContext("ColorPickerSwatches")
+  const context = useColorPickerContext('ColorPickerSwatches')
   const [activeId, setActiveId] = useState<string | null>(null)
   const listRef = useRef<HTMLDivElement>(null)
   const options = () =>
     Array.from(
-      listRef.current?.querySelectorAll<HTMLElement>(OPTION_SELECTOR) ?? []
+      listRef.current?.querySelectorAll<HTMLElement>(OPTION_SELECTOR) ?? [],
     )
   const activate = (option: HTMLElement | undefined) => {
     if (!option) return
     setActiveId(option.id)
-    option.scrollIntoView?.({ block: "nearest" })
+    option.scrollIntoView?.({ block: 'nearest' })
   }
 
   return (
     <SwatchesContext.Provider value={{ shape, activeId, setActiveId }}>
       <div
         ref={listRef}
-        role="listbox"
+        role='listbox'
         tabIndex={context.disabled ? -1 : 0}
         aria-label={context.i18n.labels.swatches}
         aria-activedescendant={activeId ?? undefined}
         aria-disabled={context.disabled || undefined}
         aria-readonly={context.readOnly || undefined}
-        data-slot="color-picker-swatches"
-        data-empty={activeId ? undefined : ""}
+        data-slot='color-picker-swatches'
+        data-empty={activeId ? undefined : ''}
         className={cn(
-          "group/color-picker-swatches data-empty:focus-visible:outline-ring grid color-picker-swatches justify-between gap-x-1 gap-y-1.5 outline-none aria-disabled:opacity-50 data-empty:focus-visible:outline-2 data-empty:focus-visible:outline-offset-2",
-          className
+          'group/color-picker-swatches data-empty:focus-visible:outline-ring grid color-picker-swatches justify-between gap-x-1 gap-y-1.5 outline-none aria-disabled:opacity-50 data-empty:focus-visible:outline-2 data-empty:focus-visible:outline-offset-2',
+          className,
         )}
         onFocus={(event) => {
           onFocus?.(event)
@@ -2828,7 +2828,7 @@ export function ColorPickerSwatches({
             : null
           if (!found) {
             const selected = event.currentTarget.querySelector<HTMLElement>(
-              `${OPTION_SELECTOR}[aria-selected="true"]`
+              `${OPTION_SELECTOR}[aria-selected="true"]`,
             )
             setActiveId(selected?.id ?? null)
           }
@@ -2839,32 +2839,32 @@ export function ColorPickerSwatches({
           if (context.disabled) return
           const list = options()
           const current = list.find((option) => option.id === activeId)
-          if (event.key === "Enter" || event.key === " ") {
+          if (event.key === 'Enter' || event.key === ' ') {
             event.preventDefault()
             current?.click()
             return
           }
           if (
             ![
-              "ArrowLeft",
-              "ArrowRight",
-              "ArrowUp",
-              "ArrowDown",
-              "Home",
-              "End",
+              'ArrowLeft',
+              'ArrowRight',
+              'ArrowUp',
+              'ArrowDown',
+              'Home',
+              'End',
             ].includes(event.key)
           ) {
             return
           }
           event.preventDefault()
-          const rtl = getComputedStyle(event.currentTarget).direction === "rtl"
+          const rtl = getComputedStyle(event.currentTarget).direction === 'rtl'
           activate(neighbor(list, current, event.key, rtl) ?? current)
         }}
         {...props}
       >
         {children ??
           colors?.map((item, index) => {
-            const swatch = typeof item === "string" ? { value: item } : item
+            const swatch = typeof item === 'string' ? { value: item } : item
             return (
               <ColorPickerSwatchItem
                 key={`${index}-${swatch.value}`}
@@ -2880,15 +2880,14 @@ export function ColorPickerSwatches({
 
 /* A 24px chip takes the shadcn Select item's radius, square in lyra and sera.
    The keyboard ring is an offset outline, so it never sits on the color. */
-const SWATCH_ITEM_SQUARE =
-  "rounded-md"
+const SWATCH_ITEM_SQUARE = 'rounded-md'
 
 const SWATCH_ITEM_CLASS =
-  "forced-color-adjust-none relative flex size-(--color-picker-swatch-size) shrink-0 cursor-default items-center justify-center outline-offset-2 transition-scale duration-150 after:pointer-events-none after:absolute after:inset-0 after:rounded-inherit after:inset-ring after:inset-ring-foreground/10 not-aria-disabled:hover:scale-110 aria-disabled:opacity-40 motion-reduce:transition-none group-focus-visible/color-picker-swatches:data-active:outline-2 group-focus-visible/color-picker-swatches:data-active:outline-ring [&_svg]:size-3.5"
+  'forced-color-adjust-none relative flex size-(--color-picker-swatch-size) shrink-0 cursor-default items-center justify-center outline-offset-2 transition-scale duration-150 after:pointer-events-none after:absolute after:inset-0 after:rounded-inherit after:inset-ring after:inset-ring-foreground/10 not-aria-disabled:hover:scale-110 aria-disabled:opacity-40 motion-reduce:transition-none group-focus-visible/color-picker-swatches:data-active:outline-2 group-focus-visible/color-picker-swatches:data-active:outline-ring [&_svg]:size-3.5'
 
 export type ColorPickerSwatchItemProps = Omit<
-  ComponentProps<"div">,
-  "children"
+  ComponentProps<'div'>,
+  'children'
 > & {
   /** Any color `parseColor` reads. */
   value: string
@@ -2907,7 +2906,7 @@ export function ColorPickerSwatchItem({
   onClick,
   ...props
 }: ColorPickerSwatchItemProps) {
-  const context = useColorPickerContext("ColorPickerSwatchItem")
+  const context = useColorPickerContext('ColorPickerSwatchItem')
   const swatches = useContext(SwatchesContext)
   const id = useId()
   const parsed = parseColor(value)
@@ -2915,29 +2914,29 @@ export function ColorPickerSwatchItem({
   const selected =
     !!color &&
     !!context.color &&
-    formatColor(color, "hex") === formatColor(context.color, "hex")
+    formatColor(color, 'hex') === formatColor(context.color, 'hex')
   /* The check reads like text on the swatch: one rule for both. */
   const check =
-    (color && getForegroundColor(color, { light: "#fff", dark: "#000" })) ??
-    "#000"
+    (color && getForegroundColor(color, { light: '#fff', dark: '#000' })) ??
+    '#000'
   const inactive = disabled || !color
 
   return (
     <div
       id={id}
-      role="option"
+      role='option'
       aria-selected={selected}
       aria-disabled={inactive || undefined}
       aria-label={
         label ?? (color ? context.i18n.functions.getColorName(color) : value)
       }
-      data-slot="color-picker-swatch-item"
-      data-active={swatches.activeId === id ? "" : undefined}
-      data-selected={selected ? "" : undefined}
+      data-slot='color-picker-swatch-item'
+      data-active={swatches.activeId === id ? '' : undefined}
+      data-selected={selected ? '' : undefined}
       className={cn(
         SWATCH_ITEM_CLASS,
-        swatches.shape === "circle" ? "rounded-full" : SWATCH_ITEM_SQUARE,
-        className
+        swatches.shape === 'circle' ? 'rounded-full' : SWATCH_ITEM_SQUARE,
+        className,
       )}
       style={{ background: swatchBackground(color), color: check, ...style }}
       onClick={(event) => {
@@ -2949,7 +2948,7 @@ export function ColorPickerSwatchItem({
       {...props}
     >
       {selected && (
-        <HugeiconsIcon icon={Tick02Icon} strokeWidth={2} aria-hidden="true" />
+        <HugeiconsIcon icon={Tick02Icon} strokeWidth={2} aria-hidden='true' />
       )}
     </div>
   )

@@ -1,15 +1,15 @@
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 import { cn } from 'cn'
-import { Button } from '@/components/ui/button'
-import { Show } from '@/components/utility/show'
-import { Spinner } from '@/components/ui/spinner'
-import { NativeSlider } from '@/components/ui/native-slider'
+import { Button } from '@ongaku/ui'
+import { Show } from '@ongaku/ui'
+import { Spinner } from '@ongaku/ui'
+import { NativeSlider } from '@ongaku/ui'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover'
+} from '@ongaku/ui'
 import { formatDuration } from '@/shared/helpers/format-duration'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {

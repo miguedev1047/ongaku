@@ -1,5 +1,5 @@
-import { SidebarMenuBadge } from '@/components/ui/sidebar'
-import { Show } from '@/components/utility/show'
+import { SidebarMenuBadge } from '@ongaku/ui'
+import { Show } from '@ongaku/ui'
 import { AlertCircleIcon, Settings01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { cn } from 'cn'

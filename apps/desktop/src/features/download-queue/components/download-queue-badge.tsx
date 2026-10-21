@@ -1,9 +1,9 @@
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { Badge } from '@ongaku/ui'
+import { Button } from '@ongaku/ui'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Download01Icon } from '@hugeicons/core-free-icons'
 import { useDownloadQueue } from '@/features/download-queue/hooks'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { useTranslation } from 'react-i18next'
 import { cn } from 'cn'
 

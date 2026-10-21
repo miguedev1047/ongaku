@@ -4,14 +4,14 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
+} from '@ongaku/ui'
 import { useTranslation } from 'react-i18next'
-import { Button } from '@/components/ui/button'
-import { Show } from '@/components/utility/show'
+import { Button } from '@ongaku/ui'
+import { Show } from '@ongaku/ui'
 import { UrlInputField } from '@/features/download-songs/form/url-input-field'
 import { SubmitDownloadButton } from '@/features/download-songs/form/submit-download-button'
 import type { useDownloadSongsForm } from '@/features/download-songs/hooks'
-import { CardWrapper } from '@/components/ui/card-wrapper'
+import { CardWrapper } from '@ongaku/ui'
 
 interface DownloadSongsCardFormProps {
   formInstance: ReturnType<typeof useDownloadSongsForm>

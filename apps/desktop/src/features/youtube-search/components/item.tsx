@@ -12,10 +12,10 @@ import {
   ItemDescription,
   ItemMedia,
   ItemTitle
-} from "@/components/ui/item"
-import { Skeleton } from "@/components/ui/skeleton"
+} from "@ongaku/ui"
+import { Skeleton } from "@ongaku/ui"
 import { isItemAction } from "@/shared/helpers/is-item-action"
-import { Show } from "@/components/utility/show"
+import { Show } from "@ongaku/ui"
 
 interface YoutubeCardProps {
   item: TYoutubeSearchResult

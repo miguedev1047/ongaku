@@ -1,4 +1,4 @@
-import { CoverImage } from '@/components/ui/cover-image'
+import { CoverImage } from '@ongaku/ui'
 import { useSongUtils } from '@/hooks/use-song-utils'
 import { useLocalPlayerStore } from '@/features/player/stores'
 import { PlayerMedia } from '@/components/ui/player'

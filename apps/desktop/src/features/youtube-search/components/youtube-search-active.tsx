@@ -1,4 +1,4 @@
-import { RouteSection } from '@/components/ui/route-section'
+import { RouteSection } from '@ongaku/ui'
 import { useStreamingPlayerStore } from '@/features/player/stores'
 import { SearchResultsSection } from '@/features/youtube-search/components/search-results-section'
 import { ActiveTrackSidebar } from '@/features/youtube-search/components/active-track-sidebar'

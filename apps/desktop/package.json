@@ -17,6 +17,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@ongaku/ui": "workspace:*",
     "@animate-ui/react": "^2.0.0",
     "@base-ui/react": "^1.8.0",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",

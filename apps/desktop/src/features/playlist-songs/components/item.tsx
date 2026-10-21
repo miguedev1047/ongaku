@@ -6,8 +6,8 @@ import {
   ItemDescription,
   ItemMedia,
   ItemTitle
-} from "@/components/ui/item"
-import { CoverImage } from "@/components/ui/cover-image"
+} from "@ongaku/ui"
+import { CoverImage } from "@ongaku/ui"
 import { useSongUtils } from "@/hooks/use-song-utils"
 import { formatDuration } from "@/shared/helpers/format-duration"
 import { useLocalPlayerStore, useActivePlayerStore } from "@/features/player/stores"

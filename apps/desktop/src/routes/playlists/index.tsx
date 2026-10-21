@@ -1,4 +1,4 @@
-import { RouteSection } from '@/components/ui/route-section'
+import { RouteSection } from '@ongaku/ui'
 import { PlaylistHeader, PlaylistList } from '@/features/playlists/components'
 import { PlaylistsLoadingState } from '@/features/playlists/ui-state'
 import {

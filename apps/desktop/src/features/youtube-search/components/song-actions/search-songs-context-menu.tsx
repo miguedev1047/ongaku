@@ -10,8 +10,8 @@ import {
   ContextMenuSubContent,
   ContextMenuSubTrigger,
   ContextMenuTrigger,
-} from '@/components/ui/context-menu'
-import { Spinner } from '@/components/ui/spinner'
+} from '@ongaku/ui'
+import { Spinner } from '@ongaku/ui'
 import type { TYoutubeSearchResult } from '@/features/youtube-search/types'
 import {
   Copy01Icon,
@@ -24,9 +24,9 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import { PlaylistContextMenuGroup } from '@/features/download-queue/components'
 import { useCopySongTitle } from '@/shared/components/song-actions/use-copy-song-title'
 import { useSearchSongActions } from '@/features/youtube-search/components/song-actions/hooks'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { cn } from 'cn'
-import { CONTEXT_ACTIONS_MENU_WIDTH } from '@/constants/styles'
+import { CONTEXT_ACTIONS_MENU_WIDTH } from '@ongaku/ui'
 import { useTranslation } from 'react-i18next'
 
 export interface SearchSongContextMenuProps {

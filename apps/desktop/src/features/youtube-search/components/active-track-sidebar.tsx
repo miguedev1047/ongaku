@@ -1,4 +1,4 @@
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { YoutubeSongInfo } from '@/features/youtube-search/components/youtube-song-info'
 import type { TYoutubeSearchResult } from '@/features/youtube-search/types'
 

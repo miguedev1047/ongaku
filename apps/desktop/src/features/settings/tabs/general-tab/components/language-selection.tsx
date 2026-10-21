@@ -10,8 +10,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { CardWrapper } from '@/components/ui/card-wrapper'
+} from '@ongaku/ui'
+import { CardWrapper } from '@ongaku/ui'
 import { LANGUAGES } from '@/constants/data'
 
 export function LanguageSelection() {

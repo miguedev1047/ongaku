@@ -1,5 +1,5 @@
 import { createPortal } from "react-dom"
-import { Button } from "@/components/ui/button"
+import { Button } from "@ongaku/ui"
 import { usePlaylistBatchStore } from "@/shared/stores/batch-operations"
 import { useActivePlayerStore } from "@/features/player/stores"
 import { usePlaylistBatchActions } from "@/features/playlist-songs/components/playlist-songs-list/hooks"
@@ -13,7 +13,7 @@ import {
 } from "@hugeicons/core-free-icons"
 import { cn } from "cn"
 import { useTranslation } from "react-i18next"
-import { Show } from "@/components/utility/show"
+import { Show } from "@ongaku/ui"
 
 interface PlaylistBatchBarProps {
   currentPlaylistName?: string

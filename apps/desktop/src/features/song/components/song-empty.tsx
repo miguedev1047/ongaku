@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { Button } from '@ongaku/ui'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { MusicIcon } from '@hugeicons/core-free-icons'
 import { Link } from '@tanstack/react-router'

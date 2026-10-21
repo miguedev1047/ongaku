@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { Button } from '@ongaku/ui'
 import {
   Sheet,
   SheetContent,
@@ -6,12 +6,12 @@ import {
   SheetTitle,
   SheetDescription,
   SheetTrigger,
-} from '@/components/ui/sheet'
+} from '@ongaku/ui'
 import { useLocalPlayerStore } from '@/features/player/stores'
 import { formatPlaylistDuration } from '@/shared/helpers/total-tracks-hours'
 import { ListMusicIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { QueueList } from './queue-list'
 import type { TPlaylistSong } from '@/features/playlist-songs/types'
 import { useTranslation } from 'react-i18next'

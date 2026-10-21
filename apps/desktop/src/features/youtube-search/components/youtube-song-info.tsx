@@ -8,18 +8,18 @@ import {
   YoutubeIcon,
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Card } from '@/components/ui/card'
+import { Button } from '@ongaku/ui'
+import { Badge } from '@ongaku/ui'
+import { Card } from '@ongaku/ui'
 import {
   Empty,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from '@/components/ui/empty'
+} from '@ongaku/ui'
 import { formatDuration } from '@/shared/helpers/format-duration'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { SearchSongActions } from '@/features/youtube-search/components/song-actions'
 import { cn } from 'cn'
 import { useTranslation } from 'react-i18next'

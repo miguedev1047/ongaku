@@ -5,14 +5,14 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from "@/components/ui/empty"
+} from "@ongaku/ui"
 import { MusicNote01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useParams } from "@tanstack/react-router"
 import { ImportSongsButton } from "@/features/playlist-songs/components/import-songs-button"
 import { cn } from "cn"
 
-import { Show } from "@/components/utility/show"
+import { Show } from "@ongaku/ui"
 
 export interface PlaylistSongsEmptyStateProps {
   className?: string

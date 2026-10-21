@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@ongaku/ui"
 import {
   Dialog,
   DialogClose,
@@ -7,11 +7,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from "@/components/ui/dialog"
-import { Spinner } from "@/components/ui/spinner"
+} from "@ongaku/ui"
+import { Spinner } from "@ongaku/ui"
 import type { TPlaylist } from "@/features/playlists/types"
 import { useDeletePlaylist } from "@/features/playlists/hooks"
-import { Show } from "@/components/utility/show"
+import { Show } from "@ongaku/ui"
 
 import { useTranslation } from "react-i18next"
 

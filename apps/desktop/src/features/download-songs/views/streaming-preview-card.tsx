@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Show } from '@/components/utility/show'
+import { Badge } from '@ongaku/ui'
+import { Button } from '@ongaku/ui'
+import { Show } from '@ongaku/ui'
 import { cn } from 'cn'
 import { useStreamingPlayerStore } from '@/features/player/stores'
 import { formatDuration } from '@/shared/helpers/format-duration'
@@ -15,8 +15,8 @@ import {
   PauseIcon,
   PlayIcon,
 } from '@hugeicons/core-free-icons'
-import { CardWrapper } from '@/components/ui/card-wrapper'
-import { Spinner } from '@/components/ui/spinner'
+import { CardWrapper } from '@ongaku/ui'
+import { Spinner } from '@ongaku/ui'
 
 export interface StreamingPreviewCardProps {
   className?: string

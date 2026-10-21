@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Spinner } from "@/components/ui/spinner"
+import { Button } from "@ongaku/ui"
+import { Badge } from "@ongaku/ui"
+import { Spinner } from "@ongaku/ui"
 import {
   SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem
-} from "@/components/ui/sidebar"
+} from "@ongaku/ui"
 import { Download01Icon, FolderIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useBinaries } from "@/features/download-queue/hooks"
@@ -15,9 +15,8 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger
-} from "@/components/ui/popover"
-import { Show } from "@/components/utility/show"
-import { DotmSquare10 } from "@/components/ui/loaders/dotm-square-10"
+} from "@ongaku/ui"
+import { Show, DotmSquare10 } from "@ongaku/ui"
 import { cn } from "cn"
 
 interface StatusProps {

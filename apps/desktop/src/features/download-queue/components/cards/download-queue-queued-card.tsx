@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button'
-import { Spinner } from '@/components/ui/spinner'
-import { Show } from '@/components/utility/show'
+import { Button } from '@ongaku/ui'
+import { Spinner } from '@ongaku/ui'
+import { Show } from '@ongaku/ui'
 import type { DownloadTask } from '@/shared/types/download.types'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
@@ -15,7 +15,7 @@ import {
   AttachmentDescription,
   AttachmentMedia,
   AttachmentTitle,
-} from '@/components/ui/attachment'
+} from '@ongaku/ui'
 import { cn } from 'cn'
 
 interface DownloadQueueQueuedCardProps {

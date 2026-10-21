@@ -7,8 +7,8 @@ import {
   CommandItem,
   CommandList,
   CommandShortcut,
-} from '@/components/ui/command'
-import { SearchTrigger } from '@/components/ui/search-trigger'
+} from '@ongaku/ui'
+import { SearchTrigger } from '@ongaku/ui'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Music01Icon } from '@hugeicons/core-free-icons'
 import { useSuspenseQuery } from '@tanstack/react-query'
@@ -16,7 +16,7 @@ import { playlistsQueryOpts } from '@/features/playlists/queries'
 import { useCallback, useState } from 'react'
 import { useNavigate, useRouter } from '@tanstack/react-router'
 import { useHotkey } from '@tanstack/react-hotkeys'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import type { TPlaylist } from '@/features/playlists/types'
 import { useTranslation } from 'react-i18next'
 

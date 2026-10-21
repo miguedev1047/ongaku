@@ -1,13 +1,13 @@
-import { Button } from '@/components/ui/button'
+import { Button } from '@ongaku/ui'
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from '@/components/ui/tooltip'
+} from '@ongaku/ui'
 import { FileUploadIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Spinner } from '@/components/ui/spinner'
-import { Show } from '@/components/utility/show'
+import { Spinner } from '@ongaku/ui'
+import { Show } from '@ongaku/ui'
 import { useImportSongs } from '@/features/playlist-songs/hooks'
 import { cn } from 'cn'
 

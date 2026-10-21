@@ -1,7 +1,7 @@
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { CardWrapper } from '@/components/ui/card-wrapper'
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { Badge } from '@ongaku/ui'
+import { Button } from '@ongaku/ui'
+import { CardWrapper } from '@ongaku/ui'
+import { Alert, AlertTitle, AlertDescription } from '@ongaku/ui'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,16 +11,16 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
+} from '@ongaku/ui'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
   FolderIcon,
   AlertCircleIcon,
   FolderEditIcon,
 } from '@hugeicons/core-free-icons'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { type TDirectoryHealth } from '@/shared/queries/system-health'
-import { Spinner } from '@/components/ui/spinner'
+import { Spinner } from '@ongaku/ui'
 import { useDirectoriesStatus } from '@/features/settings/hooks'
 import { useTranslation } from 'react-i18next'
 

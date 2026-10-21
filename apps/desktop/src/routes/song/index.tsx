@@ -5,9 +5,9 @@ import {
   SongStreamingView,
   SongEmpty,
 } from '@/features/song/components'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { Suspense } from 'react'
-import { Spinner } from '@/components/ui/spinner'
+import { Spinner } from '@ongaku/ui'
 
 export const Route = createFileRoute('/song/')({
   component: SongRouteComponent,

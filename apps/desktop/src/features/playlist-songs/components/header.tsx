@@ -6,9 +6,9 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
+} from '@ongaku/ui'
 import { SearchSongs } from '@/features/playlist-songs/components/search-songs'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Skeleton } from '@ongaku/ui'
 import { Link, useParams } from '@tanstack/react-router'
 import { Suspense } from 'react'
 import { PlaylistSongsReloadList } from '@/features/playlist-songs/components'

@@ -6,7 +6,7 @@ import {
 import { AppWallpapersList } from '@/features/settings/tabs/appearance-tab/components/wallpapers/app-wallpapers-list'
 import { AppWallpaperUrlDialog } from '@/features/settings/tabs/appearance-tab/components/wallpapers/app-wallpaper-url-dialog'
 import { AppWallpaperBlurSelection } from '@/features/settings/tabs/appearance-tab/components/wallpapers/app-wallpaper-blur-selection'
-import { CardWrapper } from '@/components/ui/card-wrapper'
+import { CardWrapper } from '@ongaku/ui'
 import { AppWallpaperHeader } from '@/features/settings/tabs/appearance-tab/components/wallpapers/app-wallpaper-header'
 
 export function AppWallpapersSelection() {

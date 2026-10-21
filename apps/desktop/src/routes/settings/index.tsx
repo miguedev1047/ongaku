@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import { updatesQueryOpts } from '@/features/settings/queries/updates'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
-import { RouteSection } from '@/components/ui/route-section'
+import { RouteSection } from '@ongaku/ui'
 import {
   RoutePendingState,
   RouteErrorState,
@@ -16,7 +16,7 @@ import {
 } from '@/features/settings/tabs'
 import { SettingsTabLoadingState } from '@/features/settings/ui-state'
 import { useSystemHealth } from '@/features/settings/hooks'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@ongaku/ui'
 import { Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { systemBackgroundsOpts } from '@/features/settings/queries/backgrounds'

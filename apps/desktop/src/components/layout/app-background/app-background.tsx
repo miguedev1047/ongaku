@@ -1,4 +1,4 @@
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { getBackgroundUrl } from '@/lib/song-utils'
 import { wallpaperQueryOpts } from '@/features/settings/queries/wallpaper'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'

@@ -9,7 +9,7 @@ import {
   LibraryPending,
   LibraryStatsSkeleton,
 } from '@/features/library/ui-state'
-import { RouteSection } from '@/components/ui/route-section'
+import { RouteSection } from '@ongaku/ui'
 import { RouteErrorState } from '@/components/feedback/route-ui-state'
 import { createFileRoute } from '@tanstack/react-router'
 import { librarySongsQueryOpts } from '@/features/library/queries'

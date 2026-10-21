@@ -5,19 +5,15 @@ import { FolderIcon } from '@hugeicons/core-free-icons'
 import { useQuery } from '@tanstack/react-query'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import { useUpdateConfig } from '@/features/settings/hooks/use-config'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { CardWrapper } from '@/components/ui/card-wrapper'
-import { Folder } from '@/components/ui/folder'
+import { RadioGroup, RadioGroupItem } from '@ongaku/ui'
+import { CardWrapper } from '@ongaku/ui'
+import { Folder } from '@ongaku/ui'
 import { FOLDER_COLOR_PRESETS } from '@/constants'
 import { useTranslation } from 'react-i18next'
 import { useDebouncedCallback } from '@tanstack/react-pacer'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
-import { Field, FieldDescription, FieldLabel } from '@/components/ui/field'
-import { ColorPicker } from '@/components/reui/color-picker'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@ongaku/ui'
+import { Field, FieldDescription, FieldLabel } from '@ongaku/ui'
+import { ColorPicker } from '@ongaku/ui'
 
 export function FolderColorOptions() {
   const { t } = useTranslation()

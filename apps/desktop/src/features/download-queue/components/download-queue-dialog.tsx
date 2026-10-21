@@ -6,10 +6,10 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Show } from '@/components/utility/show'
+} from '@ongaku/ui'
+import { Badge } from '@ongaku/ui'
+import { Button } from '@ongaku/ui'
+import { Show } from '@ongaku/ui'
 import { useDownloadQueue } from '@/features/download-queue/hooks'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Download01Icon } from '@hugeicons/core-free-icons'

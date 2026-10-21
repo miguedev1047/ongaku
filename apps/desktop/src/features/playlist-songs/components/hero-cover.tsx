@@ -1,5 +1,5 @@
-import { CoverImage } from '@/components/ui/cover-image'
-import { Show } from '@/components/utility/show'
+import { CoverImage } from '@ongaku/ui'
+import { Show } from '@ongaku/ui'
 import { cn } from 'cn'
 import type { TPlaylistSong } from '@/features/playlist-songs/types'
 import { useTranslation } from 'react-i18next'

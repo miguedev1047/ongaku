@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { Button } from '@ongaku/ui'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from '@ongaku/ui'
 import {
   Delete01Icon,
   ImportIcon,
@@ -14,10 +14,10 @@ import {
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { cn } from 'cn'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { DeletePlaylist } from '@/features/playlists/components'
 import { usePlaylistActions } from '@/features/playlists/components/playlist-actions/hooks'
-import { DROPDOWN_ACTIONS_MENU_WIDTH } from '@/constants/styles'
+import { DROPDOWN_ACTIONS_MENU_WIDTH } from '@ongaku/ui'
 
 export interface PlaylistActionsProps {
   playlistName?: string

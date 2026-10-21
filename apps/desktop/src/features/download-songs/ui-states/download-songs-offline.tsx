@@ -4,12 +4,12 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from '@/components/ui/empty'
+} from '@ongaku/ui'
 import { WifiOff01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { cn } from 'cn'
 import { useTranslation } from 'react-i18next'
-import { RouteSection } from '@/components/ui/route-section'
+import { RouteSection } from '@ongaku/ui'
 
 interface DownloadSongsOfflineProps {
   className?: string

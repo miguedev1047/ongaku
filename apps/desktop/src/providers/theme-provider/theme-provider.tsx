@@ -3,7 +3,7 @@ import {
   DEFAULT_THEME_ID,
   DEFAULT_THEME_MODE,
   type ThemeMode,
-} from '@/constants/themes'
+} from '@ongaku/ui'
 
 type ThemeProviderProps = {
   children: React.ReactNode

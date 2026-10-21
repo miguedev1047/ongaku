@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { Button } from '@ongaku/ui'
 import type { DownloadTask } from '@/shared/types/download.types'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
@@ -13,7 +13,7 @@ import {
   AttachmentDescription,
   AttachmentMedia,
   AttachmentTitle,
-} from '@/components/ui/attachment'
+} from '@ongaku/ui'
 import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 

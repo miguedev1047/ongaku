@@ -2,7 +2,7 @@ import { useRef, useEffect, useCallback } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { QueueItem } from './queue-item'
 import { QueueEmpty } from './queue-empty'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import {
   useActivePlayerStore,
   useLocalPlayerStore,

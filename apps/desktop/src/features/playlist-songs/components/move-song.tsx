@@ -1,7 +1,7 @@
 import { useState, Suspense } from "react"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { playlistsQueryOpts } from "@/features/playlists/queries"
-import { Button } from "@/components/ui/button"
+import { Button } from "@ongaku/ui"
 import {
   Dialog,
   DialogClose,
@@ -10,7 +10,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from "@/components/ui/dialog"
+} from "@ongaku/ui"
 import {
   Select,
   SelectContent,
@@ -19,12 +19,12 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue
-} from "@/components/ui/select"
-import { Spinner } from "@/components/ui/spinner"
-import { Skeleton } from "@/components/ui/skeleton"
+} from "@ongaku/ui"
+import { Spinner } from "@ongaku/ui"
+import { Skeleton } from "@ongaku/ui"
 import type { TPlaylistSong } from "@/features/playlist-songs/types"
 import { useMoveSong } from "@/features/playlist-songs/hooks"
-import { Show } from "@/components/utility/show"
+import { Show } from "@ongaku/ui"
 
 interface MoveSongProps {
   song: TPlaylistSong

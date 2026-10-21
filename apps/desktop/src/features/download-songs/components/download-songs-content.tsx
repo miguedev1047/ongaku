@@ -1,5 +1,5 @@
-import { RouteSection } from '@/components/ui/route-section'
-import { Show } from '@/components/utility/show'
+import { RouteSection } from '@ongaku/ui'
+import { Show } from '@ongaku/ui'
 import { useDownloadSongsForm } from '@/features/download-songs/hooks'
 import { DownloadSongsCardForm } from '@/features/download-songs/form'
 import {

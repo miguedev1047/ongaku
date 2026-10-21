@@ -1,5 +1,5 @@
 import type { Virtualizer } from '@tanstack/react-virtual'
-import { Table } from '@/components/ui/table'
+import { Table } from '@ongaku/ui'
 import {
   TableSongsContextProvider,
   type TableSongsContextValue,

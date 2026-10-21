@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button'
-import { Spinner } from '@/components/ui/spinner'
+import { Button } from '@ongaku/ui'
+import { Spinner } from '@ongaku/ui'
 import {
   Empty,
   EmptyContent,
@@ -7,11 +7,11 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from '@/components/ui/empty'
+} from '@ongaku/ui'
 import { AlertIcon, Download01Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Show } from '@/components/utility/show'
-import { RouteSection } from '@/components/ui/route-section'
+import { Show } from '@ongaku/ui'
+import { RouteSection } from '@ongaku/ui'
 import { useTranslation } from 'react-i18next'
 
 interface DownloadToolsMissingProps {

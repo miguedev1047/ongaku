@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import type { DownloadTask } from '@/shared/types/download.types'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Download01Icon } from '@hugeicons/core-free-icons'

@@ -5,8 +5,8 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from '@/components/ui/empty'
-import { Button } from '@/components/ui/button'
+} from '@ongaku/ui'
+import { Button } from '@ongaku/ui'
 import { FolderIcon, PlusIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { CreatePlaylistDialog } from '@/features/playlists/components/new-playlist'

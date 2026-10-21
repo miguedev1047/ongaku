@@ -1,7 +1,7 @@
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { CardWrapper } from '@/components/ui/card-wrapper'
-import { Spinner } from '@/components/ui/spinner'
+import { Badge } from '@ongaku/ui'
+import { Button } from '@ongaku/ui'
+import { CardWrapper } from '@ongaku/ui'
+import { Spinner } from '@ongaku/ui'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
   Download01Icon,
@@ -11,13 +11,13 @@ import {
 import { useBinaries } from '@/features/download-queue/hooks'
 import { openFolder } from '@/shared/helpers/open-folder'
 import { toast } from 'sonner'
-import { Show } from '@/components/utility/show'
-import { DotmSquare10 } from '@/components/ui/loaders/dotm-square-10'
+import { Show } from '@ongaku/ui'
+import { DotmSquare10 } from '@ongaku/ui'
 import { useTranslation } from 'react-i18next'
 import { cn } from 'cn'
 import { useNetworkState } from '@/hooks/use-network-state'
 import { BinariesOfflineCard } from '@/features/settings/tabs/system-tab/components/binaries-offline-card'
-import { RainbowButton } from '@/components/ui/rainbow-button'
+import { RainbowButton } from '@ongaku/ui'
 
 interface BinariesManagerCardProps {
   isOnline: boolean

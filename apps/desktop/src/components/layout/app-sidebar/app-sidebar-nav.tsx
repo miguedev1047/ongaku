@@ -3,7 +3,7 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
-} from '@/components/ui/sidebar'
+} from '@ongaku/ui'
 import { useTranslation } from 'react-i18next'
 import { YoutubeSearchNav } from '@/components/layout/app-sidebar/navigations/youtube-search-nav'
 import { PlaylistNav } from '@/components/layout/app-sidebar/navigations/playlist-nav'
@@ -11,7 +11,7 @@ import { LibraryNav } from '@/components/layout/app-sidebar/navigations/library-
 import { DownloadSongsNav } from '@/components/layout/app-sidebar/navigations/download-songs-nav'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import { useQuery } from '@tanstack/react-query'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 
 export function AppSidebarNav() {
   const { t } = useTranslation()

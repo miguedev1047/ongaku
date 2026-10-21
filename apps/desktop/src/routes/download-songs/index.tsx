@@ -11,7 +11,7 @@ import {
 } from '@/features/download-songs/ui-states'
 import { useBinaries } from '@/features/download-queue/hooks'
 import { useNetworkState } from '@/hooks/use-network-state'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { RouteErrorState } from '@/components/feedback/route-ui-state'
 
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'

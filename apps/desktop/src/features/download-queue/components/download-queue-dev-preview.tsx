@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { DownloadTask } from '@/shared/types/download.types'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { Badge } from '@ongaku/ui'
+import { Button } from '@ongaku/ui'
 import {
   DownloadQueueCompletedCard,
   DownloadQueueDownloadingCard,

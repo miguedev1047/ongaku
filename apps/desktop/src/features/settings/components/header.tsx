@@ -1,21 +1,21 @@
 import { RouteHeader } from '@/components/ui/route-header'
-import { Button } from '@/components/ui/button'
+import { Button } from '@ongaku/ui'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { RefreshIcon } from '@hugeicons/core-free-icons'
-import { Spinner } from '@/components/ui/spinner'
-import { Show } from '@/components/utility/show'
+import { Spinner } from '@ongaku/ui'
+import { Show } from '@ongaku/ui'
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
-} from '@/components/ui/breadcrumb'
+} from '@ongaku/ui'
 import { useTranslation } from 'react-i18next'
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from '@/components/ui/tooltip'
+} from '@ongaku/ui'
 
 interface SettingsHeaderProps {
   isLoading: boolean

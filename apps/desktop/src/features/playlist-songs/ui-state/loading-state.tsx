@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from "@ongaku/ui"
 import {
   Table,
   TableHeader,
@@ -6,7 +6,7 @@ import {
   TableHead,
   TableBody,
   TableCell
-} from "@/components/ui/table"
+} from "@ongaku/ui"
 import { cn } from "cn"
 import { useTranslation } from "react-i18next"
 

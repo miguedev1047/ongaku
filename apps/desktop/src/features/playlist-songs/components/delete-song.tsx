@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@ongaku/ui"
 import {
   Dialog,
   DialogClose,
@@ -7,11 +7,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from "@/components/ui/dialog"
-import { Spinner } from "@/components/ui/spinner"
+} from "@ongaku/ui"
+import { Spinner } from "@ongaku/ui"
 import type { TPlaylistSong } from "@/features/playlist-songs/types"
 import { useDeleteSong } from "@/features/playlist-songs/hooks"
-import { Show } from "@/components/utility/show"
+import { Show } from "@ongaku/ui"
 
 interface DeleteSongProps {
   song: TPlaylistSong

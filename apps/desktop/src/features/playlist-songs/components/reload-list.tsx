@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button"
-import { Spinner } from "@/components/ui/spinner"
+import { Button } from "@ongaku/ui"
+import { Spinner } from "@ongaku/ui"
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger
-} from "@/components/ui/tooltip"
-import { Show } from "@/components/utility/show"
+} from "@ongaku/ui"
+import { Show } from "@ongaku/ui"
 import { playlistSongsQueryOpts } from "@/features/playlist-songs/queries"
 import { ReloadIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"

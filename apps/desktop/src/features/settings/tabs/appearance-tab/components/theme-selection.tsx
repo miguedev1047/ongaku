@@ -1,19 +1,19 @@
-import { CardWrapper } from '@/components/ui/card-wrapper'
+import { CardWrapper } from '@ongaku/ui'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Moon, Sun, PaintBoardIcon } from '@hugeicons/core-free-icons'
 import { useTheme } from '@/providers/theme-provider'
 import { useUpdateWallpaper } from '@/features/settings/hooks/use-wallpaper'
 import { useTranslation } from 'react-i18next'
-import { REGISTERED_THEMES, type ThemeMode } from '@/constants/themes'
+import { REGISTERED_THEMES, type ThemeMode } from '@ongaku/ui'
 import { cn } from 'cn'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { RadioGroup, RadioGroupItem } from '@ongaku/ui'
 import {
   Field,
   FieldContent,
   FieldDescription,
   FieldLabel,
   FieldTitle,
-} from '@/components/ui/field'
+} from '@ongaku/ui'
 
 export const MODE_OPTIONS = [
   {

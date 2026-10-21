@@ -1,5 +1,5 @@
 import { ThemeProvider } from '@/providers/theme-provider'
-import { TooltipProvider } from '@/components/ui/tooltip'
+import { TooltipProvider } from '@ongaku/ui'
 import { HotkeysProvider } from '@tanstack/react-hotkeys'
 
 export function AppProvider({ children }: { children: React.ReactNode }) {

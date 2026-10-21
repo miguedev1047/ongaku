@@ -2,7 +2,7 @@ import { useState, Suspense } from "react"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 import { playlistsQueryOpts } from "@/features/playlists/queries"
-import { Button } from "@/components/ui/button"
+import { Button } from "@ongaku/ui"
 import {
   Dialog,
   DialogClose,
@@ -11,7 +11,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from "@/components/ui/dialog"
+} from "@ongaku/ui"
 import {
   Select,
   SelectContent,
@@ -20,10 +20,10 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue
-} from "@/components/ui/select"
-import { Spinner } from "@/components/ui/spinner"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Show } from "@/components/utility/show"
+} from "@ongaku/ui"
+import { Spinner } from "@ongaku/ui"
+import { Skeleton } from "@ongaku/ui"
+import { Show } from "@ongaku/ui"
 
 interface BatchMoveDialogProps {
   open: boolean

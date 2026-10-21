@@ -5,7 +5,7 @@ import {
   Cancel01Icon,
   Delete02Icon,
 } from '@hugeicons/core-free-icons'
-import { Button } from '@/components/ui/button'
+import { Button } from '@ongaku/ui'
 import {
   Command,
   CommandDialog,
@@ -14,9 +14,9 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@/components/ui/command'
-import { SearchTrigger } from '@/components/ui/search-trigger'
-import { Show } from '@/components/utility/show'
+} from '@ongaku/ui'
+import { SearchTrigger } from '@ongaku/ui'
+import { Show } from '@ongaku/ui'
 import { useYoutubeSearchBar } from '@/features/youtube-search/hooks'
 import { useTranslation } from 'react-i18next'
 

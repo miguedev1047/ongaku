@@ -3,7 +3,7 @@ import { useSongUtils } from '@/hooks/use-song-utils'
 import { SongCoverCanvas } from './song-cover-canvas'
 import { SongHeader } from './header'
 import { SongEmpty } from './song-empty'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 
 export function SongLocalView() {
   const currentSong = useLocalPlayerStore((s) => s.currentSong)

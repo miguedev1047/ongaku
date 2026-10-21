@@ -1,11 +1,11 @@
 import { cn } from 'cn'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Spinner } from '@/components/ui/spinner'
-import { Item, ItemActions, ItemContent, ItemMedia } from '@/components/ui/item'
+import { Skeleton } from '@ongaku/ui'
+import { Spinner } from '@ongaku/ui'
+import { Item, ItemActions, ItemContent, ItemMedia } from '@ongaku/ui'
 import { YoutubeIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useTranslation } from 'react-i18next'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { RoutePendingState } from '@/components/feedback/route-ui-state'
 
 interface YoutubeItemSkeletonProps {

@@ -1,5 +1,5 @@
 import type { VirtualItem } from '@tanstack/react-virtual'
-import { TableBody } from '@/components/ui/table'
+import { TableBody } from '@ongaku/ui'
 import { useTableSongsContext } from '@/components/table-songs-list/table-songs-context'
 import { cn } from 'cn'
 

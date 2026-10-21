@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from "@ongaku/ui"
 import { cn } from "cn"
 
 export interface PlaylistsLoadingStateProps {

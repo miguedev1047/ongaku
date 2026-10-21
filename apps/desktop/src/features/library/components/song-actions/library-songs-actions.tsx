@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
+import { Button } from '@ongaku/ui'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from '@ongaku/ui'
 import type { TPlaylistSong } from '@/features/playlist-songs/types'
 import {
   Delete01Icon,
@@ -21,9 +21,9 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import { DeleteSong, MoveSong } from '@/features/playlist-songs/components'
 import { CopySongMenuItem } from '@/shared/components/song-actions/copy-song-menu-item'
 import { useLibrarySongActions } from './hooks'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { cn } from 'cn'
-import { DROPDOWN_ACTIONS_MENU_WIDTH } from '@/constants/styles'
+import { DROPDOWN_ACTIONS_MENU_WIDTH } from '@ongaku/ui'
 import { useTranslation } from 'react-i18next'
 
 export interface LibrarySongActionsProps {

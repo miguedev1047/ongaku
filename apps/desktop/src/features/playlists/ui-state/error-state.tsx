@@ -5,11 +5,11 @@ import {
   EmptyMedia,
   EmptyTitle,
   EmptyContent
-} from "@/components/ui/empty"
+} from "@ongaku/ui"
 import { AlertIcon, RefreshIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { Button } from "@/components/ui/button"
-import { Show } from "@/components/utility/show"
+import { Button } from "@ongaku/ui"
+import { Show } from "@ongaku/ui"
 import { cn } from "cn"
 import { useTranslation } from "react-i18next"
 

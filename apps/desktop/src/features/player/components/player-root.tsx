@@ -4,7 +4,7 @@ import { StreamingPlayer } from '@/features/player/components/streaming-player'
 import { useMediaSession } from '@/hooks/use-media-session'
 import { usePlayerSync } from '@/features/player/hooks/use-player-sync'
 import { useDiscordRpcSync } from '@/features/player/hooks/use-discord-rpc-sync'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 
 interface PlayerRootProps {
   position?: 'bottom' | 'top'

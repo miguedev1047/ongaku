@@ -1,5 +1,5 @@
 import { cn } from 'cn'
-import { SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
+import { SidebarMenuButton, SidebarMenuItem } from '@ongaku/ui'
 import { Link } from '@tanstack/react-router'
 import { useAppStatus } from '@/features/settings/hooks'
 import {
@@ -8,7 +8,7 @@ import {
   CollapsedIndicator,
 } from '@/components/layout/app-sidebar/components/settings-nav-status'
 import { useTranslation } from 'react-i18next'
-import { ACTIVE_ROUTE } from '@/constants/styles'
+import { ACTIVE_ROUTE } from '@ongaku/ui'
 
 export function SettingsNav() {
   const { t } = useTranslation()

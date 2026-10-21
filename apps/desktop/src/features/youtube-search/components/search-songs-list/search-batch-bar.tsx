@@ -1,12 +1,12 @@
 import { Suspense } from 'react'
 import { createPortal } from 'react-dom'
-import { Button } from '@/components/ui/button'
+import { Button } from '@ongaku/ui'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Spinner } from '@/components/ui/spinner'
+} from '@ongaku/ui'
+import { Spinner } from '@ongaku/ui'
 import { PlaylistMenuGroup } from '@/features/download-queue/components'
 import { useSearchBatchActions } from '@/features/youtube-search/components/search-songs-list/hooks'
 import { useActivePlayerStore } from '@/features/player/stores'
@@ -15,9 +15,9 @@ import { Cancel01Icon, Download01Icon } from '@hugeicons/core-free-icons'
 
 import { cn } from 'cn'
 import { useTranslation } from 'react-i18next'
-import { Show } from '@/components/utility/show'
-import { DROPDOWN_ACTIONS_MENU_WIDTH } from '@/constants/styles'
-import { RainbowButton } from '@/components/ui/rainbow-button'
+import { Show } from '@ongaku/ui'
+import { DROPDOWN_ACTIONS_MENU_WIDTH } from '@ongaku/ui'
+import { RainbowButton } from '@ongaku/ui'
 
 export function SearchBatchBar() {
   const { t } = useTranslation()

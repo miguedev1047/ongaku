@@ -8,8 +8,8 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from '@/components/ui/empty'
-import { Show } from '@/components/utility/show'
+} from '@ongaku/ui'
+import { Show } from '@ongaku/ui'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { ListIcon } from '@hugeicons/core-free-icons'
 import { useTranslation } from 'react-i18next'

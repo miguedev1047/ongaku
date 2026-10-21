@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query'
 import { platformService } from '@/infrastructure/platform'
-import type { ThemeMode } from '@/constants/themes'
+import type { ThemeMode } from '@ongaku/ui'
 
 export type WallpaperBlur = 'none' | 'sm' | 'md' | 'lg'
 

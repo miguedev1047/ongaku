@@ -1,4 +1,4 @@
-import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
+import { DropdownMenuItem } from "@ongaku/ui"
 import { Copy01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useCopySongTitle } from "@/shared/components/song-actions/use-copy-song-title"

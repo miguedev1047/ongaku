@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Show } from '@/components/utility/show'
+import { Button } from '@ongaku/ui'
+import { Show } from '@ongaku/ui'
 import { AppWallpaperCard } from '@/features/settings/tabs/appearance-tab/components/wallpapers/app-wallpaper-card'
 import { getBackgroundUrl } from '@/lib/song-utils'
 import type { TBackgroundItem } from '@/features/settings/queries/backgrounds'
 import { useTranslation } from 'react-i18next'
-import { RadioGroup } from '@/components/ui/radio-group'
+import { RadioGroup } from '@ongaku/ui'
 
 export interface AppWallpapersListProps {
   wallpapers: TBackgroundItem[]

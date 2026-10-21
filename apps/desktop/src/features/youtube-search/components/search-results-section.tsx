@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { SearchYoutubeList } from '@/features/youtube-search/components/list'
 import {
   YoutubeSearchEmpty,

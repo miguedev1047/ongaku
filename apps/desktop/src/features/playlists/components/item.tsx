@@ -1,12 +1,12 @@
 import { Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { Folder } from '@/components/ui/folder'
+import { Folder } from '@ongaku/ui'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import type { TPlaylist } from '@/features/playlists/types'
 import { PlaylistActionsContextMenu } from '@/features/playlists/components/playlist-actions'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { useTranslation } from 'react-i18next'
-import { CardWrapper } from '@/components/ui/card-wrapper'
+import { CardWrapper } from '@ongaku/ui'
 
 interface PlaylistItemProps {
   playlist: TPlaylist

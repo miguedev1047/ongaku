@@ -2,7 +2,7 @@ import { useStreamingPlayerStore } from '@/features/player/stores'
 import { SongCoverCanvas } from './song-cover-canvas'
 import { SongHeader } from './header'
 import { SongEmpty } from './song-empty'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 
 export function SongStreamingView() {
   const currentTrack = useStreamingPlayerStore((s) => s.currentTrack)

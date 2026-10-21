@@ -1,5 +1,5 @@
-import { SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
-import { ACTIVE_ROUTE } from '@/constants/styles'
+import { SidebarMenuButton, SidebarMenuItem } from '@ongaku/ui'
+import { ACTIVE_ROUTE } from '@ongaku/ui'
 import { FolderIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Link } from '@tanstack/react-router'

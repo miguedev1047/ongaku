@@ -3,13 +3,13 @@ import {
   SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar'
-import { Badge } from '@/components/ui/badge'
+} from '@ongaku/ui'
+import { Badge } from '@ongaku/ui'
 import { YoutubeIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { useYoutubeSearchStore } from '@/features/youtube-search/stores/use-youtube-search'
 import { useTranslation } from 'react-i18next'
-import { ACTIVE_ROUTE } from '@/constants/styles'
+import { ACTIVE_ROUTE } from '@ongaku/ui'
 
 export function YoutubeSearchNav() {
   const { t } = useTranslation()

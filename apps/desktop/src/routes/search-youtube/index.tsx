@@ -9,7 +9,7 @@ import {
   YoutubeToolsMissing,
 } from '@/features/youtube-search/ui-states'
 import { useBinaries } from '@/features/download-queue/hooks'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { RouteErrorState } from '@/components/feedback/route-ui-state'
 
 export const Route = createFileRoute('/search-youtube/')({

@@ -1,12 +1,12 @@
-import { Badge } from '@/components/ui/badge'
-import { CardWrapper } from '@/components/ui/card-wrapper'
+import { Badge } from '@ongaku/ui'
+import { CardWrapper } from '@ongaku/ui'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
   CloudServerIcon,
   CheckmarkCircle02Icon,
   AlertCircleIcon,
 } from '@hugeicons/core-free-icons'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
 import { useTranslation } from 'react-i18next'

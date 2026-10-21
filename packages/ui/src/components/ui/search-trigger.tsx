@@ -1,10 +1,10 @@
 import type * as React from 'react'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Search01Icon } from '@hugeicons/core-free-icons'
-import { Button } from '@/components/ui/button'
-import { Kbd } from '@/components/ui/kbd'
-import { Show } from '@/components/utility/show'
-import { useIsMobile } from '@/hooks/use-mobile'
+import { Button } from '../../components/ui/button'
+import { Kbd } from '../../components/ui/kbd'
+import { Show } from '../../components/utility/show'
+import { useIsMobile } from '../../hooks/use-mobile'
 import { cn } from 'cn'
 
 export interface SearchTriggerProps extends React.ComponentProps<

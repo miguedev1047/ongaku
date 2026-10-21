@@ -1,4 +1,4 @@
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import type { DownloadTask } from '@/shared/types/download.types'
 import {
   DownloadQueueCompletedCard,

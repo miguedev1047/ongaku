@@ -3,7 +3,7 @@ import { DiscordRpcStatusCard } from '@/features/settings/tabs/system-tab/compon
 import { DiscordRpcOfflineCard } from '@/features/settings/tabs/system-tab/components/discord-rpc-offline-card'
 import { BinariesStatusCard } from '@/features/settings/tabs/system-tab/components/binaries-status-card'
 import { DirectoriesStatusCard } from '@/features/settings/tabs/system-tab/components/directories-status-card'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { systemConfigQueryOpts } from '@/shared/queries/config'
 import { useNetworkState } from '@/hooks/use-network-state'

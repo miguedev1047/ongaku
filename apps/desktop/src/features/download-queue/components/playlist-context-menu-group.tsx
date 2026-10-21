@@ -4,12 +4,12 @@ import {
   ContextMenuItem,
   ContextMenuLabel,
   ContextMenuSeparator,
-} from '@/components/ui/context-menu'
+} from '@ongaku/ui'
 import { playlistsQueryOpts } from '@/features/playlists/queries'
 import { FolderIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { systemHealthQueryOpts } from '@/shared/queries/system-health'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { useTranslation } from 'react-i18next'
 
 export interface PlaylistContextMenuGroupProps {

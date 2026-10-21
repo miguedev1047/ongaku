@@ -1,20 +1,20 @@
-import type { ErrorComponentProps } from "@tanstack/react-router"
-import { Link } from "@tanstack/react-router"
+import type { ErrorComponentProps } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import {
   Empty,
   EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
-  EmptyTitle
-} from "@/components/ui/empty"
-import { Button } from "@/components/ui/button"
-import { AlertIcon, Home01Icon, RefreshIcon } from "@hugeicons/core-free-icons"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { RouteSection } from "@/components/ui/route-section"
-import { Show } from "@/components/utility/show"
-import { cn } from "cn"
-import { useTranslation } from "react-i18next"
+  EmptyTitle,
+} from '@ongaku/ui'
+import { Button } from '@ongaku/ui'
+import { AlertIcon, Home01Icon, RefreshIcon } from '@hugeicons/core-free-icons'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { RouteSection } from '@ongaku/ui'
+import { Show } from '@ongaku/ui'
+import { cn } from 'cn'
+import { useTranslation } from 'react-i18next'
 
 export interface RouteErrorStateProps extends Partial<ErrorComponentProps> {
   title?: string
@@ -22,11 +22,17 @@ export interface RouteErrorStateProps extends Partial<ErrorComponentProps> {
   className?: string
 }
 
-function getErrorMessage(error: unknown, fallbackMessage?: string, defaultMessage?: string): string {
+function getErrorMessage(
+  error: unknown,
+  fallbackMessage?: string,
+  defaultMessage?: string,
+): string {
   if (fallbackMessage) return fallbackMessage
   if (error instanceof Error) return error.message
-  if (typeof error === "string") return error
-  return defaultMessage || "An unexpected error occurred while loading this route."
+  if (typeof error === 'string') return error
+  return (
+    defaultMessage || 'An unexpected error occurred while loading this route.'
+  )
 }
 
 export function RouteErrorState({
@@ -34,69 +40,58 @@ export function RouteErrorState({
   reset,
   title,
   message,
-  className
+  className,
 }: RouteErrorStateProps) {
   const { t } = useTranslation()
-  const displayTitle = title ?? t("routes.error.title")
-  const displayMessage = getErrorMessage(error, message, t("routes.error.message"))
+  const displayTitle = title ?? t('routes.error.title')
+  const displayMessage = getErrorMessage(
+    error,
+    message,
+    t('routes.error.message'),
+  )
 
   return (
     <RouteSection
       className={cn(
-        "w-full h-screen flex flex-col items-center justify-center text-center select-none",
-        className
+        'w-full h-screen flex flex-col items-center justify-center text-center select-none',
+        className,
       )}
     >
-      <Empty variant="card" className="w-full py-8">
-        <EmptyMedia
-          variant="icon"
-          color="destructive"
-          className="size-10"
-        >
-          <HugeiconsIcon
-            icon={AlertIcon}
-            className="size-5"
-          />
+      <Empty variant='card' className='w-full py-8'>
+        <EmptyMedia variant='icon' color='destructive' className='size-10'>
+          <HugeiconsIcon icon={AlertIcon} className='size-5' />
         </EmptyMedia>
 
         <EmptyHeader>
           <EmptyTitle>{displayTitle}</EmptyTitle>
           <EmptyDescription>
-            <span className="line-clamp-3">
-              {displayMessage}
-            </span>
+            <span className='line-clamp-3'>{displayMessage}</span>
           </EmptyDescription>
         </EmptyHeader>
 
         <EmptyContent>
-          <div className="flex items-center gap-2 pt-2">
+          <div className='flex items-center gap-2 pt-2'>
             <Show when={Boolean(reset)}>
               <Button
                 onClick={() => reset?.()}
-                variant="outline"
-                size="sm"
-                className="gap-1.5"
+                variant='outline'
+                size='sm'
+                className='gap-1.5'
               >
-                <HugeiconsIcon
-                  icon={RefreshIcon}
-                  className="size-3.5"
-                />
-                <span>{t("common.retry")}</span>
+                <HugeiconsIcon icon={RefreshIcon} className='size-3.5' />
+                <span>{t('common.retry')}</span>
               </Button>
             </Show>
 
             <Button
               nativeButton={false}
-              render={<Link to="/playlists" />}
-              variant="default"
-              size="sm"
-              className="gap-1.5"
+              render={<Link to='/playlists' />}
+              variant='default'
+              size='sm'
+              className='gap-1.5'
             >
-              <HugeiconsIcon
-                icon={Home01Icon}
-                className="size-3.5"
-              />
-              <span>{t("routes.error.go_playlists")}</span>
+              <HugeiconsIcon icon={Home01Icon} className='size-3.5' />
+              <span>{t('routes.error.go_playlists')}</span>
             </Button>
           </div>
         </EmptyContent>

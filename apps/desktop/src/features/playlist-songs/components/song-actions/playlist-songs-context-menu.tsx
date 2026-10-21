@@ -7,7 +7,7 @@ import {
   ContextMenuItem,
   ContextMenuSeparator,
   ContextMenuTrigger,
-} from '@/components/ui/context-menu'
+} from '@ongaku/ui'
 import {
   Copy01Icon,
   Delete01Icon,
@@ -20,9 +20,9 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import { DeleteSong, MoveSong } from '@/features/playlist-songs/components'
 import { useCopySongTitle } from '@/shared/components/song-actions/use-copy-song-title'
 import { usePlaylistSongActions } from '@/features/playlist-songs/components/song-actions/hooks'
-import { Show } from '@/components/utility/show'
+import { Show } from '@ongaku/ui'
 import { cn } from 'cn'
-import { CONTEXT_ACTIONS_MENU_WIDTH } from '@/constants/styles'
+import { CONTEXT_ACTIONS_MENU_WIDTH } from '@ongaku/ui'
 
 import { useTranslation } from 'react-i18next'
 
