@@ -30,6 +30,8 @@ export function SongCoverCanvas({
   isPlaying = false,
   onPlayToggle,
 }: SongCoverCanvasProps) {
+  'use no memo'
+
   const storeDirection = useLocalPlayerStore((s) => s.direction)
   const direction = propDirection ?? storeDirection ?? 1
 
@@ -75,11 +77,12 @@ export function SongCoverCanvas({
 
   return (
     <div className='size-full flex-1 relative overflow-hidden'>
-      <AnimatePresence initial={false} mode='popLayout' custom={direction}>
+      <AnimatePresence initial={false} custom={direction}>
         <motion.div
           key={songId}
           custom={direction}
-          className='size-full p-2 '
+          className='size-full absolute inset-0 p-2 transform-gpu will-change-transform'
+          style={{ backfaceVisibility: 'hidden' }}
           variants={{
             enter: (d: number) => ({ x: d > 0 ? '100%' : '-100%' }),
             center: { x: 0 },
@@ -88,7 +91,7 @@ export function SongCoverCanvas({
           initial='enter'
           animate='center'
           exit='exit'
-          transition={{ duration: 1, ease: [0.32, 0.72, 0, 1] }}
+          transition={{ duration: 0.8, ease: [0.32, 0.72, 0, 1] }}
         >
           <div
             className={cn(

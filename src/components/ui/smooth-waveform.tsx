@@ -7,7 +7,7 @@ import {
   useImperativeHandle,
   useRef,
 } from "react";
-import type { ComponentProps, Ref } from "react";
+import type { ComponentProps, CSSProperties, Ref } from "react";
 
 import { useFrameSource } from "@/hooks/use-frame-source";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
@@ -227,9 +227,15 @@ export const SmoothWaveform = ({
     <div
       aria-label="Audio waveform"
       className={cn(
-        "relative h-24 w-full [--waveform:currentColor]",
+        "relative h-24 w-full",
         className
       )}
+      style={
+        {
+          "--waveform": "currentColor",
+          ...props.style,
+        } as CSSProperties
+      }
       data-loading={loading ? "" : undefined}
       data-mode={mode}
       data-slot="smooth-waveform"
