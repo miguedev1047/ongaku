@@ -26,6 +26,18 @@ export default defineConfig([
           allow: ['layout'],
           contracts: [
             {
+              pattern: '^Breadcrumb(Page|Item)?$',
+              allow: [
+                'layout',
+                'truncate',
+                'block',
+                'max-w-*',
+                'sm:max-w-*',
+                'md:max-w-*',
+                'app-no-drag',
+              ],
+            },
+            {
               pattern: '^Button$',
               allow: [
                 'layout',
@@ -117,6 +129,7 @@ export default defineConfig([
                 'py-*',
                 'text-*',
                 'border-*',
+                'backdrop-blur-*',
                 'border',
                 'gap-*',
               ],
@@ -146,7 +159,14 @@ export default defineConfig([
             },
             {
               pattern: '^BarVisualizer$',
-              allow: ['layout', 'w-*', 'h-*', 'text-*', 'pointer-events-*', 'z-*'],
+              allow: [
+                'layout',
+                'w-*',
+                'h-*',
+                'text-*',
+                'pointer-events-*',
+                'z-*',
+              ],
             },
             {
               pattern: '^Tabs(Content|List|Trigger)?$',
@@ -262,6 +282,7 @@ export default defineConfig([
                 'min-w-*',
                 'min-h-*',
                 'overflow-*',
+                'backdrop-blur-*',
                 'gap-*',
                 'p-*',
                 'px-*',

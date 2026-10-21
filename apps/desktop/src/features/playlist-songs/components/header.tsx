@@ -12,7 +12,6 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Link, useParams } from '@tanstack/react-router'
 import { Suspense } from 'react'
 import { PlaylistSongsReloadList } from '@/features/playlist-songs/components'
-
 import { useTranslation } from 'react-i18next'
 
 export function PlaylistSongHeader() {
@@ -21,21 +20,26 @@ export function PlaylistSongHeader() {
 
   return (
     <RouteHeader>
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink render={<Link to='/playlists' />}>
+      <Breadcrumb className='min-w-0 flex-1'>
+        <BreadcrumbList className='flex-nowrap min-w-0 overflow-hidden'>
+          <BreadcrumbItem className='hidden sm:inline-flex shrink-0'>
+            <BreadcrumbLink
+              className='app-no-drag'
+              render={<Link to='/playlists' />}
+            >
               {t('playlists.header.title')}
             </BreadcrumbLink>
           </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>{playlistName}</BreadcrumbPage>
+          <BreadcrumbSeparator className='hidden sm:inline-flex shrink-0' />
+          <BreadcrumbItem className='min-w-0'>
+            <BreadcrumbPage className='truncate block max-w-40 sm:max-w-xs md:max-w-md'>
+              {playlistName}
+            </BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className='flex items-center gap-1.5 ml-auto'>
+      <div className='flex items-center gap-1.5 ml-auto shrink-0 app-no-drag'>
         <PlaylistSongsReloadList />
         <Suspense fallback={<Skeleton className='ml-auto w-52 h-6' />}>
           <SearchSongs />

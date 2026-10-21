@@ -2,6 +2,7 @@ import * as React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from 'cn'
 import { Show } from '@/components/utility/show'
+import { platformService } from '@/infrastructure/platform'
 import {
   WindowControls,
   WindowMinimizeButton,
@@ -48,30 +49,67 @@ export function RouteHeader({
   children,
   ...props
 }: RouteHeaderProps) {
+  const handleMouseDown = async (e: React.MouseEvent<HTMLElement>) => {
+    if (e.button !== 0) return
+    const target = e.target as HTMLElement | null
+    if (!target) return
+
+    if (
+      target.closest(
+        'button, a, input, textarea, select, [role="button"], [data-no-drag], .app-no-drag, [data-tauri-drag-region="false"]',
+      )
+    ) {
+      return
+    }
+
+    try {
+      await platformService.startDragging()
+    } catch (err) {
+      console.error('[RouteHeader]: Failed to start dragging window:', err)
+    }
+  }
+
+  const handleDoubleClick = async (e: React.MouseEvent<HTMLElement>) => {
+    const target = e.target as HTMLElement | null
+    if (!target) return
+
+    if (
+      target.closest(
+        'button, a, input, textarea, select, [role="button"], [data-no-drag], .app-no-drag',
+      )
+    ) {
+      return
+    }
+
+    try {
+      await platformService.toggleMaximizeWindow()
+    } catch (err) {
+      console.error('[RouteHeader]: Failed to toggle maximize window:', err)
+    }
+  }
+
   return (
     <header
       data-slot='route-header'
       data-tauri-drag-region
-      className={cn(routeHeaderVariants({ sticky }), className)}
+      onMouseDown={handleMouseDown}
+      onDoubleClick={handleDoubleClick}
+      className={cn('app-drag', routeHeaderVariants({ sticky }), className)}
       {...props}
     >
       <div
-        data-tauri-drag-region
         className={cn(
           'flex w-full items-center gap-1 px-4 lg:gap-2 relative',
           containerClassName,
         )}
       >
-        <SidebarTrigger className='place-items-center max-md:block hidden' />
+        <SidebarTrigger className='place-items-center max-md:block hidden app-no-drag' />
         <Separator
           orientation='vertical'
           className='mx-2 my-auto data-[orientation=vertical]:h-4 max-md:block hidden'
         />
 
-        <div
-          data-tauri-drag-region
-          className='flex flex-1 items-center gap-1 min-w-0'
-        >
+        <div className='flex flex-1 items-center gap-1 min-w-0'>
           {children}
         </div>
 
@@ -81,7 +119,7 @@ export function RouteHeader({
         />
 
         <Show when={showWindowControls}>
-          <WindowControls />
+          <WindowControls className='app-no-drag' />
         </Show>
       </div>
     </header>

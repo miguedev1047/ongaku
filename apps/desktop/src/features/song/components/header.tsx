@@ -19,16 +19,18 @@ interface SongHeaderProps {
 
 export function SongHeader({ song, streamingTitle }: SongHeaderProps) {
   const { t } = useTranslation()
+
   const hasStreaming = Boolean(streamingTitle)
   const hasSong = Boolean(song)
+
   const hasPlaylist = Boolean(
     song?.playlist_name && song.playlist_name.length > 0,
   )
 
   return (
     <RouteHeader>
-      <Breadcrumb>
-        <BreadcrumbList>
+      <Breadcrumb className='min-w-0 flex-1'>
+        <BreadcrumbList className='flex-nowrap min-w-0 overflow-hidden'>
           <Show
             when={hasStreaming}
             fallback={
@@ -36,14 +38,14 @@ export function SongHeader({ song, streamingTitle }: SongHeaderProps) {
                 when={hasSong}
                 fallback={
                   <>
-                    <BreadcrumbItem>
+                    <BreadcrumbItem className='shrink-0 app-no-drag'>
                       <BreadcrumbLink render={<Link to='/library' />}>
                         {t('sidebar.navigation.routes.library')}
                       </BreadcrumbLink>
                     </BreadcrumbItem>
-                    <BreadcrumbSeparator />
-                    <BreadcrumbItem>
-                      <BreadcrumbPage>
+                    <BreadcrumbSeparator className='shrink-0' />
+                    <BreadcrumbItem className='min-w-0 flex-1'>
+                      <BreadcrumbPage className='truncate block'>
                         {t('player.now_playing', 'Now Playing')}
                       </BreadcrumbPage>
                     </BreadcrumbItem>
@@ -53,21 +55,25 @@ export function SongHeader({ song, streamingTitle }: SongHeaderProps) {
                 <Show
                   when={hasPlaylist}
                   fallback={
-                    <BreadcrumbItem>
-                      <BreadcrumbLink render={<Link to='/library' />}>
+                    <BreadcrumbItem className='shrink-0 app-no-drag'>
+                      <BreadcrumbLink
+                        className='truncate block'
+                        render={<Link to='/library' />}
+                      >
                         {t('sidebar.navigation.routes.library')}
                       </BreadcrumbLink>
                     </BreadcrumbItem>
                   }
                 >
-                  <BreadcrumbItem>
+                  <BreadcrumbItem className='hidden sm:inline-flex shrink-0 app-no-drag'>
                     <BreadcrumbLink render={<Link to='/playlists' />}>
                       {t('playlists.header.title')}
                     </BreadcrumbLink>
                   </BreadcrumbItem>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
+                  <BreadcrumbSeparator className='hidden sm:inline-flex shrink-0' />
+                  <BreadcrumbItem className='shrink-0 min-w-0 max-w-30 sm:max-w-40 md:max-w-60 app-no-drag'>
                     <BreadcrumbLink
+                      className='truncate block'
                       render={
                         <Link
                           to='/playlists/$playlistName'
@@ -79,23 +85,27 @@ export function SongHeader({ song, streamingTitle }: SongHeaderProps) {
                     </BreadcrumbLink>
                   </BreadcrumbItem>
                 </Show>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>{song?.name}</BreadcrumbPage>
+                <BreadcrumbSeparator className='shrink-0' />
+                <BreadcrumbItem className='min-w-0 flex-1'>
+                  <BreadcrumbPage className='truncate block'>
+                    {song?.name}
+                  </BreadcrumbPage>
                 </BreadcrumbItem>
               </Show>
             }
           >
-            <BreadcrumbItem>
+            <BreadcrumbItem className='shrink-0 app-no-drag'>
               <BreadcrumbLink
                 render={<Link to='/search-youtube' search={{ q: '' }} />}
               >
                 {t('sidebar.navigation.routes.search', 'YouTube')}
               </BreadcrumbLink>
             </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{streamingTitle}</BreadcrumbPage>
+            <BreadcrumbSeparator className='shrink-0' />
+            <BreadcrumbItem className='min-w-0 flex-1'>
+              <BreadcrumbPage className='truncate block'>
+                {streamingTitle}
+              </BreadcrumbPage>
             </BreadcrumbItem>
           </Show>
         </BreadcrumbList>

@@ -76,6 +76,11 @@ class TauriAdapter implements PlatformService {
     await win.close()
   }
 
+  async startDragging(): Promise<void> {
+    const win = getCurrentWebviewWindow()
+    await win.startDragging()
+  }
+
   async onWindowResize(handler: () => void): Promise<() => void> {
     const win = getCurrentWebviewWindow()
     return await win.onResized(handler)

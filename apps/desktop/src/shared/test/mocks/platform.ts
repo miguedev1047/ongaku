@@ -110,6 +110,7 @@ export function createMockPlatformService(
     toggleMaximizeWindow: async () => {},
     isWindowMaximized: async () => false,
     closeWindow: async () => {},
+    startDragging: async () => {},
     onWindowResize: async () => () => {},
     checkForUpdates: async () => null,
     relaunch: async () => {},

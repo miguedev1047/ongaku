@@ -29,7 +29,7 @@ export function YoutubeSearchHeader({
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className='ml-auto flex items-center gap-2'>
+      <div className='ml-auto flex items-center gap-2 app-no-drag'>
         <YoutubeSearchBar initialQuery={initialQuery} />
       </div>
     </RouteHeader>

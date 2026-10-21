@@ -358,6 +358,7 @@ export interface PlatformService {
   toggleMaximizeWindow(): Promise<void>
   isWindowMaximized(): Promise<boolean>
   closeWindow(): Promise<void>
+  startDragging(): Promise<void>
   onWindowResize(handler: () => void): Promise<() => void>
 
   checkForUpdates(): Promise<AppUpdate | null>

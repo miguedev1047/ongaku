@@ -75,8 +75,11 @@ export function WindowMaximizeButton({
       await platformService.toggleMaximizeWindow()
       const nextState = await platformService.isWindowMaximized()
       setIsMaximized(nextState)
-    } catch {
-      console.log('[ONGAKU]: An ocurred error to maximize window')
+    } catch (err) {
+      console.error(
+        '[WindowControls]: An error occurred while toggling window maximization:',
+        err,
+      )
     }
   }
 

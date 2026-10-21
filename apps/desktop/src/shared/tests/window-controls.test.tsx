@@ -74,6 +74,48 @@ describe('Window Controls', () => {
 
     const header = containerElement!.querySelector('header')
     expect(header).toHaveAttribute('data-tauri-drag-region')
+    expect(header).toHaveClass('app-drag')
     expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument()
+  })
+
+  it('triggers startDragging on header mousedown but ignores buttons', async () => {
+    const dragSpy = vi.spyOn(platformService, 'startDragging').mockResolvedValue(undefined)
+
+    await act(async () => {
+      render(
+        <SidebarProvider>
+          <RouteHeader>
+            <div data-testid='title-text'>Test Title</div>
+          </RouteHeader>
+        </SidebarProvider>,
+      )
+    })
+
+    const titleEl = screen.getByTestId('title-text')
+    fireEvent.mouseDown(titleEl, { button: 0 })
+    expect(dragSpy).toHaveBeenCalledTimes(1)
+
+    dragSpy.mockClear()
+    const closeBtn = screen.getByRole('button', { name: 'Close' })
+    fireEvent.mouseDown(closeBtn, { button: 0 })
+    expect(dragSpy).not.toHaveBeenCalled()
+  })
+
+  it('toggles maximize on header double click', async () => {
+    const toggleSpy = vi.spyOn(platformService, 'toggleMaximizeWindow').mockResolvedValue(undefined)
+
+    await act(async () => {
+      render(
+        <SidebarProvider>
+          <RouteHeader>
+            <div data-testid='title-text'>Test Title</div>
+          </RouteHeader>
+        </SidebarProvider>,
+      )
+    })
+
+    const titleEl = screen.getByTestId('title-text')
+    fireEvent.doubleClick(titleEl)
+    expect(toggleSpy).toHaveBeenCalledTimes(1)
   })
 })

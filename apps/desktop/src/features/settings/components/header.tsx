@@ -11,6 +11,11 @@ import {
   BreadcrumbPage,
 } from '@/components/ui/breadcrumb'
 import { useTranslation } from 'react-i18next'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 interface SettingsHeaderProps {
   isLoading: boolean
@@ -30,18 +35,26 @@ export function SettingsHeader({ isLoading, onRefresh }: SettingsHeaderProps) {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className='flex items-center gap-1 ml-auto'>
-        <Button
-          variant='outline'
-          size='sm'
-          onClick={onRefresh}
-          disabled={isLoading}
-        >
-          <Show when={!isLoading} fallback={<Spinner />}>
-            <HugeiconsIcon icon={RefreshIcon} />
-          </Show>
-          <span>{t('settings.refresh_status')}</span>
-        </Button>
+      <div className='flex items-center gap-1 ml-auto app-no-drag'>
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <Button
+                variant='outline'
+                size='icon-sm'
+                onClick={onRefresh}
+                disabled={isLoading}
+              >
+                <Show when={!isLoading} fallback={<Spinner />}>
+                  <HugeiconsIcon icon={RefreshIcon} />
+                </Show>
+              </Button>
+            }
+          />
+          <TooltipContent>
+            <span>{t('settings.refresh_status')}</span>
+          </TooltipContent>
+        </Tooltip>
       </div>
     </RouteHeader>
   )

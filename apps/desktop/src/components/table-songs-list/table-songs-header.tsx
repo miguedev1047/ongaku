@@ -72,7 +72,7 @@ export function TableSongsHeaderCover({
   const { t } = useTranslation()
   return (
     <TableHead className={cn(TABLE_SONGS_SLOTS.coverHead, className)}>
-      {label ?? t('library.columns.cover')}
+      <span className='sr-only'>{label ?? t('library.columns.cover')}</span>
     </TableHead>
   )
 }
@@ -89,9 +89,9 @@ export function TableSongsHeaderTitle({
   const { t } = useTranslation()
   return (
     <TableHead className={cn(TABLE_SONGS_SLOTS.titleHead, className)}>
-      <span>{title ?? t('library.columns.title')}</span>
+      <span className='truncate'>{title ?? t('library.columns.title')}</span>
       <Show when={Boolean(countLabel)}>
-        <span className='ml-1 text-xs text-muted-foreground font-normal'>
+        <span className='ml-1 text-xs text-muted-foreground font-normal shrink-0'>
           ({countLabel})
         </span>
       </Show>
@@ -109,7 +109,7 @@ export function TableSongsHeaderArtist({
   const { t } = useTranslation()
   return (
     <TableHead className={cn(TABLE_SONGS_SLOTS.artistHead, className)}>
-      {label ?? t('library.columns.artist')}
+      <span className='truncate'>{label ?? t('library.columns.artist')}</span>
     </TableHead>
   )
 }
@@ -124,7 +124,7 @@ export function TableSongsHeaderAlbum({
   const { t } = useTranslation()
   return (
     <TableHead className={cn(TABLE_SONGS_SLOTS.albumHead, className)}>
-      {label ?? t('library.columns.album')}
+      <span className='truncate'>{label ?? t('library.columns.album')}</span>
     </TableHead>
   )
 }
@@ -139,7 +139,7 @@ export function TableSongsHeaderDuration({
   const { t } = useTranslation()
   return (
     <TableHead className={cn(TABLE_SONGS_SLOTS.durationHead, className)}>
-      {label ?? t('library.columns.duration')}
+      <span className='truncate'>{label ?? t('library.columns.duration')}</span>
     </TableHead>
   )
 }

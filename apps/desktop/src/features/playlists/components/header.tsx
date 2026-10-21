@@ -24,7 +24,7 @@ export function PlaylistHeader() {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className='flex items-center gap-1 ml-auto'>
+      <div className='flex items-center gap-1 ml-auto app-no-drag'>
         <PlaylistsReloadList />
         <Suspense fallback={<Skeleton className='ml-auto w-52 h-6' />}>
           <SearchPlaylists />
