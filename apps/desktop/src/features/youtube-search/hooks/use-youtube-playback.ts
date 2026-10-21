@@ -17,6 +17,8 @@ export function useYoutubePlayback(item: TYoutubeSearchResult) {
   const playStream = useActivePlayerStore((state) => state.playStream)
 
   const togglePlayback = () => {
+    if (isLoading) return
+
     if (isCurrentTrack) {
       togglePlay()
     } else {

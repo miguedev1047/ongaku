@@ -10,7 +10,6 @@ import {
 import { useSearchSongActions } from '@/features/youtube-search/components/song-actions/hooks'
 import { isItemAction } from '@/shared/helpers/is-item-action'
 import { TableSongItem } from '@/components/table-songs-list'
-import { useStreamingPlayerStore } from '@/features/player'
 
 interface SearchSongTableRowProps {
   row: Row<SearchTableFeatures, TYoutubeSearchResult>
@@ -22,15 +21,9 @@ export const SearchSongTableRow = memo(function SearchSongTableRow({
   const item = row.original
   const actions = useSearchSongActions({ item })
 
-  const isLoading = useStreamingPlayerStore(
-    (state) => state.playerState === 'loading',
-  )
-  const isActiveTrack = useStreamingPlayerStore(
-    (state) => state.currentTrack?.id === item.id,
-  )
-
   const handleRowClick = (e: React.MouseEvent) => {
     if (isItemAction(e)) return
+    if (actions.isLoading) return
 
     actions.togglePlayback()
   }
