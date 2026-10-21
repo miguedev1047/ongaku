@@ -8,8 +8,6 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import { SearchSongs } from '@/features/playlist-songs/components/search-songs'
-import { Separator } from '@/components/ui/separator'
-import { SidebarTrigger } from '@/components/ui/sidebar'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Link, useParams } from '@tanstack/react-router'
 import { Suspense } from 'react'
@@ -23,11 +21,6 @@ export function PlaylistSongHeader() {
 
   return (
     <RouteHeader>
-      <SidebarTrigger className='place-items-center max-md:block hidden' />
-      <Separator
-        orientation='vertical'
-        className='mx-2 data-[orientation=vertical]:h-4 max-md:block hidden my-auto'
-      />
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>

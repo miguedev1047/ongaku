@@ -6,7 +6,14 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
+    "build:tauri": {
+      "cache": false
+    },
     "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "dev:tauri": {
       "cache": false,
       "persistent": true
     },

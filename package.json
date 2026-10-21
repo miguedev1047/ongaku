@@ -8,13 +8,17 @@
   ],
   "scripts": {
     "dev": "turbo run dev",
+    "dev:tauri": "turbo run dev:tauri",
     "build": "turbo run build",
+    "build:tauri": "turbo run build:tauri",
     "preview": "turbo run preview",
     "test": "turbo run test",
     "test:watch": "bun --filter desktop test:watch",
     "lint": "turbo run lint",
     "check:platform": "turbo run check:platform",
-    "tauri": "bun --filter desktop tauri"
+    "tauri": "bun --filter desktop tauri",
+    "tauri:dev": "turbo run dev:tauri",
+    "tauri:build": "turbo run build:tauri"
   },
   "devDependencies": {
     "turbo": "^2.5.0"
