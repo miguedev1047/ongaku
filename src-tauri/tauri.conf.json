@@ -15,8 +15,11 @@
         "title": "Ongaku",
         "width": 1080,
         "height": 720,
+        "minWidth": 640,
+        "minHeight": 600,
         "center": true,
-        "visible": false
+        "visible": false,
+        "decorations": false
       }
     ],
     "security": {

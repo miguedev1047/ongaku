@@ -354,6 +354,11 @@ export interface PlatformService {
   openUrl(url: string): Promise<void>
   showWindow(): Promise<void>
   focusWindow(): Promise<void>
+  minimizeWindow(): Promise<void>
+  toggleMaximizeWindow(): Promise<void>
+  isWindowMaximized(): Promise<boolean>
+  closeWindow(): Promise<void>
+  onWindowResize(handler: () => void): Promise<() => void>
 
   checkForUpdates(): Promise<AppUpdate | null>
   relaunch(): Promise<void>

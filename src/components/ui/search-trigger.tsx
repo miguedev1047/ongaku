@@ -76,7 +76,7 @@ export function SearchTrigger({
             <span className='truncate font-medium'>{query}</span>
           </Show>
           <Show when={hasShortcut}>
-            <Kbd className='ml-auto'>
+            <Kbd className='ml-auto bg-input/80'>
               <Show when={shortcut} fallback='⌘K'>
                 {shortcut}
               </Show>

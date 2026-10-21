@@ -7,8 +7,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
-import { SidebarTrigger } from '@/components/ui/sidebar'
-import { Separator } from '@/components/ui/separator'
 import { Link } from '@tanstack/react-router'
 import { Show } from '@/components/utility/show'
 import { useTranslation } from 'react-i18next'
@@ -23,15 +21,12 @@ export function SongHeader({ song, streamingTitle }: SongHeaderProps) {
   const { t } = useTranslation()
   const hasStreaming = Boolean(streamingTitle)
   const hasSong = Boolean(song)
-  const hasPlaylist = Boolean(song?.playlist_name && song.playlist_name.length > 0)
+  const hasPlaylist = Boolean(
+    song?.playlist_name && song.playlist_name.length > 0,
+  )
 
   return (
     <RouteHeader>
-      <SidebarTrigger className='place-items-center max-md:block hidden' />
-      <Separator
-        orientation='vertical'
-        className='mx-2 data-[orientation=vertical]:h-4 max-md:block hidden my-auto'
-      />
       <Breadcrumb>
         <BreadcrumbList>
           <Show
@@ -42,9 +37,7 @@ export function SongHeader({ song, streamingTitle }: SongHeaderProps) {
                 fallback={
                   <>
                     <BreadcrumbItem>
-                      <BreadcrumbLink
-                        render={<Link to='/library' />}
-                      >
+                      <BreadcrumbLink render={<Link to='/library' />}>
                         {t('sidebar.navigation.routes.library')}
                       </BreadcrumbLink>
                     </BreadcrumbItem>
@@ -61,18 +54,14 @@ export function SongHeader({ song, streamingTitle }: SongHeaderProps) {
                   when={hasPlaylist}
                   fallback={
                     <BreadcrumbItem>
-                      <BreadcrumbLink
-                        render={<Link to='/library' />}
-                      >
+                      <BreadcrumbLink render={<Link to='/library' />}>
                         {t('sidebar.navigation.routes.library')}
                       </BreadcrumbLink>
                     </BreadcrumbItem>
                   }
                 >
                   <BreadcrumbItem>
-                    <BreadcrumbLink
-                      render={<Link to='/playlists' />}
-                    >
+                    <BreadcrumbLink render={<Link to='/playlists' />}>
                       {t('playlists.header.title')}
                     </BreadcrumbLink>
                   </BreadcrumbItem>
@@ -99,12 +88,7 @@ export function SongHeader({ song, streamingTitle }: SongHeaderProps) {
           >
             <BreadcrumbItem>
               <BreadcrumbLink
-                render={
-                  <Link
-                    to='/search-youtube'
-                    search={{ q: '' }}
-                  />
-                }
+                render={<Link to='/search-youtube' search={{ q: '' }} />}
               >
                 {t('sidebar.navigation.routes.search', 'YouTube')}
               </BreadcrumbLink>

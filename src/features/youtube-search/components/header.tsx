@@ -5,8 +5,6 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
 } from '@/components/ui/breadcrumb'
-import { Separator } from '@/components/ui/separator'
-import { SidebarTrigger } from '@/components/ui/sidebar'
 import { YoutubeSearchBar } from '@/features/youtube-search/components'
 import { useTranslation } from 'react-i18next'
 
@@ -21,11 +19,6 @@ export function YoutubeSearchHeader({
 
   return (
     <RouteHeader>
-      <SidebarTrigger className='place-items-center max-md:block hidden' />
-      <Separator
-        orientation='vertical'
-        className='mx-2 data-[orientation=vertical]:h-4 max-md:block hidden my-auto'
-      />
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>

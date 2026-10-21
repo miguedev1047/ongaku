@@ -6,12 +6,9 @@ import {
   BreadcrumbPage,
 } from '@/components/ui/breadcrumb'
 import { SearchPlaylists } from '@/features/playlists/components/search-playlists'
-import { Separator } from '@/components/ui/separator'
-import { SidebarTrigger } from '@/components/ui/sidebar'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Suspense } from 'react'
 import { PlaylistsReloadList } from '@/features/playlists/components'
-
 import { useTranslation } from 'react-i18next'
 
 export function PlaylistHeader() {
@@ -19,11 +16,6 @@ export function PlaylistHeader() {
 
   return (
     <RouteHeader>
-      <SidebarTrigger className='place-items-center max-md:block hidden' />
-      <Separator
-        orientation='vertical'
-        className='mx-2 data-[orientation=vertical]:h-4 max-md:block hidden my-auto'
-      />
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>

@@ -56,6 +56,31 @@ class TauriAdapter implements PlatformService {
     await win.setFocus()
   }
 
+  async minimizeWindow(): Promise<void> {
+    const win = getCurrentWebviewWindow()
+    await win.minimize()
+  }
+
+  async toggleMaximizeWindow(): Promise<void> {
+    const win = getCurrentWebviewWindow()
+    await win.toggleMaximize()
+  }
+
+  async isWindowMaximized(): Promise<boolean> {
+    const win = getCurrentWebviewWindow()
+    return await win.isMaximized()
+  }
+
+  async closeWindow(): Promise<void> {
+    const win = getCurrentWebviewWindow()
+    await win.close()
+  }
+
+  async onWindowResize(handler: () => void): Promise<() => void> {
+    const win = getCurrentWebviewWindow()
+    return await win.onResized(handler)
+  }
+
   async checkForUpdates(): Promise<AppUpdate | null> {
     try {
       const update = await tauriCheckUpdate()

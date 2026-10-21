@@ -4,8 +4,6 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import { RefreshIcon } from '@hugeicons/core-free-icons'
 import { Spinner } from '@/components/ui/spinner'
 import { Show } from '@/components/utility/show'
-import { SidebarTrigger } from '@/components/ui/sidebar'
-import { Separator } from '@/components/ui/separator'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -24,11 +22,6 @@ export function SettingsHeader({ isLoading, onRefresh }: SettingsHeaderProps) {
 
   return (
     <RouteHeader>
-      <SidebarTrigger className='place-items-center max-md:block hidden' />
-      <Separator
-        orientation='vertical'
-        className='mx-2 data-[orientation=vertical]:h-4 max-md:block hidden my-auto'
-      />
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
