@@ -2,7 +2,7 @@
   "name": "desktop",
   "description": "A lightweight and simple mp3 player",
   "private": true,
-  "version": "0.1.43",
+  "version": "0.1.44",
   "type": "module",
   "scripts": {
     "dev": "vite",
