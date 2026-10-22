@@ -12,6 +12,7 @@ import {
   supportedLanguages,
   type SupportedLanguage,
 } from '@/lib/i18n'
+import { setLanguage } from '@/lib/language'
 
 export function LanguageSwitcher() {
   const { i18n, t } = useTranslation('common')
@@ -27,8 +28,8 @@ export function LanguageSwitcher() {
     <Select
       value={current}
       onValueChange={(language) => {
-        if (language) {
-          void i18n.changeLanguage(language)
+        if (isSupportedLanguage(language)) {
+          void setLanguage(language)
         }
       }}
       items={languageItems}

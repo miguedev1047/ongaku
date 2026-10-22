@@ -1,0 +1,5 @@
+dist
+dist-ssr
+.wrangler
+.tanstack
+public

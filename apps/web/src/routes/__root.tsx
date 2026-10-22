@@ -1,50 +1,63 @@
-import '@/lib/i18n'
-
 import {
   HeadContent,
   Link,
+  Outlet,
   ScriptOnce,
   Scripts,
-  createRootRoute,
+  createRootRouteWithContext,
 } from '@tanstack/react-router'
+import { QueryClientProvider, type QueryClient } from '@tanstack/react-query'
 import logo from '@ongaku/assets/logo'
-import { useTranslation } from 'react-i18next'
+import { I18nextProvider, useTranslation } from 'react-i18next'
 import appCss from '@/styles/main.css?url'
-import { SITE_DESCRIPTION, SITE_NAME } from '@/features/landing/constants'
 import { useLanguageSync } from '@/hooks/language-sync'
+import i18n, { createI18nInstance } from '@/lib/i18n'
+import { getDocumentLanguage } from '@/lib/language'
 import {
   ThemeProvider,
   getThemeScript,
 } from '@ongaku/ui/providers/theme-provider'
 
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: 'utf-8' },
-      {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
-      },
-      { title: SITE_NAME },
-      { name: 'description', content: SITE_DESCRIPTION },
-      { name: 'theme-color', content: '#0a0a0a' },
-    ],
-    links: [
-      { rel: 'stylesheet', href: appCss },
-      { rel: 'icon', type: 'image/png', href: logo },
-      { rel: 'apple-touch-icon', href: logo },
-      { rel: 'manifest', href: '/manifest.json' },
-    ],
-  }),
+export const Route = createRootRouteWithContext<{
+  queryClient: QueryClient
+}>()({
+  head: () => {
+    const language = getDocumentLanguage()
+    const t = i18n.getFixedT(language, 'common')
+
+    return {
+      meta: [
+        { charSet: 'utf-8' },
+        {
+          name: 'viewport',
+          content: 'width=device-width, initial-scale=1',
+        },
+        { title: t('site.title') },
+        { name: 'description', content: t('site.description') },
+        { name: 'theme-color', content: '#0a0a0a' },
+      ],
+      links: [
+        { rel: 'stylesheet', href: appCss },
+        { rel: 'icon', type: 'image/png', href: logo },
+        { rel: 'apple-touch-icon', href: logo },
+        { rel: 'manifest', href: '/manifest.json' },
+      ],
+    }
+  },
   notFoundComponent: NotFound,
   shellComponent: RootDocument,
+  component: RootLayout,
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-  useLanguageSync()
+  const language = getDocumentLanguage()
+  const instance =
+    typeof document === 'undefined' ? createI18nInstance(language) : i18n
+
+  useLanguageSync(language)
 
   return (
-    <html lang='en' suppressHydrationWarning>
+    <html lang={language} suppressHydrationWarning>
       <head>
         <HeadContent />
         <ScriptOnce>
@@ -57,17 +70,29 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         </ScriptOnce>
       </head>
       <body>
-        <ThemeProvider
-          defaultMode='dark'
-          defaultTheme='default'
-          modeStorageKey='ongaku-mode'
-          themeStorageKey='ongaku-theme'
-        >
-          {children}
-        </ThemeProvider>
+        <I18nextProvider i18n={instance}>
+          <ThemeProvider
+            defaultMode='dark'
+            defaultTheme='default'
+            modeStorageKey='ongaku-mode'
+            themeStorageKey='ongaku-theme'
+          >
+            {children}
+          </ThemeProvider>
+        </I18nextProvider>
         <Scripts />
       </body>
     </html>
+  )
+}
+
+function RootLayout() {
+  const { queryClient } = Route.useRouteContext()
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Outlet />
+    </QueryClientProvider>
   )
 }
 

@@ -278,7 +278,7 @@ export const shadcnContracts = [
     allow: ['layout', 'opacity-*', 'mask-y-from-*', 'mask-y-from-*', 'mask-*'],
   },
   {
-    package: '^ElectricWaveform$',
+    pattern: '^ElectricWaveform$',
     allow: ['layout', 'text-*'],
   },
 ]

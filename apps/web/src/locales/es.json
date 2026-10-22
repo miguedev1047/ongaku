@@ -5,6 +5,10 @@
       "en": "English",
       "es": "Español"
     },
+    "site": {
+      "title": "Ongaku — Música de escritorio, sin el ruido",
+      "description": "Un reproductor de música de escritorio ligero y minimalista con descarga de YouTube para Windows, macOS y Linux."
+    },
     "screenshotRegion": "Capturas de Ongaku",
     "notFound": {
       "eyebrow": "404",
@@ -22,11 +26,18 @@
     "theme": "Cambiar tema"
   },
   "landing": {
+    "meta": {
+      "title": "Ongaku — Música de escritorio, sin el ruido",
+      "description": "Un reproductor de música de escritorio ligero y minimalista con descarga de YouTube para Windows, macOS y Linux."
+    },
     "hero": {
       "badge": "Reproductor de escritorio de código abierto",
       "titleLine1": "Música de escritorio,",
       "titleLine2": "sin el ruido.",
       "description": "Ongaku reproduce tu biblioteca local, busca en YouTube y descarga pistas en una pequeña app nativa. Sin cuenta, sin feed y sin ruido.",
+      "downloadNow": "Descargar ahora",
+      "availability": "Gratis para Macs con Apple silicon, Windows y Linux.",
+      "imageAlt": "App de escritorio Ongaku mostrando la biblioteca musical y los controles de reproducción",
       "downloadCta": "Descargar la última versión",
       "sourceCta": "Ver código",
       "license": "Gratis · Licencia MIT",
@@ -41,6 +52,7 @@
       }
     },
     "features": {
+      "eyebrow": "Qué incluye",
       "library": {
         "title": "Biblioteca local",
         "description": "Escanea carpetas, lee etiquetas y reproduce tus propios archivos con un motor de audio nativo."
@@ -97,7 +109,15 @@
     "description": "Los instaladores se publican en cada release de GitHub. Elige tu plataforma, descarga la última compilación y mantén tu biblioteca local.",
     "cta": "Descargar la última",
     "allReleases": "Todas las versiones",
-    "note": "El botón siempre apunta al release más reciente de GitHub.",
+    "platformAction": "Descargar para {{platform}}",
+    "note": "El botón siempre apunta a la compilación más reciente para tu plataforma.",
+    "fallbackNote": "Ninguna compilación coincide con tu plataforma, así que el botón abre la página de versiones.",
+    "loading": "Cargando la última versión",
+    "error": {
+      "title": "No se pudo cargar la última versión.",
+      "description": "GitHub puede no estar disponible temporalmente. Aun así puedes elegir una compilación en la página de versiones.",
+      "action": "Abrir versiones en GitHub"
+    },
     "platforms": {
       "windows": {
         "name": "Windows",
@@ -105,7 +125,10 @@
       },
       "macos": {
         "name": "macOS",
-        "hint": "Apple silicon e Intel"
+        "hint": "Apple silicon e Intel",
+        "choose": "Elige tu Mac",
+        "arm64": "Apple silicon (serie M)",
+        "intel": "Intel (x64)"
       },
       "linux": {
         "name": "Linux",
