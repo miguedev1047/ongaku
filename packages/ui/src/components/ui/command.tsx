@@ -8,8 +8,8 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '../../components/ui/dialog'
-import { InputGroup, InputGroupAddon } from '../../components/ui/input-group'
+} from '@/components/ui/dialog'
+import { InputGroup, InputGroupAddon } from '@/components/ui/input-group'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { SearchIcon, Tick02Icon } from '@hugeicons/core-free-icons'
 
@@ -21,7 +21,7 @@ function Command({
     <CommandPrimitive
       data-slot='command'
       className={cn(
-        'flex size-full flex-col overflow-hidden rounded-xl bg-popover p-1 text-popover-foreground',
+        'flex size-full flex-col overflow-hidden rounded-xl bg-popover p-1 text-popover-foreground app-no-drag',
         className,
       )}
       {...props}
@@ -30,7 +30,7 @@ function Command({
 }
 
 const commandDialogContent = cva(
-  'top-1/3 translate-y-0 overflow-hidden rounded-xl p-0',
+  'top-1/3 translate-y-0 overflow-hidden rounded-xl p-0 app-no-drag',
   {
     variants: {
       size: {

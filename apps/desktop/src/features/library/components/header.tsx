@@ -24,7 +24,7 @@ export function LibraryHeader() {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className='flex items-center gap-1 ml-auto'>
+      <div className='flex items-center gap-1 ml-auto app-no-drag'>
         <LibraryReloadList />
         <Suspense fallback={<Skeleton className='ml-auto w-52 h-6' />}>
           <SearchLibrary />
