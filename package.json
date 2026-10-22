@@ -15,6 +15,7 @@
     "test": "turbo run test",
     "test:watch": "bun --filter desktop test:watch",
     "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
     "check:platform": "turbo run check:platform",
     "tauri": "bun --filter desktop tauri",
     "tauri:dev": "turbo run dev:tauri",

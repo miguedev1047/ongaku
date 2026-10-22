@@ -3,7 +3,7 @@
   "ui": "tui",
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "^typecheck"],
       "outputs": ["dist/**"]
     },
     "build:tauri": {
@@ -26,6 +26,9 @@
     },
     "lint": {
       "dependsOn": ["^lint"]
+    },
+    "typecheck": {
+      "dependsOn": ["^typecheck"]
     },
     "check:platform": {}
   }

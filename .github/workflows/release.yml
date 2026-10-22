@@ -50,7 +50,10 @@ jobs:
             patchelf
 
       - name: Install frontend dependencies
-        run: bun install
+        run: bun install --frozen-lockfile
+
+      - name: Typecheck workspaces
+        run: bun run typecheck
 
       - name: Build and Publish Tauri App
         uses: tauri-apps/tauri-action@v0
@@ -60,6 +63,7 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           projectPath: apps/desktop
+          tauriScript: bun run tauri
           tagName: v__VERSION__
           releaseName: 'Ongaku v__VERSION__'
           releaseBody: 'See the assets to download this version and install.'

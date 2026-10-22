@@ -14,7 +14,8 @@
     "check:platform": "! grep -rn \"@tauri-apps\" src/ --exclude-dir=infrastructure",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@ongaku/ui": "workspace:*",
