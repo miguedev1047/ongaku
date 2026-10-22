@@ -7,7 +7,9 @@ const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const [target, only = 'all'] = process.argv.slice(2)
 
 if (!target) {
-  console.error('Usage: bun scripts/sync.mjs <public-dir> [logo|screenshots|all]')
+  console.error(
+    'Usage: bun scripts/sync.mjs <public-dir> [logo|screenshots|all]',
+  )
   process.exit(1)
 }
 
