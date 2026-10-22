@@ -78,7 +78,8 @@ function TableHeader({
 }) {
   const context = React.useContext(TableContext)
   const variant = propVariant ?? context.variant
-  const headerClass = headerVariant === 'muted' ? 'bg-muted/20' : ''
+  const headerClass =
+    headerVariant === 'muted' ? 'bg-muted/20 backdrop-blur-lg' : ''
 
   if (variant === 'table') {
     return (

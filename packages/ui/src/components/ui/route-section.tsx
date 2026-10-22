@@ -16,7 +16,7 @@ const routeSectionVariants = cva('w-full min-h-0 mx-auto container', {
       false: '',
     },
     scrollable: {
-      true: 'overflow-y-auto no-scrollbar scroll-fade-y',
+      true: 'overflow-y-auto no-scrollbar',
       false: 'overflow-hidden',
     },
     fill: {
