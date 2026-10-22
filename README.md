@@ -21,7 +21,7 @@
 <div align="center">
   <img src="packages/assets/public/screenshots/demo-app-1.webp" alt="Ongaku YouTube Search" width="100%" />
   <br/><br/>
-  <img src="packages/assets/public/screenshots/demo-app-2.webp" alt="Ongaku Playlists" width="100%" />
+  <img src="packages/assets/public/screenshots/demo-app-6.webp" alt="Ongaku Playlists" width="100%" />
   <br/><br/>
   <img src="packages/assets/public/screenshots/demo-app-3.webp" alt="Ongaku Downloads" width="100%" />
 </div>
