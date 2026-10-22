@@ -1,12 +1,12 @@
-import { useEffect } from "react"
+import { useEffect } from 'react'
 
 import i18n, {
   LANGUAGE_STORAGE_KEY,
   isSupportedLanguage,
   resolveLanguage,
-} from "@/lib/i18n"
+} from '@/lib/i18n'
 
-export function LanguageSync() {
+export function useLanguageSync() {
   useEffect(() => {
     const stored = window.localStorage.getItem(LANGUAGE_STORAGE_KEY)
     const language = resolveLanguage(stored ?? i18n.resolvedLanguage)
@@ -29,12 +29,10 @@ export function LanguageSync() {
       window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language)
     }
 
-    i18n.on("languageChanged", handleLanguageChanged)
+    i18n.on('languageChanged', handleLanguageChanged)
 
     return () => {
-      i18n.off("languageChanged", handleLanguageChanged)
+      i18n.off('languageChanged', handleLanguageChanged)
     }
   }, [])
-
-  return null
 }

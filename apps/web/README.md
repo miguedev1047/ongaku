@@ -99,9 +99,10 @@ The website owns its own `i18next` instance and resources:
 - `src/lib/i18n.ts` initializes once with `en` as default and fallback
 - `src/routes/__root.tsx` imports it and mounts `LanguageSync`
 
-`LanguageSync` persists the preference in `localStorage`
-(`ongaku-language`), updates `document.documentElement.lang`, and never touches
-`window` during SSR. The accessible selector lives in the site header.
+`src/hooks/language-sync.ts` is called once from `src/routes/__root.tsx`. It
+persists the preference in `localStorage` (`ongaku-language`), updates
+`document.documentElement.lang`, and never touches `window` during SSR. The
+accessible selector lives in the site header.
 
 When adding copy, update both locale files. `src/shared/tests/i18n.test.ts`
 checks namespace shape and key parity between languages.
