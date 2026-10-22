@@ -25,6 +25,8 @@
     "tauri:build": "turbo run build:tauri"
   },
   "devDependencies": {
+    "@rolldown/plugin-babel": "^0.2.4",
+    "babel-plugin-react-compiler": "^1.0.0",
     "turbo": "^2.5.0"
   }
 }
