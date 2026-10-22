@@ -12,10 +12,17 @@ bun run dev:all
 ```
 
 This starts the native Tauri desktop app (with its Vite server on port `1420`)
-and the Web app on port `3000`. To work on the website alone:
+and the Web app on port `3000`. To work on the website alone from the root:
+
+```bash
+bun run dev:web
+```
+
+Equivalent alternatives:
 
 ```bash
 bun --filter web dev
+bun --filter web dev:web
 ```
 
 To start only the Desktop frontend in the browser, without Tauri:
@@ -77,10 +84,27 @@ in the same two values. `apps/web/.env` is ignored by git.
 ```text
 src/
 ├── features/landing/   # Landing sections, content and constants
+├── locales/            # Web-only en/es resources
 ├── routes/             # TanStack Start routes
 ├── router.tsx
 └── styles/main.css     # Shared @ongaku/ui theme + landing utilities
 ```
+
+## Internationalization
+
+The website owns its own `i18next` instance and resources:
+
+- `src/locales/en.json` and `src/locales/es.json`
+- namespaces: `common`, `navigation`, `landing`, `downloads`, `footer`
+- `src/lib/i18n.ts` initializes once with `en` as default and fallback
+- `src/routes/__root.tsx` imports it and mounts `LanguageSync`
+
+`LanguageSync` persists the preference in `localStorage`
+(`ongaku-language`), updates `document.documentElement.lang`, and never touches
+`window` during SSR. The accessible selector lives in the site header.
+
+When adding copy, update both locale files. `src/shared/tests/i18n.test.ts`
+checks namespace shape and key parity between languages.
 
 UI primitives come from `@ongaku/ui`; do not add local copies of shadcn
 components. Image assets come from `@ongaku/assets`.

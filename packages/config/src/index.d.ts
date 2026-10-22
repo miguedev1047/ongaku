@@ -1,2 +1,7 @@
-export * from './eslint/index.js'
-export { default } from './eslint/index.js'
+export interface RestyleContract {
+  pattern: string
+  allow?: string[]
+}
+
+export declare const shadcnContracts: RestyleContract[]
+export declare const defaultIgnores: string[]

@@ -1,0 +1,123 @@
+{
+  "common": {
+    "language": "Language",
+    "languages": {
+      "en": "English",
+      "es": "Español"
+    },
+    "screenshotRegion": "Ongaku screenshots",
+    "notFound": {
+      "eyebrow": "404",
+      "title": "This track does not exist.",
+      "description": "The page you are looking for may have moved or never existed.",
+      "back": "Back to Ongaku"
+    }
+  },
+  "navigation": {
+    "home": "Ongaku home",
+    "main": "Main",
+    "footer": "Footer",
+    "github": "GitHub",
+    "download": "Download"
+  },
+  "landing": {
+    "hero": {
+      "badge": "Open source desktop player",
+      "titleLine1": "Desktop music,",
+      "titleLine2": "without the noise.",
+      "description": "Ongaku plays your local library, searches YouTube and downloads tracks in one small native app. No account, no feed, no noise.",
+      "downloadCta": "Download the latest release",
+      "sourceCta": "View source",
+      "license": "Free · MIT licensed",
+      "platforms": {
+        "windows": "Windows",
+        "macos": "macOS",
+        "linux": "Linux"
+      },
+      "nowPlaying": {
+        "title": "Local playback",
+        "subtitle": "Native audio engine"
+      }
+    },
+    "features": {
+      "library": {
+        "title": "Local library",
+        "description": "Scan folders, read tags and play your own files with a native audio engine."
+      },
+      "youtube": {
+        "title": "YouTube search",
+        "description": "Find tracks, preview results and add them to your library without a browser tab."
+      },
+      "downloads": {
+        "title": "Batch downloads",
+        "description": "Paste a song, album or playlist URL, review the tracks and download only what you want."
+      },
+      "native": {
+        "title": "Native desktop",
+        "description": "Built with Tauri for Windows, macOS and Linux. Small binary, real desktop behavior."
+      }
+    },
+    "screenshots": {
+      "eyebrow": "Inside the app",
+      "title": "A real desktop player, not a mockup.",
+      "description": "Every screen below is captured from Ongaku. Search, organize, download and listen without switching tools.",
+      "items": {
+        "search": {
+          "label": "Search",
+          "title": "Find it on YouTube",
+          "description": "Search, preview and queue tracks without leaving the player.",
+          "alt": "Ongaku YouTube search results with video thumbnails, durations and download actions"
+        },
+        "library": {
+          "label": "Library",
+          "title": "Your collection, organized",
+          "description": "Playlists, folders and a library that keeps local music tidy.",
+          "alt": "Ongaku desktop app showing the playlists view with album artwork, folders and the playback bar"
+        },
+        "downloads": {
+          "label": "Downloads",
+          "title": "Batch downloads",
+          "description": "Paste a song, album or playlist URL and pick exactly what to keep.",
+          "alt": "Ongaku download page showing a YouTube URL, 1229 found tracks and batch download controls in a light theme"
+        },
+        "themes": {
+          "label": "Themes",
+          "title": "Light or dark",
+          "description": "Seven bundled themes that follow your desktop, not the other way around.",
+          "alt": "Ongaku download page in a dark theme with the same batch download workflow"
+        }
+      }
+    }
+  },
+  "downloads": {
+    "badge": "Latest release",
+    "openSource": "Free · Open source",
+    "title": "Get Ongaku on your desktop.",
+    "description": "Installers are published with every release on GitHub. Pick your platform, download the latest build and keep your library local.",
+    "cta": "Download latest",
+    "allReleases": "All releases",
+    "note": "The button always points to the newest GitHub release.",
+    "platforms": {
+      "windows": {
+        "name": "Windows",
+        "hint": "NSIS installer"
+      },
+      "macos": {
+        "name": "macOS",
+        "hint": "Apple silicon and Intel"
+      },
+      "linux": {
+        "name": "Linux",
+        "hint": "AppImage or Debian package"
+      }
+    }
+  },
+  "footer": {
+    "tagline": "Desktop music, without the noise.",
+    "github": "GitHub",
+    "issues": "Issues",
+    "license": "MIT License",
+    "copyright": "© {{year}} Ongaku. Built with Tauri, React and Rust.",
+    "disclaimer": "Not affiliated with YouTube or Google."
+  }
+}

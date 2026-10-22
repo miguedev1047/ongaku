@@ -1,7 +1,11 @@
+import "@/lib/i18n"
+
 import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router"
 import logo from "@ongaku/assets/logo"
+import { useTranslation } from "react-i18next"
 
 import appCss from "@/styles/main.css?url"
+import { LanguageSync } from "@/features/landing/components/language-sync"
 import { SITE_DESCRIPTION, SITE_NAME } from "@/features/landing/constants"
 
 export const Route = createRootRoute({
@@ -34,6 +38,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
+        <LanguageSync />
         {children}
         <Scripts />
       </body>
@@ -42,22 +47,24 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 }
 
 function NotFound() {
+  const { t } = useTranslation("common")
+
   return (
     <main className="mx-auto flex min-h-svh w-full max-w-xl flex-col items-start justify-center gap-4 px-4">
       <p className="text-2xs font-medium tracking-widest text-muted-foreground uppercase">
-        404
+        {t("notFound.eyebrow")}
       </p>
       <h1 className="landing-display font-heading text-3xl font-semibold">
-        This track does not exist.
+        {t("notFound.title")}
       </h1>
       <p className="text-sm text-muted-foreground">
-        The page you are looking for may have moved or never existed.
+        {t("notFound.description")}
       </p>
       <a
         href="/"
         className="mt-2 rounded-sm text-sm font-medium underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring/50"
       >
-        Back to Ongaku
+        {t("notFound.back")}
       </a>
     </main>
   )

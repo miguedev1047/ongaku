@@ -2,10 +2,9 @@ import { plugin as shadcn } from '@shadcn/lint'
 import tsParser from '@typescript-eslint/parser'
 import { defineConfig } from 'eslint/config'
 import { shadcnContracts } from './contracts.js'
+import { defaultIgnores } from './defaults.js'
 
-export { shadcnContracts }
-
-export const defaultIgnores = ['dist/**', 'node_modules/**', '.turbo/**']
+export { defaultIgnores, shadcnContracts }
 
 /**
  * Creates an ESLint flat configuration for Ongaku apps and packages.

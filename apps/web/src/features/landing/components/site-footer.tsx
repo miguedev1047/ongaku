@@ -7,6 +7,7 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { buttonVariants } from "@ongaku/ui/components/ui/button"
 import { Separator } from "@ongaku/ui/components/ui/separator"
 import { cn } from "cn"
+import { useTranslation } from "react-i18next"
 
 import {
   ISSUES_URL,
@@ -16,24 +17,14 @@ import {
 import { SiteLogo } from "@/features/landing/components/site-logo"
 
 const FOOTER_LINKS = [
-  {
-    label: "GitHub",
-    href: REPOSITORY_URL,
-    icon: GithubIcon,
-  },
-  {
-    label: "Issues",
-    href: ISSUES_URL,
-    icon: Bug01Icon,
-  },
-  {
-    label: "MIT License",
-    href: LICENSE_URL,
-    icon: LicenseIcon,
-  },
-]
+  { key: "github", href: REPOSITORY_URL, icon: GithubIcon },
+  { key: "issues", href: ISSUES_URL, icon: Bug01Icon },
+  { key: "license", href: LICENSE_URL, icon: LicenseIcon },
+] as const
 
 export function SiteFooter() {
+  const { t } = useTranslation(["footer", "navigation"])
+
   return (
     <footer className="border-t border-border/60 bg-card/30">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-10 lg:px-6">
@@ -41,15 +32,16 @@ export function SiteFooter() {
           <div className="flex items-center gap-4">
             <SiteLogo />
             <Separator orientation="vertical" />
-            <p className="text-2xs text-muted-foreground">
-              Desktop music, without the noise.
-            </p>
+            <p className="text-2xs text-muted-foreground">{t("tagline")}</p>
           </div>
 
-          <nav aria-label="Footer" className="flex flex-wrap items-center gap-1">
+          <nav
+            aria-label={t("navigation:footer")}
+            className="flex flex-wrap items-center gap-1"
+          >
             {FOOTER_LINKS.map((link) => (
               <a
-                key={link.label}
+                key={link.key}
                 href={link.href}
                 target="_blank"
                 rel="noreferrer"
@@ -58,15 +50,15 @@ export function SiteFooter() {
                 )}
               >
                 <HugeiconsIcon icon={link.icon} data-icon="inline-start" />
-                {link.label}
+                {t(link.key)}
               </a>
             ))}
           </nav>
         </div>
 
         <div className="flex flex-col justify-between gap-2 text-2xs text-muted-foreground sm:flex-row">
-          <p>© 2026 Ongaku. Built with Tauri, React and Rust.</p>
-          <p>Not affiliated with YouTube or Google.</p>
+          <p>{t("copyright", { year: 2026 })}</p>
+          <p>{t("disclaimer")}</p>
         </div>
       </div>
     </footer>

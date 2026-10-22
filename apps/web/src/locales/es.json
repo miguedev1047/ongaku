@@ -1,0 +1,123 @@
+{
+  "common": {
+    "language": "Idioma",
+    "languages": {
+      "en": "English",
+      "es": "Español"
+    },
+    "screenshotRegion": "Capturas de Ongaku",
+    "notFound": {
+      "eyebrow": "404",
+      "title": "Esta pista no existe.",
+      "description": "La página que buscas puede haberse movido o no haber existido nunca.",
+      "back": "Volver a Ongaku"
+    }
+  },
+  "navigation": {
+    "home": "Inicio de Ongaku",
+    "main": "Principal",
+    "footer": "Pie de página",
+    "github": "GitHub",
+    "download": "Descargar"
+  },
+  "landing": {
+    "hero": {
+      "badge": "Reproductor de escritorio de código abierto",
+      "titleLine1": "Música de escritorio,",
+      "titleLine2": "sin el ruido.",
+      "description": "Ongaku reproduce tu biblioteca local, busca en YouTube y descarga pistas en una pequeña app nativa. Sin cuenta, sin feed y sin ruido.",
+      "downloadCta": "Descargar la última versión",
+      "sourceCta": "Ver código",
+      "license": "Gratis · Licencia MIT",
+      "platforms": {
+        "windows": "Windows",
+        "macos": "macOS",
+        "linux": "Linux"
+      },
+      "nowPlaying": {
+        "title": "Reproducción local",
+        "subtitle": "Motor de audio nativo"
+      }
+    },
+    "features": {
+      "library": {
+        "title": "Biblioteca local",
+        "description": "Escanea carpetas, lee etiquetas y reproduce tus propios archivos con un motor de audio nativo."
+      },
+      "youtube": {
+        "title": "Búsqueda en YouTube",
+        "description": "Encuentra pistas, previsualiza resultados y añádelos a tu biblioteca sin abrir otra pestaña."
+      },
+      "downloads": {
+        "title": "Descargas por lotes",
+        "description": "Pega la URL de una canción, álbum o playlist, revisa las pistas y descarga solo lo que quieras."
+      },
+      "native": {
+        "title": "Escritorio nativo",
+        "description": "Hecho con Tauri para Windows, macOS y Linux. Binario pequeño y comportamiento de escritorio real."
+      }
+    },
+    "screenshots": {
+      "eyebrow": "Dentro de la app",
+      "title": "Un reproductor de escritorio real, no una maqueta.",
+      "description": "Cada pantalla está capturada de Ongaku. Busca, organiza, descarga y escucha sin cambiar de herramienta.",
+      "items": {
+        "search": {
+          "label": "Búsqueda",
+          "title": "Encuéntralo en YouTube",
+          "description": "Busca, previsualiza y encola pistas sin salir del reproductor.",
+          "alt": "Resultados de búsqueda de YouTube en Ongaku con miniaturas, duraciones y acciones de descarga"
+        },
+        "library": {
+          "label": "Biblioteca",
+          "title": "Tu colección, organizada",
+          "description": "Playlists, carpetas y una biblioteca que mantiene ordenada tu música local.",
+          "alt": "Vista de playlists de Ongaku con portadas, carpetas y barra de reproducción"
+        },
+        "downloads": {
+          "label": "Descargas",
+          "title": "Descargas por lotes",
+          "description": "Pega la URL de una canción, álbum o playlist y elige exactamente qué conservar.",
+          "alt": "Página de descargas de Ongaku con una URL de YouTube, 1229 pistas encontradas y controles de descarga por lotes en un tema claro"
+        },
+        "themes": {
+          "label": "Temas",
+          "title": "Claro u oscuro",
+          "description": "Siete temas incluidos que siguen a tu escritorio, no al revés.",
+          "alt": "Página de descargas de Ongaku en un tema oscuro con el mismo flujo de descarga por lotes"
+        }
+      }
+    }
+  },
+  "downloads": {
+    "badge": "Última versión",
+    "openSource": "Gratis · Código abierto",
+    "title": "Consigue Ongaku en tu escritorio.",
+    "description": "Los instaladores se publican en cada release de GitHub. Elige tu plataforma, descarga la última compilación y mantén tu biblioteca local.",
+    "cta": "Descargar la última",
+    "allReleases": "Todas las versiones",
+    "note": "El botón siempre apunta al release más reciente de GitHub.",
+    "platforms": {
+      "windows": {
+        "name": "Windows",
+        "hint": "Instalador NSIS"
+      },
+      "macos": {
+        "name": "macOS",
+        "hint": "Apple silicon e Intel"
+      },
+      "linux": {
+        "name": "Linux",
+        "hint": "AppImage o paquete Debian"
+      }
+    }
+  },
+  "footer": {
+    "tagline": "Música de escritorio, sin el ruido.",
+    "github": "GitHub",
+    "issues": "Incidencias",
+    "license": "Licencia MIT",
+    "copyright": "© {{year}} Ongaku. Hecho con Tauri, React y Rust.",
+    "disclaimer": "No está afiliado a YouTube ni a Google."
+  }
+}

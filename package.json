@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "turbo run dev",
     "dev:all": "turbo run dev:all --filter=desktop --filter=web",
+    "dev:web": "turbo run dev:web --filter=web",
     "dev:tauri": "turbo run dev:tauri",
     "build": "turbo run build",
     "build:web": "turbo run build --filter=web...",

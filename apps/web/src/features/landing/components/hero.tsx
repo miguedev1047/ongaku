@@ -8,6 +8,7 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { Badge } from "@ongaku/ui/components/ui/badge"
 import { Button, buttonVariants } from "@ongaku/ui/components/ui/button"
 import { cn } from "cn"
+import { useTranslation } from "react-i18next"
 
 import {
   HERO_SCREENSHOT,
@@ -15,7 +16,7 @@ import {
   REPOSITORY_URL,
 } from "@/features/landing/constants"
 
-const PLATFORMS = ["Windows", "macOS", "Linux"]
+const PLATFORMS = ["windows", "macos", "linux"] as const
 
 const EQUALIZER_BARS = [
   "h-2",
@@ -28,6 +29,8 @@ const EQUALIZER_BARS = [
 ]
 
 export function Hero() {
+  const { t } = useTranslation("landing")
+
   return (
     <section className="relative overflow-hidden">
       <div className="landing-grid pointer-events-none absolute inset-0" />
@@ -37,18 +40,19 @@ export function Hero() {
         <div className="flex flex-col items-start justify-center lg:col-span-7">
           <Badge variant="outline" size="sm">
             <HugeiconsIcon icon={MusicNote01Icon} />
-            Open source desktop player
+            {t("hero.badge")}
           </Badge>
 
           <h1 className="landing-display mt-6 font-heading text-4xl font-semibold leading-none sm:text-5xl lg:text-6xl">
-            Desktop music,
+            {t("hero.titleLine1")}
             <br />
-            <span className="text-muted-foreground">without the noise.</span>
+            <span className="text-muted-foreground">
+              {t("hero.titleLine2")}
+            </span>
           </h1>
 
           <p className="mt-6 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
-            Ongaku plays your local library, searches YouTube and downloads
-            tracks in one small native app. No account, no feed, no noise.
+            {t("hero.description")}
           </p>
 
           <div className="mt-8 flex w-full flex-col gap-3 sm:flex-row sm:items-center">
@@ -56,9 +60,10 @@ export function Hero() {
               size="lg"
               className="w-full sm:w-auto"
               render={<a href={LATEST_RELEASE_URL} />}
+              nativeButton={false}
             >
               <HugeiconsIcon icon={Download04Icon} data-icon="inline-start" />
-              Download the latest release
+              {t("hero.downloadCta")}
               <HugeiconsIcon icon={ArrowUpRight01Icon} data-icon="inline-end" />
             </Button>
             <a
@@ -71,17 +76,17 @@ export function Hero() {
               )}
             >
               <HugeiconsIcon icon={GithubIcon} data-icon="inline-start" />
-              View source
+              {t("hero.sourceCta")}
             </a>
           </div>
 
           <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 text-2xs text-muted-foreground">
             <span className="font-medium tracking-wider uppercase">
-              Free · MIT licensed
+              {t("hero.license")}
             </span>
             <span aria-hidden="true" className="h-1 w-1 rounded-sm bg-border" />
             {PLATFORMS.map((platform) => (
-              <span key={platform}>{platform}</span>
+              <span key={platform}>{t(`hero.platforms.${platform}`)}</span>
             ))}
           </div>
         </div>
@@ -107,7 +112,7 @@ export function Hero() {
             </div>
             <img
               src={HERO_SCREENSHOT.src}
-              alt={HERO_SCREENSHOT.alt}
+              alt={t(`screenshots.items.${HERO_SCREENSHOT.key}.alt`)}
               className="w-full"
               fetchPriority="high"
               decoding="async"
@@ -121,10 +126,10 @@ export function Hero() {
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-xs font-medium">
-                  Local playback
+                  {t("hero.nowPlaying.title")}
                 </span>
                 <span className="block truncate text-2xs text-muted-foreground">
-                  Native audio engine
+                  {t("hero.nowPlaying.subtitle")}
                 </span>
               </span>
               <span className="flex items-end gap-0.5" aria-hidden="true">
