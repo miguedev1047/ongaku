@@ -2,7 +2,7 @@
   "name": "desktop",
   "description": "A lightweight and simple mp3 player",
   "private": true,
-  "version": "0.1.45",
+  "version": "0.1.46",
   "type": "module",
   "scripts": {
     "assets:sync": "bun ../../packages/assets/scripts/sync.mjs public logo",
