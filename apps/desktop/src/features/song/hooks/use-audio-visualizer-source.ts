@@ -1,10 +1,12 @@
 import { useEffect, useRef } from 'react'
 import { platformService } from '@/infrastructure/platform'
 import type { Channel } from '@/infrastructure/platform'
-import type { FrameSource, VisualFrame } from '@/lib/types'
-import { createFrameEmitter } from '@/lib/frame-source'
+import type { FrameSource, VisualFrame } from '@ongaku/ui/lib/audio/types'
+import { createFrameEmitter } from '@ongaku/ui/lib/audio/frame-source'
 
-export function useAudioVisualizerSource(enabled: boolean = true): FrameSource<VisualFrame> {
+export function useAudioVisualizerSource(
+  enabled: boolean = true,
+): FrameSource<VisualFrame> {
   const emitterRef = useRef(createFrameEmitter<VisualFrame>())
   const channelRef = useRef<Channel<number[]> | null>(null)
 
@@ -33,7 +35,10 @@ export function useAudioVisualizerSource(enabled: boolean = true): FrameSource<V
     platformService
       .invoke('audio_visualizer_listen', { onFrame: channel })
       .catch((err) => {
-        console.error('[VISUALIZER]: Failed to attach audio visualizer channel:', err)
+        console.error(
+          '[VISUALIZER]: Failed to attach audio visualizer channel:',
+          err,
+        )
       })
 
     return () => {

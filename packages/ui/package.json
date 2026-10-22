@@ -8,6 +8,8 @@
     "./styles": "./src/styles/main.css",
     "./styles/*": "./src/styles/*",
     "./hooks/*": "./src/hooks/*.ts",
+    "./lib/*": "./src/lib/*.ts",
+    "./audio/*": "./src/lib/audio/*.ts",
     "./constants": "./src/constants/index.ts",
     "./constants/*": "./src/constants/*",
     "./components/ui/*": "./src/components/ui/*.tsx",

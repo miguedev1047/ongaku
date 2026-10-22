@@ -1,4 +1,4 @@
-import { clamp } from '../lib/audio/decibels'
+import { clamp } from './decibels'
 
 /**
  * Shared drawing for the electric visualizers: repeatable crackle, a spark

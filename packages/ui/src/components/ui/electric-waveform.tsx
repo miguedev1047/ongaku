@@ -27,12 +27,12 @@ import {
   moveSparks,
   readElectricColors,
   strokeSparks,
-} from '../../lib/electric'
+} from '../../lib/audio/electric'
 import type {
   ElectricCanvasSize,
   ElectricColors,
   ElectricSparks,
-} from '../../lib/electric'
+} from '../../lib/audio/electric'
 import { cn } from 'cn'
 
 const DEFAULT_INTENSITY = 0.6
