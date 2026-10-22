@@ -44,7 +44,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   useLanguageSync()
 
   return (
-    <html lang='en'>
+    <html lang='en' suppressHydrationWarning>
       <head>
         <HeadContent />
         <ScriptOnce>

@@ -118,7 +118,7 @@
     "github": "GitHub",
     "issues": "Incidencias",
     "license": "Licencia MIT",
-    "copyright": "© {{year}} Ongaku. Hecho con Tauri, React y Rust.",
+    "copyright": "© {{year}} Ongaku. Hecho por Miguel Angel <3",
     "disclaimer": "No está afiliado a YouTube ni a Google."
   }
 }

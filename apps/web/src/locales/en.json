@@ -118,7 +118,7 @@
     "github": "GitHub",
     "issues": "Issues",
     "license": "MIT License",
-    "copyright": "© {{year}} Ongaku. Built with Tauri, React and Rust.",
+    "copyright": "© {{year}} Ongaku. Build by Miguel Angel <3",
     "disclaimer": "Not affiliated with YouTube or Google."
   }
 }

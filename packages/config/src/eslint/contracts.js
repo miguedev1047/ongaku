@@ -262,4 +262,23 @@ export const shadcnContracts = [
     pattern: '^ColorPicker.*$',
     allow: ['layout', 'w-*', 'max-w-*', 'gap-*'],
   },
+  {
+    pattern: '^FlickeringGrid$',
+    allow: [
+      'layout',
+      'mask-b-*',
+      'mask-t-*',
+      'mask-b-from-*',
+      'mask-t-from-*',
+      'mask-*',
+    ],
+  },
+  {
+    pattern: '^TopographyBackground$',
+    allow: ['layout', 'opacity-*', 'mask-y-from-*', 'mask-y-from-*', 'mask-*'],
+  },
+  {
+    package: '^ElectricWaveform$',
+    allow: ['layout', 'text-*'],
+  },
 ]
