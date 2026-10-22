@@ -1,0 +1,21 @@
+{
+  "name": "@ongaku/config",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./eslint": {
+      "types": "./src/eslint/index.d.ts",
+      "default": "./src/eslint/index.js"
+    }
+  },
+  "dependencies": {
+    "@shadcn/lint": "^0.2.0",
+    "@typescript-eslint/parser": "^8.71.1",
+    "eslint": "^10.12.0"
+  }
+}

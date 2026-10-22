@@ -19,26 +19,26 @@ import type {
 import { cn } from 'cn'
 import { flushSync } from 'react-dom'
 
-import { Button } from '@/components/ui/button'
+import { Button } from '../ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from '../ui/dropdown-menu'
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
-} from '@/components/ui/input-group'
+} from '../ui/input-group'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover'
-import { Separator } from '@/components/ui/separator'
+} from '../ui/popover'
+import { Separator } from '../ui/separator'
 import { HugeiconsIcon } from '@hugeicons/react'
 import {
   ArrowDown01Icon,
