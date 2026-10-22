@@ -104,7 +104,7 @@ export function SongCoverCanvas({
               source={visualizerSource}
               align='end'
               barCount={90}
-              className='absolute -bottom-1 inset-x-0 h-20 w-full text-foreground/80 pointer-events-none z-10'
+              className='absolute -bottom-1 inset-x-0 h-20 w-full text-background/80 dark:text-foreground/80 pointer-events-none z-10'
             />
 
             <div className='min-h-full flex flex-col items-center justify-center p-6 sm:p-10'>
