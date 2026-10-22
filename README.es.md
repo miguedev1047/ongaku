@@ -19,11 +19,11 @@
 ## 📸 Capturas de Pantalla
 
 <div align="center">
-  <img src="packages/assets/public/screenshots/app-img-1.png" alt="Ongaku YouTube Search" width="100%" />
+  <img src="packages/assets/public/screenshots/demo-app-1.webp" alt="Ongaku YouTube Search" width="100%" />
   <br/><br/>
-  <img src="packages/assets/public/screenshots/app-img-2.png" alt="Ongaku Playlists" width="100%" />
+  <img src="packages/assets/public/screenshots/demo-app-2.webp" alt="Ongaku Playlists" width="100%" />
   <br/><br/>
-  <img src="packages/assets/public/screenshots/app-img-3.png" alt="Ongaku Downloads" width="100%" />
+  <img src="packages/assets/public/screenshots/demo-app-3.webp" alt="Ongaku Downloads" width="100%" />
 </div>
 
 ---
@@ -56,6 +56,6 @@ Consulta [`apps/web/README.md`](apps/web/README.md) para la configuración de Cl
 
 Para ver la guía de instalación, solución de problemas, características completas y entorno de desarrollo:
 
-- [Compatibilidad de Plataformas y Requisitos](docs/es/compatibilidad.md) *(Aviso de SmartScreen en Windows, aprobación de Gatekeeper en macOS, dependencias multimedia en Linux)*
-- [Documentación Completa y Arquitectura](docs/es/bienvenida.md) *(Características detalladas, arquitectura técnica y configuración para desarrollo)*
-- [Arquitectura de Seguridad y Defensa en Profundidad](docs/es/seguridad.md) *(Blindaje de `yt-dlp`, matriz de amenazas, pruebas en CI y reporte de vulnerabilidades)*
+- [Compatibilidad de Plataformas y Requisitos](docs/es/compatibilidad.md) _(Aviso de SmartScreen en Windows, aprobación de Gatekeeper en macOS, dependencias multimedia en Linux)_
+- [Documentación Completa y Arquitectura](docs/es/bienvenida.md) _(Características detalladas, arquitectura técnica y configuración para desarrollo)_
+- [Arquitectura de Seguridad y Defensa en Profundidad](docs/es/seguridad.md) _(Blindaje de `yt-dlp`, matriz de amenazas, pruebas en CI y reporte de vulnerabilidades)_

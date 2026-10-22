@@ -1,4 +1,4 @@
-import appImg13 from '@ongaku/assets/screenshots/app-img-13.png'
+import demoApp13 from '@ongaku/assets/screenshots/demo-app-13.webp'
 import { RainbowButton, TechText } from '@ongaku/ui'
 import { useTranslation } from 'react-i18next'
 import { Tilt, TiltContent } from '@animate-ui/react/primitives/effects/tilt'
@@ -64,7 +64,7 @@ export function Hero() {
         <Tilt>
           <TiltContent>
             <img
-              src={appImg13}
+              src={demoApp13}
               alt={t('hero.imageAlt')}
               className='relative w-full rounded-md'
             />

@@ -1,15 +1,15 @@
-import appImg1 from '@ongaku/assets/screenshots/app-img-1.png'
-import appImg2 from '@ongaku/assets/screenshots/app-img-2.png'
-import appImg3 from '@ongaku/assets/screenshots/app-img-3.png'
-import appImg4 from '@ongaku/assets/screenshots/app-img-4.png'
-import appImg5 from '@ongaku/assets/screenshots/app-img-5.png'
-import appImg6 from '@ongaku/assets/screenshots/app-img-6.png'
-import appImg7 from '@ongaku/assets/screenshots/app-img-7.png'
-import appImg8 from '@ongaku/assets/screenshots/app-img-8.png'
-import appImg9 from '@ongaku/assets/screenshots/app-img-9.png'
-import appImg10 from '@ongaku/assets/screenshots/app-img-10.png'
-import appImg11 from '@ongaku/assets/screenshots/app-img-11.png'
-import appImg12 from '@ongaku/assets/screenshots/app-img-12.png'
+import demoApp1 from '@ongaku/assets/screenshots/demo-app-1.webp'
+import demoApp2 from '@ongaku/assets/screenshots/demo-app-2.webp'
+import demoApp3 from '@ongaku/assets/screenshots/demo-app-3.webp'
+import demoApp4 from '@ongaku/assets/screenshots/demo-app-4.webp'
+import demoApp5 from '@ongaku/assets/screenshots/demo-app-5.webp'
+import demoApp6 from '@ongaku/assets/screenshots/demo-app-6.webp'
+import demoApp7 from '@ongaku/assets/screenshots/demo-app-7.webp'
+import demoApp8 from '@ongaku/assets/screenshots/demo-app-8.webp'
+import demoApp9 from '@ongaku/assets/screenshots/demo-app-9.webp'
+import demoApp10 from '@ongaku/assets/screenshots/demo-app-10.webp'
+import demoApp11 from '@ongaku/assets/screenshots/demo-app-11.webp'
+import demoApp12 from '@ongaku/assets/screenshots/demo-app-12.webp'
 
 import { buildMarqueeLayout } from '@/features/landing/lib/marquee-layout'
 
@@ -20,21 +20,21 @@ export const ISSUES_URL = `${REPOSITORY_URL}/issues`
 
 export const SITE_NAME = 'Ongaku'
 export const SOCIAL_IMAGE_URL =
-  'https://raw.githubusercontent.com/miguedev1047/ongaku/master/packages/assets/public/screenshots/app-img-2.png'
+  'https://raw.githubusercontent.com/miguedev1047/ongaku/master/packages/assets/public/screenshots/demo-app-2.webp'
 
 const SCREENSHOT_ASSETS = [
-  appImg1,
-  appImg2,
-  appImg3,
-  appImg4,
-  appImg5,
-  appImg6,
-  appImg7,
-  appImg8,
-  appImg9,
-  appImg10,
-  appImg11,
-  appImg12,
+  demoApp1,
+  demoApp2,
+  demoApp3,
+  demoApp4,
+  demoApp5,
+  demoApp6,
+  demoApp7,
+  demoApp8,
+  demoApp9,
+  demoApp10,
+  demoApp11,
+  demoApp12,
 ] as const
 
 export const SCREENSHOTS = buildMarqueeLayout(SCREENSHOT_ASSETS, {

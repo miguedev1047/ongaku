@@ -8,11 +8,22 @@ Single source of truth for Ongaku brand and product media.
 public/
 ├── ongaku-logo.png
 └── screenshots/
-    ├── app-img-1.png
-    ├── app-img-2.png
-    ├── app-img-3.png
-    └── app-img-4.png
+    ├── demo-app-1.webp
+    ├── demo-app-2.webp
+    ├── demo-app-3.webp
+    └── demo-app-4.webp
 ```
+
+## Optimizing screenshots
+
+Drop new captures as `app-img-<number>.png` and run:
+
+```bash
+bun run screenshots:optimize
+```
+
+The script converts every source PNG to `demo-app-<number>.webp` at quality 80,
+removes the original PNG and keeps the original resolution.
 
 ## Importing from an app
 
@@ -21,7 +32,7 @@ of the application bundle:
 
 ```tsx
 import logo from '@ongaku/assets/logo'
-import libraryShot from '@ongaku/assets/screenshots/app-img-1.png'
+import libraryShot from '@ongaku/assets/screenshots/demo-app-1.webp'
 ```
 
 Use these imports for rendered `<img>` elements. Do not reference another

@@ -14,6 +14,10 @@
     }
   },
   "scripts": {
-    "sync": "bun scripts/sync.mjs"
+    "sync": "bun scripts/sync.mjs",
+    "screenshots:optimize": "bun scripts/optimize-screenshots.mjs"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.5"
   }
 }
