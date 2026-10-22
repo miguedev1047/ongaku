@@ -49,6 +49,9 @@ Bienvenido a la documentación oficial de **Ongaku** (`音楽`), un reproductor 
   - Modos Claro, Oscuro y Sistema con familias de temas sincronizadas.
   - Paletas de colores pastel para las carpetas de tus playlists (Azul Cielo, Esmeralda, Coral, Lavanda, etc.) junto a un selector de color interactivo con valores HEX personalizados y soporte para canales de color.
   - Posición del reproductor personalizable (barra inferior anclada o diseños flotantes).
+- **Ventana Sin Bordes y Controles Nativos Integrados**:
+  - Presentación elegante frameless con controles de ventana personalizados (Minimizar, Maximizar/Restaurar, Cerrar).
+  - Regiones nativas de arrastre (`data-tauri-drag-region`) junto con protección `app-no-drag` para cabeceras y paletas de comandos interactivas.
 - **Reproductor Minimalista y Panel de Cola de Reproducción**:
   - Barra de progreso interactiva a 60 FPS sin tirones, control de volumen suave y controles intuitivos.
   - **Panel de Cola (Queue Sheet)**: Panel lateral deslizable para ver, reordenar, gestionar o limpiar las próximas canciones al vuelo.
@@ -72,6 +75,8 @@ Bienvenido a la documentación oficial de **Ongaku** (`音楽`), un reproductor 
 
 Estado y funciones de las versiones de Ongaku:
 
+- [x] **Arquitectura Monorepo con Turborepo**: Espacios de trabajo de Bun con paquetes desacoplados (`@ongaku/ui`, `@ongaku/config`) y pipelines de compilación con caché en paralelo.
+- [x] **Ventana Sin Bordes y Controles Nativos Integrados**: Diseño frameless con controles de ventana personalizados (minimizar, maximizar/restaurar, cerrar) y aislamiento de regiones de arrastre.
 - [x] **Soporte Multilenguaje (i18n)**: Integración de traducciones completas de la interfaz (Español e Inglés) con selector reactivo de idioma en ajustes.
 - [x] **Fondos Personalizados y Desenfoque Ajustable**: Posibilidad de importar y gestionar fondos locales o mediante URL, con optimización WebP, miniaturas ligeras en caché, selector visual y niveles de desenfoque sutil, medio o intenso.
 - [x] **Temas Dinámicos Desacoplados y Colores Pastel**: Familias de temas, sincronización claro/oscuro con el sistema, colores pastel para playlists con selector HEX interactivo y posición configurable del reproductor.
@@ -88,9 +93,17 @@ Si quieres ejecutar el proyecto tú mismo o colaborar en el desarrollo:
 
 ### Requisitos Previos
 
-- [Bun](https://bun.sh/) (Gestor de paquetes recomendado)
+- [Bun](https://bun.sh/) (Gestor de paquetes recomendado, versión 1.2+)
 - [Rust](https://www.rust-lang.org/) (Instalado mediante `rustup`)
 - Herramientas de compilación de C++ (Visual Studio Build Tools en Windows o `build-essential` en Linux)
+
+### Estructura del Monorepo
+
+Ongaku está estructurado como un monorepo gestionado por Turborepo:
+- `apps/desktop`: Aplicación de escritorio Tauri v2 (React 19 + TanStack + backend Rust)
+- `apps/web`: Espacio de trabajo para aplicación web
+- `packages/ui`: Sistema de diseño compartido (`@ongaku/ui`), componentes de UI y temas
+- `packages/config`: Configuraciones compartidas (`@ongaku/config`) y reglas estrictas de ESLint
 
 ### Comandos de Ejecución
 
@@ -99,14 +112,18 @@ Si quieres ejecutar el proyecto tú mismo o colaborar en el desarrollo:
 git clone https://github.com/miguedev1047/ongaku.git
 cd ongaku
 
-# 2. Instalar dependencias
+# 2. Instalar dependencias del workspace
 bun install
 
-# 3. Iniciar la aplicación en modo desarrollo
-bun run tauri dev
+# 3. Iniciar la aplicación de escritorio en modo desarrollo
+bun run dev:tauri
 
-# 4. Compilar instaladores para producción
-bun run tauri build
+# 4. Compilar instaladores de escritorio para producción
+bun run build:tauri
+
+# Verificación de linting y tests en el workspace
+bun run lint
+bun run test
 ```
 
 ---

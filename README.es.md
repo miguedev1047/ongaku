@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/ongaku-logo.png" alt="Ongaku Logo" width="96" height="96" />
+  <img src="apps/desktop/public/ongaku-logo.png" alt="Ongaku Logo" width="96" height="96" />
   <h1>Ongaku (音楽)</h1>
   <p>Un reproductor de música de escritorio y descargador de YouTube ligero, minimalista y ultra rápido.</p>
 
@@ -19,11 +19,11 @@
 ## 📸 Capturas de Pantalla
 
 <div align="center">
-  <img src="public/images/app-img-1.png" alt="Ongaku Local Library" width="100%" />
+  <img src="apps/desktop/public/images/app-img-1.png" alt="Ongaku Local Library" width="100%" />
   <br/><br/>
-  <img src="public/images/app-img-2.png" alt="Ongaku YouTube Search" width="100%" />
+  <img src="apps/desktop/public/images/app-img-2.png" alt="Ongaku YouTube Search" width="100%" />
   <br/><br/>
-  <img src="public/images/app-img-3.png" alt="Ongaku Player & Queue" width="100%" />
+  <img src="apps/desktop/public/images/app-img-3.png" alt="Ongaku Player & Queue" width="100%" />
 </div>
 
 ---

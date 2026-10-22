@@ -49,6 +49,9 @@ Welcome to the official documentation for **Ongaku** (`音楽`), a lightweight, 
   - Clean Dark, Light, and System modes with synchronized theme families.
   - Curated pastel folder color presets for playlists (Sky Blue, Emerald, Sunset Coral, Lavender, etc.) plus an interactive custom HEX color picker with full color channel controls.
   - Customizable player position (docked bottom or floating layouts).
+- **Frameless Window & Integrated Native Controls**:
+  - Elegant borderless presentation with custom titlebar window controls (Minimize, Maximize/Restore, Close).
+  - Native window dragging regions (`data-tauri-drag-region`) paired with `app-no-drag` protection on headers and interactive command palettes.
 - **Minimalist Player & Dedicated Playback Queue Sheet**:
   - Full-width interactive progress bar with decoupled 60 FPS dragging, smooth volume control, and intuitive controls.
   - Interactive **Queue Sheet**: slide-over panel to view, reorder, manage, or clear upcoming tracks on the fly.
@@ -72,6 +75,8 @@ Welcome to the official documentation for **Ongaku** (`音楽`), a lightweight, 
 
 Status and planned features for Ongaku releases:
 
+- [x] **Turborepo Monorepo Architecture**: Bun workspaces with isolated packages (`@ongaku/ui`, `@ongaku/config`) and parallel build caching pipelines.
+- [x] **Frameless Window & Integrated Native Controls**: Borderless design with native window controls (minimize, maximize/restore, close) and drag region isolation.
 - [x] **Internationalization (i18n)**: Full multi-language support (English and Spanish) with a reactive language selector in Settings.
 - [x] **Custom App Wallpapers & Adjustable Blur**: Import and manage wallpapers from local files or remote URLs, featuring WebP compression, lightweight thumbnail caching, visual gallery, and subtle/medium/intense blur presets.
 - [x] **Decoupled Dynamic Themes & Pastel Presets**: Theme families, system dark/light switching, pastel folder colors with interactive HEX picker, and configurable player positions.
@@ -88,9 +93,17 @@ To run Ongaku locally or contribute to the project:
 
 ### Prerequisites
 
-- [Bun](https://bun.sh/) (Recommended package manager)
+- [Bun](https://bun.sh/) (Recommended package manager, version 1.2+)
 - [Rust](https://www.rust-lang.org/) (Installed via `rustup`)
 - C++ build tools (Visual Studio Build Tools on Windows or `build-essential` on Linux)
+
+### Monorepo Structure
+
+Ongaku is structured as a Turborepo monorepo:
+- `apps/desktop`: Tauri v2 desktop application (React 19 + TanStack + Rust backend)
+- `apps/web`: Web application workspace
+- `packages/ui`: Shared design system (`@ongaku/ui`), UI components, and theme presets
+- `packages/config`: Shared configurations (`@ongaku/config`) and strict ESLint contracts
 
 ### Commands
 
@@ -99,14 +112,18 @@ To run Ongaku locally or contribute to the project:
 git clone https://github.com/miguedev1047/ongaku.git
 cd ongaku
 
-# 2. Install dependencies
+# 2. Install workspace dependencies
 bun install
 
-# 3. Launch in development mode
-bun run tauri dev
+# 3. Launch the desktop application in development mode
+bun run dev:tauri
 
-# 4. Build release packages
-bun run tauri build
+# 4. Build release desktop packages
+bun run build:tauri
+
+# Workspace verification and testing
+bun run lint
+bun run test
 ```
 
 ---

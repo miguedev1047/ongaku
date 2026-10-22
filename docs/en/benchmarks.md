@@ -10,13 +10,21 @@ Ongaku combines a reactive, virtualized frontend with a high-performance Rust ba
 
 ```mermaid
 graph TD
-    subgraph Frontend ["Frontend (React 19 + TanStack)"]
-        UI[UI Components & Virtualized Tables]
-        TABS[Modular Feature Tabs - Settings/Playlists]
-        TR[TanStack Router - File Based]
-        TQ[TanStack React Query - Cache & Suspense]
-        ZS[Zustand Stores - Persistent Action State]
-        ADAPT[PlatformService Adapter Layer]
+    subgraph Monorepo ["Monorepo Workspaces (Turborepo + Bun)"]
+        subgraph Packages ["Shared Packages"]
+            UIKIT["@ongaku/ui\nDesign System & Themes"]
+            CONF["@ongaku/config\nShared ESLint & Contracts"]
+        end
+
+        subgraph DesktopApp ["Desktop App (apps/desktop)"]
+            UI[Views & Virtualized Tables]
+            TABS[Domain Features & Settings Tabs]
+            WIN[Frameless Window & Drag Region Controls]
+            TR[TanStack Router - File Based]
+            TQ[TanStack React Query - Cache & Suspense]
+            ZS[Zustand Stores - Persistent Action State]
+            ADAPT[PlatformService Adapter Layer]
+        end
     end
 
     subgraph Backend ["Native Backend (Tauri v2 + Rust)"]
@@ -29,11 +37,18 @@ graph TD
         FS[("Local Filesystem\nlibrary/, cache/ & staging/")]
     end
 
-    subgraph OS ["Operating System & Audio Server"]
-        AUDIO[PipeWire / PulseAudio / ALSA]
+    subgraph OS ["Operating System, Window & Audio"]
+        AUDIO[PipeWire / PulseAudio / ALSA / CoreAudio / WASAPI]
+        WND[OS Window Server & Frameless Manager]
     end
 
+    UIKIT --> UI
+    CONF -.->|Lint Contracts| DesktopApp
+    CONF -.->|Lint Contracts| UIKIT
     UI --> TABS
+    UI --> WIN
+    WIN --> ADAPT
+    ADAPT -.-> WND
     TABS --> TQ
     UI --> TQ
     UI --> ZS
@@ -57,9 +72,16 @@ graph TD
 
 ## 🧩 2. Core Technical Components
 
-### A. Frontend (React 19, TanStack Ecosystem & PlatformService)
+### A. Monorepo Architecture (Turborepo + Bun Workspaces)
+- **Unified Workspace Management**: Managed via Bun workspaces and Turborepo (`turbo.json`) for pipeline acceleration and incremental caching.
+- **`packages/ui` (`@ongaku/ui`)**: Standalone UI design system providing reusable shadcn primitives, theme providers (`catppuccin`, `crimson`, `sakura`, `spotify`, `vintage-paper`, `zedative`), and interactive components like the custom color picker.
+- **`packages/config` (`@ongaku/config`)**: Centralized ESLint flat configurations and architectural enforcement contracts (`cn` utility enforcement, `<Show>` component adoption, restricted relative imports, icon sizing contracts).
+- **Dedicated Build Pipelines**: Independent pipelines (`dev:tauri`, `build:tauri`, `lint`, `test`) with clean artifact caching and cross-package dependency resolution.
+
+### B. Desktop Application & Frontend (`apps/desktop`)
+- **Integrated Frameless Window & Drag Regions**: Clean borderless window presentation with native window controls (Minimize, Maximize/Restore, Close). Window dragging is driven by native `data-tauri-drag-region` titlebars while `app-no-drag` boundary classes shield interactive elements, search inputs, and command palettes from accidental window movement.
 - **TanStack Router**: File-based routing (`/playlists/$playlistName`, `/library`, `/settings/`, `/search-youtube`, `/download-songs`). Route loaders prewarm query caches with `.query()` to guarantee flicker-free transitions.
-- **Domain-Driven Feature & Tab Architecture**: Strictly structured into isolated domain packages (`src/features/<domain>/` for `player`, `library`, `playlists`, `playlist-songs`, `youtube-search`, `download-songs`, `download-queue`, `settings`). The `settings` domain is modularized by tabs (`general-tab`, `appearance-tab` with an isolated `wallpapers/` submodule, `system-tab`), ensuring high cohesion, clear boundaries, and clean maintenance.
+- **Domain-Driven Feature & Tab Architecture**: Strictly structured into isolated domain packages (`apps/desktop/src/features/<domain>/` for `player`, `library`, `playlists`, `playlist-songs`, `youtube-search`, `download-songs`, `download-queue`, `settings`). The `settings` domain is modularized by tabs (`general-tab`, `appearance-tab` with an isolated `wallpapers/` submodule, `system-tab`), ensuring high cohesion, clear boundaries, and clean maintenance.
 - **Reactive Binary Guards & Dynamic Navigation**: Auxiliary binaries (`yt-dlp` and `ffmpeg`) are monitored reactively via `useBinaries` / `systemHealthQueryOpts`. When auxiliary tools are not installed, download and YouTube search routes (`/download-songs`, `/search-youtube`) are gracefully hidden from sidebar navigation, and route boundaries render intuitive 1-click installer fallbacks.
 - **TanStack React Query & Suspense**: Declarative asynchronous state and in-memory caching. The UI relies on `useSuspenseQuery` for system health, audio libraries, and configuration.
 - **Zustand Action Stores**: Global state persistence across navigation for long-running workflows (audio download progress, binary installation status, persisted player state, queue sheet).
@@ -67,7 +89,7 @@ graph TD
 - **Native Command Palettes (⌘K)**: Instant keyboard-driven modal search powered by `cmdk` native in-memory fuzzy filtering without layout thrashing, ensuring zero input latency.
 - **PlatformService Layer**: Runtime abstraction isolating the React UI from direct Tauri API calls, enabling modularity and seamless cross-platform adaptability.
 
-### B. Native Rust Audio Engine (Rodio, Symphonia & CPAL)
+### C. Native Rust Audio Engine (Rodio, Symphonia & CPAL)
 - **Native Decoding and Playback**: Replaced the webview HTML5 `<audio>` element with `rodio` (v0.22) and `symphonia` for local library playback. Completely eliminates WebKitGTK / GStreamer freezes on Linux by offloading audio decoding outside the web browser process.
 - **Format Compatibility**: High-fidelity native decoding for `.mp3`, `.flac`, `.wav`, `.ogg` (Vorbis), and `.m4a`/`.mp4` (AAC).
 - **Decoupled 60 FPS Seeking**: Dragging the progress slider visually updates the position at 60 FPS (`isSeeking = true`) without CPU overhead; IPC seek commands (`local_audio_seek`) are dispatched to Rust only on pointer release (`onPointerUp`) or discrete ±5s steps.
@@ -75,21 +97,21 @@ graph TD
 - **Strict Mutual Exclusion (YouTube vs Local)**: When playing a remote YouTube stream, `local_audio_stop` immediately terminates Rodio; when playing local audio, the streaming element is instantly cleared, eliminating dual audio playback.
 - **Resilience and Circuit Breaker**: Atomic generation tracking (`AtomicU64`) to discard stale playback requests during rapid track switching, automatic circuit breaker (stops after 3 consecutive failures on missing files), and phantom state prevention for cold-deleted persisted tracks.
 
-### C. Local Axum Server & On-Demand Covers
+### D. Local Axum Server & On-Demand Covers
 - **Internal HTTP Server**: Binds Axum to `localhost` on a dynamic OS-assigned port to isolate local traffic.
 - **On-Demand Cover Processing**: Extract album artwork and downscale via `Lanczos3` with WebP compression on the fly, keeping image cache compact (~16MB).
 - **YouTube Stream Delivery**: Efficient bridge for streaming remote YouTube tracks into the webview.
 
-### D. SQLite Database in WAL Mode
+### E. SQLite Database in WAL Mode
 - **Relational Integrity**: Normalized schemas (`songs`, `playlists`, `playlist_songs`, `config`).
 - **Write-Ahead Logging (WAL)**: Allows concurrent reads without blocking database writes.
 - **Indexed Queries**: Fast queries by song ID and positional sorting with dedicated database indexes.
 
-### E. Ingestion Pipeline & Chunked Shield (Lofty + Rayon)
+### F. Ingestion Pipeline & Chunked Shield (Lofty + Rayon)
 - **Multithreaded Parsing**: `Rayon` balances metadata extraction (ID3v2, Vorbis, FLAC, MP4) across all available CPU cores.
 - **Bounded Chunk Processing**: Mass file imports are processed in batches of 100 (`IMPORT_CHUNK_SIZE`), executing safe internal file copies, delta synchronization, and bounded SQLite transactions while emitting live progress events (`import-progress`).
 
-### F. Hardened Download Queue & Security Shield (yt-dlp + ffmpeg)
+### G. Hardened Download Queue & Security Shield (yt-dlp + ffmpeg)
 - **Rust Backend Ownership**: Process spawns and execution environments are strictly owned and managed by the Rust backend. The webview cannot execute shell processes directly or inject unverified commands.
 - **Strict Domain Whitelist (`ALLOWED_URLS`)**: URLs are validated before process creation against strict domain patterns (`youtube.com`, `*.youtube.com`, `youtu.be`, `music.youtube.com`), preventing arbitrary host fetching, protocol exploits (`file://`), and SSRF.
 - **CLI Flag Injection Prevention**: All invocations to `yt-dlp` inject the standard `--` argument delimiter right before target URLs, completely neutralizing flag injection attacks (such as `--exec` or `--dump-user-opts`). URLs and task IDs are also validated to forbid flags (`-`) and control characters (`\0`).
