@@ -1,0 +1,17 @@
+{
+  "short_name": "Ongaku",
+  "name": "Ongaku — Desktop music, without the noise",
+  "description": "A lightweight, minimal desktop music player and YouTube downloader for Windows, macOS and Linux.",
+  "icons": [
+    {
+      "src": "/ongaku-logo.png",
+      "type": "image/png",
+      "sizes": "1000x1000",
+      "purpose": "any"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#0a0a0a",
+  "background_color": "#0a0a0a"
+}

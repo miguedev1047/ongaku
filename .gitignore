@@ -14,6 +14,21 @@ dist-ssr
 .turbo
 *.local
 
+# Assets copied from @ongaku/assets for stable public URLs
+apps/desktop/public/ongaku-logo.png
+apps/web/public/ongaku-logo.png
+apps/web/public/screenshots/
+
+# Local environment files (keep the examples committed)
+.env
+.env.*
+!**/.env.example
+
+# Cloudflare local/build artifacts
+apps/web/.wrangler/
+apps/web/.tanstack/
+apps/web/worker-configuration.d.ts
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

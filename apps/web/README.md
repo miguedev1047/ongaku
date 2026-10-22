@@ -1,0 +1,86 @@
+# Ongaku Web
+
+Public landing page and download center for Ongaku. Built with TanStack Start
+and deployed to Cloudflare Workers.
+
+## Development
+
+From the repository root:
+
+```bash
+bun run dev:all
+```
+
+This starts the native Tauri desktop app (with its Vite server on port `1420`)
+and the Web app on port `3000`. To work on the website alone:
+
+```bash
+bun --filter web dev
+```
+
+To start only the Desktop frontend in the browser, without Tauri:
+
+```bash
+bun --filter desktop dev
+```
+
+The `dev` and `build` scripts sync the shared logo from `@ongaku/assets` into
+`public/` before Vite starts, so the manifest and social icons use stable URLs.
+
+## Build and checks
+
+```bash
+bun run typecheck
+bun run lint
+bun run build:web
+```
+
+`build:web` uses Turborepo and builds the website together with its workspace
+dependencies (`@ongaku/ui`, `@ongaku/config`, `@ongaku/assets`).
+
+## Cloudflare Workers
+
+The app uses `@cloudflare/vite-plugin` and `wrangler.jsonc` with
+`@tanstack/react-start/server-entry`.
+
+```bash
+bun --filter web cf:dev
+bun --filter web cf-typegen
+bun --filter web deploy
+```
+
+`deploy` builds first and then runs `wrangler deploy` with the configuration in
+this directory. The Worker name is `ongaku-web`; update `wrangler.jsonc` before
+attaching a custom domain.
+
+`compatibility_date` is pinned to the newest date supported by the local
+`workerd` build shipped with Wrangler. Bump it together with Wrangler when the
+runtime supports a newer date.
+
+`cf-typegen` writes `worker-configuration.d.ts`, which is ignored by git because
+the landing has no bindings yet. Run the script again after adding any binding.
+
+### GitHub Actions
+
+`.github/workflows/web-deploy.yml` validates pull requests and deploys only from
+`master` or a manual dispatch using the official
+`cloudflare/wrangler-action@v4`. Configure these repository secrets:
+
+- `CLOUDFLARE_API_TOKEN` — token with permission to deploy Workers.
+- `CLOUDFLARE_ACCOUNT_ID` — Cloudflare account that owns the Worker.
+
+For deploys from your machine, copy `.env.example` to `apps/web/.env` and fill
+in the same two values. `apps/web/.env` is ignored by git.
+
+## Structure
+
+```text
+src/
+├── features/landing/   # Landing sections, content and constants
+├── routes/             # TanStack Start routes
+├── router.tsx
+└── styles/main.css     # Shared @ongaku/ui theme + landing utilities
+```
+
+UI primitives come from `@ongaku/ui`; do not add local copies of shadcn
+components. Image assets come from `@ongaku/assets`.

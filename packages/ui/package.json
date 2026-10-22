@@ -9,6 +9,9 @@
     "./styles/*": "./src/styles/*",
     "./constants": "./src/constants/index.ts",
     "./constants/*": "./src/constants/*",
+    "./components/ui/*": "./src/components/ui/*.tsx",
+    "./components/reui/*": "./src/components/reui/*.tsx",
+    "./components/utility/show": "./src/components/utility/show/index.ts",
     "./components/*": "./src/components/*",
     "./loaders": "./src/components/ui/loaders/index.ts"
   },

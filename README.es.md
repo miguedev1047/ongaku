@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="apps/desktop/public/ongaku-logo.png" alt="Ongaku Logo" width="96" height="96" />
+  <img src="packages/assets/public/ongaku-logo.png" alt="Ongaku Logo" width="96" height="96" />
   <h1>Ongaku (音楽)</h1>
   <p>Un reproductor de música de escritorio y descargador de YouTube ligero, minimalista y ultra rápido.</p>
 
@@ -19,11 +19,11 @@
 ## 📸 Capturas de Pantalla
 
 <div align="center">
-  <img src="apps/desktop/public/images/app-img-1.png" alt="Ongaku Local Library" width="100%" />
+  <img src="packages/assets/public/screenshots/app-img-1.png" alt="Ongaku YouTube Search" width="100%" />
   <br/><br/>
-  <img src="apps/desktop/public/images/app-img-2.png" alt="Ongaku YouTube Search" width="100%" />
+  <img src="packages/assets/public/screenshots/app-img-2.png" alt="Ongaku Playlists" width="100%" />
   <br/><br/>
-  <img src="apps/desktop/public/images/app-img-3.png" alt="Ongaku Player & Queue" width="100%" />
+  <img src="packages/assets/public/screenshots/app-img-3.png" alt="Ongaku Downloads" width="100%" />
 </div>
 
 ---
@@ -35,6 +35,20 @@ Obtén el instalador o ejecutable más reciente para tu plataforma directamente 
 - **Windows**: `ongaku_*_x64-setup.exe`
 - **macOS**: `ongaku_*_x64.dmg` / `ongaku_*_aarch64.dmg`
 - **Linux**: `ongaku_*_amd64.AppImage` / `ongaku_*_amd64.deb`
+
+---
+
+## 🌐 Sitio Web
+
+La landing pública vive en [`apps/web`](apps/web) y se despliega en Cloudflare Workers con TanStack Start. Comparte la UI, configuración y assets de Ongaku desde `packages/`.
+
+```bash
+bun run dev:all      # App Tauri de escritorio + Web en :3000
+bun run build:web    # Compila el sitio y sus dependencias del workspace
+bun --filter web deploy
+```
+
+Consulta [`apps/web/README.md`](apps/web/README.md) para la configuración de Cloudflare y los secretos de CI.
 
 ---
 

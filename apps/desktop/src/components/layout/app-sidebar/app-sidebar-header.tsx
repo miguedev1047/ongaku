@@ -1,3 +1,4 @@
+import logo from '@ongaku/assets/logo'
 import { SidebarHeader, SidebarTrigger } from '@ongaku/ui'
 
 export function AppSidebarHeader() {
@@ -5,7 +6,7 @@ export function AppSidebarHeader() {
     <SidebarHeader className='flex flex-row items-center justify-between p-2 border-b h-12 bg-accent/40 backdrop-blur-md'>
       <div className='flex items-center gap-2 overflow-hidden px-1 group-data-[collapsible=icon]:hidden'>
         <div className='flex size-7 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground overflow-hidden'>
-          <img src='/ongaku-logo.png' className='size-full object-cover' />
+          <img src={logo} className='size-full object-cover' alt='Ongaku' />
         </div>
         <span className='font-semibold text-sm tracking-tight truncate'>
           Ongaku

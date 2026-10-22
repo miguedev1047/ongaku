@@ -8,8 +8,10 @@
   ],
   "scripts": {
     "dev": "turbo run dev",
+    "dev:all": "turbo run dev:all --filter=desktop --filter=web",
     "dev:tauri": "turbo run dev:tauri",
     "build": "turbo run build",
+    "build:web": "turbo run build --filter=web...",
     "build:tauri": "turbo run build:tauri",
     "preview": "turbo run preview",
     "test": "turbo run test",

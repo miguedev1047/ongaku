@@ -5,9 +5,11 @@
   "version": "0.1.45",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "assets:sync": "bun ../../packages/assets/scripts/sync.mjs public logo",
+    "dev": "bun run assets:sync && vite",
+    "dev:all": "bun run dev:tauri",
     "dev:tauri": "tauri dev",
-    "build": "tsc && vite build",
+    "build": "bun run assets:sync && tsc && vite build",
     "build:tauri": "tauri build",
     "preview": "vite preview",
     "tauri": "tauri",
@@ -18,6 +20,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@ongaku/assets": "workspace:*",
     "@ongaku/ui": "workspace:*",
     "@animate-ui/react": "^2.0.0",
     "@base-ui/react": "^1.8.0",
