@@ -3,6 +3,7 @@ import '@/lib/i18n'
 import {
   HeadContent,
   Link,
+  ScriptOnce,
   Scripts,
   createRootRoute,
 } from '@tanstack/react-router'
@@ -11,6 +12,10 @@ import { useTranslation } from 'react-i18next'
 import appCss from '@/styles/main.css?url'
 import { SITE_DESCRIPTION, SITE_NAME } from '@/features/landing/constants'
 import { useLanguageSync } from '@/hooks/language-sync'
+import {
+  ThemeProvider,
+  getThemeScript,
+} from '@ongaku/ui/providers/theme-provider'
 
 export const Route = createRootRoute({
   head: () => ({
@@ -42,9 +47,24 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     <html lang='en'>
       <head>
         <HeadContent />
+        <ScriptOnce>
+          {getThemeScript({
+            defaultMode: 'dark',
+            defaultTheme: 'default',
+            modeStorageKey: 'ongaku-mode',
+            themeStorageKey: 'ongaku-theme',
+          })}
+        </ScriptOnce>
       </head>
       <body>
-        {children}
+        <ThemeProvider
+          defaultMode='dark'
+          defaultTheme='default'
+          modeStorageKey='ongaku-mode'
+          themeStorageKey='ongaku-theme'
+        >
+          {children}
+        </ThemeProvider>
         <Scripts />
       </body>
     </html>

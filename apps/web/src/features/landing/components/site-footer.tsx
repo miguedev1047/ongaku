@@ -6,6 +6,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react"
 import { buttonVariants } from "@ongaku/ui/components/ui/button"
 import { Separator } from "@ongaku/ui/components/ui/separator"
+import { ModeToggle } from "@ongaku/ui/providers/theme-provider"
 import { cn } from "cn"
 import { useTranslation } from "react-i18next"
 
@@ -53,6 +54,7 @@ export function SiteFooter() {
                 {t(link.key)}
               </a>
             ))}
+            <ModeToggle label={t("navigation:theme")} />
           </nav>
         </div>
 

@@ -1,6 +1,7 @@
 import { GithubIcon, Download04Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { buttonVariants } from "@ongaku/ui/components/ui/button"
+import { ModeToggle } from "@ongaku/ui/providers/theme-provider"
 import { cn } from "cn"
 import { useTranslation } from "react-i18next"
 
@@ -42,6 +43,7 @@ export function SiteHeader() {
             <HugeiconsIcon icon={Download04Icon} data-icon="inline-start" />
             {t("download")}
           </a>
+          <ModeToggle label={t("theme")} />
           <LanguageSwitcher />
         </nav>
       </div>

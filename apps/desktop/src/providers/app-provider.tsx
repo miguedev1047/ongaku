@@ -1,4 +1,4 @@
-import { ThemeProvider } from '@/providers/theme-provider'
+import { ThemeProvider } from '@ongaku/ui/providers/theme-provider'
 import { TooltipProvider } from '@ongaku/ui'
 import { HotkeysProvider } from '@tanstack/react-hotkeys'
 

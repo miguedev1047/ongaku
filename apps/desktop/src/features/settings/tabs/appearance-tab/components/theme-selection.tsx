@@ -1,7 +1,7 @@
 import { CardWrapper } from '@ongaku/ui'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Moon, Sun, PaintBoardIcon } from '@hugeicons/core-free-icons'
-import { useTheme } from '@/providers/theme-provider'
+import { useTheme } from '@ongaku/ui/providers/theme-provider'
 import { useUpdateWallpaper } from '@/features/settings/hooks/use-wallpaper'
 import { useTranslation } from 'react-i18next'
 import { REGISTERED_THEMES, type ThemeMode } from '@ongaku/ui'
@@ -32,7 +32,7 @@ export const MODE_OPTIONS = [
 
 export function ThemeSelection() {
   const { t } = useTranslation()
-  const { mode, theme, setMode, setTheme } = useTheme()
+  const { mode, resolvedMode, theme, setMode, setTheme } = useTheme()
 
   const updateWallpaper = useUpdateWallpaper()
 
@@ -73,7 +73,7 @@ export function ThemeSelection() {
           )}
         </h3>
         <RadioGroup
-          value={mode}
+          value={mode === 'system' ? resolvedMode : mode}
           onValueChange={(val) => handleSelectMode(val as ThemeMode)}
           className='grid grid-cols-2 gap-2'
         >
@@ -112,7 +112,7 @@ export function ThemeSelection() {
                     )}
                     style={{
                       backgroundColor:
-                        mode === 'dark'
+                        resolvedMode === 'dark'
                           ? themeItem.colors.dark
                           : themeItem.colors.light,
                     }}

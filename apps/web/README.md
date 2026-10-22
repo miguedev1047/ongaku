@@ -97,7 +97,7 @@ The website owns its own `i18next` instance and resources:
 - `src/locales/en.json` and `src/locales/es.json`
 - namespaces: `common`, `navigation`, `landing`, `downloads`, `footer`
 - `src/lib/i18n.ts` initializes once with `en` as default and fallback
-- `src/routes/__root.tsx` imports it and mounts `LanguageSync`
+- `src/routes/__root.tsx` imports it and calls `useLanguageSync()`
 
 `src/hooks/language-sync.ts` is called once from `src/routes/__root.tsx`. It
 persists the preference in `localStorage` (`ongaku-language`), updates
@@ -106,6 +106,29 @@ accessible selector lives in the site header.
 
 When adding copy, update both locale files. `src/shared/tests/i18n.test.ts`
 checks namespace shape and key parity between languages.
+
+## Theme
+
+The website reuses the shared provider from `@ongaku/ui`:
+
+```ts
+import {
+  ModeToggle,
+  ThemeProvider,
+  getThemeScript,
+  useTheme,
+} from '@ongaku/ui/providers/theme-provider'
+```
+
+- `src/routes/__root.tsx` renders the theme script with `ScriptOnce`, so the
+  persisted theme is applied before the first paint and during SSR.
+- The same script is injected in Desktop through its Vite config.
+- `mode` supports `light`, `dark` and `system`; `theme` selects the visual
+  family and the `data-theme` attribute.
+- Preferences are stored in `ongaku-mode` and `ongaku-theme`.
+
+`src/features/landing/tests/theme.test.tsx` covers the script and the theme
+selector.
 
 UI primitives come from `@ongaku/ui`; do not add local copies of shadcn
 components. Image assets come from `@ongaku/assets`.

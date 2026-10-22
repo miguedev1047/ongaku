@@ -1,6 +1,14 @@
-export type ThemeMode = 'light' | 'dark'
+export type ThemeMode = 'light' | 'dark' | 'system'
+
+export type ResolvedThemeMode = 'light' | 'dark'
 
 export const DEFAULT_THEME_MODE: ThemeMode = 'dark'
+
+export const THEME_MODES: readonly ThemeMode[] = ['light', 'dark', 'system']
+
+export const DEFAULT_MODE_STORAGE_KEY = 'ongaku-mode'
+
+export const DEFAULT_THEME_STORAGE_KEY = 'ongaku-theme'
 
 export interface ThemeDefinition {
   id: string

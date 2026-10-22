@@ -18,7 +18,8 @@
     "main": "Main",
     "footer": "Footer",
     "github": "GitHub",
-    "download": "Download"
+    "download": "Download",
+    "theme": "Toggle theme"
   },
   "landing": {
     "hero": {

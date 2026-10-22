@@ -1,4 +1,4 @@
-import { useTheme } from '@/providers/theme-provider'
+import { useTheme } from '@ongaku/ui/providers/theme-provider'
 import { Toaster as Sonner, type ToasterProps } from 'sonner'
 import 'sonner/dist/styles.css'
 import { HugeiconsIcon } from '@hugeicons/react'
@@ -11,11 +11,11 @@ import {
 } from '@hugeicons/core-free-icons'
 
 const Toaster = ({ ...props }: ToasterProps) => {
-  const { mode } = useTheme()
+  const { resolvedMode } = useTheme()
 
   return (
     <Sonner
-      theme={mode as ToasterProps['theme']}
+      theme={resolvedMode as ToasterProps['theme']}
       className='toaster group font-mono!'
       style={
         {
