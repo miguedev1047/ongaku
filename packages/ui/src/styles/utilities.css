@@ -126,3 +126,22 @@
 @utility app-no-drag {
   -webkit-app-region: no-drag;
 }
+
+@theme {
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --text-caption: 15px;
+  --leading-caption: 1.35;
+  --animate-flex-carousel-reveal: flex-carousel-reveal 900ms ease both;
+  --animate-flex-carousel-title: flex-carousel-title 520ms
+    cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@utility flex-carousel-digit {
+  height: 1em;
+}
+
+@utility flex-carousel-caption {
+  top: calc(
+    50% + var(--flex-carousel-half) * var(--flex-carousel-lift, 1) + 22px
+  );
+}

@@ -124,9 +124,21 @@
   --meter-ok-foreground: color-mix(in oklch, var(--meter-ok), black 40%);
   --meter-warn-foreground: color-mix(in oklch, var(--meter-warn), black 40%);
   --meter-clip-foreground: color-mix(in oklch, var(--meter-clip), black 40%);
-  --channel-mute-foreground: color-mix(in oklch, var(--channel-mute), black 40%);
-  --channel-solo-foreground: color-mix(in oklch, var(--channel-solo), black 40%);
-  --channel-monitor-foreground: color-mix(in oklch, var(--channel-monitor), black 40%);
+  --channel-mute-foreground: color-mix(
+    in oklch,
+    var(--channel-mute),
+    black 40%
+  );
+  --channel-solo-foreground: color-mix(
+    in oklch,
+    var(--channel-solo),
+    black 40%
+  );
+  --channel-monitor-foreground: color-mix(
+    in oklch,
+    var(--channel-monitor),
+    black 40%
+  );
 }
 
 .dark {
