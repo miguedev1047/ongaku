@@ -1,0 +1,19 @@
+{
+  "name": "@ongaku/assets",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./logo": {
+      "types": "./types/logo.d.ts",
+      "default": "./public/ongaku-logo.png"
+    },
+    "./screenshots/*": {
+      "types": "./types/screenshot.d.ts",
+      "default": "./public/screenshots/*"
+    }
+  },
+  "scripts": {
+    "sync": "bun scripts/sync.mjs"
+  }
+}
