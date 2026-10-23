@@ -49,9 +49,6 @@ export function ReleaseCard() {
           <span className='text-2xs tracking-wider text-muted-foreground uppercase'>
             {release.tagName}
           </span>
-          <span className='text-2xs tracking-wider text-muted-foreground uppercase'>
-            {t('openSource')}
-          </span>
         </div>
 
         <h2 className='landing-display mt-4 font-heading text-3xl font-semibold sm:text-4xl'>
