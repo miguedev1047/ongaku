@@ -81,7 +81,7 @@ export function SongCoverCanvas({
         <motion.div
           key={songId}
           custom={direction}
-          className='size-full absolute inset-0 p-2 transform-gpu will-change-transform'
+          className='size-full absolute inset-0 p-2 transform-gpu will-change-transform backdrop-blur-md'
           style={{ backfaceVisibility: 'hidden' }}
           variants={{
             enter: (d: number) => ({ x: d > 0 ? '100%' : '-100%' }),

@@ -3,14 +3,14 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from 'cn'
 
 export const cardWrapperVariants = cva(
-  'relative rounded-md border shadow-lg',
+  'relative rounded-md border shadow-lg backdrop-blur-lg',
   {
     variants: {
       variant: {
-        default: 'border-border/50 bg-card/60 backdrop-blur-lg',
+        default: 'border-border/50 bg-card/60',
         solid: 'border-border/40 bg-card',
         interactive:
-          'border-border/40 bg-card/60 backdrop-blur-lg hover:bg-accent/40 hover:border-border transition-colors duration-200 outline-none',
+          'border-border/40 bg-card/60 hover:bg-accent/40 hover:border-border transition-colors duration-200 outline-none',
         hero: 'border-border/40 bg-card rounded-lg transition-all ease-in-out duration-300',
         plain: 'border-transparent bg-transparent',
       },

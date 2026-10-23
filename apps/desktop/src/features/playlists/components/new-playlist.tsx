@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { PlusIcon } from '@hugeicons/core-free-icons'
 import { useHotkey } from '@tanstack/react-hotkeys'
-import { Button } from '@ongaku/ui'
+import { Button, CardWrapper } from '@ongaku/ui'
 import {
   Dialog,
   DialogClose,
@@ -21,11 +21,7 @@ import {
 } from '@ongaku/ui'
 import { Input } from '@ongaku/ui'
 import { Spinner } from '@ongaku/ui'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@ongaku/ui'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@ongaku/ui'
 import { Kbd, KbdGroup } from '@ongaku/ui'
 import { useNewPlaylist } from '@/features/playlists/hooks'
 import { Show } from '@ongaku/ui'
@@ -48,10 +44,7 @@ export function CreatePlaylistDialog({
   })
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={onOpenChange}
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{t('playlists.dialogs.new.title')}</DialogTitle>
@@ -104,12 +97,10 @@ export function CreatePlaylistDialog({
         </form>
 
         <DialogFooter>
-          <DialogClose render={<Button variant='outline'>{t('common.close')}</Button>} />
-          <Button
-            type='submit'
-            form='new-playlist-form'
-            disabled={isPending}
-          >
+          <DialogClose
+            render={<Button variant='outline'>{t('common.close')}</Button>}
+          />
+          <Button type='submit' form='new-playlist-form' disabled={isPending}>
             <Show when={isPending}>
               <Spinner />
             </Show>
@@ -136,25 +127,19 @@ export function NewPlaylistCard({ className }: NewPlaylistCardProps = {}) {
       <Tooltip>
         <TooltipTrigger
           render={
-            <button
-              type='button'
+            <CardWrapper
+              role='button'
               onClick={() => setIsOpen(true)}
               className={cn(
                 'group relative flex min-h-47.5 flex-col items-center justify-center p-4 rounded-xl border-2 border-dashed border-border/60 bg-card/40 hover:bg-accent/40 hover:border-muted-foreground/50 text-muted-foreground hover:text-primary transition-all duration-200 select-none cursor-pointer outline-none focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 ring-0',
                 className,
               )}
             >
-              <HugeiconsIcon
-                icon={PlusIcon}
-                className='size-20'
-              />
-            </button>
+              <HugeiconsIcon icon={PlusIcon} className='size-20' />
+            </CardWrapper>
           }
         />
-        <TooltipContent
-          side='bottom'
-          className='flex items-center gap-1.5'
-        >
+        <TooltipContent side='bottom' className='flex items-center gap-1.5'>
           <span>{t('playlists.header.new_button')}</span>
           <KbdGroup>
             <Kbd>Alt</Kbd>
@@ -163,10 +148,7 @@ export function NewPlaylistCard({ className }: NewPlaylistCardProps = {}) {
         </TooltipContent>
       </Tooltip>
 
-      <CreatePlaylistDialog
-        open={isOpen}
-        onOpenChange={setIsOpen}
-      />
+      <CreatePlaylistDialog open={isOpen} onOpenChange={setIsOpen} />
     </>
   )
 }
