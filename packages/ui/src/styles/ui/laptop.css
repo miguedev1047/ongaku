@@ -1,0 +1,690 @@
+/*
+  Glass Laptop: a laptop mockup in CSS 3D. Every length is
+  a multiple of --lg-laptop-u, one millimetre of the real machine: the case is 355.7
+  wide and 248 deep with corners rounded to 6.2 in plan, the display 345.6 by 223.4
+  behind 3.5 of black glass, and the notch 37 by 6.4.
+
+  The eye sits 4 m away and 7 cm above the deck, so open, the lid faces you, the base's
+  front edge is 6.5% wider than the lid (the 379 the figure is drawn to) and the deck is
+  a sliver. Shut, the whole rig tips towards you, so the case is seen from above.
+*/
+
+@property --lg-laptop-u {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+/* Preserve Tailwind's order even when the laptop loads before global CSS. */
+@layer properties;
+@layer theme, base, components, utilities;
+
+@layer components {
+  .lg-laptop {
+    /* Black. */
+    --lg-laptop-metal-light: #55555a;
+    --lg-laptop-metal: #2d2d30;
+    --lg-laptop-metal-dark: #1d1d1f;
+    --lg-laptop-metal-deep: #101011;
+    --lg-laptop-edge: rgb(255 255 255 / 0.24);
+    --lg-laptop-shell-light: #424246;
+    --lg-laptop-shell: #2c2c2f;
+    --lg-laptop-shell-dark: #1f1f22;
+    --lg-laptop-deck-back: #1d1d20;
+    --lg-laptop-deck: #313135;
+    --lg-laptop-deck-front: #444449;
+    --lg-laptop-well: #070708;
+    --lg-laptop-key: #161618;
+    --lg-laptop-grille: rgb(0 0 0 / 0.55);
+    --lg-laptop-pad: rgb(255 255 255 / 0.04);
+    --lg-laptop-cover: #0d0d0e;
+    --lg-laptop-glass: #060607;
+
+    container-type: inline-size;
+    margin: 0;
+  }
+
+  .lg-laptop[data-finish='silver'] {
+    --lg-laptop-metal-light: #fbfbfc;
+    --lg-laptop-metal: #dadbdd;
+    --lg-laptop-metal-dark: #b3b5b8;
+    --lg-laptop-metal-deep: #85878b;
+    --lg-laptop-edge: rgb(255 255 255 / 0.95);
+    --lg-laptop-shell-light: #f3f4f5;
+    --lg-laptop-shell: #dadbdd;
+    --lg-laptop-shell-dark: #c2c3c6;
+    --lg-laptop-deck-back: #a3a5a9;
+    --lg-laptop-deck: #cbccd0;
+    --lg-laptop-deck-front: #e1e2e4;
+    --lg-laptop-well: #0b0b0c;
+    --lg-laptop-key: #19191b;
+    --lg-laptop-grille: rgb(0 0 0 / 0.32);
+    --lg-laptop-pad: rgb(255 255 255 / 0.22);
+    --lg-laptop-cover: #2c2d2f;
+  }
+
+  .lg-laptop-body {
+    --lg-laptop-u: calc(100cqi / 379);
+
+    position: relative;
+    isolation: isolate;
+    aspect-ratio: 379 / 257.5;
+    perspective: calc(4034 * var(--lg-laptop-u));
+    perspective-origin: 50% calc(170.8 * var(--lg-laptop-u));
+  }
+
+  /* Everything that moves with the view. It turns about the middle of the base. */
+  .lg-laptop-rig {
+    position: absolute;
+    inset: 0;
+    transform-origin: calc(189.5 * var(--lg-laptop-u))
+      calc(246 * var(--lg-laptop-u)) calc(124 * var(--lg-laptop-u));
+    transform-style: preserve-3d;
+  }
+
+  /* ------------------------------------------------------------------ lid */
+
+  /* The hinge runs along the back of the deck, 3.2 mm under the lid, so the lid shuts
+     flat onto the deck. */
+  .lg-laptop-lid {
+    position: absolute;
+    top: 0;
+    left: calc(11.65 * var(--lg-laptop-u));
+    width: calc(355.7 * var(--lg-laptop-u));
+    height: calc(238 * var(--lg-laptop-u));
+    transform-origin: 50% calc(241.2 * var(--lg-laptop-u));
+    transform-style: preserve-3d;
+  }
+
+  .lg-laptop-lid-face {
+    position: absolute;
+    inset: 0;
+    border-radius: calc(6.2 * var(--lg-laptop-u)) calc(6.2 * var(--lg-laptop-u))
+      calc(2.4 * var(--lg-laptop-u)) calc(2.4 * var(--lg-laptop-u));
+    /* Only a 1.55 mm band of aluminium shows round the glass; its top edge faces the light. */
+    background: linear-gradient(
+      var(--lg-laptop-metal-light),
+      var(--lg-laptop-metal) 1.5%,
+      var(--lg-laptop-metal-dark)
+    );
+    box-shadow:
+      inset 0 1px 0 var(--lg-laptop-edge),
+      inset 1px 0 0 rgb(255 255 255 / 0.07),
+      inset -1px 0 0 rgb(255 255 255 / 0.07),
+      inset 0 -1px 0 rgb(0 0 0 / 0.35);
+    backface-visibility: hidden;
+  }
+
+  /* The outer shell, 5.5 mm behind the glass. Shut, it is the top of the case: lit
+     towards the front, with a soft sheen. */
+  .lg-laptop-lid-back {
+    position: absolute;
+    inset: 0;
+    border-radius: calc(6.2 * var(--lg-laptop-u));
+    background:
+      radial-gradient(
+        120% 70% at 30% 0%,
+        rgb(255 255 255 / 0.07),
+        transparent 60%
+      ),
+      linear-gradient(
+        var(--lg-laptop-shell-light),
+        var(--lg-laptop-shell) 40%,
+        var(--lg-laptop-shell-dark)
+      );
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.05);
+    transform: translateZ(calc(-5.5 * var(--lg-laptop-u))) rotateY(180deg);
+    backface-visibility: hidden;
+  }
+
+  /* The lid's top edge between its rounded corners: it faces up while the lid is open and
+     towards you once it is shut. */
+  .lg-laptop-lid-edge {
+    position: absolute;
+    top: calc(-5.5 * var(--lg-laptop-u));
+    left: calc(6.05 * var(--lg-laptop-u));
+    width: calc(343.6 * var(--lg-laptop-u));
+    height: calc(5.5 * var(--lg-laptop-u));
+    background: linear-gradient(
+      var(--lg-laptop-metal-light),
+      var(--lg-laptop-metal) 55%,
+      var(--lg-laptop-metal-dark)
+    );
+    box-shadow: inset 0 1px 0 var(--lg-laptop-edge);
+    transform-origin: 50% 100%;
+    transform: rotateX(90deg);
+    backface-visibility: hidden;
+  }
+
+  /* The rounded top corners, as flat facets placed by the component. Each dims as it turns
+     away from the front. */
+  .lg-laptop-lid-facet {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: calc(5.5 * var(--lg-laptop-u));
+    background: linear-gradient(
+      to top,
+      color-mix(
+        in srgb,
+        var(--lg-laptop-metal-light),
+        #000 var(--lg-laptop-turn)
+      ),
+      color-mix(in srgb, var(--lg-laptop-metal), #000 var(--lg-laptop-turn)) 55%,
+      color-mix(
+        in srgb,
+        var(--lg-laptop-metal-dark),
+        #000 var(--lg-laptop-turn)
+      )
+    );
+    box-shadow: inset 0 -1px 0
+      color-mix(
+        in srgb,
+        var(--lg-laptop-edge),
+        transparent var(--lg-laptop-turn)
+      );
+    transform-origin: 0 0;
+    backface-visibility: hidden;
+  }
+
+  .lg-laptop-glass {
+    position: absolute;
+    inset: calc(1.55 * var(--lg-laptop-u));
+    overflow: hidden;
+    border-radius: calc(4.65 * var(--lg-laptop-u))
+      calc(4.65 * var(--lg-laptop-u)) var(--lg-laptop-u) var(--lg-laptop-u);
+    background: var(--lg-laptop-glass);
+    box-shadow: 0 0 0 0.5px rgb(0 0 0 / 0.7);
+  }
+
+  /* The panel: rounded at the top only, like the real one. */
+  .lg-laptop-screen {
+    position: absolute;
+    top: calc(3.5 * var(--lg-laptop-u));
+    left: calc(3.5 * var(--lg-laptop-u));
+    width: calc(345.6 * var(--lg-laptop-u));
+    height: calc(223.4 * var(--lg-laptop-u));
+    overflow: hidden;
+    isolation: isolate;
+    border-radius: calc(2 * var(--lg-laptop-u)) calc(2 * var(--lg-laptop-u)) 0 0;
+    background: #000;
+  }
+
+  .lg-laptop-display {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: 0 0;
+    scale: var(--lg-laptop-scale);
+  }
+
+  /* Until the first measurement the content would show at full size. */
+  .lg-laptop-display:not([data-fitted]) {
+    visibility: hidden;
+  }
+
+  /* The panel switched off: the same black as the glass around it. */
+  .lg-laptop-shutter {
+    position: absolute;
+    inset: 0;
+    background: var(--lg-laptop-glass);
+    pointer-events: none;
+  }
+
+  /* The notch reaches 6.4 mm into the panel, with tiny inverse corners where it meets it. */
+  .lg-laptop-notch {
+    position: absolute;
+    z-index: 1;
+    top: calc(3 * var(--lg-laptop-u));
+    left: 50%;
+    width: calc(37 * var(--lg-laptop-u));
+    height: calc(6.9 * var(--lg-laptop-u));
+    translate: -50% 0;
+    border-radius: 0 0 calc(2 * var(--lg-laptop-u)) calc(2 * var(--lg-laptop-u));
+    background: var(--lg-laptop-glass);
+  }
+
+  .lg-laptop-notch::before,
+  .lg-laptop-notch::after {
+    content: '';
+    position: absolute;
+    top: calc(0.5 * var(--lg-laptop-u));
+    width: calc(0.8 * var(--lg-laptop-u));
+    height: calc(0.8 * var(--lg-laptop-u));
+  }
+
+  .lg-laptop-notch::before {
+    right: 100%;
+    background: radial-gradient(
+      circle at 0 100%,
+      transparent calc(0.8 * var(--lg-laptop-u) - 0.5px),
+      var(--lg-laptop-glass) calc(0.8 * var(--lg-laptop-u))
+    );
+  }
+
+  .lg-laptop-notch::after {
+    left: 100%;
+    background: radial-gradient(
+      circle at 100% 100%,
+      transparent calc(0.8 * var(--lg-laptop-u) - 0.5px),
+      var(--lg-laptop-glass) calc(0.8 * var(--lg-laptop-u))
+    );
+  }
+
+  /* Centred in the black between the lid's edge and the bottom of the notch. */
+  .lg-laptop-camera {
+    position: absolute;
+    top: calc(0.85 * var(--lg-laptop-u));
+    left: 50%;
+    width: calc(2.2 * var(--lg-laptop-u));
+    aspect-ratio: 1;
+    translate: -50% 0;
+    border-radius: 50%;
+    background:
+      radial-gradient(
+        circle at 36% 34%,
+        rgb(255 255 255 / 0.4) 0 5%,
+        transparent 9%
+      ),
+      radial-gradient(
+        circle,
+        #26304f 0 14%,
+        #0d1020 30%,
+        #040406 46%,
+        #1b1b1f 58%,
+        #0b0b0c 70%
+      );
+  }
+
+  /* A reflection of the light above. It slides down the glass as the lid rises. */
+  .lg-laptop-glare {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    background: linear-gradient(
+      112deg,
+      rgb(255 255 255 / 0.07),
+      rgb(255 255 255 / 0.025) 34%,
+      transparent 46%
+    );
+    pointer-events: none;
+  }
+
+  /* ----------------------------------------------------------------- base */
+
+  /* The lid's aluminium wraps the hinge at each end; a black cover runs between. Under the
+     chin the ends are in shade, so they stay darker than the lid and fade into the cover.
+     It turns with the lid, so it tucks away under the case when the lid is shut. */
+  .lg-laptop-hinge {
+    position: absolute;
+    top: calc(236.8 * var(--lg-laptop-u));
+    left: calc(0.3 * var(--lg-laptop-u));
+    width: calc(355.1 * var(--lg-laptop-u));
+    height: calc(4.8 * var(--lg-laptop-u));
+    border-radius: 0 0 calc(2.4 * var(--lg-laptop-u))
+      calc(2.4 * var(--lg-laptop-u));
+    background:
+      linear-gradient(
+        rgb(0 0 0 / 0.55),
+        rgb(255 255 255 / 0.05) 45%,
+        rgb(0 0 0 / 0.5)
+      ),
+      linear-gradient(
+        90deg,
+        var(--lg-laptop-metal-dark) 4%,
+        var(--lg-laptop-cover) 5% 95%,
+        var(--lg-laptop-metal-dark) 96%
+      );
+    backface-visibility: hidden;
+  }
+
+  /* The deck, laid flat from the hinge to the front edge: speakers either side of the
+     keyboard, then the trackpad. The lid shades it near the hinge. */
+  .lg-laptop-deck {
+    position: absolute;
+    top: calc(241.2 * var(--lg-laptop-u));
+    left: calc(11.65 * var(--lg-laptop-u));
+    width: calc(355.7 * var(--lg-laptop-u));
+    height: calc(248 * var(--lg-laptop-u));
+    border-radius: calc(6.2 * var(--lg-laptop-u));
+    background:
+      linear-gradient(rgb(0 0 0 / 0.5), transparent 8%),
+      linear-gradient(
+        var(--lg-laptop-deck-back),
+        var(--lg-laptop-deck) 30%,
+        var(--lg-laptop-deck-front)
+      );
+    box-shadow: inset 0 calc(-0.5 * var(--lg-laptop-u)) 0
+      rgb(255 255 255 / 0.12);
+    transform-origin: 50% 0;
+    transform: rotateX(90deg);
+  }
+
+  .lg-laptop-speaker {
+    position: absolute;
+    top: calc(16 * var(--lg-laptop-u));
+    width: calc(24 * var(--lg-laptop-u));
+    height: calc(107 * var(--lg-laptop-u));
+    background: radial-gradient(
+        circle,
+        var(--lg-laptop-grille) calc(0.3 * var(--lg-laptop-u)),
+        transparent calc(0.42 * var(--lg-laptop-u))
+      )
+      0 0 / calc(1.35 * var(--lg-laptop-u)) calc(1.35 * var(--lg-laptop-u));
+  }
+
+  .lg-laptop-speaker[data-side='left'] {
+    left: calc(15 * var(--lg-laptop-u));
+  }
+
+  .lg-laptop-speaker[data-side='right'] {
+    right: calc(15 * var(--lg-laptop-u));
+  }
+
+  /* Six rows of 18.4 mm keys, 1.8 mm apart, in a recessed well. */
+  .lg-laptop-keyboard {
+    position: absolute;
+    top: calc(14 * var(--lg-laptop-u));
+    left: calc(44.4 * var(--lg-laptop-u));
+    display: flex;
+    flex-direction: column;
+    gap: calc(1.8 * var(--lg-laptop-u));
+    width: calc(266.9 * var(--lg-laptop-u));
+    height: calc(110.4 * var(--lg-laptop-u));
+    padding: calc(0.9 * var(--lg-laptop-u));
+    border-radius: calc(2.4 * var(--lg-laptop-u));
+    background: var(--lg-laptop-well);
+    box-shadow: inset 0 0 0 calc(0.3 * var(--lg-laptop-u)) rgb(0 0 0 / 0.4);
+  }
+
+  .lg-laptop-key-row,
+  .lg-laptop-arrows {
+    display: flex;
+    flex: 1 1 0;
+    gap: calc(1.8 * var(--lg-laptop-u));
+  }
+
+  .lg-laptop-arrows {
+    flex-grow: 3;
+  }
+
+  .lg-laptop-key {
+    flex: 1 1 0;
+    border-radius: calc(1.1 * var(--lg-laptop-u));
+    background: var(--lg-laptop-key);
+    box-shadow: inset 0 calc(0.25 * var(--lg-laptop-u)) 0
+      rgb(255 255 255 / 0.07);
+  }
+
+  /* The inverted-T arrows: left and right at half height, up and down stacked between. */
+  .lg-laptop-key--half {
+    align-self: flex-end;
+    height: calc(50% - 0.45 * var(--lg-laptop-u));
+  }
+
+  .lg-laptop-arrow-stack {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    gap: calc(0.9 * var(--lg-laptop-u));
+  }
+
+  .lg-laptop-trackpad {
+    position: absolute;
+    top: calc(133 * var(--lg-laptop-u));
+    left: calc(97.85 * var(--lg-laptop-u));
+    width: calc(160 * var(--lg-laptop-u));
+    height: calc(99 * var(--lg-laptop-u));
+    border-radius: calc(4 * var(--lg-laptop-u));
+    background: var(--lg-laptop-pad);
+    box-shadow: inset 0 0 0 calc(0.3 * var(--lg-laptop-u)) rgb(0 0 0 / 0.18);
+  }
+
+  /* The scoop seen from above: a shallow dip at the front edge. */
+  .lg-laptop-deck-scoop {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: calc(47.9 * var(--lg-laptop-u));
+    height: calc(4 * var(--lg-laptop-u));
+    translate: -50% 0;
+    border-radius: calc(2 * var(--lg-laptop-u)) calc(2 * var(--lg-laptop-u)) 0 0;
+    background: linear-gradient(to top, rgb(0 0 0 / 0.35), rgb(0 0 0 / 0.04));
+  }
+
+  /* The base's front edge between its rounded corners. */
+  .lg-laptop-front {
+    position: absolute;
+    top: calc(241.2 * var(--lg-laptop-u));
+    left: calc(17.7 * var(--lg-laptop-u));
+    width: calc(343.6 * var(--lg-laptop-u));
+    height: calc(9.855 * var(--lg-laptop-u));
+    /* Lit along the top edge, darker as it curves under. */
+    background: linear-gradient(
+      var(--lg-laptop-metal-light),
+      var(--lg-laptop-metal) 14% 45%,
+      var(--lg-laptop-metal-dark) 82%,
+      var(--lg-laptop-metal-deep)
+    );
+    box-shadow: inset 0 1px 0 var(--lg-laptop-edge);
+    transform: translateZ(calc(248 * var(--lg-laptop-u)));
+  }
+
+  /* The scoop that lifts the lid: a shallow slot, in shadow, with a lit lip. */
+  .lg-laptop-scoop {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: calc(47.9 * var(--lg-laptop-u));
+    height: calc(2.44 * var(--lg-laptop-u));
+    translate: -50% 0;
+    border-radius: 0 0 calc(2.44 * var(--lg-laptop-u))
+      calc(2.44 * var(--lg-laptop-u));
+    background: linear-gradient(rgb(0 0 0 / 0.42), rgb(0 0 0 / 0.16));
+    box-shadow: inset 0 -1px 0 var(--lg-laptop-edge);
+  }
+
+  /* The front feet. */
+  .lg-laptop-front::before,
+  .lg-laptop-front::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    width: calc(18.8 * var(--lg-laptop-u));
+    height: calc(1.13 * var(--lg-laptop-u));
+    border-radius: 0 0 calc(1.9 * var(--lg-laptop-u))
+      calc(1.9 * var(--lg-laptop-u));
+    background: #0b0b0c;
+  }
+
+  .lg-laptop-front::before {
+    left: calc(18.35 * var(--lg-laptop-u));
+  }
+
+  .lg-laptop-front::after {
+    right: calc(18.35 * var(--lg-laptop-u));
+  }
+
+  /* The base's rounded front corners, as upright facets placed by the component. Their
+     bottoms are cut to rise as they turn to the side, where the bottom edge rolls under. */
+  .lg-laptop-base-facet {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: calc(9.855 * var(--lg-laptop-u));
+    background: linear-gradient(
+      color-mix(
+        in srgb,
+        var(--lg-laptop-metal-light),
+        #000 var(--lg-laptop-turn)
+      ),
+      color-mix(in srgb, var(--lg-laptop-metal), #000 var(--lg-laptop-turn)) 14%
+        45%,
+      color-mix(
+          in srgb,
+          var(--lg-laptop-metal-dark),
+          #000 var(--lg-laptop-turn)
+        )
+        82%,
+      var(--lg-laptop-metal-deep)
+    );
+    box-shadow: inset 0 1px 0
+      color-mix(
+        in srgb,
+        var(--lg-laptop-edge),
+        transparent var(--lg-laptop-turn)
+      );
+    transform-origin: 0 0;
+    backface-visibility: hidden;
+  }
+
+  /* --------------------------------------------------------------- shadows */
+
+  /* The shadow on the ground, which the view sees more of from above. */
+  .lg-laptop-ground {
+    position: absolute;
+    top: calc(252.3 * var(--lg-laptop-u));
+    left: calc(-13.35 * var(--lg-laptop-u));
+    width: calc(405.7 * var(--lg-laptop-u));
+    height: calc(300 * var(--lg-laptop-u));
+    background: radial-gradient(
+      closest-side,
+      rgb(0 0 0 / 0.3),
+      rgb(0 0 0 / 0.12) 60%,
+      transparent
+    );
+    transform-origin: 50% 0;
+    transform: rotateX(90deg) translateY(calc(-26 * var(--lg-laptop-u)));
+  }
+
+  /* Where the base meets the ground. */
+  .lg-laptop-ground::after {
+    content: '';
+    position: absolute;
+    top: calc(26 * var(--lg-laptop-u));
+    left: calc(25 * var(--lg-laptop-u));
+    width: calc(355.7 * var(--lg-laptop-u));
+    height: calc(248 * var(--lg-laptop-u));
+    border-radius: calc(6.2 * var(--lg-laptop-u));
+    background: rgb(0 0 0 / 0.25);
+    box-shadow: 0 0 calc(5 * var(--lg-laptop-u)) calc(1.5 * var(--lg-laptop-u))
+      rgb(0 0 0 / 0.3);
+  }
+
+  /* The soft shadow under the open machine, drawn flat for the view from in front. */
+  .lg-laptop-shadow {
+    position: absolute;
+    z-index: -1;
+    top: calc(248 * var(--lg-laptop-u));
+    left: -3%;
+    width: 106%;
+    height: calc(18 * var(--lg-laptop-u));
+    background: radial-gradient(
+      closest-side,
+      rgb(0 0 0 / 0.3),
+      rgb(0 0 0 / 0.12) 55%,
+      transparent
+    );
+  }
+
+  .lg-laptop-shadow::after {
+    content: '';
+    position: absolute;
+    top: calc(7 * var(--lg-laptop-u));
+    left: 5%;
+    width: 90%;
+    height: calc(4 * var(--lg-laptop-u));
+    background: radial-gradient(closest-side, rgb(0 0 0 / 0.5), transparent);
+  }
+
+  /* ---------------------------------------------------------------- motion */
+
+  /*
+    Opening, the lid lifts slowly off the deck and glides upright while the view sinks and
+    moves in to face it. The screen lights once both have come to rest. Closing, the screen
+    goes dark first, then the lid comes down as the view rises. Only transforms and
+    opacity move, so the compositor runs it.
+  */
+  .lg-laptop-rig {
+    transition: transform 2.4s cubic-bezier(0.4, 0, 0.12, 1);
+  }
+
+  .lg-laptop-lid {
+    transition: transform 2s cubic-bezier(0.6, 0, 0.2, 1);
+  }
+
+  .lg-laptop-glare {
+    transition: translate 2s cubic-bezier(0.6, 0, 0.2, 1);
+  }
+
+  .lg-laptop-shadow {
+    transition: opacity 2.4s cubic-bezier(0.4, 0, 0.12, 1);
+  }
+
+  .lg-laptop-shutter {
+    transition: opacity 0.35s ease-in;
+  }
+
+  .lg-laptop[data-screen='on'] .lg-laptop-shutter {
+    opacity: 0;
+    transition: opacity 0.9s cubic-bezier(0.2, 0.6, 0.2, 1) 0.1s;
+  }
+
+  .lg-laptop[data-lid='closed'] .lg-laptop-rig {
+    transform: translateY(calc(-105 * var(--lg-laptop-u)))
+      translateZ(calc(-380 * var(--lg-laptop-u))) rotateX(-28deg);
+    transition: transform 2.2s cubic-bezier(0.45, 0, 0.25, 1) 0.35s;
+  }
+
+  .lg-laptop[data-lid='closed'] .lg-laptop-lid {
+    transform: rotateX(-90deg);
+    transition: transform 1.6s cubic-bezier(0.55, 0, 0.35, 1) 0.3s;
+  }
+
+  .lg-laptop[data-lid='closed'] .lg-laptop-glare {
+    translate: 0 -40%;
+    transition: translate 1.6s cubic-bezier(0.55, 0, 0.35, 1) 0.3s;
+  }
+
+  .lg-laptop[data-lid='closed'] .lg-laptop-shadow {
+    opacity: 0;
+    transition: opacity 1.4s ease 0.35s;
+  }
+
+  /* Reduced motion puts the lid and the view straight where they are going. */
+  [data-lg-reduce-motion='1']
+    .lg-laptop
+    :is(
+      .lg-laptop-rig,
+      .lg-laptop-lid,
+      .lg-laptop-glare,
+      .lg-laptop-shadow,
+      .lg-laptop-shutter
+    ) {
+    transition: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lg-laptop[data-lid]
+      :is(
+        .lg-laptop-rig,
+        .lg-laptop-lid,
+        .lg-laptop-glare,
+        .lg-laptop-shadow,
+        .lg-laptop-shutter
+      ) {
+      transition: none;
+    }
+  }
+
+  /* Reduced transparency takes the reflection off the screen. */
+  [data-lg-reduce-transparency='1'] .lg-laptop-glare {
+    display: none;
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    .lg-laptop-glare {
+      display: none;
+    }
+  }
+}

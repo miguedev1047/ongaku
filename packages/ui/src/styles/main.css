@@ -7,6 +7,8 @@
 @import './components.css';
 @import './utilities.css';
 
+@import './ui/laptop.css';
+
 @import './themes/default.css';
 @import './themes/zedative.css';
 @import './themes/catppuccin.css';
