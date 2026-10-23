@@ -44,8 +44,6 @@ const platforms = {}
 const requiredKeys = [
   'windows-x86_64',
   'linux-x86_64',
-  'darwin-aarch64',
-  'darwin-x86_64',
 ]
 
 for (const platform of PLATFORMS) {
