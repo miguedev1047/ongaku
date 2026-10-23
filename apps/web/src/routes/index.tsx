@@ -1,5 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router'
+import i18n from '@/lib/i18n'
 
+import { createFileRoute } from '@tanstack/react-router'
 import { FeatureStrip } from '@/features/landing/components/feature-strip'
 import { FlickeringBackground } from '@/features/landing/components/flickering-background'
 import { Hero } from '@/features/landing/components/hero'
@@ -9,7 +10,7 @@ import { SiteFooter } from '@/features/landing/components/site-footer'
 import { SiteHeader } from '@/features/landing/components/site-header'
 import { SITE_NAME, SOCIAL_IMAGE_URL } from '@/features/landing/constants'
 import { preloadLatestRelease } from '@/features/landing/queries/latest-release'
-import i18n from '@/lib/i18n'
+import { Fades } from '@animate-ui/react/primitives/effects/fade'
 import { getDocumentLanguage } from '@/lib/language'
 
 export const Route = createFileRoute('/')({
@@ -42,7 +43,9 @@ export const Route = createFileRoute('/')({
 function LandingPage() {
   return (
     <div className='relative flex min-h-svh flex-col'>
-      <FlickeringBackground className='absolute inset-x-0 z-0 h-100 w-full mask-b-from-20% mask-b-to-80%' />
+      <Fades delay={0.5}>
+        <FlickeringBackground className='absolute inset-x-0 z-0 h-100 w-full mask-b-from-20% mask-b-to-80%' />
+      </Fades>
 
       <SiteHeader />
       <main id='main' className='relative z-20 flex-1'>

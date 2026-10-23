@@ -1,8 +1,6 @@
 import demoApp13 from '@ongaku/assets/screenshots/demo-app-13.webp'
-import { RainbowButton, TechText } from '@ongaku/ui'
+import { GlassLaptop, RainbowButton, TechText } from '@ongaku/ui'
 import { useTranslation } from 'react-i18next'
-import { Tilt, TiltContent } from '@animate-ui/react/primitives/effects/tilt'
-
 import { SITE_NAME } from '@/features/landing/constants'
 
 export function Hero() {
@@ -61,15 +59,13 @@ export function Hero() {
           </p>
         </div>
 
-        <Tilt>
-          <TiltContent>
-            <img
-              src={demoApp13}
-              alt={t('hero.imageAlt')}
-              className='relative w-full rounded-md'
-            />
-          </TiltContent>
-        </Tilt>
+        <GlassLaptop className='w-full'>
+          <img
+            src={demoApp13}
+            alt={t('hero.imageAlt')}
+            className='relative size-full'
+          />
+        </GlassLaptop>
       </div>
     </section>
   )

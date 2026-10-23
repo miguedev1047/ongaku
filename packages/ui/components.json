@@ -24,6 +24,7 @@
   "registries": {
     "@react-bits": "https://reactbits.dev/r/{name}.json",
     "@magicui": "https://magicui.design/r/{name}",
-    "@audiocn": "https://www.audiocn.dev/r/{name}.json"
+    "@audiocn": "https://www.audiocn.dev/r/{name}.json",
+    "@aceternity": "https://ui.aceternity.com/registry/{name}.json"
   }
 }
