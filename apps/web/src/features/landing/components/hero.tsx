@@ -48,7 +48,7 @@ export function Hero() {
         </p>
 
         <div className='w-full max-w-sm space-y-3 sm:max-w-none'>
-          <div className='flex items-center justify-center gap-1'>
+          <div className='flex-col md:flex-row items-center justify-center gap-1'>
             <RainbowButton
               nativeButton={false}
               render={<a href='#download' />}
