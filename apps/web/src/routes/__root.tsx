@@ -1,12 +1,11 @@
 import {
   HeadContent,
   Link,
-  Outlet,
   ScriptOnce,
   Scripts,
   createRootRouteWithContext,
 } from '@tanstack/react-router'
-import { QueryClientProvider, type QueryClient } from '@tanstack/react-query'
+import { type QueryClient } from '@tanstack/react-query'
 import logo from '@ongaku/assets/logo'
 import { I18nextProvider, useTranslation } from 'react-i18next'
 import appCss from '@/styles/main.css?url'
@@ -46,7 +45,6 @@ export const Route = createRootRouteWithContext<{
   },
   notFoundComponent: NotFound,
   shellComponent: RootDocument,
-  component: RootLayout,
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
@@ -83,16 +81,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <Scripts />
       </body>
     </html>
-  )
-}
-
-function RootLayout() {
-  const { queryClient } = Route.useRouteContext()
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      <Outlet />
-    </QueryClientProvider>
   )
 }
 

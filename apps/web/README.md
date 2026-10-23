@@ -64,6 +64,19 @@ attaching a custom domain.
 `workerd` build shipped with Wrangler. Bump it together with Wrangler when the
 runtime supports a newer date.
 
+The latest GitHub release is fetched inside a server function, cached for five
+minutes at the edge (`cf.cacheTtl`) and in memory per Worker isolate. If GitHub
+rate-limits the Worker, the landing renders the official releases fallback
+without failing SSR or hydration.
+
+To raise the GitHub API limit, configure an optional Worker secret. It is read
+only on the server and must never use a `VITE_` prefix:
+
+```bash
+cd apps/web
+bunx wrangler secret put GITHUB_TOKEN
+```
+
 `cf-typegen` writes `worker-configuration.d.ts`, which is ignored by git because
 the landing has no bindings yet. Run the script again after adding any binding.
 

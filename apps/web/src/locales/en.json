@@ -118,6 +118,13 @@
       "description": "GitHub may be temporarily unavailable. You can still pick a build from the releases page.",
       "action": "Open releases on GitHub"
     },
+    "unavailable": {
+      "status": "Release info unavailable",
+      "description": "GitHub did not return the latest release metadata. You can still download the newest build from the official releases page.",
+      "action": "Open releases on GitHub",
+      "helpTitle": "Direct downloads remain available",
+      "helpDescription": "The installers are published and verified in the official GitHub release."
+    },
     "platforms": {
       "windows": {
         "name": "Windows",

@@ -8,6 +8,7 @@ import { cn } from 'cn'
 import { useTranslation } from 'react-i18next'
 
 import { RELEASES_URL } from '@/features/landing/constants'
+import { ReleaseCardFallback } from '@/features/landing/components/release-card-fallback'
 import {
   MacPlatformMenu,
   PlatformDownloadLink,
@@ -19,6 +20,10 @@ import { latestReleaseQueryOpts } from '@/features/landing/queries/latest-releas
 export function ReleaseCard() {
   const { t } = useTranslation('downloads')
   const { data: release } = useSuspenseQuery(latestReleaseQueryOpts())
+
+  if (!release) {
+    return <ReleaseCardFallback />
+  }
 
   const target = getReleaseTarget()
   const download = selectReleaseAsset(release, target)

@@ -118,6 +118,13 @@
       "description": "GitHub puede no estar disponible temporalmente. Aun así puedes elegir una compilación en la página de versiones.",
       "action": "Abrir versiones en GitHub"
     },
+    "unavailable": {
+      "status": "Información no disponible",
+      "description": "GitHub no devolvió los datos de la última versión. Aun así puedes descargar la compilación más reciente desde la página oficial de versiones.",
+      "action": "Abrir versiones en GitHub",
+      "helpTitle": "Las descargas directas siguen disponibles",
+      "helpDescription": "Los instaladores se publican y verifican en la release oficial de GitHub."
+    },
     "platforms": {
       "windows": {
         "name": "Windows",
