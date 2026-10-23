@@ -1,10 +1,12 @@
 import demoApp13 from '@ongaku/assets/screenshots/demo-app-13.webp'
-import { GlassLaptop, RainbowButton, TechText } from '@ongaku/ui'
+import { Button, GlassLaptop, RainbowButton, TechText } from '@ongaku/ui'
 import { useTranslation } from 'react-i18next'
-import { SITE_NAME } from '@/features/landing/constants'
+import { REPOSITORY_URL, SITE_NAME } from '@/features/landing/constants'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { GithubIcon } from '@hugeicons/core-free-icons'
 
 export function Hero() {
-  const { t } = useTranslation(['landing', 'common'])
+  const { t } = useTranslation(['landing', 'common', 'navigation'])
 
   return (
     <section className='relative mx-auto flex w-full max-w-5xl flex-col items-center px-4 pt-14 pb-20 text-center sm:px-6 sm:pt-20 sm:pb-28'>
@@ -46,14 +48,26 @@ export function Hero() {
         </p>
 
         <div className='w-full max-w-sm space-y-3 sm:max-w-none'>
-          <RainbowButton
-            nativeButton={false}
-            render={<a href='#download' />}
-            size='lg'
-            className='w-full sm:w-auto'
-          >
-            {t('hero.downloadNow')}
-          </RainbowButton>
+          <div className='flex items-center justify-center gap-1'>
+            <RainbowButton
+              nativeButton={false}
+              render={<a href='#download' />}
+              size='lg'
+              className='w-full sm:w-auto'
+            >
+              {t('hero.downloadNow')}
+            </RainbowButton>
+            <Button
+              nativeButton={false}
+              render={<a target='_blank' href={REPOSITORY_URL} />}
+              size='lg'
+              variant='outline'
+              className='w-full sm:w-auto'
+            >
+              <HugeiconsIcon icon={GithubIcon} />
+              <span className='capitalize'>{t('github')}</span>
+            </Button>
+          </div>
           <p className='text-xs text-balance text-muted-foreground sm:text-sm'>
             {t('hero.availability')}
           </p>
