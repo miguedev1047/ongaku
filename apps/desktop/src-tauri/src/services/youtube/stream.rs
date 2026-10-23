@@ -1,13 +1,11 @@
 use std::{
     collections::HashMap,
-    process::Stdio,
     sync::LazyLock,
     time::{Duration, Instant},
 };
 use tokio::{process::Command, sync::RwLock};
 
-use super::helpers::validate_video_id_or_url;
-use crate::helpers::get_ytdlp_path;
+use super::helpers::{run_ytdlp, validate_video_id_or_url};
 use crate::services::errors::ServiceError;
 
 static STREAM_CACHE: LazyLock<RwLock<HashMap<String, (String, Instant)>>> =
@@ -32,13 +30,8 @@ pub async fn get_youtube_stream_url(video_id: String) -> Result<String, ServiceE
         }
     }
 
-    crate::services::system::ensure_binaries().await?;
-    let ytdlp_path = get_ytdlp_path();
-    if !ytdlp_path.is_file() {
-        return Err(ServiceError::NotFound(
-            "yt-dlp binary is not installed or available".to_string(),
-        ));
-    }
+    let libraries = crate::services::system::ensure_binaries().await?;
+    let ytdlp_path = libraries.youtube;
 
     let mut cmd = Command::new(&ytdlp_path);
     cmd.args([
@@ -55,16 +48,10 @@ pub async fn get_youtube_stream_url(video_id: String) -> Result<String, ServiceE
         "--",
         &video_url,
     ]);
-    cmd.stdout(Stdio::piped());
-    cmd.stderr(Stdio::piped());
-
     #[cfg(target_os = "windows")]
     cmd.creation_flags(0x08000000);
 
-    let output = cmd
-        .output()
-        .await
-        .map_err(|err| ServiceError::Execution(format!("Failed to execute yt-dlp: {err}")))?;
+    let output = run_ytdlp(cmd).await?;
 
     if !output.status.success() {
         let err = String::from_utf8_lossy(&output.stderr);

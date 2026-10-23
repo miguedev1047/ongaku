@@ -13,7 +13,7 @@
     "build:tauri": "tauri build",
     "preview": "vite preview",
     "tauri": "tauri",
-    "check:platform": "! grep -rn \"@tauri-apps\" src/ --exclude-dir=infrastructure",
+    "check:platform": "bun scripts/check-platform.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .",

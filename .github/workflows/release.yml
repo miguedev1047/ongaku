@@ -55,6 +55,15 @@ jobs:
       - name: Typecheck workspaces
         run: bun run typecheck
 
+      - name: Verify updater signing key is configured
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+        run: |
+          if [ -z "${TAURI_SIGNING_PRIVATE_KEY:-}" ]; then
+            echo "TAURI_SIGNING_PRIVATE_KEY is required to publish updater artifacts" >&2
+            exit 1
+          fi
+
       - name: Build and Publish Tauri App
         uses: tauri-apps/tauri-action@v0
         env:
@@ -67,6 +76,46 @@ jobs:
           tagName: v__VERSION__
           releaseName: 'Ongaku v__VERSION__'
           releaseBody: 'See the assets to download this version and install.'
-          releaseDraft: false
+          releaseDraft: true
+          includeUpdaterJson: false
           prerelease: false
           args: ${{ matrix.args }}
+
+  publish:
+    needs: release
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Download draft release assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p release-assets
+          gh release download "${GITHUB_REF_NAME}" --dir release-assets --clobber
+
+      - name: Build complete latest.json
+        run: |
+          bun scripts/build-release-manifest.mjs \
+            release-assets \
+            "${GITHUB_REF_NAME}" \
+            latest.json
+
+      - name: Upload latest.json
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${GITHUB_REF_NAME}" latest.json --clobber
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release edit "${GITHUB_REF_NAME}" --draft=false

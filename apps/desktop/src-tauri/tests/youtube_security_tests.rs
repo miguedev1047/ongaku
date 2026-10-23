@@ -428,4 +428,21 @@ fn test_ytdlp_use_extractors_and_ignore_config_contract() {
     let _ = std::fs::remove_dir_all(&temp_cfg_root);
 }
 
+#[test]
+fn test_playlist_size_limit_contract() {
+    use tauri_app_lib::services::youtube::{validate_playlist_size, MAX_PLAYLIST_ENTRIES};
+
+    assert!(validate_playlist_size(0).is_ok());
+    assert!(validate_playlist_size(MAX_PLAYLIST_ENTRIES).is_ok());
+    assert!(validate_playlist_size(MAX_PLAYLIST_ENTRIES + 1).is_err());
+}
+
+#[test]
+fn test_ytdlp_limits_are_configurable_contracts() {
+    use tauri_app_lib::services::youtube::{MAX_YTDLP_OUTPUT_BYTES, YTDLP_TIMEOUT_SECS};
+
+    assert!(MAX_YTDLP_OUTPUT_BYTES > 0);
+    assert!(YTDLP_TIMEOUT_SECS > 0);
+}
+
 

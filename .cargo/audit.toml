@@ -1,0 +1,10 @@
+[advisories]
+# zip 4/8 are pulled by tauri-plugin-updater and yt-dlp respectively.
+# Ongaku's own archive extraction uses zip 9 (fixed).
+# - yt-dlp's zip path is its dependency installer, which Ongaku no longer calls.
+# - tauri-plugin-updater only expands signed update artifacts (requireSignedVersion).
+ignore = [
+  "RUSTSEC-2026-0367",
+  "RUSTSEC-2026-0368",
+  "RUSTSEC-2026-0369",
+]

@@ -25,11 +25,20 @@ export type ReleaseDownload = {
 
 type UnknownRecord = Record<string, unknown>
 
+const REPOSITORY_OWNER = 'miguedev1047'
+const REPOSITORY_NAME = 'ongaku'
+const GITHUB_HOST = 'github.com'
+const RELEASES_PATH = `/${REPOSITORY_OWNER}/${REPOSITORY_NAME}/releases`
+const LATEST_RELEASE_TAG_PATTERN = /^v\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$/
+const SAFE_SEGMENT_PATTERN = /^[0-9A-Za-z._+-]+$/
+
+export const OFFICIAL_RELEASES_URL = `https://${GITHUB_HOST}${RELEASES_PATH}`
+
 function isRecord(value: unknown): value is UnknownRecord {
   return typeof value === 'object' && value !== null
 }
 
-function readHttpsUrl(value: unknown): string | null {
+function parseHttpsUrl(value: unknown): URL | null {
   if (typeof value !== 'string') {
     return null
   }
@@ -37,10 +46,82 @@ function readHttpsUrl(value: unknown): string | null {
   try {
     const url = new URL(value)
 
-    return url.protocol === 'https:' ? url.toString() : null
+    return url.protocol === 'https:' ? url : null
   } catch {
     return null
   }
+}
+
+function isOfficialGithubUrl(url: URL, expectedPath: string): boolean {
+  return (
+    url.hostname === GITHUB_HOST &&
+    url.port === '' &&
+    url.username === '' &&
+    url.password === '' &&
+    url.search === '' &&
+    url.hash === '' &&
+    url.pathname.replace(/\/$/, '') === expectedPath
+  )
+}
+
+function parseOfficialReleaseUrl(raw: unknown, tagName: string): string | null {
+  const url = parseHttpsUrl(raw)
+
+  if (!url) {
+    return null
+  }
+
+  return isOfficialGithubUrl(url, `${RELEASES_PATH}/tag/${tagName}`)
+    ? url.toString()
+    : null
+}
+
+function parseOfficialAssetUrl(
+  raw: unknown,
+  tagName: string,
+  assetName: string,
+): string | null {
+  const url = parseHttpsUrl(raw)
+
+  if (!url) {
+    return null
+  }
+
+  return isOfficialGithubUrl(
+    url,
+    `${RELEASES_PATH}/download/${tagName}/${assetName}`,
+  )
+    ? url.toString()
+    : null
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+function releaseVersion(tagName: string): string | null {
+  if (!LATEST_RELEASE_TAG_PATTERN.test(tagName)) {
+    return null
+  }
+
+  return tagName.replace(/^v/, '')
+}
+
+function isKnownAssetName(name: string, version: string): boolean {
+  if (!SAFE_SEGMENT_PATTERN.test(name) || name.endsWith('.sig')) {
+    return false
+  }
+
+  const escapedVersion = escapeRegExp(version)
+  const patterns = [
+    new RegExp(`^ongaku_${escapedVersion}_x64-setup\\.exe$`),
+    new RegExp(`^ongaku_${escapedVersion}_(?:x64|aarch64)\\.dmg$`),
+    new RegExp(
+      `^ongaku_${escapedVersion}_(?:amd64|aarch64|arm64)\\.(?:AppImage|deb)$`,
+    ),
+  ]
+
+  return patterns.some((pattern) => pattern.test(name))
 }
 
 export function parseLatestRelease(payload: unknown): LatestRelease {
@@ -49,23 +130,52 @@ export function parseLatestRelease(payload: unknown): LatestRelease {
   }
 
   const tagName = typeof payload.tag_name === 'string' ? payload.tag_name : ''
-  const htmlUrl = readHttpsUrl(payload.html_url)
+  const version = releaseVersion(tagName)
+  const htmlUrl = version
+    ? parseOfficialReleaseUrl(payload.html_url, tagName)
+    : null
 
-  if (!tagName || !htmlUrl) {
-    throw new Error('GitHub returned an incomplete release payload.')
+  if (!version || !htmlUrl) {
+    throw new Error('GitHub returned an untrusted release payload.')
   }
 
-  const assets = Array.isArray(payload.assets)
+  const validAssets = Array.isArray(payload.assets)
     ? payload.assets.flatMap((asset): ReleaseAsset[] => {
         if (!isRecord(asset) || typeof asset.name !== 'string') {
           return []
         }
 
-        const downloadUrl = readHttpsUrl(asset.browser_download_url)
+        const name = asset.name
+        const downloadUrl = parseOfficialAssetUrl(
+          asset.browser_download_url,
+          tagName,
+          name,
+        )
 
-        return downloadUrl ? [{ name: asset.name, downloadUrl }] : []
+        if (!downloadUrl || !isKnownAssetName(name, version)) {
+          return []
+        }
+
+        return [{ name, downloadUrl }]
       })
     : []
+
+  const nameCounts = new Map<string, number>()
+  const urlCounts = new Map<string, number>()
+
+  for (const asset of validAssets) {
+    nameCounts.set(asset.name, (nameCounts.get(asset.name) ?? 0) + 1)
+    urlCounts.set(
+      asset.downloadUrl,
+      (urlCounts.get(asset.downloadUrl) ?? 0) + 1,
+    )
+  }
+
+  const assets = validAssets.filter(
+    (asset) =>
+      nameCounts.get(asset.name) === 1 &&
+      urlCounts.get(asset.downloadUrl) === 1,
+  )
 
   return {
     tagName,
@@ -104,64 +214,89 @@ export function selectReleaseAsset(
   release: LatestRelease,
   target: ReleaseTarget,
 ): ReleaseDownload {
+  const version = releaseVersion(release.tagName)
+
+  if (!version) {
+    return { url: OFFICIAL_RELEASES_URL, assetName: null }
+  }
+
   const asset =
     target.os === 'linux'
-      ? findLinuxAsset(release.assets, target.arch)
-      : release.assets.find((candidate) =>
-          matchesTarget(candidate.name.toLowerCase(), target),
-        )
+      ? findLinuxAsset(release.assets, target.arch, version)
+      : findSingleAsset(release.assets, target, version)
 
   return asset
     ? { url: asset.downloadUrl, assetName: asset.name }
-    : { url: release.htmlUrl, assetName: null }
+    : { url: OFFICIAL_RELEASES_URL, assetName: null }
 }
 
-function matchesTarget(name: string, target: ReleaseTarget): boolean {
+function findSingleAsset(
+  assets: ReleaseAsset[],
+  target: ReleaseTarget,
+  version: string,
+): ReleaseAsset | undefined {
+  const matches = assets.filter((asset) =>
+    matchesTarget(asset.name, target, version),
+  )
+
+  return matches.length === 1 ? matches[0] : undefined
+}
+
+function matchesTarget(
+  name: string,
+  target: ReleaseTarget,
+  version: string,
+): boolean {
+  const escapedVersion = escapeRegExp(version)
+  const encodedArch = target.arch === 'arm64' ? 'aarch64' : 'x64'
+
   if (target.os === 'windows') {
-    return /x64[._-]?setup\.exe$/.test(name)
+    return new RegExp(`^ongaku_${escapedVersion}_x64-setup\\.exe$`).test(name)
   }
 
   if (target.os === 'macos') {
-    return matchesMacAsset(name, target.arch)
+    return new RegExp(`^ongaku_${escapedVersion}_${encodedArch}\\.dmg$`).test(
+      name,
+    )
   }
 
-  return matchesLinuxAsset(name, target.arch, 'appimage')
-}
-
-function matchesMacAsset(name: string, arch: ReleaseArch): boolean {
-  if (!name.endsWith('.dmg')) {
-    return false
-  }
-
-  const isArm = /(aarch64|arm64)/.test(name)
-
-  return arch === 'arm64'
-    ? isArm
-    : !isArm && /(x64|x86_64|amd64|intel)/.test(name)
+  return matchesLinuxAsset(name, target.arch, version, 'AppImage')
 }
 
 function findLinuxAsset(
   assets: ReleaseAsset[],
   arch: ReleaseArch,
+  version: string,
 ): ReleaseAsset | undefined {
-  return (
-    assets.find((asset) =>
-      matchesLinuxAsset(asset.name.toLowerCase(), arch, 'appimage'),
-    ) ??
-    assets.find((asset) =>
-      matchesLinuxAsset(asset.name.toLowerCase(), arch, 'deb'),
-    )
+  const appImages = assets.filter((asset) =>
+    matchesLinuxAsset(asset.name, arch, version, 'AppImage'),
   )
+
+  if (appImages.length === 1) {
+    return appImages[0]
+  }
+
+  if (appImages.length > 1) {
+    return undefined
+  }
+
+  const debs = assets.filter((asset) =>
+    matchesLinuxAsset(asset.name, arch, version, 'deb'),
+  )
+
+  return debs.length === 1 ? debs[0] : undefined
 }
 
 function matchesLinuxAsset(
   name: string,
   arch: ReleaseArch,
-  extension: 'appimage' | 'deb',
+  version: string,
+  extension: 'AppImage' | 'deb',
 ): boolean {
-  if (arch === 'arm64') {
-    return /(aarch64|arm64)/.test(name) && name.endsWith(`.${extension}`)
-  }
+  const escapedVersion = escapeRegExp(version)
+  const encodedArch = arch === 'arm64' ? '(?:aarch64|arm64)' : 'amd64'
 
-  return /(amd64|x86_64)/.test(name) && name.endsWith(`.${extension}`)
+  return new RegExp(
+    `^ongaku_${escapedVersion}_${encodedArch}\\.${extension}$`,
+  ).test(name)
 }

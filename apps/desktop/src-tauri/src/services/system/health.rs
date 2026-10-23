@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use super::binaries::{get_ffmpeg_path, get_ytdlp_path};
+use super::binaries::get_binaries_info;
 use super::models::{DirectoryHealth, SystemHealthInfo};
 use crate::constants::SERVER_HOST;
 use crate::helpers::{get_app_paths, get_db_path};
@@ -45,8 +45,7 @@ pub fn check_dir_writable(path: &Path) -> bool {
 pub fn get_system_health(server_port: u16) -> Result<SystemHealthInfo, ServiceError> {
     let app_paths = get_app_paths();
     let db_path = get_db_path();
-    let ytdlp_path = get_ytdlp_path();
-    let ffmpeg_path = get_ffmpeg_path();
+    let binaries = get_binaries_info();
 
     let directories = vec![
         DirectoryHealth {
@@ -90,9 +89,9 @@ pub fn get_system_health(server_port: u16) -> Result<SystemHealthInfo, ServiceEr
 
     let server_healthy = server_port > 0;
     let package_type = detect_package_type();
-    let ytdlp_installed = ytdlp_path.is_file();
-    let ffmpeg_installed = ffmpeg_path.is_file();
-    let binaries_installed = ytdlp_installed && ffmpeg_installed;
+    let ytdlp_installed = binaries.ytdlp_installed;
+    let ffmpeg_installed = binaries.ffmpeg_installed;
+    let binaries_installed = binaries.is_installed;
 
     Ok(SystemHealthInfo {
         server_healthy,

@@ -8,11 +8,9 @@ use tokio::process::Command;
 use super::helpers::{locate_staged_mp3, parse_progress_line, validate_task_id};
 use super::models::DownloadProgress;
 use crate::constants::ALLOWED_YTDLP_EXTRACTORS;
-use crate::helpers::{
-    canonicalize_path, get_bin_dir, get_staging_dir, prepare_secure_dir,
-};
-use crate::services::system::{ensure_binaries, get_ytdlp_path};
+use crate::helpers::{canonicalize_path, get_bin_dir, get_staging_dir, prepare_secure_dir};
 use crate::services::errors::ServiceError;
+use crate::services::system::ensure_binaries;
 use crate::services::youtube::helpers::{clean_youtube_url, validate_youtube_url};
 
 pub async fn download_song_from_url<F>(
@@ -28,9 +26,8 @@ where
     let safe_id = validate_task_id(id)?;
     let validated_url = validate_youtube_url(url)?;
 
-    ensure_binaries().await?;
-
-    let ytdlp_path = get_ytdlp_path();
+    let libraries = ensure_binaries().await?;
+    let ytdlp_path = libraries.youtube;
     let bin_dir = get_bin_dir();
 
     let staging_base = prepare_secure_dir(&get_staging_dir()).map_err(ServiceError::Execution)?;
@@ -60,6 +57,12 @@ where
         "--embed-thumbnail".to_string(),
         "--no-playlist".to_string(),
         "--no-warnings".to_string(),
+        "--max-filesize".to_string(),
+        "1G".to_string(),
+        "--socket-timeout".to_string(),
+        "30".to_string(),
+        "--retries".to_string(),
+        "3".to_string(),
         "--progress".to_string(),
         "--progress-template".to_string(),
         "download-progress:%(progress._percent_str)s|%(progress.downloaded_bytes)s|%(progress.total_bytes)s".to_string(),
@@ -136,7 +139,9 @@ where
                 done: true,
             },
         );
-        return Err(ServiceError::Execution("yt-dlp download failed or was cancelled".to_string()));
+        return Err(ServiceError::Execution(
+            "yt-dlp download failed or was cancelled".to_string(),
+        ));
     }
 
     let src_file = locate_staged_mp3(&staging_task_dir, &last_filepath).ok_or_else(|| {
@@ -148,7 +153,9 @@ where
         Some(name) => name.to_os_string(),
         None => {
             let _ = fs::remove_dir_all(&staging_task_dir);
-            return Err(ServiceError::Execution("Invalid file name from downloaded file".to_string()));
+            return Err(ServiceError::Execution(
+                "Invalid file name from downloaded file".to_string(),
+            ));
         }
     };
 

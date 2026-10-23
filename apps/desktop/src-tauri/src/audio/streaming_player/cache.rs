@@ -3,8 +3,8 @@ use tokio::process::Command;
 
 use crate::audio::lib::types::AudioPlayerError;
 use crate::helpers::{
-    extract_canonical_video_id, get_bin_dir, get_streaming_cache_dir, get_ytdlp_path,
-    prepare_secure_dir, verify_regular_file_inside,
+    extract_canonical_video_id, get_bin_dir, get_streaming_cache_dir, prepare_secure_dir,
+    verify_regular_file_inside,
 };
 
 pub fn find_cached_file(video_id: &str) -> Option<PathBuf> {
@@ -45,15 +45,14 @@ pub async fn download_stream_audio(
     clean_id: &str,
     on_spawn: impl FnOnce(u32),
 ) -> Result<PathBuf, AudioPlayerError> {
-    let ytdlp_path = get_ytdlp_path();
-    if !ytdlp_path.is_file() {
-        return Err(AudioPlayerError::NotFound(
-            "yt-dlp binary is not installed or available".to_string(),
-        ));
-    }
+    let libraries = crate::services::system::ensure_binaries()
+        .await
+        .map_err(|err| AudioPlayerError::Internal(err.to_string()))?;
+    let ytdlp_path = libraries.youtube;
 
     let bin_dir = get_bin_dir();
-    let cache_dir = prepare_secure_dir(&get_streaming_cache_dir()).map_err(AudioPlayerError::Internal)?;
+    let cache_dir =
+        prepare_secure_dir(&get_streaming_cache_dir()).map_err(AudioPlayerError::Internal)?;
     let video_url = format!("https://www.youtube.com/watch?v={clean_id}");
     let output_template = cache_dir.join(format!("{clean_id}.%(ext)s"));
 
@@ -73,6 +72,12 @@ pub async fn download_stream_audio(
         "mp3",
         "--no-playlist",
         "--no-warnings",
+        "--max-filesize",
+        "1G",
+        "--socket-timeout",
+        "30",
+        "--retries",
+        "3",
         "-o",
         output_template.to_string_lossy().as_ref(),
         "--",

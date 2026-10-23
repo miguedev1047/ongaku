@@ -41,7 +41,7 @@ export function SiteFooter() {
                 key={link.key}
                 href={link.href}
                 target='_blank'
-                rel='noreferrer'
+                rel='noopener noreferrer'
                 className={cn(
                   buttonVariants({ variant: 'ghost-muted', size: 'sm' }),
                 )}

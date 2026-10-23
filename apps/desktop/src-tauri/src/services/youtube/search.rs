@@ -1,10 +1,11 @@
-use yt_dlp::client::{Downloader, Libraries};
+use std::time::Duration;
 
-use super::helpers::{
-    resolve_youtube_thumbnail, validate_search_query, validate_youtube_duration,
-};
+use yt_dlp::client::Downloader;
+
+use super::helpers::{resolve_youtube_thumbnail, validate_search_query, validate_youtube_duration};
 use super::models::YoutubeSearchResult;
-use crate::helpers::{get_cache_dir, get_ffmpeg_path, get_ytdlp_path};
+use super::YTDLP_TIMEOUT_SECS;
+use crate::helpers::get_cache_dir;
 use crate::services::errors::ServiceError;
 
 pub async fn search_youtube(
@@ -16,11 +17,8 @@ pub async fn search_youtube(
         return Ok(Vec::new());
     }
 
-    crate::services::system::ensure_binaries().await?;
-    let ytdlp_path = get_ytdlp_path();
-    let ffmpeg_path = get_ffmpeg_path();
+    let libraries = crate::services::system::ensure_binaries().await?;
 
-    let libraries = Libraries::new(ytdlp_path, ffmpeg_path);
     let downloader = Downloader::builder(libraries, get_cache_dir())
         .build()
         .await
@@ -28,10 +26,13 @@ pub async fn search_youtube(
 
     let youtube = downloader.youtube_extractor();
     let fetch_count = max_results.saturating_mul(2).clamp(max_results, 50);
-    let results = youtube
-        .search(&clean_query, fetch_count)
-        .await
-        .map_err(|e| ServiceError::Execution(e.to_string()))?;
+    let results = tokio::time::timeout(
+        Duration::from_secs(YTDLP_TIMEOUT_SECS),
+        youtube.search(&clean_query, fetch_count),
+    )
+    .await
+    .map_err(|_| ServiceError::Execution("YouTube search timed out".to_string()))?
+    .map_err(|e| ServiceError::Execution(e.to_string()))?;
 
     let search_results: Vec<YoutubeSearchResult> = results
         .entries

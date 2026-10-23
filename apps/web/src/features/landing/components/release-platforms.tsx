@@ -49,7 +49,7 @@ export function PlatformDownloadLink({
     <a
       href={download.url}
       target='_blank'
-      rel='noreferrer'
+      rel='noopener noreferrer'
       aria-label={t('platformAction', {
         platform: t(`platforms.${platform}.name`),
       })}
@@ -91,7 +91,11 @@ export function MacPlatformMenu({
           <DropdownMenuItem
             className='cursor-pointer'
             render={
-              <a href={downloads.arm64.url} target='_blank' rel='noreferrer'>
+              <a
+                href={downloads.arm64.url}
+                target='_blank'
+                rel='noopener noreferrer'
+              >
                 {t('platforms.macos.arm64')}
               </a>
             }
@@ -99,7 +103,11 @@ export function MacPlatformMenu({
           <DropdownMenuItem
             className='cursor-pointer'
             render={
-              <a href={downloads.x64.url} target='_blank' rel='noreferrer'>
+              <a
+                href={downloads.x64.url}
+                target='_blank'
+                rel='noopener noreferrer'
+              >
                 {t('platforms.macos.intel')}
               </a>
             }

@@ -69,7 +69,7 @@ export function ReleaseCard() {
               <a
                 href={download.url}
                 target='_blank'
-                rel='noreferrer'
+                rel='noopener noreferrer'
                 download={download.assetName ?? undefined}
               />
             }
@@ -82,7 +82,7 @@ export function ReleaseCard() {
           <a
             href={RELEASES_URL}
             target='_blank'
-            rel='noreferrer'
+            rel='noopener noreferrer'
             className={cn(
               buttonVariants({ variant: 'ghost', size: 'lg' }),
               'w-full sm:w-auto',

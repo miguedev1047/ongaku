@@ -16,7 +16,7 @@ export function ReleaseSectionError() {
       <a
         href={RELEASES_URL}
         target='_blank'
-        rel='noreferrer'
+        rel='noopener noreferrer'
         className={cn(buttonVariants({ variant: 'outline', size: 'sm' }))}
       >
         {t('error.action')}

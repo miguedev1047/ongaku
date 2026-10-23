@@ -1,11 +1,9 @@
-use std::process::Stdio;
 use tokio::process::Command;
 
 use super::helpers::{
-    resolve_youtube_thumbnail, validate_youtube_duration, validate_youtube_url,
+    resolve_youtube_thumbnail, run_ytdlp, validate_youtube_duration, validate_youtube_url,
 };
 use super::models::YoutubeSearchResult;
-use crate::helpers::get_ytdlp_path;
 use crate::services::errors::ServiceError;
 
 fn map_ytdlp_error(err: &str) -> ServiceError {
@@ -37,10 +35,7 @@ fn map_ytdlp_error(err: &str) -> ServiceError {
     ServiceError::Execution(format!("Failed to resolve media: {err}"))
 }
 
-fn parse_single_item(
-    json: &serde_json::Value,
-    fallback_url: &str,
-) -> Option<YoutubeSearchResult> {
+fn parse_single_item(json: &serde_json::Value, fallback_url: &str) -> Option<YoutubeSearchResult> {
     let id = json.get("id").and_then(|v| v.as_str())?.to_string();
     if id.is_empty() {
         return None;
@@ -103,8 +98,8 @@ fn parse_single_item(
 pub async fn resolve_url_info(url: &str) -> Result<YoutubeSearchResult, ServiceError> {
     let valid_url = validate_youtube_url(url)?;
 
-    crate::services::system::ensure_binaries().await?;
-    let ytdlp_path = get_ytdlp_path();
+    let libraries = crate::services::system::ensure_binaries().await?;
+    let ytdlp_path = libraries.youtube;
 
     let mut cmd = Command::new(&ytdlp_path);
     cmd.args([
@@ -117,16 +112,10 @@ pub async fn resolve_url_info(url: &str) -> Result<YoutubeSearchResult, ServiceE
         "--",
         &valid_url,
     ]);
-    cmd.stdout(Stdio::piped());
-    cmd.stderr(Stdio::piped());
-
     #[cfg(target_os = "windows")]
     cmd.creation_flags(0x08000000);
 
-    let output = cmd
-        .output()
-        .await
-        .map_err(|err| ServiceError::Execution(format!("Failed to execute yt-dlp: {err}")))?;
+    let output = run_ytdlp(cmd).await?;
 
     if !output.status.success() {
         let err = String::from_utf8_lossy(&output.stderr);
@@ -134,8 +123,9 @@ pub async fn resolve_url_info(url: &str) -> Result<YoutubeSearchResult, ServiceE
     }
 
     let stdout_str = String::from_utf8_lossy(&output.stdout);
-    let json: serde_json::Value = serde_json::from_str(&stdout_str)
-        .map_err(|err| ServiceError::Execution(format!("Failed to parse metadata response: {err}")))?;
+    let json: serde_json::Value = serde_json::from_str(&stdout_str).map_err(|err| {
+        ServiceError::Execution(format!("Failed to parse metadata response: {err}"))
+    })?;
 
     parse_single_item(&json, &valid_url)
         .ok_or_else(|| ServiceError::NotFound("Failed to extract item metadata".to_string()))
@@ -144,8 +134,8 @@ pub async fn resolve_url_info(url: &str) -> Result<YoutubeSearchResult, ServiceE
 pub async fn resolve_playlist_info(url: &str) -> Result<Vec<YoutubeSearchResult>, ServiceError> {
     let valid_url = validate_youtube_url(url)?;
 
-    crate::services::system::ensure_binaries().await?;
-    let ytdlp_path = get_ytdlp_path();
+    let libraries = crate::services::system::ensure_binaries().await?;
+    let ytdlp_path = libraries.youtube;
 
     let mut cmd = Command::new(&ytdlp_path);
     cmd.args([
@@ -160,16 +150,10 @@ pub async fn resolve_playlist_info(url: &str) -> Result<Vec<YoutubeSearchResult>
         "--",
         &valid_url,
     ]);
-    cmd.stdout(Stdio::piped());
-    cmd.stderr(Stdio::piped());
-
     #[cfg(target_os = "windows")]
     cmd.creation_flags(0x08000000);
 
-    let output = cmd
-        .output()
-        .await
-        .map_err(|err| ServiceError::Execution(format!("Failed to execute yt-dlp: {err}")))?;
+    let output = run_ytdlp(cmd).await?;
 
     if !output.status.success() {
         let err = String::from_utf8_lossy(&output.stderr);
@@ -177,12 +161,14 @@ pub async fn resolve_playlist_info(url: &str) -> Result<Vec<YoutubeSearchResult>
     }
 
     let stdout_str = String::from_utf8_lossy(&output.stdout);
-    let json: serde_json::Value = serde_json::from_str(&stdout_str)
-        .map_err(|err| ServiceError::Execution(format!("Failed to parse playlist response: {err}")))?;
+    let json: serde_json::Value = serde_json::from_str(&stdout_str).map_err(|err| {
+        ServiceError::Execution(format!("Failed to parse playlist response: {err}"))
+    })?;
 
     let mut results = Vec::new();
 
     if let Some(entries) = json.get("entries").and_then(|v| v.as_array()) {
+        crate::services::youtube::validate_playlist_size(entries.len())?;
         for entry in entries {
             if let Some(item) = parse_single_item(entry, "") {
                 results.push(item);
