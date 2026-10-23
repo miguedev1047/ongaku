@@ -58,6 +58,7 @@ jobs:
       - name: Verify updater signing key is configured
         env:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+        shell: bash
         run: |
           if [ -z "${TAURI_SIGNING_PRIVATE_KEY:-}" ]; then
             echo "TAURI_SIGNING_PRIVATE_KEY is required to publish updater artifacts" >&2
