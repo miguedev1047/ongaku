@@ -1,5 +1,6 @@
 export * from './alert'
 export * from './alert-dialog'
+export * from './animated-theme-toggler'
 export * from './attachment'
 export * from './badge'
 export * from './breadcrumb'

@@ -1,8 +1,8 @@
-import { ModeToggle } from '@ongaku/ui/providers/theme-provider'
 import { useTranslation } from 'react-i18next'
 import { LanguageSwitcher } from '@/features/landing/components/language-switcher'
 import { SiteLogo } from '@/features/landing/components/site-logo'
 import { Link } from '@tanstack/react-router'
+import { AnimatedThemeToggler } from '@ongaku/ui'
 
 export function SiteHeader() {
   const { t } = useTranslation('navigation')
@@ -19,7 +19,7 @@ export function SiteHeader() {
         </Link>
 
         <nav aria-label={t('main')} className='flex items-center gap-1.5'>
-          <ModeToggle label={t('theme')} />
+          <AnimatedThemeToggler variant='square' />
           <LanguageSwitcher />
         </nav>
       </div>
