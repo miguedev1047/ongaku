@@ -48,6 +48,7 @@ function LandingPage() {
       </Fades>
 
       <SiteHeader />
+
       <main id='main' className='relative z-20 flex-1'>
         <Hero />
         <ScreenshootMarquee />
