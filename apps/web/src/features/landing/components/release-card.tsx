@@ -1,9 +1,9 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { ArrowUpRight01Icon, Download04Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Show } from '@ongaku/ui'
+import { RainbowButton, Show } from '@ongaku/ui'
 import { Badge } from '@ongaku/ui/components/ui/badge'
-import { Button, buttonVariants } from '@ongaku/ui/components/ui/button'
+import { buttonVariants } from '@ongaku/ui/components/ui/button'
 import { cn } from 'cn'
 import { useTranslation } from 'react-i18next'
 
@@ -51,7 +51,7 @@ export function ReleaseCard() {
             />
             {t('badge')}
           </Badge>
-          <span className='text-2xs tracking-wider text-muted-foreground uppercase'>
+          <span className='text-2xs text-balance tracking-wider text-muted-foreground uppercase'>
             {release.tagName}
           </span>
         </div>
@@ -64,7 +64,7 @@ export function ReleaseCard() {
         </p>
 
         <div className='mt-7 flex flex-col gap-3 sm:flex-row sm:items-center'>
-          <Button
+          <RainbowButton
             size='lg'
             className='w-full sm:w-auto'
             render={
@@ -80,7 +80,7 @@ export function ReleaseCard() {
             <HugeiconsIcon icon={Download04Icon} data-icon='inline-start' />
             {t('cta')}
             <HugeiconsIcon icon={ArrowUpRight01Icon} data-icon='inline-end' />
-          </Button>
+          </RainbowButton>
           <a
             href={RELEASES_URL}
             target='_blank'

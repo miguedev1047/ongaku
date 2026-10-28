@@ -11,7 +11,7 @@ export function ReleaseSection() {
   return (
     <section
       id='download'
-      className='relative mx-auto w-full max-w-4xl px-4 py-24 sm:px-6 sm:py-28'
+      className='relative mx-auto w-full max-w-5xl px-4 py-24 sm:px-6 sm:py-28'
     >
       <Card variant='default' className='relative w-full gap-8 p-6 sm:p-10'>
         <FlickeringBackground className='absolute inset-0 z-0 size-full mask-b-from-20% mask-b-to-80% h-40' />

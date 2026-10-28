@@ -2,7 +2,6 @@ import { Bug01Icon, GithubIcon, LicenseIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { buttonVariants } from '@ongaku/ui/components/ui/button'
 import { Separator } from '@ongaku/ui/components/ui/separator'
-import { ModeToggle } from '@ongaku/ui/providers/theme-provider'
 import { cn } from 'cn'
 import { useTranslation } from 'react-i18next'
 
@@ -12,6 +11,7 @@ import {
   REPOSITORY_URL,
 } from '@/features/landing/constants'
 import { SiteLogo } from '@/features/landing/components/site-logo'
+import { AnimatedThemeToggler } from '@ongaku/ui'
 
 const FOOTER_LINKS = [
   { key: 'github', href: REPOSITORY_URL, icon: GithubIcon },
@@ -50,7 +50,7 @@ export function SiteFooter() {
                 {t(link.key)}
               </a>
             ))}
-            <ModeToggle label={t('navigation:theme')} />
+            <AnimatedThemeToggler variant='square' />
           </nav>
         </div>
 

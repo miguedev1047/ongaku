@@ -13,7 +13,7 @@ export function FeatureStrip() {
 
   return (
     <section className='border-y border-border/60 bg-card/20'>
-      <div className='mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 sm:py-16'>
+      <div className='mx-auto w-full max-w-5xl px-4 py-14 sm:px-6 sm:py-16'>
         <p className='text-2xs font-medium tracking-widest text-muted-foreground uppercase'>
           {t('features.eyebrow')}
         </p>
