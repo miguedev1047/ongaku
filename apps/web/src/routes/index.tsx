@@ -5,7 +5,7 @@ import { FeatureStrip } from '@/features/landing/components/feature-strip'
 import { FlickeringBackground } from '@/features/landing/components/flickering-background'
 import { Hero } from '@/features/landing/components/hero'
 import { ReleaseSection } from '@/features/landing/components/release-section'
-import { ScreenshootMarquee } from '@/features/landing/components/screenshot-marquee'
+import { ScreenshootMotion } from '@/features/landing/components/screenshot-motion'
 import { SiteFooter } from '@/features/landing/components/site-footer'
 import { SiteHeader } from '@/features/landing/components/site-header'
 import { SITE_NAME, SOCIAL_IMAGE_URL } from '@/features/landing/constants'
@@ -51,7 +51,7 @@ function LandingPage() {
 
       <main id='main' className='relative z-20 flex-1'>
         <Hero />
-        <ScreenshootMarquee />
+        <ScreenshootMotion />
         <FeatureStrip />
         <ReleaseSection />
       </main>

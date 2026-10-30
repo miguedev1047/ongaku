@@ -22,7 +22,7 @@ export const SITE_NAME = 'Ongaku'
 export const SOCIAL_IMAGE_URL =
   'https://raw.githubusercontent.com/miguedev1047/ongaku/master/packages/assets/public/screenshots/demo-app-2.webp'
 
-const SCREENSHOT_ASSETS = [
+export const SCREENSHOT_ASSETS = [
   demoApp1,
   demoApp2,
   demoApp3,
@@ -35,7 +35,7 @@ const SCREENSHOT_ASSETS = [
   demoApp10,
   demoApp11,
   demoApp12,
-] as const
+]
 
 export const SCREENSHOTS = buildMarqueeLayout(SCREENSHOT_ASSETS, {
   columns: 4,
