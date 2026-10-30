@@ -1,4 +1,5 @@
-import demoApp13 from '@ongaku/assets/screenshots/demo-app-13.webp'
+import demoApp13 from '@ongaku/assets/screenshots/demo-app-13.png'
+
 import { Button, GlassLaptop, RainbowButton, TechText } from '@ongaku/ui'
 import { useTranslation } from 'react-i18next'
 import { REPOSITORY_URL, SITE_NAME } from '@/features/landing/constants'
